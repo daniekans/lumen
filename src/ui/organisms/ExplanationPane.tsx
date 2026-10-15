@@ -12,6 +12,7 @@ import { StepList } from '../molecules'
 import styles from './ExplanationPane.module.css'
 import { mdxComponents } from './mdxComponents'
 import prose from './Prose.module.css'
+import surfaces from '@/styles/surfaces.module.css'
 
 interface ExplanationPaneProps {
   entry: VizEntry
@@ -34,7 +35,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
   return (
     <motion.aside
       key={mode}
-      className={clsx(styles.aside, floating && styles.floating)}
+      className={clsx(styles.aside, floating && [surfaces.glass, styles.floating])}
       style={{ '--aside-width': `${width}px` } as CSSProperties}
       initial={false}
       animate={{ width: open ? width : 0, opacity: open ? 1 : 0 }}

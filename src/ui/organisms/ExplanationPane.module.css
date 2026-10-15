@@ -8,7 +8,6 @@
 }
 
 .floating {
-  composes: glass from '../../styles/surfaces.module.css';
   position: absolute;
   top: calc(var(--topbar-height) + var(--space-3));
   right: var(--space-3);

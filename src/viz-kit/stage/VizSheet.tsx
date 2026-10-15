@@ -1,9 +1,11 @@
+import clsx from 'clsx'
 import { X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, type ReactNode } from 'react'
 import { ease } from '@/styles/motion'
 import { IconButton } from '@/ui/atoms'
 import styles from './VizSheet.module.css'
+import surfaces from '@/styles/surfaces.module.css'
 
 interface VizSheetProps {
   open: boolean
@@ -29,7 +31,7 @@ export function VizSheet({ open, onClose, title, children }: VizSheetProps) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className={styles.sheet}
+          className={clsx(surfaces.glass, styles.sheet)}
           role="dialog"
           aria-label={title}
           initial={{ opacity: 0, scale: 0.97, y: 8 }}

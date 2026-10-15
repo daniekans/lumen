@@ -49,7 +49,8 @@ Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a co
 ## Overlays
 
 All floating surfaces share the glass style (translucent background, blur, thin border, shadow).
-Never style a floating panel by hand; compose the `glass` class from `src/styles/surfaces.module.css`.
+Never style a floating panel by hand; combine the `glass` class from `src/styles/surfaces.module.css`
+in TSX (`clsx(surfaces.glass, styles.panel)`).
 When part of a visualization is too small to read at normal size, offer an expand button that opens
 it in a `VizSheet` rather than shrinking the rest of the layout.
 

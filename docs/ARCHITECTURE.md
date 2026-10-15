@@ -80,8 +80,10 @@ still used for UI transitions.
 ## Surfaces and overlays
 
 Everything that floats over content (control dock, readout panels, the command palette, the floating
-explanation pane, `VizSheet`) uses one glass surface: `composes: glass from
-'@/styles/surfaces.module.css'`, driven by the `--glass` and `--glass-blur` tokens.
+explanation pane, `VizSheet`) uses one glass surface: the `glass` class from
+`src/styles/surfaces.module.css`, combined in TSX with `clsx(surfaces.glass, styles.panel)` and
+driven by the `--glass` and `--glass-blur` tokens. Avoid `composes ... from` across files: Vite's
+CSS modules plugin parses the referenced file without a source path and logs a warning.
 
 `VizSheet` opens a large panel over the stage for an enlarged part of a visualization (usually a
 second `<Stage>`), leaving the control dock usable. The RAG vector store view uses it.

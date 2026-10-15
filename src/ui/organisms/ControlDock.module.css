@@ -11,7 +11,6 @@
   width: max-content;
   max-width: calc(100% - 2 * var(--space-5));
   padding: var(--space-3) var(--space-4);
-  composes: glass from '../../styles/surfaces.module.css';
   border-radius: var(--radius-lg);
   transform: translateX(-50%);
   animation: rise var(--dur-slow) var(--ease-out) both;

@@ -1,5 +1,4 @@
 .readouts {
-  composes: glass from '../../styles/surfaces.module.css';
   display: flex;
   flex-direction: column;
   gap: 4px;

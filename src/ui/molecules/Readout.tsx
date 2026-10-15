@@ -1,6 +1,8 @@
+import clsx from 'clsx'
 import type { ReactNode } from 'react'
 import { RichText } from '../atoms'
 import styles from './Readout.module.css'
+import surfaces from '@/styles/surfaces.module.css'
 
 interface ReadoutProps {
   /** Plain text with optional $TeX$. */
@@ -23,5 +25,5 @@ export function Readout({ label, value, color }: ReadoutProps) {
 
 /** Glass panel grouping several readouts. */
 export const ReadoutPanel = ({ children }: { children: ReactNode }) => (
-  <div className={styles.readouts}>{children}</div>
+  <div className={clsx(surfaces.glass, styles.readouts)}>{children}</div>
 )

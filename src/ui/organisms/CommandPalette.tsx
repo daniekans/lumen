@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Search } from 'lucide-react'
 import { useMemo, useState, type KeyboardEvent } from 'react'
@@ -7,6 +8,7 @@ import { sections } from '@/content/sections'
 import { useUi } from '@/state/ui'
 import { Kbd } from '../atoms'
 import styles from './CommandPalette.module.css'
+import surfaces from '@/styles/surfaces.module.css'
 
 const sectionTitle = (id: string) => sections.find((s) => s.id === id)?.title ?? id
 
@@ -17,7 +19,10 @@ export function CommandPalette() {
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className={styles.overlay} />
-        <Dialog.Content className={styles.content} aria-describedby={undefined}>
+        <Dialog.Content
+          className={clsx(surfaces.glass, styles.content)}
+          aria-describedby={undefined}
+        >
           <Dialog.Title
             className="sr-only"
             style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}

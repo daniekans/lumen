@@ -1,6 +1,7 @@
 /*
- * Shared surfaces. Compose them from component CSS modules:
- *   .panel { composes: glass from '@/styles/surfaces.module.css'; }
+ * Shared surfaces. Combine the class in TSX rather than with `composes` across files:
+ *   import surfaces from '@/styles/surfaces.module.css'
+ *   <div className={clsx(surfaces.glass, styles.panel)} />
  */
 .glass {
   border: 1px solid var(--border);

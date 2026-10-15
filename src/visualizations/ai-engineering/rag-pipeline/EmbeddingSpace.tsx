@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { clamp, fmt, lerpVec, type Vec2 } from '@/lib/math'
@@ -5,6 +6,7 @@ import { vc } from '@/styles/viz-colors'
 import { Arc, MathLabel, Point, Segment, TextLabel, useStage } from '@/viz-kit'
 import { chunks, queryPos, topicCenters, type Chunk, type Ranked, type Topic } from './data'
 import styles from './ContextPanel.module.css'
+import surfaces from '@/styles/surfaces.module.css'
 
 interface EmbeddingSpaceProps {
   /** Maps embedding coordinates to stage units. */
@@ -130,7 +132,10 @@ function ChunkTip({ chunk, at }: { chunk: Chunk; at: Vec2 }) {
   const [x, y] = coords.toPx(at)
   const d = Math.hypot(chunk.pos[0] - queryPos[0], chunk.pos[1] - queryPos[1])
   return createPortal(
-    <div className={styles.tip} style={{ transform: `translate(${x + 14}px, ${y + 12}px)` }}>
+    <div
+      className={clsx(surfaces.glass, styles.tip)}
+      style={{ transform: `translate(${x + 14}px, ${y + 12}px)` }}
+    >
       <div className={styles.tipMeta}>
         chunk {chunk.id} · {chunk.topic} · d = {fmt(d)}
       </div>

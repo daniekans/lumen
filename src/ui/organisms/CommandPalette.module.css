@@ -8,7 +8,6 @@
 }
 
 .content {
-  composes: glass from '../../styles/surfaces.module.css';
   position: fixed;
   top: 16vh;
   left: 50%;

@@ -1,5 +1,4 @@
 .sheet {
-  composes: glass from '../../styles/surfaces.module.css';
   position: absolute;
   top: var(--space-5);
   right: var(--space-5);
