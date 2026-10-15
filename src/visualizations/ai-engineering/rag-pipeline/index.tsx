@@ -1,19 +1,17 @@
-import { Play } from 'lucide-react'
+import { Maximize2, Play } from 'lucide-react'
 import { useId, useRef, useState, type ReactNode } from 'react'
-import { clamp, lerpVec, type Vec2 } from '@/lib/math'
+import { clamp, type Vec2 } from '@/lib/math'
 import { alpha, vc } from '@/styles/viz-colors'
-import { Button, Divider } from '@/ui/atoms'
-import { LabeledSlider } from '@/ui/molecules'
+import { Button, Divider, IconButton } from '@/ui/atoms'
+import { LabeledSlider, Readout, ReadoutPanel } from '@/ui/molecules'
 import {
-  Arc,
   connect,
   DiagramEdge,
   DiagramNode,
+  Grid,
   HtmlBox,
-  MathLabel,
+  Overlay,
   Packet,
-  Point,
-  Segment,
   Stage,
   TextLabel,
   useAnimatedValue,
@@ -22,12 +20,15 @@ import {
   useStepEffect,
   useVizStep,
   VizControls,
+  VizSheet,
   type Box,
   type Curve,
   type NodeState,
 } from '@/viz-kit'
 import { ContextPanel } from './ContextPanel'
-import { chunks, queryPos, ranked, topicCenters, type Topic } from './data'
+import styles from './ContextPanel.module.css'
+import { chunks, ranked } from './data'
+import { EmbeddingSpace } from './EmbeddingSpace'
 
 /* Layout in design units (y grows downward). */
 const NODE_W = 118
@@ -236,9 +237,8 @@ export default function RagPipeline() {
 
   const reveal = (p: number) => local(progress[p] ?? 0, phases[p]!.reveal)
   const retrieved = ranked.slice(0, k)
-  const radius = useAnimatedValue((retrieved.at(-1)?.distance ?? 0) * SPACE_SCALE + 7, {
-    duration: 0.5,
-  })
+  const searchDistance = useAnimatedValue(retrieved.at(-1)?.distance ?? 0, { duration: 0.5 })
+  const [expanded, setExpanded] = useState(false)
   const focusId = hovered ?? selected
   const focus = focusId
     ? { title: nodes[focusId].label, description: nodes[focusId].description }
@@ -252,7 +252,6 @@ export default function RagPipeline() {
   const edgeState = (e: EdgeDef) =>
     e.phase === phase ? 'active' : e.phase < phase ? 'done' : 'idle'
 
-  const q = toSpace(queryPos)
   const pointsReveal = phase > 1 ? 1 : phase === 1 ? reveal(1) : 0
   const queryReveal = phase > 2 ? 1 : phase === 2 ? reveal(2) : 0
   const retrieveReveal = phase > 3 ? 1 : phase === 3 ? reveal(3) : 0
@@ -271,74 +270,26 @@ export default function RagPipeline() {
         <TextLabel at={SPACE_CENTER} size={11} color={vc.subtle} opacity={pointsReveal > 0 ? 0 : 1}>
           Empty until chunks are embedded
         </TextLabel>
-        {(Object.keys(topicCenters) as Topic[]).map((t) => (
-          <TextLabel
-            key={t}
-            at={toSpace(topicCenters[t])}
-            size={10.5}
-            color={vc.subtle}
-            opacity={pointsReveal > 0.5 ? 1 : 0}
-          >
-            {t}
-          </TextLabel>
-        ))}
-
         <ClipTo {...SPACE}>
-          <Arc
-            center={q}
-            r={radius}
-            from={0}
-            to={Math.PI * 2}
-            color={vc.yellow}
-            width={1}
-            dash="3 4"
-            opacity={retrieveReveal * 0.7}
-            fill={vc.yellow}
-            fillOpacity={0.06}
+          <EmbeddingSpace
+            toSpace={toSpace}
+            scale={SPACE_SCALE}
+            pointsReveal={pointsReveal}
+            queryReveal={queryReveal}
+            retrieveReveal={retrieveReveal}
+            retrieved={retrieved}
+            searchDistance={searchDistance}
           />
-          {retrieved.map((r) => (
-            <Segment
-              key={r.chunk.id}
-              from={q}
-              to={lerpVec(q, toSpace(r.chunk.pos), retrieveReveal)}
-              color={vc.yellow}
-              width={1.25}
-              opacity={0.8 * Math.min(1, retrieveReveal * 3)}
-            />
-          ))}
-          {chunks.map((c, i) => {
-            const rank = retrieveReveal > 0 ? retrieved.findIndex((r) => r.chunk.id === c.id) : -1
-            return (
-              <g key={c.id} style={{ opacity: clamp(pointsReveal * chunks.length - i, 0, 1) }}>
-                <Point at={toSpace(c.pos)} r={4} color={rank >= 0 ? vc.yellow : vc.blue} />
-                {rank >= 0 && (
-                  <TextLabel
-                    at={[toSpace(c.pos)[0] + 9, toSpace(c.pos)[1] - 8]}
-                    size={10}
-                    color={vc.yellow}
-                    mono
-                    align="start"
-                    opacity={retrieveReveal}
-                  >
-                    {String(rank + 1)}
-                  </TextLabel>
-                )}
-              </g>
-            )
-          })}
-          <g style={{ opacity: queryReveal }}>
-            <Point at={q} r={5.5} color={vc.yellow} hollow />
-            <MathLabel
-              at={q}
-              tex="q"
-              color={vc.yellow}
-              anchor="w"
-              offset={10}
-              size={15}
-              opacity={queryReveal}
-            />
-          </g>
         </ClipTo>
+        <HtmlBox x={SPACE.x + SPACE.w - 34} y={SPACE.y + SPACE.h - 34} width={28} height={28}>
+          <IconButton
+            label="Expand the vector store view"
+            size="sm"
+            onClick={() => setExpanded(true)}
+          >
+            <Maximize2 size={13} />
+          </IconButton>
+        </HtmlBox>
 
         {edges.map((e) => (
           <DiagramEdge key={e.id} curve={e.curve} state={edgeState(e)} color={e.color} />
@@ -378,6 +329,35 @@ export default function RagPipeline() {
           />
         </HtmlBox>
       </Stage>
+
+      <VizSheet open={expanded} onClose={() => setExpanded(false)} title="Vector store, 2D view">
+        <Stage
+          domain={{ x: [-1.05, 1.05], y: [-0.95, 0.95] }}
+          insets={{ top: 24, right: 24, bottom: 24, left: 24 }}
+          ariaLabel="Chunks and the question as points in a 2D view of the embedding space"
+          overlay={
+            <Overlay corner="top-right">
+              <ReadoutPanel>
+                <Readout label="chunks" value={chunks.length} color={vc.blue} />
+                <Readout label="top-$k$" value={k} color={vc.yellow} />
+                <span className={styles.hint}>Hover a point to read its chunk.</span>
+              </ReadoutPanel>
+            </Overlay>
+          }
+        >
+          <Grid step={0.5} />
+          <EmbeddingSpace
+            toSpace={(p) => p}
+            scale={1}
+            pointsReveal={Math.max(pointsReveal, 1)}
+            queryReveal={queryReveal}
+            retrieveReveal={retrieveReveal}
+            retrieved={retrieved}
+            searchDistance={searchDistance}
+            detailed
+          />
+        </Stage>
+      </VizSheet>
 
       <VizControls>
         <Button variant="primary" icon={<Play size={14} />} onClick={runQuery}>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   apply,
+  cubicBezier,
   cAbs,
   cArg,
   cMul,
@@ -59,5 +60,19 @@ describe('niceStep', () => {
     expect(niceStep(1.3)).toBe(2)
     expect(niceStep(3)).toBe(5)
     expect(niceStep(42)).toBe(50)
+  })
+})
+
+describe('cubicBezier', () => {
+  it('matches the endpoints and the linear case', () => {
+    const lin = cubicBezier(0, 0, 1, 1)
+    expect(lin(0)).toBe(0)
+    expect(lin(1)).toBe(1)
+    expect(lin(0.3)).toBeCloseTo(0.3, 5)
+  })
+  it('is symmetric for an ease-in-out curve', () => {
+    const e = cubicBezier(0.65, 0, 0.35, 1)
+    expect(e(0.5)).toBeCloseTo(0.5, 5)
+    expect(e(0.25) + e(0.75)).toBeCloseTo(1, 5)
   })
 })

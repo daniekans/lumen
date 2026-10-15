@@ -1,13 +1,10 @@
 .readouts {
+  composes: glass from '../../styles/surfaces.module.css';
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   min-width: 170px;
 }
 

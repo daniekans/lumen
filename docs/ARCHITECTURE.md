@@ -12,11 +12,11 @@ src/
     organisms/       Sidebar, TopBar, ExplanationPane, ControlDock, CommandPalette, VizCard, ...
     templates/       AppShell, VizLayout
   viz-kit/         Building blocks for visualizations (public API in viz-kit/index.ts)
-    stage/           Stage, coordinate system, Overlay
+    stage/           Stage, coordinate system, Overlay, HtmlBox, VizSheet
     math-plot/       Grid, Axes, FunctionPlot, Path, Segment, Vector, Point, Arc, MathLabel, TextLabel
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
-    anim/            useSequence, useAnimatedValue
+    anim/            useSequence, useAnimatedValue, tween (requestAnimationFrame)
     interaction/     useDrag
     runtime/         VizControls, useVizStep, useStepEffect
   content/         Section taxonomy, visualization types and the registry
@@ -64,6 +64,11 @@ lazily loaded like everything else.
 
 ## Animation
 
+Visualization timing runs on the kit's own `tween` (requestAnimationFrame with cubic-bezier
+easing), not on motion's `animate()`. Motion's frame loop is shared with layout animations in the
+chrome, and a layout animation starting in the same tick made viz tweens finish instantly. motion is
+still used for UI transitions.
+
 - **Scripted sequences**: `useSequence().run(async ({ tween, wait }) => ...)`. Starting a new run or
   unmounting cancels the current one. Respects `prefers-reduced-motion`.
 - **Eased targets**: `useAnimatedValue(target)` for numbers and number arrays.
@@ -71,6 +76,18 @@ lazily loaded like everything else.
   declared in the kit interpolate. This is how the neural network fades activations.
 - **Continuous loops**: `useAnimationFrame` from motion, writing to the DOM through refs when the
   loop runs constantly (see `LissajousMark`).
+
+## Surfaces and overlays
+
+Everything that floats over content (control dock, readout panels, the command palette, the floating
+explanation pane, `VizSheet`) uses one glass surface: `composes: glass from
+'@/styles/surfaces.module.css'`, driven by the `--glass` and `--glass-blur` tokens.
+
+`VizSheet` opens a large panel over the stage for an enlarged part of a visualization (usually a
+second `<Stage>`), leaving the control dock usable. The RAG vector store view uses it.
+
+The explanation pane can be resized (drag its left edge, double-click to reset) and switched between
+docked and floating. Width and mode persist in the UI store.
 
 ## State
 

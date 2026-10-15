@@ -46,6 +46,13 @@ Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a co
   top right. Keep both small; the stage is the focus.
 - Stage content stays clear of the dock through the default `insets`.
 
+## Overlays
+
+All floating surfaces share the glass style (translucent background, blur, thin border, shadow).
+Never style a floating panel by hand; compose the `glass` class from `src/styles/surfaces.module.css`.
+When part of a visualization is too small to read at normal size, offer an expand button that opens
+it in a `VizSheet` rather than shrinking the rest of the layout.
+
 ## Motion rules
 
 - Default visualization transitions take 0.6 to 1.0 s with `ease.inOut`. UI transitions take

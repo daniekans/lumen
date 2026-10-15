@@ -11,12 +11,8 @@
   width: max-content;
   max-width: calc(100% - 2 * var(--space-5));
   padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
+  composes: glass from '../../styles/surfaces.module.css';
   border-radius: var(--radius-lg);
-  background: var(--glass);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
   transform: translateX(-50%);
   animation: rise var(--dur-slow) var(--ease-out) both;
   animation-delay: 120ms;

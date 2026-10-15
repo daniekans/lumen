@@ -1,12 +1,13 @@
-import { animate, useReducedMotion } from 'motion/react'
+import { useReducedMotion } from 'motion/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { duration as defaultDuration, ease as easings } from '@/styles/motion'
+import { tween as rafTween, type EaseSpec } from './tween'
 
 class Cancelled extends Error {}
 
 export interface TweenOptions {
   duration?: number
-  ease?: readonly [number, number, number, number] | 'linear'
+  ease?: EaseSpec
   onUpdate: (value: number) => void
 }
 
@@ -61,20 +62,13 @@ export const useSequence = () => {
               resolve()
               return
             }
-            const controls = animate(from, to, {
-              duration,
-              ease: ease === 'linear' ? 'linear' : [...ease],
-              onUpdate,
-            })
-            const stop = () => {
-              controls.stop()
-              reject(new Cancelled())
-            }
+            const handle = rafTween(from, to, { duration, ease, onUpdate })
+            const stop = () => handle.stop()
             stops.current.add(stop)
-            controls.then(() => {
+            void handle.finished.then((done) => {
               stops.current.delete(stop)
-              if (isCancelled()) reject(new Cancelled())
-              else resolve()
+              if (done && !isCancelled()) resolve()
+              else reject(new Cancelled())
             })
           }),
         wait: (seconds) =>

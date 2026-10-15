@@ -1,7 +1,8 @@
-import { animate, useReducedMotion } from 'motion/react'
+import { useReducedMotion } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 import { lerpArray } from '@/lib/math'
 import { duration as defaultDuration, ease as easings } from '@/styles/motion'
+import { tween } from './tween'
 
 interface Options {
   duration?: number
@@ -27,9 +28,9 @@ export function useAnimatedValue<T extends number | readonly number[]>(
     const from = current.current
     const to = target
     if (reduced) return
-    const controls = animate(0, 1, {
+    const handle = tween(0, 1, {
       duration,
-      ease: [...ease],
+      ease,
       onUpdate: (t) => {
         const next = (
           typeof to === 'number'
@@ -40,7 +41,7 @@ export function useAnimatedValue<T extends number | readonly number[]>(
         setValue(next)
       },
     })
-    return () => controls.stop()
+    return () => handle.stop()
     // `key` captures the content of `target`; the reference itself may change every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, duration, reduced])

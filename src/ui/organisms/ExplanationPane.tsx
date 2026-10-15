@@ -1,12 +1,13 @@
 import { MDXProvider } from '@mdx-js/react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import clsx from 'clsx'
+import { ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
 import { motion } from 'motion/react'
-import { Suspense } from 'react'
+import { Suspense, useState, type CSSProperties } from 'react'
 import { sections } from '@/content/sections'
 import type { VizEntry } from '@/content/types'
-import { useUi } from '@/state/ui'
+import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
-import { Badge, IconButton } from '../atoms'
+import { Badge, IconButton, ResizeHandle } from '../atoms'
 import { StepList } from '../molecules'
 import styles from './ExplanationPane.module.css'
 import { mdxComponents } from './mdxComponents'
@@ -20,20 +21,39 @@ interface ExplanationPaneProps {
 
 export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPaneProps) {
   const open = useUi((s) => s.asideOpen)
+  const mode = useUi((s) => s.asideMode)
+  const width = useUi((s) => s.asideWidth)
+  const setWidth = useUi((s) => s.setAsideWidth)
+  const toggleMode = useUi((s) => s.toggleAsideMode)
+  const [resizing, setResizing] = useState(false)
+  const floating = mode === 'floating'
   const steps = entry.steps ?? []
   const section = sections.find((s) => s.id === entry.section)
   const Explanation = entry.Explanation
 
   return (
     <motion.aside
-      className={styles.aside}
+      key={mode}
+      className={clsx(styles.aside, floating && styles.floating)}
+      style={{ '--aside-width': `${width}px` } as CSSProperties}
       initial={false}
-      animate={{ width: open ? 'var(--aside-width)' : 0, opacity: open ? 1 : 0 }}
-      transition={spring.pane}
+      animate={{ width: open ? width : 0, opacity: open ? 1 : 0 }}
+      transition={resizing ? { duration: 0 } : spring.pane}
       aria-label="Explanation"
       aria-hidden={!open}
       inert={!open}
     >
+      {open && (
+        <ResizeHandle
+          edge="left"
+          width={width}
+          onResize={setWidth}
+          onResizeStart={() => setResizing(true)}
+          onResizeEnd={() => setResizing(false)}
+          defaultWidth={ASIDE_WIDTH.default}
+          label="Resize explanation"
+        />
+      )}
       <motion.div
         key={entry.id}
         className={styles.inner}
@@ -41,9 +61,18 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: ease.out }}
       >
-        <div className={styles.meta}>
-          {section && <Badge>{section.title}</Badge>}
-          <Badge>{entry.level}</Badge>
+        <div className={styles.head}>
+          <div className={styles.meta}>
+            {section && <Badge>{section.title}</Badge>}
+            <Badge>{entry.level}</Badge>
+          </div>
+          <IconButton
+            label={floating ? 'Dock to the side' : 'Float over the stage'}
+            size="sm"
+            onClick={toggleMode}
+          >
+            {floating ? <Pin size={14} /> : <PinOff size={14} />}
+          </IconButton>
         </div>
         <h1 className={styles.title}>{entry.title}</h1>
         <p className={styles.summary}>{entry.summary}</p>

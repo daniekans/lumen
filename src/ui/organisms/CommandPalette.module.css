@@ -8,16 +8,14 @@
 }
 
 .content {
+  composes: glass from '../../styles/surfaces.module.css';
   position: fixed;
   top: 16vh;
   left: 50%;
   z-index: 51;
   width: min(560px, calc(100vw - 32px));
   overflow: hidden;
-  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
-  background: var(--bg-elevated);
-  box-shadow: var(--shadow);
   transform: translateX(-50%);
   animation: pop var(--dur-base) var(--ease-out);
 }

@@ -12,15 +12,15 @@ visualizations exist. Waiting for review of direction before scaling up.
 
 ## Visualizations
 
-| Section         | Visualization                  | Status | Notes                                                 |
-| --------------- | ------------------------------ | ------ | ----------------------------------------------------- |
-| Calculus        | The derivative as a limit      | review |                                                       |
-| Calculus        | Riemann sums                   | review | Empty space below the x-axis at some sizes            |
-| Linear Algebra  | Matrices as transformations    | review | `MatrixView` could move to `ui` if reused             |
-| Complex Numbers | Complex multiplication         | review |                                                       |
-| Neural Networks | The forward pass               | review |                                                       |
-| Neural Networks | Backpropagation                | review |                                                       |
-| AI Engineering  | Retrieval-augmented generation | review | 2D vector store panel is small; labels crowd at k = 5 |
+| Section         | Visualization                  | Status | Notes                                                        |
+| --------------- | ------------------------------ | ------ | ------------------------------------------------------------ |
+| Calculus        | The derivative as a limit      | review |                                                              |
+| Calculus        | Riemann sums                   | review | Empty space below the x-axis at some sizes                   |
+| Linear Algebra  | Matrices as transformations    | review | `MatrixView` could move to `ui` if reused                    |
+| Complex Numbers | Complex multiplication         | review |                                                              |
+| Neural Networks | The forward pass               | review |                                                              |
+| Neural Networks | Backpropagation                | review |                                                              |
+| AI Engineering  | Retrieval-augmented generation | review | Vector store view opens in a larger sheet with hover details |
 
 ## Backlog
 
@@ -90,6 +90,8 @@ visualizations exist. Waiting for review of direction before scaling up.
   animation hooks, drag, steps runtime
 - Folder-based registry with code splitting and draft status
 - Prose lint, unit tests, Playwright smoke tests, CI
+- Glass surface shared by all overlays; resizable and floating explanation pane; `VizSheet`
+- Viz animations on the kit's own requestAnimationFrame tween (fixed instant preset animations)
 
 ### Next
 

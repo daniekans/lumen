@@ -1,0 +1,41 @@
+.handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 9px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+.handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--fg-muted);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.left::after {
+  left: 0;
+}
+
+.right::after {
+  right: 0;
+}
+
+.handle:hover::after,
+.active::after {
+  opacity: 0.6;
+}

@@ -1,0 +1,11 @@
+/*
+ * Shared surfaces. Compose them from component CSS modules:
+ *   .panel { composes: glass from '@/styles/surfaces.module.css'; }
+ */
+.glass {
+  border: 1px solid var(--border);
+  background: var(--glass);
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
