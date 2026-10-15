@@ -1,0 +1,44 @@
+A language model only knows what was in its training data and what is in its prompt. Retrieval-augmented
+generation (RAG) puts the relevant part of your own documents into the prompt at question time, so the
+model can answer from them.
+
+## Two pipelines
+
+RAG has an **indexing** pipeline that runs ahead of time and a **query** pipeline that runs for every
+question. They meet in the vector store.
+
+1. <StepLink step="indexing">Chunking</StepLink>. Documents are split into passages of a few
+   sentences, often with some overlap between neighbours. A chunk that is too long dilutes its own
+   meaning; one that is too short loses context.
+2. <StepLink step="embedding">Embedding</StepLink>. An embedding model maps each chunk to a vector
+   $\mathbf{v} \in \mathbb{R}^d$, with $d$ typically between 384 and 3072. The 2D view in the
+   diagram is a projection of that space for illustration.
+3. <StepLink step="query">Query embedding</StepLink>. The question is embedded with the same model.
+   Using a different model would put the question in a different space and make distances
+   meaningless.
+
+## Retrieval
+
+The store returns the $k$ chunks most similar to the question vector $\mathbf{q}$. Most systems use
+cosine similarity,
+
+$$
+\operatorname{sim}(\mathbf{q}, \mathbf{v}) = \frac{\mathbf{q} \cdot \mathbf{v}}{\lVert \mathbf{q} \rVert \, \lVert \mathbf{v} \rVert},
+$$
+
+which for normalized vectors ranks results in the same order as Euclidean distance. The diagram uses
+distance in the 2D view, so the <C c="yellow">dashed circle</C> contains exactly the retrieved chunks.
+
+Choosing $k$ is a trade-off. With $k = 1$ the answer misses that the reset link expires. With $k = 5$
+the prompt also carries a chunk about pricing, which costs tokens and can distract the model. Large
+collections use approximate nearest-neighbour indexes (such as HNSW) so that search stays fast.
+
+## Generation
+
+The <StepLink step="prompt">prompt</StepLink> contains an instruction, the numbered chunks and the
+question. The model then <StepLink step="generation">writes the answer</StepLink> and cites the
+numbers it used, which lets a reader check each claim against its source.
+
+RAG does not guarantee a correct answer. If retrieval returns the wrong chunks, the model is grounded
+in the wrong text. Evaluating retrieval quality separately from answer quality is the usual way to
+find out which half of the system needs work.

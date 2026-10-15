@@ -1,0 +1,53 @@
+.stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: visible;
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: auto;
+}
+
+.topLeft {
+  top: var(--space-5);
+  left: var(--space-5);
+}
+
+.topRight {
+  top: var(--space-5);
+  right: var(--space-5);
+  align-items: flex-end;
+}
+
+.bottomLeft {
+  bottom: calc(var(--space-5) + 64px);
+  left: var(--space-5);
+}
+
+.bottomRight {
+  bottom: calc(var(--space-5) + 64px);
+  right: var(--space-5);
+  align-items: flex-end;
+}

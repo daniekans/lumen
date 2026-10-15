@@ -1,0 +1,28 @@
+.fill {
+  position: absolute;
+  inset: 0;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  opacity: 0.5;
+}
+
+.next {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-right: var(--space-2);
+  padding: 0 var(--space-2);
+  height: 28px;
+  border-radius: var(--radius-sm);
+  color: var(--fg-muted);
+  font-size: var(--text-xs);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.next:hover {
+  color: var(--fg);
+}

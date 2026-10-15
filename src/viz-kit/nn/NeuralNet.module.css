@@ -1,0 +1,42 @@
+.edge {
+  transition:
+    stroke var(--dur-slow) var(--ease-out),
+    stroke-width var(--dur-slow) var(--ease-out),
+    opacity var(--dur-slow) var(--ease-out);
+}
+
+.neuron {
+  cursor: pointer;
+}
+
+.fill {
+  transition:
+    fill-opacity 520ms var(--ease-out),
+    fill var(--dur-slow) var(--ease-out);
+}
+
+.outline {
+  transition:
+    stroke var(--dur-base) var(--ease-out),
+    stroke-width var(--dur-base) var(--ease-out);
+}
+
+.neuron:hover .outline {
+  stroke-width: 2.5;
+}
+
+.ring {
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    stroke var(--dur-slow) var(--ease-out),
+    r var(--dur-slow) var(--ease-out);
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  transition:
+    fill var(--dur-slow) var(--ease-out),
+    opacity var(--dur-slow) var(--ease-out);
+}

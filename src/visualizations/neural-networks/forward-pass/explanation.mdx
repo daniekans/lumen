@@ -1,0 +1,40 @@
+A neural network is a function. This one takes three numbers $x_1, x_2, x_3$ and returns two numbers
+$\hat y_1, \hat y_2$. Everything in between is arithmetic that repeats the same pattern.
+
+## Activations
+
+Each neuron holds an activation, a number between 0 and 1. The fill of each circle shows it: an
+empty circle is 0 and a solid one is 1. The input layer's activations are simply the inputs.
+
+## What one neuron computes
+
+A neuron in layer $l$ looks at every activation in layer $l-1$. It multiplies each by a weight, adds
+the results and a bias, and passes the total $z$ through the sigmoid function:
+
+$$
+z_j = \sum_i w_{ji}\, a^{(l-1)}_i + b_j, \qquad a^{(l)}_j = \sigma(z_j) = \frac{1}{1 + e^{-z_j}}.
+$$
+
+A <C c="blue">positive weight</C> means "a larger input pushes this neuron up". A
+
+<C c="red">negative weight</C> pushes it down. The bias shifts how easily the neuron activates. The
+sigmoid maps any real $z$ into $(0, 1)$, so large positive sums give activations near 1 and large
+negative sums give activations near 0.
+
+## The whole layer at once
+
+Writing the weights of a layer as a matrix $W$ and the biases as a vector $\mathbf b$, all neurons of
+the layer are computed together:
+
+$$
+\mathbf a^{(l)} = \sigma\big(W^{(l)} \mathbf a^{(l-1)} + \mathbf b^{(l)}\big).
+$$
+
+The forward pass applies this three times here, once per pair of adjacent layers. The network in
+this example has $3 \cdot 4 + 4 \cdot 4 + 4 \cdot 2 = 36$ weights and $4 + 4 + 2 = 10$ biases.
+
+## Where the weights come from
+
+The weights here are fixed random numbers, so the outputs do not mean anything yet. Choosing weights
+that make the outputs useful is the job of training, covered in
+[Backpropagation](/neural-networks/backpropagation).

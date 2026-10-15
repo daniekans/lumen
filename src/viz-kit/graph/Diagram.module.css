@@ -1,0 +1,39 @@
+.node rect {
+  transition:
+    stroke var(--dur-slow) var(--ease-out),
+    fill var(--dur-slow) var(--ease-out),
+    fill-opacity var(--dur-slow) var(--ease-out);
+}
+
+.node {
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+.node text {
+  transition: fill var(--dur-slow) var(--ease-out);
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover rect {
+  stroke: var(--fg);
+}
+
+.edge path {
+  transition:
+    stroke var(--dur-slow) var(--ease-out),
+    opacity var(--dur-slow) var(--ease-out),
+    fill var(--dur-slow) var(--ease-out);
+}
+
+.flow {
+  animation: flow 0.9s linear infinite;
+}
+
+@keyframes flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}

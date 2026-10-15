@@ -1,0 +1,46 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
+  border-bottom: 1px solid var(--border);
+}
+
+.matrix {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: var(--space-4);
+  row-gap: 2px;
+  padding: 3px 9px;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.matrix::before,
+.matrix::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  border: 1.5px solid var(--fg-muted);
+}
+
+.matrix::before {
+  left: 0;
+  border-right: 0;
+}
+
+.matrix::after {
+  right: 0;
+  border-left: 0;
+}
+
+.cell {
+  min-width: 3.4em;
+  transition: color var(--dur-base) var(--ease-out);
+}

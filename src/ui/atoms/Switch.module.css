@@ -1,0 +1,36 @@
+.root {
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+
+.root[data-state='checked'] {
+  background: var(--accent, var(--fg));
+  border-color: var(--accent, var(--fg));
+}
+
+.thumb {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--fg-muted);
+  transform: translateX(2px);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out);
+}
+
+.root[data-state='checked'] .thumb {
+  background: var(--bg);
+  transform: translateX(14px);
+}

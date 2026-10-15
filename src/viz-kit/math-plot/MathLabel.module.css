@@ -1,0 +1,13 @@
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  font-size: 17px;
+  line-height: 1;
+  will-change: transform;
+}
+
+.label :global(.katex) {
+  font-size: 1em;
+}

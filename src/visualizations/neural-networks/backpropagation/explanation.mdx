@@ -1,0 +1,63 @@
+Training means choosing weights that make the network's outputs match known targets.
+Backpropagation is the algorithm that computes, for every weight at once, which direction reduces
+the error. Gradient descent then takes a step in that direction.
+
+## The cost
+
+For one training example with target $\mathbf y$, the cost compares output and target:
+
+$$
+C = \tfrac12 \sum_j (\hat y_j - y_j)^2.
+$$
+
+$C$ depends on every weight in the network, because every weight affects $\hat y$. The goal is to
+find how $C$ changes when each weight changes, the partial derivative $\partial C / \partial w$.
+
+## The error signal $\delta$
+
+Define each neuron's error signal as $\delta_j = \partial C / \partial z_j$, the sensitivity of the
+cost to that neuron's weighted sum. For the output layer it follows directly from the cost and the
+sigmoid:
+
+$$
+\delta^{(L)}_j = (\hat y_j - y_j)\, \sigma'(z^{(L)}_j).
+$$
+
+## Going backward
+
+A neuron in an earlier layer affects the cost only through the neurons it feeds. The chain rule adds
+up those paths, so each layer's $\delta$ comes from the next layer's:
+
+$$
+\delta^{(l)}_i = \Big(\sum_j w^{(l+1)}_{ji}\, \delta^{(l+1)}_j\Big)\, \sigma'(z^{(l)}_i).
+$$
+
+This is why the computation moves from right to left. In the visualization the
+
+<C c="yellow">yellow rings</C> appear on the output layer first, then on each hidden layer in turn.
+
+## From $\delta$ to weight gradients
+
+A weight connects neuron $i$ in one layer to neuron $j$ in the next. Its gradient is the product of
+what flows in and the error at the far end:
+
+$$
+\frac{\partial C}{\partial w_{ji}} = a_i \, \delta_j.
+$$
+
+A weight gets a large gradient when its input neuron is active and its output neuron has a large
+error. Weights attached to inactive neurons barely change.
+
+## The update
+
+Gradient descent moves each weight a small step downhill, scaled by the learning rate $\eta$:
+
+$$
+w \leftarrow w - \eta\, \frac{\partial C}{\partial w}.
+$$
+
+A small $\eta$ learns slowly. A very large $\eta$ can overshoot, which shows up as a cost curve that
+jumps instead of falling smoothly. Try both with the slider and press **Train 60 steps**.
+
+This example trains on a single input, so the network can fit it almost exactly. Real training
+averages the gradient over many examples, which is what lets the network generalize.

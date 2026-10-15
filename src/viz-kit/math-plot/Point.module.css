@@ -1,0 +1,19 @@
+.point {
+  cursor: grab;
+}
+
+.point:active {
+  cursor: grabbing;
+}
+
+.halo {
+  transition:
+    r var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+  opacity: 0;
+}
+
+.point:hover .halo,
+.dragging .halo {
+  opacity: 1;
+}

@@ -1,0 +1,22 @@
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow);
+  color: var(--fg);
+  font-size: var(--text-xs);
+  z-index: 100;
+  transform-origin: var(--radix-tooltip-content-transform-origin);
+  animation: in var(--dur-base) var(--ease-out);
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}

@@ -1,0 +1,43 @@
+The definite integral $\int_a^b f(x)\,dx$ measures the area between the graph of $f$ and the
+$x$-axis from $a$ to $b$. Curved regions have no simple area formula, so we approximate them with
+shapes that do.
+
+## Strips
+
+Divide $[a, b]$ into $n$ strips of equal width
+
+$$
+\Delta x = \frac{b - a}{n}, \qquad x_k = a + k\,\Delta x.
+$$
+
+In each strip pick a sample point $x_k^*$ and draw a <C c="yellow">rectangle</C> of height
+$f(x_k^*)$. The Riemann sum adds their areas:
+
+$$
+S_n = \sum_{k=0}^{n-1} f(x_k^*)\,\Delta x.
+$$
+
+## Sampling rules
+
+- **Left**: $x_k^* = x_k$. On a rising stretch of $f$ the rectangles sit below the curve.
+- **Right**: $x_k^* = x_{k+1}$. On a rising stretch they overshoot.
+- **Midpoint**: $x_k^* = \tfrac{1}{2}(x_k + x_{k+1})$. Over- and undershoot inside each strip
+  roughly cancel.
+- **Trapezoid**: the top of each strip joins $f(x_k)$ and $f(x_{k+1})$, which is the average of the
+  left and right sums.
+
+For a smooth $f$, the error of the left and right sums shrinks like $1/n$, while the midpoint and
+trapezoid errors shrink like $1/n^2$. Doubling $n$ roughly halves the first and quarters the
+second. Compare the error readout at $n = 8$ and $n = 16$.
+
+## The limit
+
+If $f$ is continuous on $[a, b]$, every choice of sample points gives the same limit:
+
+$$
+\int_a^b f(x)\,dx = \lim_{n \to \infty} \sum_{k=0}^{n-1} f(x_k^*)\,\Delta x.
+$$
+
+This limit is the definition of the integral. The curve shown is
+$f(x) = 1.2 + 0.8 \sin x + 0.1x$ on $[0.5, 5.5]$, and the <C c="teal">exact area</C> is about
+$7.64$. Open <StepLink step="limit">the last step</StepLink> to watch $n$ grow to $64$.

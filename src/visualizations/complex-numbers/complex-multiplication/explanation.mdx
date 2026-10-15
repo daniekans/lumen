@@ -1,0 +1,42 @@
+Adding complex numbers adds their arrows tip to tail. Multiplication is less obvious from the
+algebra, but it has a clean geometric meaning: it combines a rotation and a scaling.
+
+## The algebra
+
+With $z = a + bi$, $w = c + di$ and $i^2 = -1$,
+
+$$
+zw = (ac - bd) + (ad + bc)\,i.
+$$
+
+For the starting values $z = 2 + i$ and $w = 1 + i$ this gives $zw = 1 + 3i$.
+
+## Polar form
+
+Write each number by its length and angle: $z = r\,(\cos\theta + i\sin\theta)$ with $r = |z|$ and
+$\theta = \arg z$. Expanding the product of two numbers in this form and applying the angle
+addition formulas gives
+
+$$
+|zw| = |z|\,|w|, \qquad \arg(zw) = \arg z + \arg w.
+$$
+
+So multiplying <C c="blue">$z$</C> by <C c="yellow">$w$</C> turns $z$ through the angle $\arg w$
+and stretches it by $|w|$. The readouts show both sides of each identity. Angles are shown in
+$[0^\circ, 360^\circ)$, so the sum of arguments wraps around after a full turn.
+
+## Every point at once
+
+The rule does not depend on $z$. Multiplication by $w$ is a map of the whole plane that rotates by
+$\arg w$ and scales by $|w|$. Because it rotates and scales uniformly, it preserves angles and
+shapes: the unit square becomes a square with one corner at $0$ and another at $w$, since
+$1 \cdot w = w$.
+
+The <StepLink step="plane">last step</StepLink> animates the map through the powers $w^t$ for
+$t$ from $0$ to $1$, which follow a spiral from $1$ to $w$.
+
+## Special cases
+
+- $|w| = 1$: a pure rotation. Multiplying by $i$ turns the plane a quarter turn counterclockwise.
+- $w$ real and positive: a pure scaling.
+- $w = -1$: a half turn, which is why $(-1)(-1) = 1$ is the same as two half turns.

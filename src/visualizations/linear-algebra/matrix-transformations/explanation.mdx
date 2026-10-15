@@ -1,0 +1,53 @@
+A $2 \times 2$ matrix is a compact description of a function that moves every point of the plane.
+The functions it can describe are the linear ones: they fix the origin and keep grid lines straight,
+parallel and evenly spaced.
+
+## Columns record the basis
+
+Write any vector as $\mathbf{v} = x\hat{\imath} + y\hat{\jmath}$. Linearity means
+
+$$
+A\mathbf{v} = x\,A\hat{\imath} + y\,A\hat{\jmath},
+$$
+
+so $A$ is fully determined by two vectors: where <C c="green">$\hat{\imath}$</C> lands and where
+
+<C c="red">$\hat{\jmath}$</C> lands. Those are the columns of the matrix:
+
+$$
+A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}, \qquad
+A\hat{\imath} = \begin{bmatrix} a \\ c \end{bmatrix}, \quad
+A\hat{\jmath} = \begin{bmatrix} b \\ d \end{bmatrix}.
+$$
+
+Drag the tips of the basis vectors to edit the columns directly. The dashed path to $A\mathbf{v}$
+shows the recipe $2\,A\hat{\imath} + A\hat{\jmath}$ for $\mathbf{v} = (2, 1)$.
+
+## Determinant
+
+The unit square spanned by $\hat{\imath}$ and $\hat{\jmath}$ maps to the parallelogram spanned by the
+two columns. Its signed area is
+
+$$
+\det A = ad - bc.
+$$
+
+Because the grid stays evenly spaced, every region scales by the same factor $|\det A|$.
+
+- $\det A > 0$: orientation is kept. Turning from $\hat{\imath}$ to $\hat{\jmath}$ is still
+  counterclockwise.
+- $\det A < 0$: the plane is <StepLink step="sign">flipped</StepLink>, like a reflection.
+- $\det A = 0$: the plane collapses onto a line or a point. Different inputs share the same output,
+  so $A$ has no inverse.
+
+## Presets
+
+| Preset  | Matrix                                                 | $\det$ |
+| ------- | ------------------------------------------------------ | ------ |
+| Rotate  | $\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$        | $1$    |
+| Shear   | $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$         | $1$    |
+| Scale   | $\begin{bmatrix} 2 & 0 \\ 0 & 1.5 \end{bmatrix}$       | $3$    |
+| Reflect | $\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$        | $-1$   |
+| Project | $\begin{bmatrix} 0.8 & 0.4 \\ 0.4 & 0.2 \end{bmatrix}$ | $0$    |
+
+The shear and the rotation change shapes but not areas, which is why both have determinant $1$.

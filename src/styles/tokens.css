@@ -1,0 +1,107 @@
+/*
+ * Design tokens. Every color, font, radius and motion value used by the UI and by
+ * visualizations comes from here. Themes only remap values; names never change.
+ */
+:root {
+  /* Typography */
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+  --font-math: 'KaTeX_Main', 'Times New Roman', serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2.25rem;
+  --text-hero: clamp(2.75rem, 6vw, 4.5rem);
+
+  /* Spacing (4px scale) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+
+  /* Layout */
+  --sidebar-width: 264px;
+  --aside-width: 400px;
+  --topbar-height: 52px;
+
+  /* Motion. Mirrored in src/styles/motion.ts for JS animations. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-base: 240ms;
+  --dur-slow: 480ms;
+
+  /* Visualization palette (shared by both themes, tuned per theme below) */
+  --viz-stroke-width: 2px;
+}
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0e0e10;
+  --bg-elevated: #141417;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --surface-active: rgba(255, 255, 255, 0.09);
+  --glass: rgba(20, 20, 23, 0.72);
+  --fg: #ece9e1;
+  --fg-muted: #a09d96;
+  --fg-subtle: #6b6964;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --focus: #58c4dd;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+  --viz-fg: #ece9e1;
+  --viz-grid: rgba(255, 255, 255, 0.07);
+  --viz-grid-strong: rgba(255, 255, 255, 0.14);
+  --viz-axis: rgba(236, 233, 225, 0.55);
+  --viz-blue: #58c4dd;
+  --viz-yellow: #f4d35e;
+  --viz-teal: #5cd0b3;
+  --viz-red: #fc6255;
+  --viz-green: #83c167;
+  --viz-purple: #a685c4;
+  --viz-orange: #f2a65a;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f7f6f2;
+  --bg-elevated: #ffffff;
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-hover: rgba(0, 0, 0, 0.05);
+  --surface-active: rgba(0, 0, 0, 0.08);
+  --glass: rgba(255, 255, 255, 0.78);
+  --fg: #16161a;
+  --fg-muted: #5c5b57;
+  --fg-subtle: #8f8d87;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --focus: #1f87a8;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  --viz-fg: #16161a;
+  --viz-grid: rgba(0, 0, 0, 0.06);
+  --viz-grid-strong: rgba(0, 0, 0, 0.13);
+  --viz-axis: rgba(22, 22, 26, 0.55);
+  --viz-blue: #1f87a8;
+  --viz-yellow: #b8860b;
+  --viz-teal: #1a9a7c;
+  --viz-red: #d6453a;
+  --viz-green: #4d8f34;
+  --viz-purple: #7d55a3;
+  --viz-orange: #c9701e;
+}
