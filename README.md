@@ -40,5 +40,6 @@ pnpm dev          # http://localhost:5173
 - [Writing](docs/WRITING.md): rules for all text in the project.
 - [Roadmap](docs/ROADMAP.md): status of every visualization and the backlog.
 - [Learning platform](docs/LEARNING_PLATFORM.md): plan and tracker for courses, practice and progress.
+- [Product vision](docs/PRODUCT_VISION.md): possible future as a product, and the seams kept for it.
 
 Live site: https://daniekans.github.io/lumen/ (deployed by `.github/workflows/deploy.yml` on every push to `main`).

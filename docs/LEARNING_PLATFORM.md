@@ -13,8 +13,17 @@ practice with checked answers, and progress.
 - Math comes first, starting from pre-calculus. Data Engineering and Architecture units are
   interleaved with the math instead of waiting until the end.
 
-Decisions already made: progress lives in the browser with JSON export and import; answers are typed
-in a MathLive math field with an on-screen keyboard; the math track starts with pre-calculus.
+Decisions already made:
+
+- Learning is on demand. There is no spaced repetition, no schedule, no due queue and no streaks;
+  study and practice happen whenever there is time, and nothing piles up in the meantime.
+- Keep the practice features simple.
+- Progress lives in the browser with JSON export and import.
+- Answers are typed in a MathLive math field with an on-screen keyboard.
+- The math track starts with pre-calculus, and the Functions unit is the pilot.
+- Prerequisites are suggestions; nothing is locked. A unit checkpoint passes at 80%.
+- The project may become a product for other learners later; see [PRODUCT_VISION.md](PRODUCT_VISION.md)
+  for what that means for the code today.
 
 ## Content model
 
@@ -22,15 +31,15 @@ in a MathLive math field with an on-screen keyboard; the math track starts with 
 Area            Mathematics, Machine Learning, Data Engineering, AI Engineering
   Course        Pre-calculus, Calculus 1, Linear Algebra, Data Modeling, ...
     Unit        Functions, Limits, Derivatives, Dimensional modeling, ...
-      Item      one of: explore, lesson, practice, review
+      Item      one of: explore, lesson, practice, checkpoint
 ```
 
-| Item kind  | What it is                                                                 | Done when                    |
-| ---------- | -------------------------------------------------------------------------- | ---------------------------- |
-| `explore`  | Today's visualizations: steps, controls, explanation                       | Opened and all steps visited |
-| `lesson`   | Guided sequence through a concept, with checkpoint questions between steps | All checkpoints answered     |
-| `practice` | Generated problems for one or two skills, with hints and worked solutions  | Skill reaches "proficient"   |
-| `review`   | End-of-unit set mixing the unit's skills, including pen-and-paper problems | Score at or above 80%        |
+| Item kind    | What it is                                                                 | Done when                    |
+| ------------ | -------------------------------------------------------------------------- | ---------------------------- |
+| `explore`    | Today's visualizations: steps, controls, explanation                       | Opened and all steps visited |
+| `lesson`     | Guided sequence through a concept, with checkpoint questions between steps | All checkpoints answered     |
+| `practice`   | Generated problems for one or two skills, with hints and worked solutions  | Skill reaches "proficient"   |
+| `checkpoint` | End-of-unit set mixing the unit's skills, including pen-and-paper problems | Score at or above 80%        |
 
 Skills are the unit of mastery. Every problem tags the skills it exercises; items and units report
 progress as an aggregate of their skills.
@@ -45,7 +54,7 @@ src/content/
   <area>/<course>/<unit>/<item>/meta.ts      kind, title, summary, order, skills, steps
   <area>/<course>/<unit>/<item>/index.tsx    the component (explore, lesson, interactive problems)
   <area>/<course>/<unit>/<item>/explanation.mdx
-  <area>/<course>/<unit>/<item>/problems.ts  problem generators (practice and review)
+  <area>/<course>/<unit>/<item>/problems.ts  problem generators (practice and checkpoint)
 ```
 
 The registry keeps discovering everything through `import.meta.glob`, now four levels deep, and
@@ -114,29 +123,38 @@ one at a time, the worked solution after a correct answer or after giving up, an
 explore item for the concept. Wrong answers produce a fresh problem of the same kind instead of
 repeating the same one.
 
-Review sets also offer a worksheet view: all problems on one page, solved on paper, then answered in
+Checkpoints also offer a worksheet view: all problems on one page, solved on paper, then answered in
 any order, with a printable layout.
 
-## Progress and review
+## Progress
 
-- Store: IndexedDB through a small versioned schema (attempts log, skill states, item completion,
-  last position). JSON export and import in a settings panel. A schema version and migrations from the
-  first release.
-- Mastery per skill: new, practiced, proficient, mastered, from recent accuracy and streaks, with harder
-  problems unlocked as mastery grows.
-- Spaced review: FSRS (ts-fsrs) schedules each skill. Due skills appear in a review queue that draws
-  fresh problems for them.
-- Order is suggested, never enforced: prerequisites show as hints ("Functions is recommended first"),
-  nothing is locked.
+Progress describes where things stand. It never creates obligations: no reminders, no due dates.
+
+- Status per skill: `new`, `practiced`, `proficient`, `mastered`.
+  - Practice suggests a status from recent results (for example, "proficient" after several correct
+    answers in a row, including a harder one).
+  - The learner can set any status at any time, in either direction: mark a topic mastered upfront,
+    or move a skill back to practiced when it feels shaky. A manual choice wins over the suggestion and
+    shows as such ("set by you").
+  - Item and unit progress is derived from their skills, and units can be marked in bulk ("I already
+    know this unit").
+- Practice is always available on demand. Problems get harder as the status of the skill rises, and a
+  "mixed practice" button draws problems from any skills chosen on the spot (a unit, a course, or
+  everything not yet mastered).
+- Store: IndexedDB through a small versioned schema (attempt log, skill statuses, item completion, last
+  position), behind a `ProgressStore` interface so a server can replace it later. JSON export and
+  import in a settings panel, with the date of the last export shown there.
+- Order is suggested, never enforced: prerequisites show as hints ("Functions is recommended first").
 
 ## Interface changes
 
 - Sidebar: area switcher at the top, then a collapsible tree of courses, units and items, with a small
   progress indicator per unit and an icon per item kind.
-- Home becomes a dashboard: continue where you left off, reviews due today, progress per course. The
-  hero stays, smaller.
+- Home becomes a dashboard: continue where you left off, progress per course, quick access to mixed
+  practice. The hero stays, smaller.
 - Course page: units in order with progress, plus a prerequisite map (drawn with the diagram kit).
-- Unit page: its items in order, the skills it covers, and the review set.
+- Unit page: its items in order, the skills it covers with their statuses (editable), and the
+  checkpoint.
 - Lesson and practice reuse the same shell: stage in the middle, explanation pane on the right, dock at
   the bottom.
 
@@ -200,22 +218,22 @@ Status: `todo`, `doing`, `done`.
 
 ### 2B. Practice
 
-| Task                                                                        | Status |
-| --------------------------------------------------------------------------- | ------ |
-| Spike: MathLive and Compute Engine bundle size, theming, equivalence checks | todo   |
-| `MathInput` molecule and answer checker library with tests                  | todo   |
-| Problem generator API, seeded random source, property tests                 | todo   |
-| Practice runner: card, hints, solutions, progress, fresh problems on errors | todo   |
-| Review sets with worksheet view and self-graded problems                    | todo   |
-| Skill mastery model                                                         | todo   |
+| Task                                                                         | Status |
+| ---------------------------------------------------------------------------- | ------ |
+| Spike: MathLive and Compute Engine bundle size, theming, equivalence checks  | todo   |
+| `MathInput` molecule and answer checker library with tests                   | todo   |
+| Problem generator API, seeded random source, property tests                  | todo   |
+| Practice runner: card, hints, solutions, progress, fresh problems on errors  | todo   |
+| Checkpoints with worksheet view and self-graded problems                     | todo   |
+| Skill statuses: suggested from results, manually settable in both directions | todo   |
 
-### 2C. Dashboard and review
+### 2C. Dashboard
 
-| Task                                                    | Status |
-| ------------------------------------------------------- | ------ |
-| Home dashboard (continue, due reviews, course progress) | todo   |
-| FSRS scheduling and review queue                        | todo   |
-| Course prerequisite map                                 | todo   |
+| Task                                                       | Status |
+| ---------------------------------------------------------- | ------ |
+| Home dashboard (continue, course progress, mixed practice) | todo   |
+| Mixed practice across chosen skills                        | todo   |
+| Course prerequisite map                                    | todo   |
 
 ### 2D. Pilot content
 
@@ -224,7 +242,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Task                                                                                                                      | Status |
 | ------------------------------------------------------------------------------------------------------------------------- | ------ |
 | Pre-calculus / Functions: explore items (function as a mapping, domain and range, composition, inverses, transformations) | todo   |
-| Pre-calculus / Functions: lesson, practice sets, unit review                                                              | todo   |
+| Pre-calculus / Functions: lesson, practice sets, checkpoint                                                               | todo   |
 | Data Engineering / Relational model and SQL joins (first interleaved unit)                                                | todo   |
 | Pre-calculus / Algebra essentials                                                                                         | todo   |
 
@@ -237,5 +255,5 @@ After the pilot: continue unit by unit, updating this tracker and `docs/ROADMAP.
 - **Bundle size.** MathLive and Compute Engine are large; they load only on practice pages.
 - **Content volume.** Each unit is several items. Templates and the generator API keep the cost per
   item low; the tracker keeps the order clear across sessions.
-- **Progress loss.** Browser storage can be cleared; export and import is the backup, and the home page
-  reminds when the last export is old.
+- **Progress loss.** Browser storage can be cleared; export and import is the backup.
+- **Scope creep.** Practice features stay minimal until the pilot unit shows what is missing.

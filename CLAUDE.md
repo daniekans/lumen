@@ -2,7 +2,11 @@
 
 Interactive math, AI and computing visualizations. React 19, Vite, TypeScript (strict), pnpm.
 Read `docs/ARCHITECTURE.md` before structural changes, `docs/ROADMAP.md` for current status and
-`docs/LEARNING_PLATFORM.md` for the current phase plan and its task tracker.
+`docs/LEARNING_PLATFORM.md` for the current phase plan and its task tracker. `docs/PRODUCT_VISION.md`
+lists seams to preserve (progress behind `ProgressStore`, pure `src/lib`, content as data).
+
+Learning features are on demand: no spaced repetition, schedules, due queues or streaks. Every
+progress status must be settable by the learner in both directions.
 
 Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `ci:`, `chore:`, `test:`).
 
