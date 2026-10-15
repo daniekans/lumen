@@ -7,7 +7,11 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { defineConfig } from 'vite'
 
+// GitHub Pages serves the site from /lumen/. Locally it is served from the root.
+const base = process.env.LUMEN_BASE ?? '/'
+
 export default defineConfig({
+  base,
   plugins: [
     {
       enforce: 'pre',

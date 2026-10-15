@@ -4,14 +4,17 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { VizPage } from './pages/VizPage'
 import { Root } from './Root'
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Root />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: ':section/:slug', element: <VizPage /> },
-      { path: '*', element: <NotFoundPage /> },
-    ],
-  },
-])
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Root />,
+      children: [
+        { index: true, element: <HomePage /> },
+        { path: ':section/:slug', element: <VizPage /> },
+        { path: '*', element: <NotFoundPage /> },
+      ],
+    },
+  ],
+  { basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/' },
+)
