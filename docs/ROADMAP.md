@@ -15,17 +15,23 @@ units, lessons, practice with checked answers, and progress. Plan and task track
 Data Engineering and Architecture units are interleaved with the math track instead of coming last;
 the schedule is in the Curriculum section of the learning platform plan.
 
-## Visualizations
+## Content
 
-| Section         | Visualization                  | Status | Notes                                                        |
-| --------------- | ------------------------------ | ------ | ------------------------------------------------------------ |
-| Calculus        | The derivative as a limit      | review |                                                              |
-| Calculus        | Riemann sums                   | review | Empty space below the x-axis at some sizes                   |
-| Linear Algebra  | Matrices as transformations    | review | `MatrixView` could move to `ui` if reused                    |
-| Complex Numbers | Complex multiplication         | review |                                                              |
-| Neural Networks | The forward pass               | review |                                                              |
-| Neural Networks | Backpropagation                | review |                                                              |
-| AI Engineering  | Retrieval-augmented generation | review | Vector store view opens in a larger sheet with hover details |
+Items in the content tree, by path under `src/content`. The full curriculum plan is in
+[LEARNING_PLATFORM.md](LEARNING_PLATFORM.md).
+
+| Path                                                                     | Kind    | Status | Notes                                      |
+| ------------------------------------------------------------------------ | ------- | ------ | ------------------------------------------ |
+| mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson  | done   | Two checks (concept, computed value)       |
+| mathematics/calculus-1/integrals/riemann-sums                            | explore | done   | Empty space below the x-axis at some sizes |
+| mathematics/linear-algebra/linear-transformations/matrix-transformations | explore | done   | `MatrixView` could move to `ui` if reused  |
+| mathematics/complex-numbers/arithmetic/complex-multiplication            | explore | done   |                                            |
+| machine-learning/neural-networks/foundations/forward-pass                | explore | done   |                                            |
+| machine-learning/neural-networks/training/backpropagation                | explore | done   |                                            |
+| ai-engineering/retrieval/fundamentals/rag-pipeline                       | explore | done   | Vector store view opens in a larger sheet  |
+
+Planned units without content (all of pre-calculus, limits, applications of derivatives, relational
+model and joins) appear on their course pages as planned.
 
 ## Backlog
 

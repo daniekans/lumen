@@ -74,6 +74,9 @@
 }
 
 .sectionTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
   font-size: var(--text-lg);
   font-weight: 600;
@@ -84,12 +87,6 @@
   margin: 0;
   color: var(--fg-muted);
   font-size: var(--text-sm);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--space-4);
 }
 
 @media (max-width: 860px) {

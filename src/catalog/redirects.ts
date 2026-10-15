@@ -1,0 +1,15 @@
+/**
+ * Paths that moved, so links shared before a reorganization keep working. Keys and values are ids
+ * without a leading slash. Add an entry whenever an item, unit or course moves.
+ */
+export const redirects: Readonly<Record<string, string>> = {
+  'calculus/derivative-as-limit': 'mathematics/calculus-1/derivatives/derivative-as-limit',
+  'calculus/riemann-sums': 'mathematics/calculus-1/integrals/riemann-sums',
+  'linear-algebra/matrix-transformations':
+    'mathematics/linear-algebra/linear-transformations/matrix-transformations',
+  'complex-numbers/complex-multiplication':
+    'mathematics/complex-numbers/arithmetic/complex-multiplication',
+  'neural-networks/forward-pass': 'machine-learning/neural-networks/foundations/forward-pass',
+  'neural-networks/backpropagation': 'machine-learning/neural-networks/training/backpropagation',
+  'ai-engineering/rag-pipeline': 'ai-engineering/retrieval/fundamentals/rag-pipeline',
+}

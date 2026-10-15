@@ -30,7 +30,8 @@ Rules that keep these seams cheap:
 
 - `src/lib` stays pure (no React, no DOM, no storage).
 - Components read and write progress only through the store's hooks, never IndexedDB directly.
-- Content never imports app internals other than the viz kit, ui components and `src/lib`.
+- Content never imports app internals other than `catalog/types`, the viz kit, ui components and
+  `src/lib`.
 
 ## If it becomes a product
 

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { CommandPalette, Sidebar } from '../organisms'
+import { CommandPalette, SettingsDialog, Sidebar } from '../organisms'
 import { TooltipProvider } from '../atoms'
 import styles from './AppShell.module.css'
 
@@ -12,6 +12,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main className={styles.main}>{children}</main>
       </div>
       <CommandPalette />
+      <SettingsDialog />
     </TooltipProvider>
   )
 }

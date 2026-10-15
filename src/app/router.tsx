@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 import { HomePage } from './pages/HomePage'
-import { NotFoundPage } from './pages/NotFoundPage'
-import { VizPage } from './pages/VizPage'
+import { NodePage } from './pages/NodePage'
 import { Root } from './Root'
 
 export const router = createBrowserRouter(
@@ -11,8 +10,8 @@ export const router = createBrowserRouter(
       element: <Root />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: ':section/:slug', element: <VizPage /> },
-        { path: '*', element: <NotFoundPage /> },
+        // Any depth of the content tree, plus redirects for moved paths and the not-found page.
+        { path: '*', element: <NodePage /> },
       ],
     },
   ],

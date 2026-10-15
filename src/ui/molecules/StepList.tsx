@@ -1,57 +1,81 @@
 import clsx from 'clsx'
+import { Check } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import type { VizStep } from '@/content/types'
+import type { VizStep } from '@/catalog/types'
 import { ease, spring } from '@/styles/motion'
 import { RichText } from '../atoms'
+import { StepCheckView } from './StepCheckView'
 import styles from './StepList.module.css'
 
 interface StepListProps {
   steps: readonly VizStep[]
   active: number
   onSelect: (index: number) => void
+  /** Ids of steps whose check is already answered correctly. */
+  solved?: ReadonlySet<string>
+  onCheck?: (stepId: string, correct: boolean) => void
 }
 
-export function StepList({ steps, active, onSelect }: StepListProps) {
+export function StepList({ steps, active, onSelect, solved, onCheck }: StepListProps) {
   return (
     <ol className={styles.list}>
-      {steps.map((s, i) => (
-        <li key={s.id}>
-          <button
-            type="button"
-            className={clsx(styles.step, i === active && styles.active, i < active && styles.done)}
-            onClick={() => onSelect(i)}
-            aria-current={i === active ? 'step' : undefined}
+      {steps.map((s, i) => {
+        const isActive = i === active
+        const isSolved = solved?.has(s.id) ?? false
+        return (
+          <li
+            key={s.id}
+            className={clsx(styles.entry, isActive && styles.active, i < active && styles.done)}
           >
-            {i === active && (
+            {isActive && (
               <motion.span
                 layoutId="step-indicator"
                 className={styles.indicator}
                 transition={spring.snappy}
               />
             )}
-            <span className={styles.index}>{i + 1}</span>
-            <span className={styles.body}>
-              <span className={styles.title}>{s.title}</span>
-              <AnimatePresence initial={false}>
-                {i === active && (
-                  <motion.span
-                    className={styles.caption}
-                    style={{ display: 'block' }}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.32, ease: ease.out }}
-                  >
-                    <span className={styles.captionText}>
-                      <RichText>{s.caption}</RichText>
-                    </span>
-                  </motion.span>
+            <button
+              type="button"
+              className={styles.step}
+              onClick={() => onSelect(i)}
+              aria-current={isActive ? 'step' : undefined}
+            >
+              <span className={styles.index}>{i + 1}</span>
+              <span className={styles.title}>
+                {s.title}
+                {s.check && isSolved && (
+                  <Check size={12} className={styles.solved} aria-label="Answered" />
                 )}
-              </AnimatePresence>
-            </span>
-          </button>
-        </li>
-      ))}
+              </span>
+            </button>
+            <AnimatePresence initial={false}>
+              {isActive && (
+                <motion.div
+                  className={styles.caption}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.32, ease: ease.out }}
+                >
+                  <div className={styles.captionInner}>
+                    <p className={styles.captionText}>
+                      <RichText>{s.caption}</RichText>
+                    </p>
+                    {s.check && (
+                      <StepCheckView
+                        key={s.id}
+                        check={s.check}
+                        solved={isSolved}
+                        onAnswer={(correct) => onCheck?.(s.id, correct)}
+                      />
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </li>
+        )
+      })}
     </ol>
   )
 }

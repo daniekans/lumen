@@ -40,6 +40,7 @@
 
 .meta {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 
@@ -52,7 +53,7 @@
 }
 
 .summary {
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-3);
   color: var(--fg-muted);
   font-size: var(--text-md);
   line-height: 1.6;
@@ -92,4 +93,16 @@
 .loading {
   color: var(--fg-subtle);
   font-size: var(--text-sm);
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5) calc(-1 * var(--space-2));
+}
+
+.manual {
+  color: var(--fg-subtle);
+  font-size: var(--text-xs);
 }

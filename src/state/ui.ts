@@ -13,12 +13,17 @@ interface UiState {
   asideMode: AsideMode
   asideWidth: number
   paletteOpen: boolean
+  settingsOpen: boolean
+  /** Area shown in the sidebar tree. Follows navigation, and can be switched without navigating. */
+  sidebarArea: string
   toggleTheme: () => void
   toggleSidebar: () => void
   toggleAside: () => void
   toggleAsideMode: () => void
   setAsideWidth: (width: number) => void
   setPaletteOpen: (open: boolean) => void
+  setSettingsOpen: (open: boolean) => void
+  setSidebarArea: (id: string) => void
 }
 
 /** Storage that survives private windows and blocked site data by failing quietly. */
@@ -55,6 +60,8 @@ export const useUi = create<UiState>()(
       asideMode: 'docked',
       asideWidth: ASIDE_WIDTH.default,
       paletteOpen: false,
+      settingsOpen: false,
+      sidebarArea: 'mathematics',
       toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       toggleAside: () => set((s) => ({ asideOpen: !s.asideOpen })),
@@ -66,11 +73,14 @@ export const useUi = create<UiState>()(
       setAsideWidth: (w) =>
         set({ asideWidth: Math.round(Math.min(ASIDE_WIDTH.max, Math.max(ASIDE_WIDTH.min, w))) }),
       setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
+      setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
+      setSidebarArea: (sidebarArea) => set({ sidebarArea }),
     }),
     {
       name: 'lumen:ui',
       storage: safeStorage,
-      partialize: ({ theme, sidebarOpen, asideOpen, asideMode, asideWidth }) => ({
+      partialize: ({ theme, sidebarOpen, asideOpen, asideMode, asideWidth, sidebarArea }) => ({
+        sidebarArea,
         theme,
         sidebarOpen,
         asideOpen,

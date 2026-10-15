@@ -210,11 +210,11 @@ Status: `todo`, `doing`, `done`.
 
 | Task                                                            | Status |
 | --------------------------------------------------------------- | ------ |
-| Content tree (areas, courses, units, items), registry and types | todo   |
-| Move the seven visualizations, redirects from old URLs          | todo   |
-| Sidebar tree with area switcher; course and unit pages          | todo   |
-| Progress store (IndexedDB, schema version, export and import)   | todo   |
-| `lesson` item kind with checkpoint questions                    | todo   |
+| Content tree (areas, courses, units, items), registry and types | done   |
+| Move the seven visualizations, redirects from old URLs          | done   |
+| Sidebar tree with area switcher; course and unit pages          | done   |
+| Progress store (IndexedDB, schema version, export and import)   | done   |
+| `lesson` item kind with check questions on steps                | done   |
 
 ### 2B. Practice
 

@@ -1,0 +1,161 @@
+import type {
+  Area,
+  AreaMeta,
+  CatalogNode,
+  Course,
+  CourseMeta,
+  Item,
+  ItemMeta,
+  LazyComponent,
+  Loader,
+  Unit,
+  UnitMeta,
+} from './types'
+
+/** Raw module maps keyed by file path, as produced by import.meta.glob. */
+export interface CatalogSources {
+  areas: readonly AreaMeta[]
+  courses: Record<string, CourseMeta>
+  units: Record<string, UnitMeta>
+  items: Record<string, ItemMeta>
+  components: Record<string, Loader>
+  explanations: Record<string, Loader>
+  /** Wraps a loader into a renderable component (React.lazy in the app). */
+  lazy: (load: Loader) => LazyComponent
+  /** Include items marked as draft. */
+  includeDrafts: boolean
+  onProblem?: (message: string) => void
+}
+
+export interface Catalog {
+  areas: readonly Area[]
+  byId: ReadonlyMap<string, CatalogNode>
+  /** Every published item in reading order: areas, courses, units, then item order. */
+  items: readonly Item[]
+}
+
+const CONTENT_ROOT = /^.*?content\//
+
+/** `../content/a/b/c/meta.ts` -> { dir: 'a/b/c', file: 'meta.ts' } */
+const split = (path: string) => {
+  const rel = path.replace(CONTENT_ROOT, '')
+  const i = rel.lastIndexOf('/')
+  return { dir: rel.slice(0, i), file: rel.slice(i + 1) }
+}
+
+const byOrder = <T extends { order: number; title: string }>(a: T, b: T) =>
+  a.order - b.order || a.title.localeCompare(b.title)
+
+/**
+ * Assembles the content tree from globbed modules. Pure: no React and no globals, so it is unit
+ * tested directly. Broken entries (unknown parent, missing component) are reported and skipped.
+ */
+export const buildCatalog = (src: CatalogSources): Catalog => {
+  const problem = src.onProblem ?? (() => {})
+  const node = (id: string) => ({ id, slug: id.slice(id.lastIndexOf('/') + 1), path: `/${id}` })
+
+  const byDir = (m: Record<string, Loader>) =>
+    new Map(Object.entries(m).map(([p, load]) => [split(p).dir, load]))
+  const components = byDir(src.components)
+  const explanations = byDir(src.explanations)
+
+  const unitItems = new Map<string, Item[]>()
+  for (const [path, meta] of Object.entries(src.items)) {
+    const { dir } = split(path)
+    const parts = dir.split('/')
+    if (parts.length !== 4) {
+      problem(`Item ${dir} is not at area/course/unit/item depth`)
+      continue
+    }
+    if (meta.status === 'draft' && !src.includeDrafts) continue
+    const load = components.get(dir)
+    if (!load) {
+      problem(`Item ${dir} has no index.tsx`)
+      continue
+    }
+    const explanation = explanations.get(dir)
+    const [a, c, u] = parts
+    const unitId = `${a}/${c}/${u}`
+    const item: Item = {
+      ...meta,
+      ...node(dir),
+      type: 'item',
+      kind: meta.kind ?? 'explore',
+      areaId: a!,
+      courseId: `${a}/${c}`,
+      unitId,
+      skillKeys: (meta.skills ?? []).map((s) => `${unitId}#${s}`),
+      Component: src.lazy(load),
+      Explanation: explanation && src.lazy(explanation),
+      preload: load,
+    }
+    unitItems.set(unitId, [...(unitItems.get(unitId) ?? []), item])
+  }
+
+  const courseUnits = new Map<string, Unit[]>()
+  for (const [path, meta] of Object.entries(src.units)) {
+    const { dir } = split(path)
+    const parts = dir.split('/')
+    if (parts.length !== 3) {
+      problem(`Unit ${dir} is not at area/course/unit depth`)
+      continue
+    }
+    const items = (unitItems.get(dir) ?? []).sort(byOrder)
+    unitItems.delete(dir)
+    const skillIds = new Set((meta.skills ?? []).map((s) => s.id))
+    for (const it of items)
+      for (const s of it.skills ?? [])
+        if (!skillIds.has(s)) problem(`Item ${it.id} references unknown skill "${s}"`)
+    const unit: Unit = {
+      ...meta,
+      ...node(dir),
+      type: 'unit',
+      areaId: parts[0]!,
+      courseId: `${parts[0]}/${parts[1]}`,
+      skills: (meta.skills ?? []).map((s) => ({ ...s, key: `${dir}#${s.id}`, unitId: dir })),
+      items,
+    }
+    const courseId = unit.courseId
+    courseUnits.set(courseId, [...(courseUnits.get(courseId) ?? []), unit])
+  }
+  for (const orphan of unitItems.keys()) problem(`Items in ${orphan} have no unit.ts`)
+
+  const areaCourses = new Map<string, Course[]>()
+  for (const [path, meta] of Object.entries(src.courses)) {
+    const { dir } = split(path)
+    const parts = dir.split('/')
+    if (parts.length !== 2) {
+      problem(`Course ${dir} is not at area/course depth`)
+      continue
+    }
+    const units = (courseUnits.get(dir) ?? []).sort(byOrder)
+    courseUnits.delete(dir)
+    const course: Course = { ...meta, ...node(dir), type: 'course', areaId: parts[0]!, units }
+    areaCourses.set(course.areaId, [...(areaCourses.get(course.areaId) ?? []), course])
+  }
+  for (const orphan of courseUnits.keys()) problem(`Units in ${orphan} have no course.ts`)
+
+  const areas: Area[] = src.areas.map((meta) => {
+    const courses = (areaCourses.get(meta.id) ?? []).sort(byOrder)
+    areaCourses.delete(meta.id)
+    return { ...meta, ...node(meta.id), type: 'area', courses }
+  })
+  for (const orphan of areaCourses.keys()) problem(`Courses in ${orphan} belong to no area`)
+
+  const byId = new Map<string, CatalogNode>()
+  const items: Item[] = []
+  for (const area of areas) {
+    byId.set(area.id, area)
+    for (const course of area.courses) {
+      byId.set(course.id, course)
+      for (const unit of course.units) {
+        byId.set(unit.id, unit)
+        for (const item of unit.items) {
+          byId.set(item.id, item)
+          items.push(item)
+        }
+      }
+    }
+  }
+  return { areas, byId, items }
+}

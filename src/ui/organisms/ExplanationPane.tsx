@@ -1,13 +1,13 @@
 import { MDXProvider } from '@mdx-js/react'
 import clsx from 'clsx'
-import { ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Suspense, useState, type CSSProperties } from 'react'
-import { sections } from '@/content/sections'
-import type { VizEntry } from '@/content/types'
+import { ancestors, kindLabel, type Item } from '@/catalog'
+import { isItemComplete, useProgress } from '@/progress'
 import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
-import { Badge, IconButton, ResizeHandle } from '../atoms'
+import { Badge, Button, IconButton, ResizeHandle } from '../atoms'
 import { StepList } from '../molecules'
 import styles from './ExplanationPane.module.css'
 import { mdxComponents } from './mdxComponents'
@@ -15,7 +15,7 @@ import prose from './Prose.module.css'
 import surfaces from '@/styles/surfaces.module.css'
 
 interface ExplanationPaneProps {
-  entry: VizEntry
+  entry: Item
   stepIndex: number
   onStep: (index: number) => void
 }
@@ -29,8 +29,18 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
   const [resizing, setResizing] = useState(false)
   const floating = mode === 'floating'
   const steps = entry.steps ?? []
-  const section = sections.find((s) => s.id === entry.section)
+  const { unit } = ancestors(entry)
   const Explanation = entry.Explanation
+  const progress = useProgress((s) => s.data.items[entry.id])
+  const recordCheck = useProgress((s) => s.recordCheck)
+  const setManual = useProgress((s) => s.setItemManual)
+  const done = isItemComplete(entry, progress)
+  const solved = new Set(progress?.correctChecks)
+  const toggleDone = () => {
+    // Prefer clearing an override over stacking a second one that agrees with the derived state.
+    const derived = isItemComplete(entry, progress && { ...progress, manual: undefined })
+    setManual(entry.id, derived === !done ? undefined : done ? 'not-done' : 'done')
+  }
 
   return (
     <motion.aside
@@ -64,7 +74,8 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
       >
         <div className={styles.head}>
           <div className={styles.meta}>
-            {section && <Badge>{section.title}</Badge>}
+            {unit && <Badge>{unit.title}</Badge>}
+            <Badge>{kindLabel[entry.kind]}</Badge>
             <Badge>{entry.level}</Badge>
           </div>
           <IconButton
@@ -77,6 +88,17 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
         </div>
         <h1 className={styles.title}>{entry.title}</h1>
         <p className={styles.summary}>{entry.summary}</p>
+        <div className={styles.status}>
+          <Button
+            size="sm"
+            variant={done ? 'default' : 'ghost'}
+            icon={done ? <Check size={13} /> : undefined}
+            onClick={toggleDone}
+          >
+            {done ? 'Done' : 'Mark as done'}
+          </Button>
+          {progress?.manual && <span className={styles.manual}>set by you</span>}
+        </div>
 
         {steps.length > 0 && (
           <section>
@@ -104,7 +126,13 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
                 </IconButton>
               </span>
             </div>
-            <StepList steps={steps} active={stepIndex} onSelect={onStep} />
+            <StepList
+              steps={steps}
+              active={stepIndex}
+              onSelect={onStep}
+              solved={solved}
+              onCheck={(stepId, correct) => recordCheck(entry.id, stepId, correct)}
+            />
           </section>
         )}
 

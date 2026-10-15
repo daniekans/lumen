@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { VizStep } from '@/content/types'
+import type { VizStep } from '@/catalog/types'
 
 export interface VizRuntimeValue {
   steps: readonly VizStep[]

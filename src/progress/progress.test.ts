@@ -1,0 +1,105 @@
+import { describe, expect, it } from 'vitest'
+import type { Item, Unit } from '@/catalog/types'
+import { isItemComplete, unitSummary } from './derive'
+import { emptyProgress, migrate } from './schema'
+import type { ItemProgress } from './types'
+
+const steps = [
+  { id: 's1', title: '', caption: '' },
+  {
+    id: 's2',
+    title: '',
+    caption: '',
+    check: { kind: 'choice', prompt: '', options: ['a', 'b'], answer: 1 },
+  },
+] as const
+
+const makeItem = (kind: Item['kind']): Item =>
+  ({ id: 'u/i', kind, steps, skillKeys: [] }) as unknown as Item
+
+const progress = (p: Partial<ItemProgress>): ItemProgress => ({
+  visitedSteps: [],
+  correctChecks: [],
+  lastVisitedAt: '',
+  ...p,
+})
+
+describe('isItemComplete', () => {
+  it('explore items complete when every step was visited', () => {
+    const item = makeItem('explore')
+    expect(isItemComplete(item, undefined)).toBe(false)
+    expect(isItemComplete(item, progress({ visitedSteps: ['s1'] }))).toBe(false)
+    expect(isItemComplete(item, progress({ visitedSteps: ['s1', 's2'] }))).toBe(true)
+  })
+
+  it('lessons also need every check answered correctly', () => {
+    const item = makeItem('lesson')
+    expect(isItemComplete(item, progress({ visitedSteps: ['s1', 's2'] }))).toBe(false)
+    expect(
+      isItemComplete(item, progress({ visitedSteps: ['s1', 's2'], correctChecks: ['s2'] })),
+    ).toBe(true)
+  })
+
+  it('a manual override wins in both directions', () => {
+    const item = makeItem('explore')
+    expect(isItemComplete(item, progress({ manual: 'done' }))).toBe(true)
+    expect(isItemComplete(item, progress({ visitedSteps: ['s1', 's2'], manual: 'not-done' }))).toBe(
+      false,
+    )
+  })
+})
+
+describe('unitSummary', () => {
+  it('combines item completion and skill statuses', () => {
+    const unit = {
+      items: [makeItem('explore')],
+      skills: [
+        { key: 'u#a', id: 'a', title: '', unitId: 'u' },
+        { key: 'u#b', id: 'b', title: '', unitId: 'u' },
+      ],
+    } as unknown as Unit
+    const data = emptyProgress()
+    expect(unitSummary(unit, data).fraction).toBe(0)
+    data.items['u/i'] = progress({ manual: 'done' })
+    data.skills['u#a'] = { status: 'mastered', source: 'manual', updatedAt: '' }
+    const s = unitSummary(unit, data)
+    expect(s.itemsDone).toBe(1)
+    expect(s.skills).toEqual({ new: 1, practiced: 0, proficient: 0, mastered: 1 })
+    expect(s.fraction).toBeCloseTo(0.75)
+  })
+})
+
+describe('migrate', () => {
+  it('returns empty progress for nothing stored', () => {
+    expect(migrate(undefined)).toEqual(emptyProgress())
+  })
+
+  it('keeps valid entries and drops malformed ones', () => {
+    const data = migrate({
+      version: 1,
+      skills: {
+        ok: { status: 'proficient', source: 'manual', updatedAt: 'x' },
+        bad: { status: 'genius' },
+      },
+      items: {
+        i: { visitedSteps: ['s1', 3], correctChecks: [], lastVisitedAt: 'y', manual: 'done' },
+        j: 5,
+      },
+      lastItemId: 'i',
+    })
+    expect(Object.keys(data.skills)).toEqual(['ok'])
+    expect(data.items.i).toEqual({
+      visitedSteps: ['s1'],
+      correctChecks: [],
+      lastVisitedAt: 'y',
+      manual: 'done',
+    })
+    expect(data.items.j).toBeUndefined()
+    expect(data.lastItemId).toBe('i')
+  })
+
+  it('rejects files that are not progress data or come from a newer version', () => {
+    expect(() => migrate({ hello: 'world' })).toThrow(/does not contain/)
+    expect(() => migrate({ version: 99 })).toThrow(/newer version/)
+  })
+})

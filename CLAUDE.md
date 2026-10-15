@@ -17,10 +17,13 @@ Node lives in nvm inside WSL. Shells do not load it automatically, so prefix com
 
 ## Conventions
 
-- A visualization is a folder `src/visualizations/<section>/<slug>/` with `meta.ts`, `index.tsx` and
-  `explanation.mdx`. The registry discovers it; no central list to edit.
-- Visualizations import only from `@/viz-kit`, `@/ui/*`, `@/lib/*` and `@/styles/*`. Anything two
-  visualizations could share goes into the kit (generic) or `ui` (chrome), never copied.
+- Content lives in `src/content/<area>/<course>/<unit>/<item>/` (`meta.ts`, `index.tsx`,
+  `explanation.mdx`), with `course.ts` and `unit.ts` above it. The catalog discovers it; no central list
+  to edit. Scaffold with `pnpm new:item`. See `docs/ADDING_CONTENT.md`.
+- When content moves, add a redirect in `src/catalog/redirects.ts`; the site is public.
+- Content imports only from `@/catalog/types`, `@/viz-kit`, `@/ui/*`, `@/lib/*` and `@/styles/*`.
+  Anything two items could share goes into the kit (generic) or `ui` (chrome), never copied.
+- Progress is read and written only through `useProgress` from `@/progress`.
 - Pure math stays in `src/lib` with Vitest tests. Components never contain numeric algorithms.
 - Colors come from `vc` / `role` in `src/styles/viz-colors.ts`, never hex literals. At most three
   hues per visualization.
