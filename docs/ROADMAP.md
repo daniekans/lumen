@@ -7,8 +7,13 @@ awaiting feedback), `done`.
 
 ## Current phase
 
-**Phase 1: foundation and first batch.** The platform, design system, visualization kit and seven
-visualizations exist. Waiting for review of direction before scaling up.
+**Phase 2: learning platform.** Phase 1 (platform, design system, visualization kit, seven
+visualizations, deployment to GitHub Pages) is done and reviewed. Phase 2 adds areas, courses and
+units, lessons, practice with checked answers, and progress. Plan and task tracker:
+[LEARNING_PLATFORM.md](LEARNING_PLATFORM.md).
+
+Data Engineering and Architecture units are interleaved with the math track instead of coming last;
+the schedule is in the Curriculum section of the learning platform plan.
 
 ## Visualizations
 

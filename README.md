@@ -39,3 +39,6 @@ pnpm dev          # http://localhost:5173
 - [Design](docs/DESIGN.md): tokens, palette rules, motion rules.
 - [Writing](docs/WRITING.md): rules for all text in the project.
 - [Roadmap](docs/ROADMAP.md): status of every visualization and the backlog.
+- [Learning platform](docs/LEARNING_PLATFORM.md): plan and tracker for courses, practice and progress.
+
+Live site: https://daniekans.github.io/lumen/ (deployed by `.github/workflows/deploy.yml` on every push to `main`).

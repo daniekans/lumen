@@ -1,7 +1,10 @@
 # Lumen: notes for Claude
 
 Interactive math, AI and computing visualizations. React 19, Vite, TypeScript (strict), pnpm.
-Read `docs/ARCHITECTURE.md` before structural changes and `docs/ROADMAP.md` for current status.
+Read `docs/ARCHITECTURE.md` before structural changes, `docs/ROADMAP.md` for current status and
+`docs/LEARNING_PLATFORM.md` for the current phase plan and its task tracker.
+
+Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `ci:`, `chore:`, `test:`).
 
 ## Environment
 
