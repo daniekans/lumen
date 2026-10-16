@@ -60,9 +60,17 @@ One catch-all route renders any depth through `NodePage`. Paths that moved are l
 ## Progress
 
 `src/progress` keeps everything about the learner: visited steps, correct checks, manual
-done/not-done overrides, skill statuses and the last item opened. Completion is derived
-(`isItemComplete`) rather than stored, so changing an item's steps never leaves stale flags.
-Learners can set every status in either direction; nothing is scheduled or due.
+done/not-done overrides, skill statuses and the last item opened. Two ideas stay separate:
+
+- **Progress** is how much content is done. An item is done when every step is visited and every
+  check answered, or when the learner marks it. `itemProgress` gives not started, in progress (with
+  a detail such as "2 of 4 steps") or done. Unit and course rings count done items only.
+- **Skill status** (new, practiced, proficient, mastered) is the learner's own assessment, later also
+  suggested by practice. It never changes the rings.
+
+Completion is derived rather than stored, so changing an item's steps never leaves stale flags.
+"I already know this unit" sets manual done marks and mastered statuses, and undoing it removes them.
+Nothing is scheduled or due.
 
 The data is saved through the `ProgressStore` interface (IndexedDB locally, memory as a fallback).
 Components use the `useProgress` hook only. `migrate()` validates loaded and imported data and is the

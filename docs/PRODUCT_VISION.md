@@ -16,15 +16,15 @@ in the meantime.
 
 ## Seams to keep
 
-| Future need                                | Seam today                                                                                                             | What changes later                                                               |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Progress synced to a server                | All progress goes through a `ProgressStore` interface with async methods; the only implementation is local (IndexedDB) | Add an HTTP implementation and pick it when signed in                            |
-| Accounts                                   | Domain logic never reads a user identity; progress belongs to the local learner                                        | An auth provider supplies a learner id to the store                              |
-| Premium content                            | Content metadata is plain data, and access to an item is decided in one place                                          | Add an `access` field to metadata and check it in that one function              |
-| Content managed outside the code           | Content lives in `src/content` as typed data plus MDX, separate from the app and the kit                               | Content could move to its own package or a headless CMS without touching the app |
-| Server-side checking (exams, certificates) | Problem generators and answer checkers are pure TypeScript in `src/lib` with no DOM access                             | The same code runs in a server function                                          |
-| Other languages                            | UI copy is short and kept in components; long text lives in content files                                              | Extract UI strings and add translated content files                              |
-| Usage insight                              | None                                                                                                                   | Add privacy-friendly analytics only if the product exists                        |
+| Future need                                  | Seam today                                                                                                              | What changes later                                                                                                                          |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Progress synced to a server                  | All progress goes through a `ProgressStore` interface with async methods; the only implementation is local (IndexedDB)  | Add an HTTP implementation and pick it when signed in                                                                                       |
+| Accounts                                     | Domain logic never reads a user identity; progress belongs to the local learner                                         | An auth provider supplies a learner id to the store                                                                                         |
+| Premium content                              | Content metadata is plain data, and access to an item is decided in one place                                           | Add an `access` field to metadata and check it in that one function                                                                         |
+| Content managed outside the code             | Content lives in `src/content` as typed data plus MDX, separate from the app and the kit                                | Content could move to its own package or a headless CMS without touching the app                                                            |
+| Server-side checking (exams, certificates)   | Problem generators and answer checkers are pure TypeScript in `src/lib` with no DOM access                              | The same code runs in a server function                                                                                                     |
+| Other languages (Brazilian Portuguese first) | UI copy is short and lives in components; long text lives in content files; numbers are formatted in one helper (`fmt`) | Extract UI strings to message files, add `meta.pt-BR.ts` / `explanation.pt-BR.mdx` next to the English ones, locale-aware number formatting |
+| Usage insight                                | None                                                                                                                    | Add privacy-friendly analytics only if the product exists                                                                                   |
 
 Rules that keep these seams cheap:
 
@@ -32,6 +32,18 @@ Rules that keep these seams cheap:
 - Components read and write progress only through the store's hooks, never IndexedDB directly.
 - Content never imports app internals other than `catalog/types`, the viz kit, ui components and
   `src/lib`.
+
+## Planned features that shape today's code
+
+- **Presentation mode.** Video lessons will be recorded with the visualizations, possibly in Portuguese.
+  A presentation mode would show the stage alone (no chrome), with larger labels and controls driven
+  from the keyboard, and possibly a teleprompter view of the steps, a cursor highlight, scripted
+  playback of steps, and fixed aspect ratios for recording. Seam today: the stage is independent of
+  the panes, steps are data, and every visualization reacts to steps through `useStepEffect`.
+- **Internationalization.** Brazilian Portuguese first, both for lessons and for a possible product
+  audience. Seams today are listed in the table above. Rules: no English inside logic or data keys,
+  ids stay in English and never show in the UI, and user-facing text comes from content files or
+  component copy only.
 
 ## If it becomes a product
 

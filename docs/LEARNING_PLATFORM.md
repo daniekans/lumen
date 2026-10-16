@@ -130,14 +130,15 @@ any order, with a printable layout.
 
 Progress describes where things stand. It never creates obligations: no reminders, no due dates.
 
+- Progress (how much content is done) and skill status (how well you know something) are separate.
+  Progress rings show only content done; skill statuses never move them.
 - Status per skill: `new`, `practiced`, `proficient`, `mastered`.
   - Practice suggests a status from recent results (for example, "proficient" after several correct
     answers in a row, including a harder one).
   - The learner can set any status at any time, in either direction: mark a topic mastered upfront,
     or move a skill back to practiced when it feels shaky. A manual choice wins over the suggestion and
     shows as such ("set by you").
-  - Item and unit progress is derived from their skills, and units can be marked in bulk ("I already
-    know this unit").
+  - "I already know this unit" marks its content done and its skills mastered, and can be undone.
 - Practice is always available on demand. Problems get harder as the status of the skill rises, and a
   "mixed practice" button draws problems from any skills chosen on the spot (a unit, a course, or
   everything not yet mastered).

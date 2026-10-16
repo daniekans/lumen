@@ -106,6 +106,10 @@ model and joins) appear on their course pages as planned.
 
 ### Next
 
+- Presentation mode for recording video lessons (stage only, larger labels, keyboard-driven steps,
+  recording aspect ratios). Details in [PRODUCT_VISION.md](PRODUCT_VISION.md).
+- Internationalization, Brazilian Portuguese first. Details in [PRODUCT_VISION.md](PRODUCT_VISION.md).
+
 - Mobile layout: panes as bottom sheets, dock collapses into a drawer
 - Shareable state in the URL (current step, key parameters)
 - Section landing pages with ordered learning paths
