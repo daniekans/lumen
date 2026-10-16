@@ -1,3 +1,4 @@
+export * from './AxisInterval'
 export * from './Arc'
 export * from './Axes'
 export * from './FunctionPlot'

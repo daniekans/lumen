@@ -1,0 +1,51 @@
+Before using a function, you need to know which inputs it accepts and which outputs it can produce.
+These two sets are its domain and its range, and both can be read straight off the graph.
+
+## Domain
+
+The domain of $f$ is the set of inputs $x$ for which $f(x)$ is defined. When a formula is given
+without a stated domain, the domain is every real number for which the formula makes sense. The two
+usual restrictions are:
+
+$$
+\sqrt{u} \text{ needs } u \geq 0, \qquad \frac{1}{u} \text{ needs } u \neq 0.
+$$
+
+On the graph, the domain is the <C c="yellow">shadow on the $x$-axis</C>: the inputs where a
+vertical line meets the curve. For $f(x) = \sqrt{x + 2}$ the condition $x + 2 \geq 0$ gives
+$[-2, \infty)$.
+
+## Range
+
+The range is the set of outputs that actually occur:
+
+$$
+\text{range}(f) = \{ f(x) : x \text{ in the domain} \}.
+$$
+
+A value $c$ is in the range exactly when the equation $f(x) = c$ has a solution, which on the graph
+means a horizontal line at height $c$ meets the curve. The range is the <C c="teal">shadow on the
+$y$-axis</C>. Finding it usually takes an argument about the formula, such as $\sqrt{u} \geq 0$ or
+$x^2 \geq 0$.
+
+## Interval notation
+
+A square bracket includes the endpoint, a parenthesis excludes it, and $\infty$ always gets a
+parenthesis because it is not a number. A gap is written as a union:
+
+$$
+[-2, \infty), \qquad (1, 4], \qquad (-\infty, 1) \cup (1, \infty).
+$$
+
+On the graphs a filled dot marks an included endpoint and a hollow dot an excluded one.
+
+## Three examples
+
+- $f(x) = \frac{1}{x - 1} + 1$: $x = 1$ is excluded. The output $1$ would need $\frac{1}{x - 1} = 0$,
+  which has no solution, so the range is also $(-\infty, 1) \cup (1, \infty)$. The dashed lines are
+  the asymptotes $x = 1$ and $y = 1$, which the graph approaches but never meets.
+- $f(x) = x^2 - 3$: the domain is all real numbers, $(-\infty, \infty)$. Since $x^2 \geq 0$, every
+  output is at least $-3$, and each $c > -3$ is reached twice, at $x = \pm\sqrt{c + 3}$.
+- $f(x) = 3 - \frac{x}{2}$ for $-2 \leq x < 4$: the line falls from $f(-2) = 4$, included, toward
+  $f(4) = 1$, excluded. The range is $(1, 4]$. Try it in <StepLink step="restricted">the last
+  step</StepLink>.

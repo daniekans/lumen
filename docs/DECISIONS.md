@@ -55,6 +55,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Deployed to GitHub Pages from a public repository (free; Daniel accepted the visibility trade-off).
   The site lives at `/lumen/` so a future personal site can use the root `daniekans.github.io`.
 - Keep things simple and low maintenance. Only free services.
+- Content is built in batches of several items, with Daniel's feedback collected after a batch, not
+  after every item.
+- After a finished batch or a set of adjustments, commit, push and deploy without asking. Ask first
+  only when a choice is not straightforward and Daniel's judgment would matter.
 
 ## Future direction (record, do not build yet)
 

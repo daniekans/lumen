@@ -263,10 +263,10 @@ Skills (local ids in `unit.ts`): `definition` (what makes a relation a function)
 
 | #   | Item                         | Kind       | Skills                 | Content                                                                                                 | Status |
 | --- | ---------------------------- | ---------- | ---------------------- | ------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | function-as-mapping          | explore    | definition, evaluate   | Arrows from inputs to outputs, one output per input, the mapping folds into a graph, vertical line test | draft  |
-| 2   | domain-and-range             | explore    | domain-range           | A graph casts shadows on the axes: domain on $x$, range on $y$; roots, fractions, restricted pieces     | todo   |
-| 3   | reading-graphs               | lesson     | evaluate, domain-range | Read $f(a)$, solve $f(x) = c$, increasing and decreasing intervals, with checks                         | todo   |
-| 4   | practice-evaluate-and-domain | practice   | evaluate, domain-range | Evaluate formulas and piecewise rules, domain of roots and fractions                                    | todo   |
+| 1   | function-as-mapping          | explore    | definition, evaluate   | Arrows from inputs to outputs, one output per input, the mapping folds into a graph, vertical line test | done   |
+| 2   | domain-and-range             | explore    | domain-range           | A graph casts shadows on the axes: domain on $x$, range on $y$; roots, fractions, restricted pieces     | review |
+| 3   | reading-graphs               | lesson     | evaluate, domain-range | Read $f(a)$, solve $f(x) = c$, increasing and decreasing intervals, with checks                         | review |
+| 4   | practice-evaluate-and-domain | practice   | evaluate, domain-range | Evaluate formulas and piecewise rules, domain of roots and fractions                                    | review |
 | 5   | composition                  | explore    | compose                | Three number lines: $x \to g(x) \to f(g(x))$; order matters                                             | todo   |
 | 6   | inverses                     | explore    | inverse                | Reflection across $y = x$, horizontal line test, restricting the domain                                 | todo   |
 | 7   | transformations              | explore    | transform              | $a\,f(b(x - h)) + k$ with sliders: shifts, stretches, reflections                                       | todo   |

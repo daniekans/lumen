@@ -68,8 +68,8 @@
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
 
   --viz-fg: #ece9e1;
-  --viz-grid: rgba(255, 255, 255, 0.07);
-  --viz-grid-strong: rgba(255, 255, 255, 0.14);
+  --viz-grid: rgba(255, 255, 255, 0.09);
+  --viz-grid-strong: rgba(255, 255, 255, 0.17);
   --viz-axis: rgba(236, 233, 225, 0.55);
   --viz-blue: #58c4dd;
   --viz-yellow: #f4d35e;

@@ -16,7 +16,8 @@ src/
     templates/       AppShell, VizLayout, DocumentLayout
   viz-kit/         Building blocks for visualizations (public API in viz-kit/index.ts)
     stage/           Stage, coordinate system, Overlay, HtmlBox, VizSheet
-    math-plot/       Grid, Axes, FunctionPlot, Path, Segment, Vector, Point, Arc, MathLabel, TextLabel
+    math-plot/       Grid, Axes, FunctionPlot, Path, Segment, Vector, Point, Arc, MathLabel, TextLabel,
+                     AxisInterval (domains, ranges and solution sets on an axis)
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
     anim/            useSequence, useAnimatedValue, tween (requestAnimationFrame)

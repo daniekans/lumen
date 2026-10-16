@@ -9,7 +9,6 @@ export const meta = defineItem({
   level: 'intro',
   order: 1,
   skills: ['definition', 'evaluate'],
-  status: 'draft',
   steps: [
     {
       id: 'mapping',
