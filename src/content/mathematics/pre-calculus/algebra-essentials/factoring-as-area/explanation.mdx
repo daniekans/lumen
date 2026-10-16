@@ -1,0 +1,55 @@
+Factoring writes a sum as a product. Multiplying out $(x + 2)(x + 3)$ is routine; going back from
+$x^2 + 5x + 6$ to the two factors takes a search. Area turns that search into a puzzle: the factors
+are the sides of a rectangle made from the polynomial's tiles.
+
+## Products as rectangles
+
+The tiles are a <C c="blue">square of area $x^2$</C>, <C c="teal">strips of area $x$</C> (sides $x$
+and $1$) and <C c="yellow">unit squares</C>. A rectangle with sides $x + p$ and $x + q$ holds one of
+each kind of region:
+
+$$
+(x + p)(x + q) = x^2 + (p + q)x + pq.
+$$
+
+The middle coefficient is the number of strips, $p + q$; the constant is the block of units,
+$p \times q$. Change $p$ and $q$ in <StepLink step="product">the first step</StepLink> and count.
+
+## Factoring a trinomial
+
+To factor $x^2 + bx + c$, look for two numbers with
+
+$$
+p + q = b, \qquad pq = c.
+$$
+
+List the factor pairs of $c$ and check their sums. For $x^2 + 7x + 12$ the pairs are
+$1 \cdot 12$, $2 \cdot 6$ and $3 \cdot 4$, with sums $13$, $8$ and $7$, so
+$x^2 + 7x + 12 = (x + 3)(x + 4)$. With a negative $b$ and a positive $c$ both numbers are negative:
+$x^2 - 7x + 12 = (x - 3)(x - 4)$. With a negative $c$ the signs differ:
+$x^2 + x - 12 = (x + 4)(x - 3)$. Tiles cannot show negative lengths, but the rule $p + q = b$,
+$pq = c$ holds for any signs.
+
+When the leading coefficient is not $1$, the same idea applies with more cases:
+$2x^2 + 7x + 3 = (2x + 1)(x + 3)$. Multiply back to check.
+
+## Common factors first
+
+If every term shares a factor, take it out before anything else:
+
+$$
+3x^2 + 6x = 3x(x + 2), \qquad 2x^2 - 8 = 2(x^2 - 4) = 2(x + 2)(x - 2).
+$$
+
+$3(x^2 + 2x)$ is correct but not fully factored, because $x$ is still common to both terms.
+
+## Difference of squares
+
+$$
+a^2 - b^2 = (a + b)(a - b).
+$$
+
+In <StepLink step="difference">the last step</StepLink>, cutting $q^2$ from the corner leaves a
+piece of width $x - q$ and height $x$, plus a strip with sides $q$ and $x - q$. Turned and placed
+on top, the strip adds height $q$, so the rectangle has sides $x - q$ and $x + q$. A sum of squares, $x^2 + q^2$, has no such
+factorization with real numbers.

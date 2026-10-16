@@ -328,15 +328,15 @@ equal but unsimplified forms, or as a `number` (an exponent, a coefficient).
 | 1   | exponent-laws                       | explore    | exponents                               | Factors as tiles: products join rows, quotients cancel pairs across a bar, zero and negative exponents, $(a^m)^n$ as a grid   | review |
 | 2   | radicals                            | explore    | radicals                                | $\sqrt{A}$ as the side of a square, $\sqrt{k^2 r} = k\sqrt{r}$ as a grid, $\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}$, cube roots | review |
 | 3   | practice-exponents-and-radicals     | practice   | exponents, radicals                     | Exponent laws, negative and rational exponents, simplest radical form, rationalizing, adding radicals                         | review |
-| 4   | factoring-as-area                   | explore    | factor                                  | Algebra tiles: $x^2 + bx + c$ arranged into $(x + p)(x + q)$, common factors, difference of squares                           | todo   |
-| 5   | rational-expressions                | lesson     | rational-expressions, factor            | Cancel common factors (and keep the excluded values: the graph has a hole), multiply, add over a common denominator           | todo   |
-| 6   | practice-factoring-and-fractions    | practice   | factor, rational-expressions            | Common factors, trinomials, difference of squares, simplify, multiply and add rational expressions                            | todo   |
+| 4   | factoring-as-area                   | explore    | factor                                  | Algebra tiles: $x^2 + bx + c$ arranged into $(x + p)(x + q)$, common factors, difference of squares                           | review |
+| 5   | rational-expressions                | lesson     | rational-expressions, factor            | Cancel common factors (and keep the excluded values: the graph has a hole), multiply, add over a common denominator           | review |
+| 6   | practice-factoring-and-fractions    | practice   | factor, rational-expressions            | Common factors, trinomials, difference of squares, simplify, multiply and add rational expressions                            | review |
 | 7   | solving-equations-and-inequalities  | explore    | equations, inequalities                 | Solutions as intersections, inequalities as where one graph is above, flipping on negative factors, sign charts               | todo   |
 | 8   | absolute-value                      | explore    | absolute-value                          | $\lvert x - a \rvert$ as distance on a number line, $\lvert x - a \rvert < r$ as an interval around $a$, the V graph          | todo   |
 | 9   | practice-equations-and-inequalities | practice   | equations, inequalities, absolute-value | Linear, quadratic and rational equations (extraneous roots), linear and quadratic inequalities, absolute value                | todo   |
 | 10  | checkpoint                          | checkpoint | all                                     | Mix of the practice generators plus a self-graded proof ($\sqrt{2}$ is irrational)                                            | todo   |
 
-Batches: items 1 to 3 (published, awaiting review), then 4 to 6, then 7 to 10. Number answers that
+Batches: items 1 to 3 and 4 to 6 (published, awaiting review), then 7 to 10. Number answers that
 are repeating decimals show as fractions (`answerTex`), so generators can return any rational.
 
 ## Risks

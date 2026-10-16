@@ -1,0 +1,50 @@
+A rational expression is a fraction whose numerator and denominator are polynomials, such as
+$\frac{x + 2}{x^2 + x - 2}$. It follows the rules of numeric fractions, with one addition: it is
+undefined wherever the denominator is zero, and simplifying must not lose track of those values.
+
+## Simplifying
+
+Factor both parts and cancel common factors:
+
+$$
+\frac{x^2 - x - 6}{x - 3} = \frac{(x - 3)(x + 2)}{x - 3} = x + 2, \qquad x \neq 3.
+$$
+
+Only factors cancel, never terms: in $\frac{x + 2}{x}$ the $x$ is part of a sum, and
+$\frac{x + 2}{x} \neq 2$.
+
+## Excluded values
+
+The excluded values come from the original denominator, before cancelling. On the graph:
+
+- a factor that cancels leaves a <C c="blue">hole</C>: the curve continues on both sides, with one
+  point missing;
+- a factor that stays in the denominator gives a vertical asymptote, where the values grow without
+  bound.
+
+In <StepLink step="excluded">the second step</StepLink>, $\frac{x + 2}{(x + 2)(x - 1)}$ has a hole at
+$x = -2$ and an asymptote at $x = 1$.
+
+## Multiplying and dividing
+
+$$
+\frac{a}{b} \cdot \frac{c}{d} = \frac{ac}{bd}, \qquad \frac{a}{b} \div \frac{c}{d} =
+\frac{a}{b} \cdot \frac{d}{c}.
+$$
+
+Factor everything first, then cancel across the product. Every denominator of the original
+expression contributes excluded values, and so does the numerator of a divisor $\frac{c}{d}$,
+because dividing by zero is not allowed.
+
+## Adding and subtracting
+
+Rewrite both fractions over a common denominator, the product of the distinct factors:
+
+$$
+\frac{1}{x - 1} + \frac{1}{x + 1} = \frac{x + 1}{(x - 1)(x + 1)} + \frac{x - 1}{(x - 1)(x + 1)}
+= \frac{2x}{x^2 - 1}.
+$$
+
+The graph in <StepLink step="add">the last step</StepLink> shows why there is no shortcut: at every
+$x$ the <C c="blue">sum</C> is the <C c="teal">first height</C> plus
+the <C c="yellow">second height</C>, and only the common-denominator form has those values.
