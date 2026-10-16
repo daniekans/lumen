@@ -20,15 +20,17 @@ the schedule is in the Curriculum section of the learning platform plan.
 Items in the content tree, by path under `src/content`. The full curriculum plan is in
 [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md).
 
-| Path                                                                     | Kind    | Status | Notes                                      |
-| ------------------------------------------------------------------------ | ------- | ------ | ------------------------------------------ |
-| mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson  | done   | Two checks (concept, computed value)       |
-| mathematics/calculus-1/integrals/riemann-sums                            | explore | done   | Empty space below the x-axis at some sizes |
-| mathematics/linear-algebra/linear-transformations/matrix-transformations | explore | done   | `MatrixView` could move to `ui` if reused  |
-| mathematics/complex-numbers/arithmetic/complex-multiplication            | explore | done   |                                            |
-| machine-learning/neural-networks/foundations/forward-pass                | explore | done   |                                            |
-| machine-learning/neural-networks/training/backpropagation                | explore | done   |                                            |
-| ai-engineering/retrieval/fundamentals/rag-pipeline                       | explore | done   | Vector store view opens in a larger sheet  |
+| Path                                                                     | Kind       | Status | Notes                                      |
+| ------------------------------------------------------------------------ | ---------- | ------ | ------------------------------------------ |
+| mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson     | done   | Two checks (concept, computed value)       |
+| mathematics/calculus-1/derivatives/difference-quotients                  | practice   | done   | Six generators, verified by property tests |
+| mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems including a self-graded proof |
+| mathematics/calculus-1/integrals/riemann-sums                            | explore    | done   | Empty space below the x-axis at some sizes |
+| mathematics/linear-algebra/linear-transformations/matrix-transformations | explore    | done   | `MatrixView` could move to `ui` if reused  |
+| mathematics/complex-numbers/arithmetic/complex-multiplication            | explore    | done   |                                            |
+| machine-learning/neural-networks/foundations/forward-pass                | explore    | done   |                                            |
+| machine-learning/neural-networks/training/backpropagation                | explore    | done   |                                            |
+| ai-engineering/retrieval/fundamentals/rag-pipeline                       | explore    | done   | Vector store view opens in a larger sheet  |
 
 Planned units without content (all of pre-calculus, limits, applications of derivatives, relational
 model and joins) appear on their course pages as planned.

@@ -107,11 +107,12 @@ accepted), `choice` (one or several), `interval`, `point`, `list` (unordered or 
 
 - Input: a `MathInput` molecule wrapping MathLive's `<math-field>`, styled with the design tokens, with
   its virtual keyboard on demand. Lazy loaded so explore pages do not pay for it.
-- Equivalence: Cortex Compute Engine (same author as MathLive) parses the LaTeX. Two expressions match
-  when they agree structurally after canonicalization, or numerically at a set of random sample points
-  inside the domain. Numbers compare exactly when rational and within a tolerance otherwise.
-- Feedback distinguishes "not equivalent" from "equivalent but not simplified" when a problem asks for
-  a simplified form, and from "could not read this".
+- Equivalence: a small TeX evaluator in `src/lib/practice/texEval.ts` reads what MathLive produces.
+  Two expressions match when they agree at random sample points inside the domain. Numbers compare
+  within a tight tolerance. (Compute Engine was tried first and dropped: about 1.1 MB gzipped for
+  features the checker did not need.)
+- Feedback distinguishes "not equivalent" from "could not read this" and from answers that use the
+  wrong variables. Requiring a simplified form is not supported yet.
 - Every generator has Vitest property tests over many seeds: the stored answer is checked against an
   independent computation (for example a numeric limit or derivative from `src/lib/math`), and the
   checker must accept the canonical answer and reject common wrong ones.
@@ -221,12 +222,12 @@ Status: `todo`, `doing`, `done`.
 
 | Task                                                                         | Status |
 | ---------------------------------------------------------------------------- | ------ |
-| Spike: MathLive and Compute Engine bundle size, theming, equivalence checks  | todo   |
-| `MathInput` molecule and answer checker library with tests                   | todo   |
-| Problem generator API, seeded random source, property tests                  | todo   |
-| Practice runner: card, hints, solutions, progress, fresh problems on errors  | todo   |
-| Checkpoints with worksheet view and self-graded problems                     | todo   |
-| Skill statuses: suggested from results, manually settable in both directions | todo   |
+| Spike: MathLive and Compute Engine bundle size, theming, equivalence checks  | done   |
+| `MathInput` molecule and answer checker library with tests                   | done   |
+| Problem generator API, seeded random source, property tests                  | done   |
+| Practice runner: card, hints, solutions, progress, fresh problems on errors  | done   |
+| Checkpoints with worksheet view and self-graded problems                     | done   |
+| Skill statuses: suggested from results, manually settable in both directions | done   |
 
 ### 2C. Dashboard
 

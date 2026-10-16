@@ -5,6 +5,8 @@
 ```sh
 pnpm new:item mathematics/pre-calculus/functions/function-as-mapping explore "A function as a mapping"
 pnpm new:item mathematics/pre-calculus/functions/reading-graphs lesson
+pnpm new:item mathematics/pre-calculus/functions/practice-domain practice
+pnpm new:item mathematics/pre-calculus/functions/checkpoint checkpoint
 ```
 
 This creates the item folder with `meta.ts`, `index.tsx` and `explanation.mdx`, marked
@@ -45,6 +47,22 @@ useStepEffect({
   `index.ts`) instead of keeping it local.
 - Scripted animation: `useSequence`. Smooth targets: `useAnimatedValue`.
 
+## 3b. Practice and checkpoints
+
+Practice and checkpoint items have a `problems.ts` instead of `index.tsx`. Each generator:
+
+- takes the seeded `rng` and returns `{ prompt, answer, hints, solution, data }`;
+- builds TeX with the helpers in `tex` (`poly`, `sum`, `frac`, `paren`) so signs and coefficients read
+  naturally for any random values;
+- stores its parameters in `data`, so `problems.test.ts` can verify the answer with an independent
+  computation (for example `derivative` from `src/lib/math`).
+
+A checkpoint usually imports the unit's practice generators and adds a few problems of its own,
+including `self` graded ones for proofs. Set `problemCount` in its meta.
+
+Write TeX-heavy files with an editor or the Write tool rather than shell heredocs: some tools rewrite
+`\\;` on the way in.
+
 ## 4. Write the explanation
 
 Follow `docs/WRITING.md`. Use `<C c="blue">` to match colors and `<StepLink step="id">` to link to steps.
@@ -54,6 +72,7 @@ Follow `docs/WRITING.md`. Use `<C c="blue">` to match colors and `<StepLink step
 - [ ] At most three hues, all from `vc`
 - [ ] Every step looks right in both themes (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`)
 - [ ] Check answers are correct (compute them, do not trust memory)
+- [ ] Practice and checkpoint items: `problems.test.ts` verifies every generator independently
 - [ ] No console errors
 - [ ] Dragging and controls cancel running sequences where they conflict
 - [ ] Works with `prefers-reduced-motion`

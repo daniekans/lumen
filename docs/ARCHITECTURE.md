@@ -25,6 +25,7 @@ src/
   catalog/         Content types, the tree builder, registry, queries and redirects
   content/         Content only: areas.ts and the area/course/unit/item folders
   progress/        Learner progress: schema, derivations, ProgressStore, the progress store hook
+  practice/        Practice and checkpoint runner (problem cards, sessions, worksheets)
   state/           UI preferences (theme, panes)
   app/             Router, pages, global hotkeys, theme sync
 ```
@@ -52,10 +53,30 @@ skipped. Courses and units without items appear on course pages as planned and a
 sidebar. `status: 'draft'` hides an item from production builds.
 
 Item kinds: `explore` (visual with steps), `lesson` (the same, plus `check` questions on steps),
-`practice` and `checkpoint` (phase 2B). Skills are declared per unit and referenced by items.
+`practice` and `checkpoint` (a `problems.ts` instead of `index.tsx`, rendered by `src/practice`).
+Skills are declared per unit and referenced by items and problems.
 
 One catch-all route renders any depth through `NodePage`. Paths that moved are listed in
 `src/catalog/redirects.ts`; add an entry whenever content moves, because the site is public.
+
+## Practice
+
+Pure logic lives in `src/lib/practice` so it could also run on a server:
+
+- `problems.ts`: a `ProblemGenerator` turns a seeded `Rng` into a `Problem` (prompt, answer, hints,
+  worked solution, and the generated parameters as `data` for tests).
+- `answers.ts` and `check.ts`: answer kinds (`number`, `expression`, `list`, `choice`, `self`) and the
+  checker. Expressions are equivalent when they agree at random sample points of their domain.
+- `texEval.ts`: a small parser and evaluator for the TeX that MathLive produces (fractions, roots,
+  powers, implicit multiplication, functions, absolute values). It replaced Compute Engine, which
+  added about 1.1 MB gzipped for features the checker did not use.
+- `session.ts`: picks the next generator (auto difficulty) and suggests skill statuses from a session.
+- `testing.ts`: `testProblemSet` checks every generator over many seeds (determinism, KaTeX parses,
+  the stored answer is accepted) plus an optional independent verification per generator.
+
+`src/practice` renders practice items as sessions of eight problems (first answers count, hints and
+solutions on demand, status suggestions the learner may apply) and checkpoints as printable
+worksheets checked all at once. The math field is `MathInput` (MathLive, loaded only on these pages).
 
 ## Progress
 

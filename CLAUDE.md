@@ -31,6 +31,11 @@ Node lives in nvm inside WSL. Shells do not load it automatically, so prefix com
   transitions on SVG style properties. Never `setInterval`.
 - Controls go through `<VizControls>` using ui atoms and molecules, so the dock stays consistent.
 
+- Practice problems are generators in `problems.ts` with a `problems.test.ts` that verifies answers
+  independently (`testProblemSet` in `src/lib/practice/testing.ts`).
+- Write TeX-heavy code with the Write/Edit tools, not shell heredocs: the shell tool has rewritten
+  `\\;` into `\;` before, which silently breaks TeX in strings.
+
 ## Writing
 
 Follow `docs/WRITING.md` for every string: captions, MDX, UI copy, docs and code comments. No em
