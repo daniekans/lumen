@@ -32,17 +32,43 @@ const parts = (item: Item, p: ItemProgress | undefined) => {
   }
 }
 
+/** Correct answers needed before a practice item counts as done. */
+export const PRACTICE_GOAL = 5
+/** Checkpoint score (0 to 1) needed to pass. */
+export const CHECKPOINT_PASS = 0.8
+
 /** Whether an item counts as done, from what the learner did or from their override. */
 export const isItemComplete = (item: Item, p: ItemProgress | undefined): boolean => {
   if (!p) return false
   if (p.manual) return p.manual === 'done'
-  if (item.kind === 'practice' || item.kind === 'checkpoint') return false // defined in phase 2B
+  if (item.kind === 'practice') return (p.practice?.correct ?? 0) >= PRACTICE_GOAL
+  if (item.kind === 'checkpoint') return (p.checkpoint?.best ?? 0) >= CHECKPOINT_PASS
   const c = parts(item, p)
   return c.stepsVisited === c.steps && c.checksCorrect === c.checks
 }
 
 export const itemProgress = (item: Item, p: ItemProgress | undefined): ItemProgressInfo => {
   if (isItemComplete(item, p)) return { state: 'done', fraction: 1, detail: 'Done' }
+  if (item.kind === 'practice') {
+    const correct = p?.practice?.correct ?? 0
+    return correct === 0
+      ? { state: 'not-started', fraction: 0, detail: 'Not started' }
+      : {
+          state: 'in-progress',
+          fraction: correct / PRACTICE_GOAL,
+          detail: `In progress: ${correct} of ${PRACTICE_GOAL} correct answers`,
+        }
+  }
+  if (item.kind === 'checkpoint') {
+    const best = p?.checkpoint?.best
+    return best === undefined
+      ? { state: 'not-started', fraction: 0, detail: 'Not started' }
+      : {
+          state: 'in-progress',
+          fraction: best / CHECKPOINT_PASS,
+          detail: `Best score ${Math.round(best * 100)}%, ${Math.round(CHECKPOINT_PASS * 100)}% passes`,
+        }
+  }
   const c = parts(item, p)
   const total = c.steps + c.checks
   const fraction = total ? (c.stepsVisited + c.checksCorrect) / total : 0

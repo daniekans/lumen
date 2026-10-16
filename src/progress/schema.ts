@@ -9,6 +9,8 @@ export const emptyProgress = (): ProgressData => ({
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v)
 
+const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
+
 const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : [])
 
 /**
@@ -43,6 +45,12 @@ export const migrate = (raw: unknown): ProgressData => {
         lastVisitedAt:
           typeof it.lastVisitedAt === 'string' ? it.lastVisitedAt : new Date(0).toISOString(),
         ...(it.manual === 'done' || it.manual === 'not-done' ? { manual: it.manual } : {}),
+        ...(isRecord(it.practice) && num(it.practice.attempts) && num(it.practice.correct)
+          ? { practice: { attempts: it.practice.attempts, correct: it.practice.correct } }
+          : {}),
+        ...(isRecord(it.checkpoint) && num(it.checkpoint.last) && num(it.checkpoint.best)
+          ? { checkpoint: { last: it.checkpoint.last, best: it.checkpoint.best } }
+          : {}),
       }
     }
   if (typeof raw.lastItemId === 'string') data.lastItemId = raw.lastItemId

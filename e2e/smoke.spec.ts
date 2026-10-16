@@ -41,7 +41,8 @@ test('every item renders and survives its steps', async ({ page }) => {
   expect(hrefs.length).toBeGreaterThanOrEqual(7)
   for (const href of hrefs) {
     await page.goto(href)
-    await expect(page.locator('main svg[role="img"]').first()).toBeVisible()
+    // Visual items draw a stage; practice and checkpoint items show problem cards.
+    await expect(page.locator('main svg[role="img"], main article').first()).toBeVisible()
     const steps = page.locator('aside ol > li > button')
     for (let i = 0; i < (await steps.count()); i++) {
       await steps.nth(i).click()
@@ -144,11 +145,43 @@ test('a chosen answer can be cleared', async ({ page }) => {
 
 test('"I already know this unit" marks content done and can be undone', async ({ page }) => {
   await page.goto('/mathematics/calculus-1/derivatives')
-  await expect(page.getByText('0 of 1 done')).toBeVisible()
+  await expect(page.getByText('0 of 3 done')).toBeVisible()
   await page.getByRole('button', { name: 'I already know this unit' }).click()
-  await expect(page.getByText('1 of 1 done')).toBeVisible()
+  await expect(page.getByText('3 of 3 done')).toBeVisible()
   await page.getByRole('button', { name: /Undo/ }).click()
-  await expect(page.getByText('0 of 1 done')).toBeVisible()
+  await expect(page.getByText('0 of 3 done')).toBeVisible()
+})
+
+test('a practice session runs to its summary', async ({ page }) => {
+  const errors = collectErrors(page)
+  await page.goto('/mathematics/calculus-1/derivatives/difference-quotients')
+  for (let i = 0; i < 8; i++) {
+    const field = page.locator('math-field')
+    if (i === 0 && (await field.count())) {
+      await field.click()
+      await page.keyboard.type('123457')
+      await page.getByRole('button', { name: 'Check', exact: true }).click()
+      await expect(page.getByRole('status')).toContainText('Not quite.')
+    }
+    await page.getByRole('button', { name: /^Show the (worked )?solution$/ }).click()
+    await expect(page.getByText('Solution', { exact: true })).toBeVisible()
+    await page.getByRole('button', { name: /Next problem/ }).click()
+  }
+  await expect(page.getByText(/of 8 correct/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Practice again' })).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('a checkpoint can be checked and scored', async ({ page }) => {
+  const errors = collectErrors(page)
+  await page.goto('/mathematics/calculus-1/derivatives/checkpoint')
+  await expect(page.getByRole('article', { name: 'Problem 1' })).toBeVisible()
+  await page.getByRole('button', { name: 'Check answers' }).click()
+  for (const no of await page.getByRole('button', { name: 'No', exact: true }).all())
+    await no.click()
+  await expect(page.getByText(/of 6 \(\d+%\)/)).toBeVisible()
+  await expect(page.getByText(/Not passed yet/)).toBeVisible()
+  expect(errors).toEqual([])
 })
 
 test('theme toggle switches tokens', async ({ page }) => {

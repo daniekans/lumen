@@ -8,6 +8,7 @@ import type {
   ItemMeta,
   LazyComponent,
   Loader,
+  ProblemsLoader,
   Unit,
   UnitMeta,
 } from './types'
@@ -20,8 +21,12 @@ export interface CatalogSources {
   items: Record<string, ItemMeta>
   components: Record<string, Loader>
   explanations: Record<string, Loader>
+  /** problems.ts modules of practice and checkpoint items. */
+  problems?: Record<string, ProblemsLoader>
   /** Wraps a loader into a renderable component (React.lazy in the app). */
   lazy: (load: Loader) => LazyComponent
+  /** The shared practice runner, which practice and checkpoint items render instead of index.tsx. */
+  practiceLoader?: Loader
   /** Include items marked as draft. */
   includeDrafts: boolean
   onProblem?: (message: string) => void
@@ -58,6 +63,9 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
     new Map(Object.entries(m).map(([p, load]) => [split(p).dir, load]))
   const components = byDir(src.components)
   const explanations = byDir(src.explanations)
+  const problemSets = new Map(
+    Object.entries(src.problems ?? {}).map(([p, load]) => [split(p).dir, load]),
+  )
 
   const unitItems = new Map<string, Item[]>()
   for (const [path, meta] of Object.entries(src.items)) {
@@ -68,9 +76,16 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       continue
     }
     if (meta.status === 'draft' && !src.includeDrafts) continue
-    const load = components.get(dir)
+    const kind = meta.kind ?? 'explore'
+    const practices = kind === 'practice' || kind === 'checkpoint'
+    const loadProblems = problemSets.get(dir)
+    if (practices && !loadProblems) {
+      problem(`${kind} item ${dir} has no problems.ts`)
+      continue
+    }
+    const load = practices ? src.practiceLoader : components.get(dir)
     if (!load) {
-      problem(`Item ${dir} has no index.tsx`)
+      problem(`Item ${dir} has no ${practices ? 'practice runner' : 'index.tsx'}`)
       continue
     }
     const explanation = explanations.get(dir)
@@ -80,7 +95,7 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       ...meta,
       ...node(dir),
       type: 'item',
-      kind: meta.kind ?? 'explore',
+      kind,
       areaId: a!,
       courseId: `${a}/${c}`,
       unitId,
@@ -88,6 +103,7 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       Component: src.lazy(load),
       Explanation: explanation && src.lazy(explanation),
       preload: load,
+      loadProblems,
     }
     unitItems.set(unitId, [...(unitItems.get(unitId) ?? []), item])
   }

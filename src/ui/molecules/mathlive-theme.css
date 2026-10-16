@@ -1,0 +1,32 @@
+/*
+ * MathLive's on-screen keyboard lives outside the React tree, so it is themed globally with the
+ * same tokens as the rest of the UI. Loaded together with MathInput.
+ */
+:root {
+  --keyboard-zindex: 70;
+  --keyboard-background: var(--glass);
+  --keyboard-border: var(--border);
+  --keyboard-toolbar-text: var(--fg-muted);
+  --keyboard-toolbar-text-active: var(--fg);
+  --keyboard-toolbar-background-hover: var(--surface-hover);
+  --keyboard-toolbar-background-selected: var(--surface-active);
+  --keyboard-accent-color: var(--viz-blue);
+  --keyboard-horizontal-rule: 1px solid var(--border);
+  --keycap-background: var(--surface-hover);
+  --keycap-background-hover: var(--surface-active);
+  --keycap-border: var(--border);
+  --keycap-border-bottom: var(--border-strong);
+  --keycap-text: var(--fg);
+  --keycap-secondary-background: var(--surface);
+  --keycap-secondary-background-hover: var(--surface-hover);
+  --keycap-secondary-text: var(--fg-muted);
+  --keycap-secondary-border: var(--border);
+  --keycap-secondary-border-bottom: var(--border-strong);
+  --keycap-primary-background: var(--fg);
+  --keycap-primary-text: var(--bg);
+  --keycap-primary-background-hover: var(--fg-muted);
+}
+
+.ML__keyboard .MLK__backdrop {
+  backdrop-filter: var(--glass-blur);
+}

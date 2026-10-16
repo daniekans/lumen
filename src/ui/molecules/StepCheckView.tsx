@@ -1,7 +1,7 @@
-import clsx from 'clsx'
 import { useState, type FormEvent } from 'react'
 import type { StepCheck } from '@/catalog/types'
 import { Button, RichText } from '../atoms'
+import { ChoiceOptions } from './ChoiceOptions'
 import styles from './StepCheckView.module.css'
 
 interface StepCheckViewProps {
@@ -42,35 +42,17 @@ export function StepCheckView({ check, solved, onAnswer, onClear }: StepCheckVie
         <RichText>{check.prompt}</RichText>
       </span>
       {check.kind === 'choice' ? (
-        <div
-          className={styles.options}
-          role="radiogroup"
-          aria-label={check.prompt.replace(/\$/g, '')}
-        >
-          {check.options.map((o, i) => {
-            const chosen = picked === i
-            return (
-              <button
-                key={i}
-                type="button"
-                role="radio"
-                aria-checked={chosen}
-                className={clsx(
-                  styles.option,
-                  result !== null && i === check.answer && (chosen || result) && styles.right,
-                  result === false && chosen && styles.wrong,
-                )}
-                onClick={() => {
-                  if (chosen) return clear()
-                  setPicked(i)
-                  submit(i === check.answer)
-                }}
-              >
-                <RichText>{o}</RichText>
-              </button>
-            )
-          })}
-        </div>
+        <ChoiceOptions
+          label={check.prompt.replace(/\$/g, '')}
+          options={check.options}
+          picked={picked}
+          reveal={result !== null ? { correct: check.answer } : undefined}
+          onPick={(i) => {
+            if (i === null) return clear()
+            setPicked(i)
+            submit(i === check.answer)
+          }}
+        />
       ) : (
         <form
           className={styles.row}

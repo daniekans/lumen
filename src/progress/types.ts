@@ -23,6 +23,10 @@ export interface ItemProgress {
   lastVisitedAt: string
   /** Learner override of the derived completion. */
   manual?: 'done' | 'not-done'
+  /** Practice items: answers given across all sessions. */
+  practice?: { attempts: number; correct: number }
+  /** Checkpoints: scores from 0 to 1. */
+  checkpoint?: { last: number; best: number }
 }
 
 /** Everything persisted about the learner. Bump `version` and add a migration when it changes. */

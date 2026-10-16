@@ -1,7 +1,7 @@
 import { lazy } from 'react'
 import { areas } from '@/content/areas'
 import { buildCatalog } from './build'
-import type { CourseMeta, ItemMeta, Loader, UnitMeta } from './types'
+import type { CourseMeta, ItemMeta, Loader, ProblemsModule, UnitMeta } from './types'
 
 /*
  * Content is discovered from the folder structure under src/content:
@@ -30,6 +30,8 @@ const explanations = import.meta.glob<{ default: never }>(
   '../content/*/*/*/*/explanation.mdx',
 ) as Record<string, Loader>
 
+const problems = import.meta.glob<ProblemsModule>('../content/*/*/*/*/problems.ts')
+
 export const catalog = buildCatalog({
   areas,
   courses,
@@ -37,6 +39,8 @@ export const catalog = buildCatalog({
   items,
   components,
   explanations,
+  problems,
+  practiceLoader: () => import('@/practice/PracticeItem'),
   lazy,
   includeDrafts: import.meta.env.DEV,
   onProblem: (message) => console.error(`[catalog] ${message}`),

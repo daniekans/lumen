@@ -7,7 +7,7 @@ export const meta = defineItem({
     'A secant line through two points of a curve turns into the tangent line as the points merge. Its slope becomes the derivative.',
   tags: ['derivative', 'limit', 'secant', 'tangent', 'slope', 'rate of change'],
   level: 'intro',
-  skills: ['definition'],
+  skills: ['secant-slope', 'definition'],
   order: 1,
   steps: [
     {

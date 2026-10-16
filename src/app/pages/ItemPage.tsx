@@ -2,7 +2,7 @@ import { PanelRightClose, PanelRightOpen } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router'
-import { neighbours, type Item } from '@/catalog'
+import { CurrentItemContext, neighbours, type Item } from '@/catalog'
 import { useProgress } from '@/progress'
 import { useUi } from '@/state/ui'
 import { ease } from '@/styles/motion'
@@ -56,57 +56,59 @@ export function ItemPage({ item }: { item: Item }) {
   )
 
   return (
-    <VizRuntimeContext.Provider value={runtime}>
-      <VizLayout
-        topBar={
-          <TopBar
-            actions={
-              <>
-                {next && (
-                  <Link
-                    to={next.path}
-                    className={styles.next}
-                    onPointerEnter={() => void next.preload()}
+    <CurrentItemContext.Provider value={item}>
+      <VizRuntimeContext.Provider value={runtime}>
+        <VizLayout
+          topBar={
+            <TopBar
+              actions={
+                <>
+                  {next && (
+                    <Link
+                      to={next.path}
+                      className={styles.next}
+                      onPointerEnter={() => void next.preload()}
+                    >
+                      Next: {next.title}
+                    </Link>
+                  )}
+                  <IconButton
+                    label={asideOpen ? 'Hide explanation' : 'Show explanation'}
+                    shortcut="]"
+                    onClick={toggleAside}
                   >
-                    Next: {next.title}
-                  </Link>
-                )}
-                <IconButton
-                  label={asideOpen ? 'Hide explanation' : 'Show explanation'}
-                  shortcut="]"
-                  onClick={toggleAside}
+                    {asideOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+                  </IconButton>
+                </>
+              }
+            >
+              <Breadcrumbs items={crumbsFor(item)} />
+            </TopBar>
+          }
+          stage={
+            <motion.div
+              className={styles.fill}
+              initial={{ opacity: 0, scale: 0.985 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: ease.out }}
+            >
+              <ErrorBoundary>
+                <Suspense
+                  fallback={
+                    <div className={styles.loading}>
+                      <LissajousMark size={40} />
+                    </div>
+                  }
                 >
-                  {asideOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-                </IconButton>
-              </>
-            }
-          >
-            <Breadcrumbs items={crumbsFor(item)} />
-          </TopBar>
-        }
-        stage={
-          <motion.div
-            className={styles.fill}
-            initial={{ opacity: 0, scale: 0.985 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: ease.out }}
-          >
-            <ErrorBoundary>
-              <Suspense
-                fallback={
-                  <div className={styles.loading}>
-                    <LissajousMark size={40} />
-                  </div>
-                }
-              >
-                <Viz />
-              </Suspense>
-            </ErrorBoundary>
-          </motion.div>
-        }
-        floating={<ControlDock ref={setDock} />}
-        aside={<ExplanationPane entry={item} stepIndex={stepIndex} onStep={goToStep} />}
-      />
-    </VizRuntimeContext.Provider>
+                  <Viz />
+                </Suspense>
+              </ErrorBoundary>
+            </motion.div>
+          }
+          floating={<ControlDock ref={setDock} />}
+          aside={<ExplanationPane entry={item} stepIndex={stepIndex} onStep={goToStep} />}
+        />
+      </VizRuntimeContext.Provider>
+    </CurrentItemContext.Provider>
   )
 }

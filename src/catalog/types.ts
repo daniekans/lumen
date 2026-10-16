@@ -1,4 +1,5 @@
 import type { ComponentType, LazyExoticComponent } from 'react'
+import type { ProblemGenerator } from '@/lib/practice/problems'
 
 /*
  * Content hierarchy: Area > Course > Unit > Item. Content files declare metadata with the
@@ -89,6 +90,8 @@ export interface ItemMeta {
   skills?: readonly string[]
   steps?: readonly VizStep[]
   status?: ItemStatus
+  /** Checkpoints: how many problems one attempt contains. Defaults to 8. */
+  problemCount?: number
 }
 
 interface NodeBase {
@@ -108,6 +111,8 @@ export interface Skill extends SkillMeta {
 
 export type LazyComponent = LazyExoticComponent<ComponentType>
 export type Loader = () => Promise<{ default: ComponentType }>
+export type ProblemsModule = { problems: readonly ProblemGenerator[] }
+export type ProblemsLoader = () => Promise<ProblemsModule>
 
 export interface Item extends Omit<ItemMeta, 'kind'>, NodeBase {
   type: 'item'
@@ -121,6 +126,8 @@ export interface Item extends Omit<ItemMeta, 'kind'>, NodeBase {
   Explanation?: LazyComponent
   /** Starts fetching the component chunk without rendering it. */
   preload: () => Promise<unknown>
+  /** Practice and checkpoint items: their problem generators. */
+  loadProblems?: ProblemsLoader
 }
 
 export interface Unit extends Omit<UnitMeta, 'skills'>, NodeBase {

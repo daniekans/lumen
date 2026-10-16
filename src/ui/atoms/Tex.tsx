@@ -14,15 +14,19 @@ export const Tex = memo(function Tex({ children, display = false, className }: T
 })
 
 /**
- * Renders plain text where segments wrapped in $...$ are TeX. The single wrapper keeps text and math
+ * Renders plain text where segments wrapped in $...$ (inline) or $$...$$ (display) are TeX. The single wrapper keeps text and math
  * flowing as one line of text, even inside flex containers.
  */
 export function RichText({ children }: { children: string }) {
-  const parts = children.split(/(\$[^$]+\$)/g)
+  const parts = children.split(/(\$\$[^$]+\$\$|\$[^$]+\$)/g)
   return (
     <span>
       {parts.map((p, i) =>
-        p.startsWith('$') && p.endsWith('$') && p.length > 1 ? (
+        p.startsWith('$$') && p.endsWith('$$') && p.length > 4 ? (
+          <Tex key={i} display>
+            {p.slice(2, -2)}
+          </Tex>
+        ) : p.startsWith('$') && p.endsWith('$') && p.length > 1 ? (
           <Tex key={i}>{p.slice(1, -1)}</Tex>
         ) : (
           <span key={i}>{p}</span>

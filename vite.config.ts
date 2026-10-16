@@ -23,6 +23,11 @@ export default defineConfig({
     },
     react({ include: /\.(jsx|tsx|mdx)$/ }),
   ],
+  optimizeDeps: {
+    // Libraries reached only through dynamic imports. Bundling them at startup avoids a dev-server
+    // re-optimization (and page reload) the first time a practice page opens.
+    include: ['mathlive'],
+  },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },

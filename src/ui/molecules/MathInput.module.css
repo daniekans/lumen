@@ -1,0 +1,65 @@
+.field {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.box {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.box:focus-within {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 22%, transparent);
+}
+
+.correct {
+  border-color: var(--viz-teal);
+}
+
+.incorrect {
+  border-color: var(--viz-red);
+}
+
+.box math-field {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: var(--radius-md);
+  outline: none;
+  background: transparent;
+  color: var(--fg);
+  font-size: 22px;
+  --caret-color: var(--focus);
+  --selection-background-color: color-mix(in srgb, var(--viz-blue) 30%, transparent);
+  --selection-color: var(--fg);
+  --contains-highlight-background-color: color-mix(in srgb, var(--fg) 6%, transparent);
+  --placeholder-color: var(--fg-subtle);
+  --smart-fence-color: var(--fg-subtle);
+}
+
+.box math-field::part(menu-toggle),
+.box math-field::part(virtual-keyboard-toggle) {
+  display: none;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 12px;
+  color: var(--fg-subtle);
+  font-size: var(--text-sm);
+}

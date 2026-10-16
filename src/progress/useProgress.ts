@@ -14,6 +14,11 @@ interface ProgressState {
   /** Forgets a check's answer, so the question can be answered fresh. */
   clearCheck: (itemId: string, stepId: string) => void
   setItemManual: (itemId: string, manual: ItemProgress['manual'] | undefined) => void
+  recordPractice: (itemId: string, correct: boolean) => void
+  /** Stores a finished checkpoint's score, from 0 to 1. */
+  recordCheckpoint: (itemId: string, score: number) => void
+  /** Applies a status that practice suggested and the learner accepted. */
+  applySuggestedStatus: (key: string, status: SkillStatus) => void
   setSkillStatus: (key: string, status: SkillStatus) => void
   /**
    * "I already know this unit": marks every item done and every skill mastered. With `known` false,
@@ -74,6 +79,37 @@ export const useProgress = create<ProgressState>()((set, get) => ({
   setItemManual: (itemId, manual) =>
     set(({ data }) => ({
       data: touchItem(data, itemId, ({ manual: _old, ...p }) => (manual ? { ...p, manual } : p)),
+    })),
+
+  recordPractice: (itemId, correct) =>
+    set(({ data }) => ({
+      data: {
+        ...touchItem(data, itemId, (p) => ({
+          ...p,
+          lastVisitedAt: now(),
+          practice: {
+            attempts: (p.practice?.attempts ?? 0) + 1,
+            correct: (p.practice?.correct ?? 0) + (correct ? 1 : 0),
+          },
+        })),
+        lastItemId: itemId,
+      },
+    })),
+
+  recordCheckpoint: (itemId, score) =>
+    set(({ data }) => ({
+      data: touchItem(data, itemId, (p) => ({
+        ...p,
+        checkpoint: { last: score, best: Math.max(score, p.checkpoint?.best ?? 0) },
+      })),
+    })),
+
+  applySuggestedStatus: (key, status) =>
+    set(({ data }) => ({
+      data: {
+        ...data,
+        skills: { ...data.skills, [key]: { status, source: 'suggested', updatedAt: now() } },
+      },
     })),
 
   setSkillStatus: (key, status) =>
