@@ -27,6 +27,42 @@ export interface ItemProgress {
   practice?: { attempts: number; correct: number }
   /** Checkpoints: scores from 0 to 1. */
   checkpoint?: { last: number; best: number }
+  /** The practice session in progress, kept across visits until finished or restarted. */
+  session?: PracticeSessionState
+  /** The checkpoint sheet in progress, kept across visits until a new set is drawn. */
+  sheet?: CheckpointSheetState
+}
+
+/** What the learner typed or chose. Plain JSON, so it can be stored and exported. */
+export type StoredResponse = { tex: string } | { choice: number } | { self: boolean }
+
+/** One problem of a practice session. The problem is regenerated from `generatorId` and `seed`. */
+export interface SessionEntry {
+  generatorId: string
+  seed: number
+  response?: StoredResponse
+  /** Whether the current response has been checked (shows its feedback). */
+  checked: boolean
+  /** Set once, from the first real answer or from giving up. */
+  outcome?: { correct: boolean; helped: boolean }
+  hints: number
+  solution: boolean
+}
+
+export interface PracticeSessionState {
+  entries: SessionEntry[]
+  difficulty: 'auto' | 1 | 2 | 3
+  finished: boolean
+}
+
+export interface CheckpointSheetState {
+  /** Seed the sheet's problems are generated from. */
+  seed: number
+  responses: Record<string, StoredResponse>
+  checked: boolean
+  selfGrades: Record<string, boolean>
+  /** The score was stored in `checkpoint`; prevents counting the same sheet twice. */
+  scored: boolean
 }
 
 /** Everything persisted about the learner. Bump `version` and add a migration when it changes. */

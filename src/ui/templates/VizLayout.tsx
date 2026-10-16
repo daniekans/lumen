@@ -11,10 +11,10 @@ interface VizLayoutProps {
 }
 
 export const VizLayout = ({ topBar, stage, floating, aside }: VizLayoutProps) => (
-  <div className={styles.layout}>
-    <div className={styles.column}>
+  <div className={styles.layout} data-print-flow>
+    <div className={styles.column} data-print-flow>
       {topBar}
-      <div className={styles.stage}>
+      <div className={styles.stage} data-print-flow>
         {stage}
         {floating}
       </div>

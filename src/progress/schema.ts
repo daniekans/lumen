@@ -1,4 +1,10 @@
-import { CURRENT_VERSION, SKILL_STATUSES, type ProgressData } from './types'
+import {
+  CURRENT_VERSION,
+  SKILL_STATUSES,
+  type CheckpointSheetState,
+  type PracticeSessionState,
+  type ProgressData,
+} from './types'
 
 export const emptyProgress = (): ProgressData => ({
   version: CURRENT_VERSION,
@@ -10,6 +16,35 @@ const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v)
 
 const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
+
+const validResponse = (v: unknown) =>
+  isRecord(v) && (typeof v.tex === 'string' || num(v.choice) || typeof v.self === 'boolean')
+
+/** Sessions and sheets are rebuilt from seeds; anything malformed is dropped, not repaired. */
+const validSession = (v: unknown): v is PracticeSessionState =>
+  isRecord(v) &&
+  Array.isArray(v.entries) &&
+  typeof v.finished === 'boolean' &&
+  (v.difficulty === 'auto' || [1, 2, 3].includes(v.difficulty as number)) &&
+  v.entries.every(
+    (e) =>
+      isRecord(e) &&
+      typeof e.generatorId === 'string' &&
+      num(e.seed) &&
+      typeof e.checked === 'boolean' &&
+      num(e.hints) &&
+      typeof e.solution === 'boolean' &&
+      (e.response === undefined || validResponse(e.response)),
+  )
+
+const validSheet = (v: unknown): v is CheckpointSheetState =>
+  isRecord(v) &&
+  num(v.seed) &&
+  typeof v.checked === 'boolean' &&
+  typeof v.scored === 'boolean' &&
+  isRecord(v.responses) &&
+  Object.values(v.responses).every(validResponse) &&
+  isRecord(v.selfGrades)
 
 const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : [])
 
@@ -51,6 +86,8 @@ export const migrate = (raw: unknown): ProgressData => {
         ...(isRecord(it.checkpoint) && num(it.checkpoint.last) && num(it.checkpoint.best)
           ? { checkpoint: { last: it.checkpoint.last, best: it.checkpoint.best } }
           : {}),
+        ...(validSession(it.session) ? { session: it.session } : {}),
+        ...(validSheet(it.sheet) ? { sheet: it.sheet } : {}),
       }
     }
   if (typeof raw.lastItemId === 'string') data.lastItemId = raw.lastItemId

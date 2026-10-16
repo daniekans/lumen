@@ -12,6 +12,7 @@ export const ControlDock = ({ ref }: { ref: Ref<HTMLDivElement> }) => (
     ref={ref}
     className={clsx(surfaces.glass, styles.dock)}
     role="toolbar"
+    data-print-hide
     aria-label="Visualization controls"
   />
 )

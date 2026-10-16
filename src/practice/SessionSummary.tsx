@@ -10,10 +10,12 @@ interface SessionSummaryProps {
   item: Item
   attempts: readonly Attempt[]
   onRestart: () => void
+  /** Opens the session's problems read-only, starting from the first. */
+  onReview: () => void
 }
 
 /** End of a session: the score, and status suggestions per skill that the learner may apply. */
-export function SessionSummary({ item, attempts, onRestart }: SessionSummaryProps) {
+export function SessionSummary({ item, attempts, onRestart, onReview }: SessionSummaryProps) {
   const data = useProgress((s) => s.data)
   const apply = useProgress((s) => s.applySuggestedStatus)
   const unit = getUnit(item.unitId)
@@ -58,9 +60,14 @@ export function SessionSummary({ item, attempts, onRestart }: SessionSummaryProp
         </div>
       ))}
       <div className={styles.actions}>
-        <Button variant="primary" icon={<RotateCcw size={14} />} onClick={onRestart}>
-          Practice again
-        </Button>
+        <span className={styles.actionGroup}>
+          <Button variant="primary" icon={<RotateCcw size={14} />} onClick={onRestart}>
+            Practice again
+          </Button>
+          <Button variant="ghost" onClick={onReview}>
+            Review answers
+          </Button>
+        </span>
         {next && (
           <Link to={next.path} className={styles.note}>
             Next: {next.title}

@@ -39,11 +39,32 @@
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
+  padding: 0;
   border: 1px solid var(--fg-subtle);
   border-radius: 50%;
-  transition: background-color var(--dur-base) var(--ease-out);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.dot:hover:not(:disabled) {
+  transform: scale(1.25);
+}
+
+.dot:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.reviewBadge {
+  padding: 1px 7px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  color: var(--fg-muted);
 }
 
 .dotRight {
@@ -58,6 +79,7 @@
 
 .dotCurrent {
   border-color: var(--fg);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--fg) 25%, transparent);
 }
 
 .prompt {
@@ -211,7 +233,21 @@
   vertical-align: middle;
 }
 
+.printSpace {
+  display: none;
+}
+
 @media print {
+  .printSpace {
+    display: block;
+    height: 4.5cm;
+    border-bottom: 1px dashed #999;
+  }
+
+  .column {
+    max-width: none;
+  }
+
   .scroll {
     position: static;
     overflow: visible;

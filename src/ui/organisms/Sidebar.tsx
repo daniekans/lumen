@@ -38,6 +38,7 @@ export function Sidebar() {
   return (
     <motion.aside
       className={styles.sidebar}
+      data-print-hide
       initial={false}
       animate={{ width: open ? 'var(--sidebar-width)' : 0, opacity: open ? 1 : 0 }}
       transition={spring.pane}

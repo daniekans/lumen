@@ -63,3 +63,13 @@
   color: var(--fg-subtle);
   font-size: var(--text-sm);
 }
+
+.placeholder {
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  color: var(--fg-subtle);
+  font-size: var(--text-sm);
+  pointer-events: none;
+  transform: translateY(-50%);
+}

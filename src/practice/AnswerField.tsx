@@ -15,11 +15,11 @@ interface AnswerFieldProps {
   readOnly?: boolean
 }
 
-/** MathLive placeholders are TeX, so words go inside \text{}. */
+/** Hints shown in the empty field. Plain text with optional $TeX$. */
 const placeholders: Partial<Record<Answer['kind'], string>> = {
-  number: '\\text{A number, e.g. }\\frac{3}{4}\\text{ or }\\sqrt{2}',
-  expression: '\\text{An expression}',
-  list: '\\text{Numbers separated by commas}',
+  number: 'A number, like $\\frac{3}{4}$ or $\\sqrt{2}$',
+  expression: 'An expression',
+  list: 'Numbers separated by commas',
 }
 
 /** The right input for an answer kind: math field, options, or a note for self-graded work. */

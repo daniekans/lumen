@@ -18,7 +18,7 @@ export function TopBar({ children, actions }: TopBarProps) {
   const toggleSidebar = useUi((s) => s.toggleSidebar)
   const openPalette = useUi((s) => s.setPaletteOpen)
   return (
-    <header className={styles.bar}>
+    <header className={styles.bar} data-print-hide>
       <div className={styles.left}>
         <AnimatePresence initial={false}>
           {!sidebarOpen && (

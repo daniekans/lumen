@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { Keyboard } from 'lucide-react'
 import type { MathfieldElement } from 'mathlive'
 import { useEffect, useRef, useState } from 'react'
-import { IconButton } from '../atoms'
+import { IconButton, RichText } from '../atoms'
 import styles from './MathInput.module.css'
 import './mathlive-theme.css'
 
@@ -22,6 +22,7 @@ interface MathInputProps {
   /** Called on Enter. */
   onSubmit?: () => void
   label: string
+  /** Shown dimmed while the field is empty. Plain text with optional $TeX$. */
   placeholder?: string
   status?: 'correct' | 'incorrect'
   autoFocus?: boolean
@@ -63,7 +64,6 @@ export function MathInput({
     mf.mathVirtualKeyboardPolicy = 'manual'
     mf.smartFence = true
     mf.menuItems = []
-    if (placeholder) mf.placeholder = placeholder
     const onInput = () => latest.current.onChange(mf.value)
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
@@ -78,7 +78,7 @@ export function MathInput({
       mf.removeEventListener('input', onInput)
       mf.removeEventListener('keydown', onKey)
     }
-  }, [ready, autoFocus, placeholder])
+  }, [ready, autoFocus])
 
   // Keep the field in sync when the value is changed from outside (e.g. cleared).
   useEffect(() => {
@@ -94,7 +94,15 @@ export function MathInput({
     <div className={styles.field}>
       <div className={clsx(styles.box, status && styles[status])}>
         {ready ? (
-          <math-field ref={field} aria-label={label} />
+          <>
+            <math-field ref={field} aria-label={label} />
+            {/* An overlay, not MathLive's placeholder, so it can never look like typed content. */}
+            {!value && placeholder && (
+              <span className={styles.placeholder} aria-hidden>
+                <RichText>{placeholder}</RichText>
+              </span>
+            )}
+          </>
         ) : (
           <div className={styles.loading}>Loading the math input…</div>
         )}

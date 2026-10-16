@@ -1,79 +1,62 @@
-import clsx from 'clsx'
 import { ArrowRight, Check, Lightbulb, X } from 'lucide-react'
-import { useState } from 'react'
-import {
-  answerTex,
-  checkAnswer,
-  type CheckResult,
-  type Problem,
-  type Response,
-} from '@/lib/practice'
-import type { Difficulty } from '@/lib/practice'
+import type { ReactNode } from 'react'
+import { answerTex, checkAnswer, type Difficulty, type Problem } from '@/lib/practice'
+import type { SessionEntry } from '@/progress'
 import { Button, RichText, Tex } from '@/ui/atoms'
 import { AnswerField } from './AnswerField'
 import styles from './Practice.module.css'
 
-export interface ProblemOutcome {
-  correct: boolean
-  /** Hints or the solution were used before the first answer. */
-  helped: boolean
-}
+const levels: Record<Difficulty, string> = { 1: 'Easy', 2: 'Medium', 3: 'Hard' }
 
 interface ProblemCardProps {
   problem: Problem
   title: string
   difficulty: Difficulty
-  /** Results so far in the session, for the progress dots. */
-  results: readonly boolean[]
-  total: number
-  /** Called once per problem, with the first real answer (or giving up). */
-  onOutcome: (outcome: ProblemOutcome) => void
-  onNext: () => void
+  /** Stored state of this problem: response, feedback, hints, solution and outcome. */
+  entry: SessionEntry
+  /** Applies a change to the entry. A patch with `outcome` records the first real answer. */
+  onUpdate: (patch: Partial<SessionEntry>) => void
+  /** Progress dots and counter, rendered in the header. */
+  progress: ReactNode
+  /** Reviewing an earlier problem: answers are shown but cannot change. */
+  review?: boolean
+  next: { label: string; onClick: () => void }
 }
 
-const levels: Record<Difficulty, string> = { 1: 'Easy', 2: 'Medium', 3: 'Hard' }
-
 /**
- * One practice problem. The first answer counts; afterwards the learner can keep trying, open
- * hints, or read the worked solution, then move on.
+ * One practice problem, fully controlled by its stored entry so it survives navigation. The first
+ * answer counts; afterwards the learner can keep trying, open hints or read the worked solution.
  */
 export function ProblemCard({
   problem,
   title,
   difficulty,
-  results,
-  total,
-  onOutcome,
-  onNext,
+  entry,
+  onUpdate,
+  progress,
+  review,
+  next,
 }: ProblemCardProps) {
-  const [response, setResponse] = useState<Response | null>(null)
-  const [result, setResult] = useState<CheckResult | null>(null)
-  const [recorded, setRecorded] = useState(false)
-  const [hints, setHints] = useState(0)
-  const [solution, setSolution] = useState(false)
   const { answer } = problem
+  const { response, outcome, hints, solution } = entry
+  const result =
+    entry.checked && response && answer.kind !== 'self' ? checkAnswer(answer, response) : null
   const solved = result?.verdict === 'correct'
-
-  const record = (correct: boolean, helped: boolean) => {
-    if (recorded) return
-    setRecorded(true)
-    onOutcome({ correct, helped })
-  }
+  const locked = review || solved
 
   const check = () => {
-    if (!response || answer.kind === 'self') return
+    if (!response || answer.kind === 'self' || review) return
     const r = checkAnswer(answer, response)
-    setResult(r)
-    if (r.verdict !== 'invalid') record(r.verdict === 'correct', hints > 0)
+    onUpdate({
+      checked: true,
+      ...(r.verdict !== 'invalid' && !outcome
+        ? { outcome: { correct: r.verdict === 'correct', helped: hints > 0 } }
+        : {}),
+    })
   }
 
-  const showSolution = () => {
-    setSolution(true)
-    if (answer.kind !== 'self') record(false, true)
-  }
-
-  const finished = solved || solution
-  const submit = () => (finished && recorded ? onNext() : check())
+  const finished = solved || solution || (answer.kind === 'self' && !!outcome)
+  const submit = () => (finished && outcome ? next.onClick() : check())
   const final = answerTex(answer)
 
   return (
@@ -83,23 +66,9 @@ export function ProblemCard({
           <span>{title}</span>
           <span>·</span>
           <span>{levels[difficulty]}</span>
+          {review && <span className={styles.reviewBadge}>Review</span>}
         </span>
-        <span className={styles.meta}>
-          <span className={styles.dots} aria-label={`Problem ${results.length + 1} of ${total}`}>
-            {Array.from({ length: total }, (_, i) => (
-              <span
-                key={i}
-                className={clsx(
-                  styles.dot,
-                  results[i] === true && styles.dotRight,
-                  results[i] === false && styles.dotWrong,
-                  i === results.length && styles.dotCurrent,
-                )}
-              />
-            ))}
-          </span>
-          {Math.min(results.length + 1, total)} / {total}
-        </span>
+        {progress}
       </div>
 
       <div className={styles.prompt}>
@@ -109,18 +78,22 @@ export function ProblemCard({
       <div className={styles.answerRow}>
         <AnswerField
           answer={answer}
-          response={response}
+          response={response ?? null}
           onChange={(r) => {
-            setResponse(r)
-            if (result && !solved) setResult(null)
+            if (locked) return
             if (answer.kind === 'choice' && r) {
               const c = checkAnswer(answer, r)
-              setResult(c)
-              record(c.verdict === 'correct', hints > 0)
-            }
+              onUpdate({
+                response: r,
+                checked: true,
+                ...(!outcome
+                  ? { outcome: { correct: c.verdict === 'correct', helped: hints > 0 } }
+                  : {}),
+              })
+            } else onUpdate({ response: r ?? undefined, checked: false })
           }}
           onSubmit={submit}
-          revealChoice={answer.kind === 'choice' && result !== null}
+          revealChoice={answer.kind === 'choice' && entry.checked}
           status={
             result?.verdict === 'correct'
               ? 'correct'
@@ -129,10 +102,10 @@ export function ProblemCard({
                 : undefined
           }
           label="Your answer"
-          autoFocus
-          readOnly={solved}
+          autoFocus={!review}
+          readOnly={locked}
         />
-        {answer.kind !== 'choice' && answer.kind !== 'self' && !solved && (
+        {answer.kind !== 'choice' && answer.kind !== 'self' && !locked && (
           <Button variant="primary" onClick={check} disabled={!response}>
             Check
           </Button>
@@ -155,48 +128,64 @@ export function ProblemCard({
                   : 'Could not check that.'}
             </strong>{' '}
             {result.message ??
-              (result.verdict === 'incorrect'
+              (result.verdict === 'incorrect' && !review
                 ? 'Try again, open a hint, or see the solution.'
                 : '')}
           </span>
         </p>
       )}
 
-      {answer.kind === 'self' && solution && !recorded && (
+      {answer.kind === 'self' && solution && !outcome && !review && (
         <div className={styles.actions}>
           <span className={styles.note}>How did it go?</span>
           <span className={styles.actionGroup}>
-            <Button onClick={() => record(true, hints > 0)}>I got it right</Button>
-            <Button variant="ghost" onClick={() => record(false, hints > 0)}>
+            <Button onClick={() => onUpdate({ outcome: { correct: true, helped: hints > 0 } })}>
+              I got it right
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => onUpdate({ outcome: { correct: false, helped: hints > 0 } })}
+            >
               I got it wrong
             </Button>
           </span>
         </div>
       )}
+      {answer.kind === 'self' && outcome && (
+        <p className={styles.feedback} role="status">
+          <strong>{outcome.correct ? 'Marked as right.' : 'Marked as wrong.'}</strong>
+        </p>
+      )}
 
       <div className={styles.actions}>
         <span className={styles.actionGroup}>
-          {problem.hints && hints < problem.hints.length && !finished && (
+          {problem.hints && hints < problem.hints.length && !finished && !review && (
             <Button
               variant="ghost"
               icon={<Lightbulb size={14} />}
-              onClick={() => setHints((h) => h + 1)}
+              onClick={() => onUpdate({ hints: hints + 1 })}
             >
               {hints === 0 ? 'Hint' : 'Another hint'}
             </Button>
           )}
           {!solution && (
-            <Button variant="ghost" onClick={showSolution}>
-              {answer.kind === 'self'
-                ? 'Show the solution'
-                : solved
-                  ? 'Show the worked solution'
-                  : 'Show the solution'}
+            <Button
+              variant="ghost"
+              onClick={() =>
+                onUpdate({
+                  solution: true,
+                  ...(answer.kind !== 'self' && !outcome && !review
+                    ? { outcome: { correct: false, helped: true } }
+                    : {}),
+                })
+              }
+            >
+              {solved || review ? 'Show the worked solution' : 'Show the solution'}
             </Button>
           )}
         </span>
-        <Button variant={recorded ? 'primary' : 'ghost'} onClick={onNext}>
-          {recorded ? 'Next problem' : 'Skip'}
+        <Button variant={outcome || review ? 'primary' : 'ghost'} onClick={next.onClick}>
+          {next.label}
           <ArrowRight size={14} />
         </Button>
       </div>

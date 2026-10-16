@@ -1,5 +1,5 @@
 import { Check, Printer, RotateCcw, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import type { Item } from '@/catalog'
 import {
   answerTex,
@@ -9,9 +9,8 @@ import {
   type CheckResult,
   type Problem,
   type ProblemGenerator,
-  type Response,
 } from '@/lib/practice'
-import { CHECKPOINT_PASS, useProgress } from '@/progress'
+import { CHECKPOINT_PASS, useProgress, type CheckpointSheetState } from '@/progress'
 import { Button, RichText, Tex } from '@/ui/atoms'
 import { AnswerField } from './AnswerField'
 import styles from './Practice.module.css'
@@ -22,13 +21,17 @@ interface Entry {
   problem: Problem
 }
 
-/** Picks `count` problems covering every generator at least once when possible, easiest first. */
-const buildSheet = (generators: readonly ProblemGenerator[], count: number): Entry[] => {
-  const seed = randomSeed()
-  const rng = createRng(seed)
-  const order = rng.shuffle(generators)
-  const picked = Array.from({ length: count }, (_, i) => order[i % order.length]!)
-  return picked
+/**
+ * The sheet's problems, generated from one seed: every generator appears at least once when
+ * possible, easiest first. The same seed always produces the same sheet.
+ */
+const buildSheet = (
+  generators: readonly ProblemGenerator[],
+  count: number,
+  seed: number,
+): Entry[] => {
+  const order = createRng(seed).shuffle(generators)
+  return Array.from({ length: count }, (_, i) => order[i % order.length]!)
     .sort((a, b) => a.difficulty - b.difficulty)
     .map((g, i) => ({
       id: `${g.id}-${i}`,
@@ -37,9 +40,17 @@ const buildSheet = (generators: readonly ProblemGenerator[], count: number): Ent
     }))
 }
 
+const freshSheet = (): CheckpointSheetState => ({
+  seed: randomSeed(),
+  responses: {},
+  checked: false,
+  selfGrades: {},
+  scored: false,
+})
+
 /**
  * A checkpoint as a worksheet: all problems on one page, solved on paper (or printed), answered in
- * any order and checked together. Self-graded problems are scored by the learner after checking.
+ * any order and checked together. The sheet and its answers are stored until a new set is drawn.
  */
 export function CheckpointSheet({
   item,
@@ -49,59 +60,65 @@ export function CheckpointSheet({
   generators: readonly ProblemGenerator[]
 }) {
   const count = item.problemCount ?? 8
+  const hydrated = useProgress((s) => s.hydrated)
+  const sheet = useProgress((s) => s.data.items[item.id]?.sheet)
+  const setSheet = useProgress((s) => s.setSheet)
   const recordCheckpoint = useProgress((s) => s.recordCheckpoint)
-  const [entries, setEntries] = useState(() => buildSheet(generators, count))
-  const [responses, setResponses] = useState<Record<string, Response | null>>({})
-  const [results, setResults] = useState<Record<string, CheckResult> | null>(null)
-  const [selfGrades, setSelfGrades] = useState<Record<string, boolean>>({})
 
-  const tally = (r: Record<string, CheckResult> | null, grades: Record<string, boolean>) => {
-    const isGraded =
-      r !== null &&
-      !entries.some((e) => r[e.id]?.verdict === 'invalid') &&
-      entries.every((e) => e.problem.answer.kind !== 'self' || e.id in grades)
-    const right = entries.filter((e) =>
-      e.problem.answer.kind === 'self' ? grades[e.id] === true : r?.[e.id]?.verdict === 'correct',
-    ).length
-    return { graded: isGraded, correct: right, score: right / entries.length }
-  }
-  const { graded, correct, score } = tally(results, selfGrades)
-  const invalid = results ? entries.filter((e) => results[e.id]?.verdict === 'invalid') : []
+  useEffect(() => {
+    if (hydrated && !sheet) setSheet(item.id, freshSheet())
+  }, [hydrated, sheet, item.id, setSheet])
 
-  /** Stores the score once grading is complete. Called from the handlers that finish grading. */
-  const finish = (r: Record<string, CheckResult> | null, grades: Record<string, boolean>) => {
-    const t = tally(r, grades)
-    if (t.graded) recordCheckpoint(item.id, t.score)
-  }
+  const entries = useMemo(
+    () => (sheet ? buildSheet(generators, count, sheet.seed) : []),
+    [generators, count, sheet],
+  )
 
-  const checkAll = () => {
-    const r: Record<string, CheckResult> = {}
+  if (!sheet) return <div className={styles.scroll} />
+
+  const results: Record<string, CheckResult> = {}
+  if (sheet.checked)
     for (const e of entries) {
       if (e.problem.answer.kind === 'self') continue
-      const response = responses[e.id]
-      r[e.id] = response
-        ? checkAnswer(e.problem.answer, response)
+      const r = sheet.responses[e.id]
+      results[e.id] = r
+        ? checkAnswer(e.problem.answer, r)
         : { verdict: 'incorrect', message: 'No answer.' }
     }
-    setResults(r)
-    finish(r, selfGrades)
+
+  const tally = (s: CheckpointSheetState) => {
+    const invalid = entries.some((e) => {
+      if (e.problem.answer.kind === 'self') return false
+      const r = s.responses[e.id]
+      return !!r && checkAnswer(e.problem.answer, r).verdict === 'invalid'
+    })
+    const graded =
+      s.checked &&
+      !invalid &&
+      entries.every((e) => e.problem.answer.kind !== 'self' || e.id in s.selfGrades)
+    const correct = entries.filter((e) => {
+      if (e.problem.answer.kind === 'self') return s.selfGrades[e.id] === true
+      const r = s.responses[e.id]
+      return !!r && checkAnswer(e.problem.answer, r).verdict === 'correct'
+    }).length
+    return { graded, correct, score: correct / entries.length }
   }
 
-  const gradeSelf = (id: string, right: boolean) => {
-    const grades = { ...selfGrades, [id]: right }
-    setSelfGrades(grades)
-    finish(results, grades)
+  /** Saves the sheet and, the first time it is fully graded, stores its score. */
+  const save = (next: CheckpointSheetState) => {
+    const t = tally(next)
+    if (t.graded && !next.scored) {
+      recordCheckpoint(item.id, t.score)
+      next = { ...next, scored: true }
+    }
+    setSheet(item.id, next)
   }
 
-  const restart = () => {
-    setEntries(buildSheet(generators, count))
-    setResponses({})
-    setResults(null)
-    setSelfGrades({})
-  }
+  const { graded, correct, score } = tally(sheet)
+  const invalidCount = Object.values(results).filter((r) => r.verdict === 'invalid').length
 
   return (
-    <div className={styles.scroll}>
+    <div className={styles.scroll} data-print-sheet>
       <div className={`${styles.column} ${styles.sheet}`}>
         <div className={styles.sheetHead}>
           <div>
@@ -116,27 +133,31 @@ export function CheckpointSheet({
             <Button variant="ghost" icon={<Printer size={14} />} onClick={() => window.print()}>
               Print
             </Button>
-            <Button variant="ghost" icon={<RotateCcw size={14} />} onClick={restart}>
+            <Button
+              variant="ghost"
+              icon={<RotateCcw size={14} />}
+              onClick={() => setSheet(item.id, freshSheet())}
+            >
               New set
             </Button>
           </span>
         </div>
 
         {graded && (
-          <article className={styles.card} role="status">
+          <article className={`${styles.card} ${styles.noPrint}`} role="status">
             <p className={styles.summaryScore}>
               {correct} of {entries.length} ({Math.round(score * 100)}%)
             </p>
             <p className={styles.note} style={{ margin: 0 }}>
               {score >= CHECKPOINT_PASS
                 ? 'Passed. The unit checkpoint is done.'
-                : 'Not passed yet. Review the solutions below, then try a new set when you are ready.'}
+                : 'Not passed yet. Review the solutions below, then draw a new set when you are ready.'}
             </p>
           </article>
         )}
 
         {entries.map((e, i) => {
-          const r = results?.[e.id]
+          const r = results[e.id]
           const self = e.problem.answer.kind === 'self'
           const final = answerTex(e.problem.answer)
           return (
@@ -155,45 +176,59 @@ export function CheckpointSheet({
               <div className={styles.prompt}>
                 <RichText>{e.problem.prompt}</RichText>
               </div>
-              <AnswerField
-                answer={e.problem.answer}
-                response={responses[e.id] ?? null}
-                onChange={(resp) => {
-                  setResponses((all) => ({ ...all, [e.id]: resp }))
-                  if (results && !graded)
-                    setResults((all) => {
-                      if (!all) return all
-                      const { [e.id]: _stale, ...rest } = all
-                      return rest
+              <div className={styles.noPrint}>
+                <AnswerField
+                  answer={e.problem.answer}
+                  response={sheet.responses[e.id] ?? null}
+                  onChange={(resp) => {
+                    const { [e.id]: _old, ...others } = sheet.responses
+                    // Editing after a check hides the results until the next check.
+                    save({
+                      ...sheet,
+                      checked: false,
+                      responses: resp ? { ...others, [e.id]: resp } : others,
                     })
-                }}
-                revealChoice={!!r}
-                status={
-                  r?.verdict === 'correct'
-                    ? 'correct'
-                    : r?.verdict === 'incorrect'
-                      ? 'incorrect'
-                      : undefined
-                }
-                label={`Answer to problem ${i + 1}`}
-                readOnly={graded}
-              />
+                  }}
+                  revealChoice={!!r}
+                  status={
+                    r?.verdict === 'correct'
+                      ? 'correct'
+                      : r?.verdict === 'incorrect'
+                        ? 'incorrect'
+                        : undefined
+                  }
+                  label={`Answer to problem ${i + 1}`}
+                  readOnly={graded}
+                />
+              </div>
+              <div className={styles.printSpace} aria-hidden />
               {r?.verdict === 'invalid' && <p className={styles.feedback}>{r.message}</p>}
-              {results && self && !(e.id in selfGrades) && (
-                <div className={styles.actions}>
+              {sheet.checked && self && !(e.id in sheet.selfGrades) && (
+                <div className={`${styles.actions} ${styles.noPrint}`}>
                   <span className={styles.note}>
                     Compare with the solution below. Did you get it?
                   </span>
                   <span className={styles.actionGroup}>
-                    <Button onClick={() => gradeSelf(e.id, true)}>Yes</Button>
-                    <Button variant="ghost" onClick={() => gradeSelf(e.id, false)}>
+                    <Button
+                      onClick={() =>
+                        save({ ...sheet, selfGrades: { ...sheet.selfGrades, [e.id]: true } })
+                      }
+                    >
+                      Yes
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() =>
+                        save({ ...sheet, selfGrades: { ...sheet.selfGrades, [e.id]: false } })
+                      }
+                    >
                       No
                     </Button>
                   </span>
                 </div>
               )}
-              {results && (self || r?.verdict !== 'correct' || graded) && (
-                <div className={styles.panel}>
+              {sheet.checked && (self || r?.verdict !== 'correct' || graded) && (
+                <div className={`${styles.panel} ${styles.noPrint}`}>
                   <p className={styles.panelTitle}>Solution</p>
                   <ol>
                     {e.problem.solution.map((line, k) => (
@@ -216,14 +251,14 @@ export function CheckpointSheet({
         {!graded && (
           <div className={`${styles.actions} ${styles.noPrint}`}>
             <span className={styles.note}>
-              {results
-                ? invalid.length
-                  ? `Fix the ${invalid.length === 1 ? 'answer' : 'answers'} that could not be read, then check again.`
+              {sheet.checked
+                ? invalidCount
+                  ? `Fix the ${invalidCount === 1 ? 'answer' : 'answers'} that could not be read, then check again.`
                   : 'Grade the self-checked problems to see your score.'
                 : 'Unanswered problems count as incorrect.'}
             </span>
-            <Button variant="primary" onClick={checkAll}>
-              {results ? 'Check again' : 'Check answers'}
+            <Button variant="primary" onClick={() => save({ ...sheet, checked: true })}>
+              {sheet.checked ? 'Check again' : 'Check answers'}
             </Button>
           </div>
         )}

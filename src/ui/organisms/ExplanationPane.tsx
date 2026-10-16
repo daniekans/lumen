@@ -48,6 +48,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
     <motion.aside
       key={mode}
       className={clsx(styles.aside, floating ? [surfaces.glass, styles.floating] : styles.docked)}
+      data-print-hide
       style={{ '--aside-width': `${width}px` } as CSSProperties}
       initial={false}
       animate={{ width: open ? width : 0, opacity: open ? 1 : 0 }}

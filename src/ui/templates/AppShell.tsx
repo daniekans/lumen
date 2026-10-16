@@ -7,9 +7,11 @@ import styles from './AppShell.module.css'
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <TooltipProvider delayDuration={400} skipDelayDuration={150}>
-      <div className={styles.shell}>
+      <div className={styles.shell} data-print-flow>
         <Sidebar />
-        <main className={styles.main}>{children}</main>
+        <main className={styles.main} data-print-flow>
+          {children}
+        </main>
       </div>
       <CommandPalette />
       <SettingsDialog />

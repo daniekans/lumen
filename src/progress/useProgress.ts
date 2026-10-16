@@ -2,7 +2,13 @@ import { create } from 'zustand'
 import type { Unit } from '@/catalog/types'
 import { emptyProgress, migrate } from './schema'
 import { createLocalStore, createMemoryStore, type ProgressStore } from './storage'
-import type { ItemProgress, ProgressData, SkillStatus } from './types'
+import type {
+  CheckpointSheetState,
+  ItemProgress,
+  PracticeSessionState,
+  ProgressData,
+  SkillStatus,
+} from './types'
 
 interface ProgressState {
   data: ProgressData
@@ -17,6 +23,10 @@ interface ProgressState {
   recordPractice: (itemId: string, correct: boolean) => void
   /** Stores a finished checkpoint's score, from 0 to 1. */
   recordCheckpoint: (itemId: string, score: number) => void
+  /** Stores (or clears, with undefined) the practice session in progress. */
+  setSession: (itemId: string, session: PracticeSessionState | undefined) => void
+  /** Stores (or clears, with undefined) the checkpoint sheet in progress. */
+  setSheet: (itemId: string, sheet: CheckpointSheetState | undefined) => void
   /** Applies a status that practice suggested and the learner accepted. */
   applySuggestedStatus: (key: string, status: SkillStatus) => void
   setSkillStatus: (key: string, status: SkillStatus) => void
@@ -104,6 +114,16 @@ export const useProgress = create<ProgressState>()((set, get) => ({
       })),
     })),
 
+  setSession: (itemId, session) =>
+    set(({ data }) => ({
+      data: touchItem(data, itemId, ({ session: _old, ...p }) => (session ? { ...p, session } : p)),
+    })),
+
+  setSheet: (itemId, sheet) =>
+    set(({ data }) => ({
+      data: touchItem(data, itemId, ({ sheet: _old, ...p }) => (sheet ? { ...p, sheet } : p)),
+    })),
+
   applySuggestedStatus: (key, status) =>
     set(({ data }) => ({
       data: {
@@ -169,15 +189,24 @@ export const startProgressPersistence = (store: ProgressStore = safeLocalStore()
     )
     .finally(() => {
       let timer: number | undefined
+      let pending = false
+      const flush = () => {
+        window.clearTimeout(timer)
+        if (!pending) return
+        pending = false
+        store.save(useProgress.getState().data).catch((e: unknown) => {
+          useProgress.setState({ error: e instanceof Error ? e.message : String(e) })
+        })
+      }
       useProgress.subscribe((state, prev) => {
         if (state.data === prev.data) return
+        pending = true
         window.clearTimeout(timer)
-        timer = window.setTimeout(() => {
-          store.save(state.data).catch((e: unknown) => {
-            useProgress.setState({ error: e instanceof Error ? e.message : String(e) })
-          })
-        }, 300)
+        timer = window.setTimeout(flush, 300)
       })
+      // Save right away when the tab is hidden or closed, so a quick reload loses nothing.
+      window.addEventListener('pagehide', flush)
+      document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flush())
     })
 }
 

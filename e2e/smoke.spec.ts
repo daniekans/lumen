@@ -161,15 +161,37 @@ test('a practice session runs to its summary', async ({ page }) => {
       await field.click()
       await page.keyboard.type('123457')
       await page.getByRole('button', { name: 'Check', exact: true }).click()
-      await expect(page.getByRole('status')).toContainText('Not quite.')
+      await expect(page.getByRole('status').first()).toContainText('Not quite.')
+      // A wrong first answer does not advance the counter.
+      await expect(page.locator('main article').getByText('1 / 8')).toBeVisible()
     }
     await page.getByRole('button', { name: /^Show the (worked )?solution$/ }).click()
     await expect(page.getByText('Solution', { exact: true })).toBeVisible()
-    await page.getByRole('button', { name: /Next problem/ }).click()
+    await page.getByRole('button', { name: /Next problem|See results/ }).click()
   }
   await expect(page.getByText(/of 8 correct/)).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Practice again' })).toBeVisible()
+  await page.getByRole('button', { name: 'Review answers' }).click()
+  await expect(page.getByText('Review', { exact: true })).toBeVisible()
+  await page
+    .getByRole('button', { name: 'Practice again' })
+    .or(page.getByRole('button', { name: /Next/ }))
+    .first()
+    .click()
   expect(errors).toEqual([])
+})
+
+test('a practice session survives leaving the page', async ({ page }) => {
+  await page.goto('/mathematics/calculus-1/derivatives/difference-quotients')
+  const prompt = page.locator('main article').first().locator('[class*=prompt]')
+  await page.getByRole('button', { name: /^Show the (worked )?solution$/ }).click()
+  const first = await prompt.textContent()
+  await page.waitForTimeout(500)
+  await page.goto('/mathematics/calculus-1/derivatives')
+  await page.goto('/mathematics/calculus-1/derivatives/difference-quotients')
+  await expect(prompt).toHaveText(first ?? '')
+  await expect(page.getByText('Solution', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Start over' }).click()
+  await expect(page.getByText('Solution', { exact: true })).toHaveCount(0)
 })
 
 test('a checkpoint can be checked and scored', async ({ page }) => {

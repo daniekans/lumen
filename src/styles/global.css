@@ -63,3 +63,42 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * Printing (checkpoint worksheets). Chrome marked data-print-hide disappears, containers marked
+ * data-print-flow return to normal document flow, and the light theme is used on paper.
+ */
+@media print {
+  :root,
+  :root[data-theme] {
+    --bg: #fff;
+    --bg-elevated: #fff;
+    --surface: transparent;
+    --fg: #111;
+    --fg-muted: #333;
+    --fg-subtle: #666;
+    --border: #bbb;
+    --border-strong: #888;
+    --shadow: none;
+    color-scheme: light;
+  }
+
+  html,
+  body,
+  #root {
+    height: auto;
+    background: #fff;
+  }
+
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  [data-print-flow] {
+    display: block !important;
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+}
