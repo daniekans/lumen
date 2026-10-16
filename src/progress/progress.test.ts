@@ -117,3 +117,34 @@ describe('migrate', () => {
     expect(() => migrate({ version: 99 })).toThrow(/newer version/)
   })
 })
+
+describe('resetItem', () => {
+  it('returns a done item to not started and keeps unfinished work and skills', async () => {
+    const { useProgress } = await import('./useProgress')
+    const item = makeItem('lesson')
+    const session = { entries: [], difficulty: 'auto' as const, finished: false }
+    useProgress.setState({
+      data: {
+        ...emptyProgress(),
+        skills: { 'u#a': { status: 'mastered', source: 'manual', updatedAt: '' } },
+        items: {
+          'u/i': progress({
+            visitedSteps: ['s1', 's2'],
+            correctChecks: ['s2'],
+            manual: 'done',
+            practice: { attempts: 3, correct: 2 },
+            session,
+          }),
+        },
+      },
+    })
+    useProgress.getState().resetItem('u/i')
+    const { data } = useProgress.getState()
+    const p = data.items['u/i']
+    expect(itemProgress(item, p).state).toBe('not-started')
+    expect(p).toMatchObject({ visitedSteps: [], correctChecks: [], session })
+    expect(p?.manual).toBeUndefined()
+    expect(p?.practice).toBeUndefined()
+    expect(data.skills['u#a']?.status).toBe('mastered')
+  })
+})

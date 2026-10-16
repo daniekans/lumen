@@ -20,6 +20,12 @@ interface ProgressState {
   /** Forgets a check's answer, so the question can be answered fresh. */
   clearCheck: (itemId: string, stepId: string) => void
   setItemManual: (itemId: string, manual: ItemProgress['manual'] | undefined) => void
+  /**
+   * Returns an item to "not started": forgets visited steps, answered checks, practice and
+   * checkpoint counts and any manual mark. Skill statuses and an unfinished practice session or
+   * checkpoint sheet are kept; those have their own controls.
+   */
+  resetItem: (itemId: string) => void
   recordPractice: (itemId: string, correct: boolean) => void
   /** Stores a finished checkpoint's score, from 0 to 1. */
   recordCheckpoint: (itemId: string, score: number) => void
@@ -90,6 +96,17 @@ export const useProgress = create<ProgressState>()((set, get) => ({
     set(({ data }) => ({
       data: touchItem(data, itemId, ({ manual: _old, ...p }) => (manual ? { ...p, manual } : p)),
     })),
+
+  resetItem: (itemId) =>
+    set(({ data }) => {
+      const prev = data.items[itemId]
+      if (!prev) return {}
+      const { session, sheet, lastVisitedAt } = prev
+      const next: ItemProgress = { visitedSteps: [], correctChecks: [], lastVisitedAt }
+      if (session) next.session = session
+      if (sheet) next.sheet = sheet
+      return { data: { ...data, items: { ...data.items, [itemId]: next } } }
+    }),
 
   recordPractice: (itemId, correct) =>
     set(({ data }) => ({
@@ -206,7 +223,10 @@ export const startProgressPersistence = (store: ProgressStore = safeLocalStore()
       })
       // Save right away when the tab is hidden or closed, so a quick reload loses nothing.
       window.addEventListener('pagehide', flush)
-      document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flush())
+      document.addEventListener(
+        'visibilitychange',
+        () => document.visibilityState === 'hidden' && flush(),
+      )
     })
 }
 

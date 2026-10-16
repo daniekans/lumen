@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Suspense, useState, type CSSProperties } from 'react'
 import { ancestors, kindLabel, type Item } from '@/catalog'
-import { isItemComplete, useProgress } from '@/progress'
+import { isItemComplete, itemProgress, useProgress } from '@/progress'
 import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
 import { Badge, IconButton, ResizeHandle } from '../atoms'
@@ -36,12 +36,15 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
   const recordCheck = useProgress((s) => s.recordCheck)
   const clearCheck = useProgress((s) => s.clearCheck)
   const setManual = useProgress((s) => s.setItemManual)
+  const resetItem = useProgress((s) => s.resetItem)
   const done = isItemComplete(entry, progress)
+  const inProgress = itemProgress(entry, progress).state === 'in-progress'
   const solved = new Set(progress?.correctChecks)
+  // Undoing "done" starts the item over; a "not done" mark over a full ring would be confusing.
   const toggleDone = () => {
-    // Prefer clearing an override over stacking a second one that agrees with the derived state.
+    if (done) return resetItem(entry.id)
     const derived = isItemComplete(entry, progress && { ...progress, manual: undefined })
-    setManual(entry.id, derived === !done ? undefined : done ? 'not-done' : 'done')
+    setManual(entry.id, derived ? undefined : 'done')
   }
 
   return (
@@ -92,7 +95,11 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
         <h1 className={styles.title}>{entry.title}</h1>
         <p className={styles.summary}>{entry.summary}</p>
         <div className={styles.status}>
-          <DoneToggle done={done} onToggle={toggleDone} />
+          <DoneToggle
+            done={done}
+            onToggle={toggleDone}
+            onReset={inProgress ? () => resetItem(entry.id) : undefined}
+          />
           {progress?.manual && <span className={styles.manual}>set by you</span>}
         </div>
 

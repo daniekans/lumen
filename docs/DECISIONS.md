@@ -29,6 +29,9 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Every status can be set by the learner in either direction, including marking things mastered
   upfront. "I already know this unit" marks content done and skills mastered, and can be undone.
 - No spaced repetition, schedules, due queues, reminders or streaks. Practice is on demand.
+- Undoing "Done" on an item returns it to not started (empty ring), and an item in progress has a
+  reset button. Both clear the item's progress only; skill statuses and unfinished practice sessions
+  or checkpoint sheets stay. (Before, "not done" kept a full ring without the check.)
 - Prerequisites are suggestions; nothing is locked.
 - A checkpoint passes at 80%. A practice item is done after 5 correct answers.
 - Practice sessions are 8 problems. The first answer counts; retries, hints and solutions are for

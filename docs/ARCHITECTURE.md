@@ -91,6 +91,8 @@ done/not-done overrides, skill statuses and the last item opened. Two ideas stay
   suggested by practice. It never changes the rings.
 
 Completion is derived rather than stored, so changing an item's steps never leaves stale flags.
+Undoing "Done", or the reset button of an item in progress, calls `resetItem`, which clears the
+item's visits, checks, counts and manual mark (sessions, sheets and skills stay).
 "I already know this unit" sets manual done marks and mastered statuses, and undoing it removes them.
 Nothing is scheduled or due.
 
