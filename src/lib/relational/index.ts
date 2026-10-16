@@ -142,3 +142,19 @@ export const orphans = (childRefs: readonly Value[], parentKeys: readonly Value[
   const keys = new Set(parentKeys.filter((k) => k !== null))
   return childRefs.flatMap((v, i) => (v !== null && !keys.has(v) ? [i] : []))
 }
+
+/*
+ * Problem data is a flat record of numbers, so columns are stored one value per entry:
+ * { a0: 3, a1: 0, an: 2 } is the column [3, NULL]. Keys used this way must be positive.
+ */
+export const encodeColumn = (prefix: string, values: readonly (number | null)[]) => {
+  const out: Record<string, number> = { [`${prefix}n`]: values.length }
+  values.forEach((v, i) => (out[`${prefix}${i}`] = v ?? 0))
+  return out
+}
+
+export const decodeColumn = (data: Readonly<Record<string, number>>, prefix: string) =>
+  Array.from({ length: data[`${prefix}n`] ?? 0 }, (_, i) => {
+    const v = data[`${prefix}${i}`] ?? 0
+    return v === 0 ? null : v
+  })

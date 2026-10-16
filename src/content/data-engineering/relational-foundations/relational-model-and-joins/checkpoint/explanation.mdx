@@ -1,0 +1,21 @@
+Ten problems that cover the whole unit. Work them on paper first, then enter the answers in any
+order and check the sheet at the end. The checkpoint passes at $80\%$.
+
+## What it covers
+
+- counting relations, keys of two columns and functional dependencies;
+- foreign keys that point at missing rows;
+- the row counts of inner, right and full joins, and the rows of an anti join;
+- joins on columns that repeat on both sides;
+- a filter placed in `ON` or in `WHERE`;
+- one short proof, graded by you against the solution.
+
+## Useful facts
+
+$$
+|A \bowtie B| = \sum_k a_k \, b_k, \qquad |A \text{ LEFT JOIN } B| = \sum_k a_k \max(b_k, 1).
+$$
+
+NULL matches nothing. A key on one side means each row of the other side matches at most once.
+
+If a problem feels unfamiliar, the matching practice set in this unit has more of the same kind.

@@ -11,12 +11,15 @@
 }
 
 .next {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+  display: block;
+  max-width: 34ch;
   margin-right: var(--space-2);
   padding: 0 var(--space-2);
   height: 28px;
+  overflow: hidden;
+  line-height: 28px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   border-radius: var(--radius-sm);
   color: var(--fg-muted);
   font-size: var(--text-xs);

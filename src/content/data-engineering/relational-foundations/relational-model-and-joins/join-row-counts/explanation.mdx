@@ -1,0 +1,60 @@
+Before running a join on large tables, it pays to know roughly how many rows it will return. A
+surprise in that number is usually a bug: a missing key, a duplicated dimension row, or a filter in
+the wrong place. The count follows from one formula.
+
+## Rows come in blocks
+
+Take an equijoin on a column $k$. Rows only pair up when their values are equal, so the result splits
+into one block per value. If value $k$ appears $a_k$ times in $A$ and $b_k$ times in $B$, its block
+is an $a_k \times b_k$ rectangle, a small copy of the product grid from the previous items:
+
+$$
+|A \bowtie B| = \sum_k a_k \, b_k.
+$$
+
+In the first dataset this is $2 \cdot 1 + 1 \cdot 2 + 3 \cdot 2 + 0 \cdot 1 + 1 \cdot 0 = 10$.
+
+## One to many
+
+If $A.k$ is a key, each $a_k$ is $0$ or $1$ and the sum becomes the number of rows of $B$ whose value
+appears in $A$:
+
+$$
+|A \bowtie B| \leq |B|.
+$$
+
+Equality holds when every value of $B.k$ is present in $A$, as with a foreign key that is enforced
+and never NULL. Joining a fact table to a dimension on the dimension's key therefore never adds rows.
+If it does, the dimension key is not unique.
+
+## Many to many
+
+With duplicates on both sides the blocks grow in both directions. Two tables of $5$ and $7$ rows give
+$3 \cdot 4 + 2 \cdot 3 = 18$ rows in <StepLink step="many-to-many">this step</StepLink>, and
+in the worst case, one shared value, the join is the whole product $|A| \cdot |B|$. Sums computed
+after such a join count each row of $A$ once per partner, which is the usual cause of inflated
+totals.
+
+## Outer joins
+
+A left join keeps rows of $A$ without a partner, one padded row each. In the formula, a value with
+$b_k = 0$ counts as if $b_k$ were $1$:
+
+$$
+|A \text{ LEFT JOIN } B| = \sum_k a_k \max(b_k, 1) \geq |A|.
+$$
+
+The right and full joins add the analogous terms for $B$.
+
+## NULL
+
+NULL is not a value that can match. The NULL rows of $A$ and $B$ form no block, even with each
+other, and in a left join a NULL in $A$ becomes one padded row. To treat NULLs as equal on purpose,
+SQL has `IS NOT DISTINCT FROM`.
+
+## ON versus WHERE
+
+The formula counts what the join condition produces. A filter on $B$ in the `ON` clause changes the
+$b_k$ before padding, so a left join still returns at least $|A|$ rows. The same filter in `WHERE`
+runs after the join and removes padded rows too, since their $B$ columns are NULL. The left join then
+returns the same rows as an inner join.

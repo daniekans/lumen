@@ -1,0 +1,23 @@
+Every problem here comes down to one count: for each key value, how many rows on each side share it.
+
+## Inner joins
+
+A value that appears $a_k$ times on the left and $b_k$ times on the right gives $a_k b_k$ rows:
+
+$$
+|A \bowtie B| = \sum_k a_k \, b_k.
+$$
+
+NULL matches nothing, not even NULL. A cross join pairs everything: $|A| \cdot |B|$ rows.
+
+## Outer joins
+
+Add one padded row for each row without a partner: left rows for a left join, right rows for a right
+join, both for a full join. An anti join (`LEFT JOIN ... WHERE right.key IS NULL`) keeps only the
+padded left rows.
+
+## Filters
+
+A condition in `ON` decides what matches, and unmatched left rows are still padded. The same condition
+in `WHERE` removes rows after the join, padded ones included, so the left join returns what an inner
+join would.

@@ -49,3 +49,46 @@ export const frac = (p: number, q: number) => {
   if (d === 1) return String(n)
   return `${n < 0 ? '-' : ''}\\frac{${Math.abs(n)}}{${d}}`
 }
+
+/** Identifiers and SQL in a monospace font, with the characters TeX reserves escaped. */
+export const code = (s: string) => `\\texttt{${s.replace(/[_{}%&#]/g, (c) => `\\${c}`)}}`
+
+type Cell = string | number | null
+
+const cell = (v: Cell) =>
+  v === null ? '\\textit{NULL}' : typeof v === 'number' ? String(v) : `\\text{${v}}`
+
+/** A small database table as a TeX array: column names in code font, NULL in italics. */
+export const table = (
+  columns: readonly string[],
+  rows: readonly (readonly Cell[])[],
+  title?: string,
+) => {
+  const head = columns.map(code).join(' & ')
+  const body = rows.map((r) => `${r.map(cell).join(' & ')} \\\\`).join(' ')
+  const grid = `\\begin{array}{${'c'.repeat(columns.length)}} ${head} \\\\ \\hline ${body} \\end{array}`
+  return title ? `\\begin{array}{c} ${code(title)} \\\\ ${grid} \\end{array}` : grid
+}
+
+interface TableSpec {
+  columns: readonly string[]
+  rows: readonly (readonly Cell[])[]
+  title?: string
+}
+
+/** Tables side by side, padded with empty rows to the same height so their headers line up. */
+export const tables = (...specs: readonly TableSpec[]) => {
+  const height = Math.max(...specs.map((s) => s.rows.length))
+  return specs
+    .map((s) =>
+      table(
+        s.columns,
+        [
+          ...s.rows,
+          ...Array.from({ length: height - s.rows.length }, () => s.columns.map(() => '')),
+        ],
+        s.title,
+      ),
+    )
+    .join(' \\qquad ')
+}

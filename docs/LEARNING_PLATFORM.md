@@ -249,7 +249,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Task                                                                       | Status |
 | -------------------------------------------------------------------------- | ------ |
 | Pre-calculus / Functions (items below)                                     | review |
-| Data Engineering / Relational model and SQL joins (first interleaved unit) | doing  |
+| Data Engineering / Relational model and SQL joins (first interleaved unit) | review |
 | Pre-calculus / Algebra essentials                                          | todo   |
 
 #### Functions unit plan
@@ -299,13 +299,15 @@ join returns).
 | 2   | keys-and-references         | explore    | keys                               | Primary key, foreign key arrows from orders to customers (many to one), customers with no orders, an orphan                | review |
 | 3   | joins-as-products           | explore    | inner-join                         | Grid of row pairs: cross join, the ON condition lights matching cells, the result table, fan-out, NULL keys                | review |
 | 4   | outer-joins                 | explore    | outer-join                         | Same grid: unmatched rows padded with NULLs for left, right and full joins; anti join; why Venn diagrams mislead           | review |
-| 5   | join-row-counts             | lesson     | row-counts, inner-join, outer-join | Join size as a sum of rectangles $a_k \times b_k$ per key; one to many, many to many, left join, NULLs, ON vs WHERE        | todo   |
-| 6   | practice-relations-and-keys | practice   | relations, keys                    | Product sizes, number of relations, candidate keys, functional dependencies, orphan rows                                   | todo   |
-| 7   | practice-joins              | practice   | inner-join, outer-join, row-counts | Row counts of cross, inner, left and full joins on small tables, anti joins, fan-out, ON vs WHERE                          | todo   |
-| 8   | checkpoint                  | checkpoint | all                                | Mix of the practice generators plus a self-graded proof (an inner join on a key of $A$ has at most $\lvert B \rvert$ rows) | todo   |
+| 5   | join-row-counts             | lesson     | row-counts, inner-join, outer-join | Join size as a sum of rectangles $a_k \times b_k$ per key; one to many, many to many, left join, NULLs, ON vs WHERE        | review |
+| 6   | practice-relations-and-keys | practice   | relations, keys                    | Product sizes, number of relations, candidate keys, functional dependencies, orphan rows                                   | review |
+| 7   | practice-joins              | practice   | inner-join, outer-join, row-counts | Row counts of cross, inner, left and full joins on small tables, anti joins, fan-out, ON vs WHERE                          | review |
+| 8   | checkpoint                  | checkpoint | all                                | Mix of the practice generators plus a self-graded proof (an inner join on a key of $A$ has at most $\lvert B \rvert$ rows) | review |
 
-Batches: (1) the plan, `src/lib/relational`, `RelationTable`, items 1 and 2; (2) items 3 and 4;
-(3) items 5 to 8.
+Built in three batches; all eight items are published and await review. The checkpoint uses
+`problemCount: 10`: nine practice generators plus the proof. Practice prompts draw tables with
+`tex.table` and `tex.tables` (side by side, padded to equal height) from `@/lib/practice`, and store
+key columns in problem data with `encodeColumn` from `@/lib/relational`.
 
 ## Risks
 
