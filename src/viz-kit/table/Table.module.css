@@ -54,3 +54,14 @@
 .interactive {
   cursor: pointer;
 }
+
+.pair {
+  transition:
+    fill var(--dur-slow) var(--ease-out),
+    stroke var(--dur-slow) var(--ease-out),
+    opacity var(--dur-slow) var(--ease-out);
+}
+
+.fade {
+  transition: opacity var(--dur-slow) var(--ease-out);
+}

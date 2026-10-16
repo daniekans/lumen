@@ -21,7 +21,8 @@ src/
                      AxisInterval (domains, ranges and solution sets on an axis)
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
-    table/           RelationTable (database tables with keys, NULLs and animated rows), tableLayout
+    table/           RelationTable (database tables with keys, NULLs and animated rows), tableLayout,
+                     JoinGrid (the product of two tables as a grid of pairs), TransposedHeader
     anim/            useSequence, useAnimatedValue, tween (requestAnimationFrame)
     interaction/     useDrag
     runtime/         VizControls, useVizStep, useStepEffect

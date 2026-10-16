@@ -1,0 +1,59 @@
+An inner join silently drops every row that has no partner. Often those rows are the point: customers
+who never ordered, payments with no invoice. Outer joins keep them by padding the missing side with
+NULLs.
+
+## Matched and unmatched rows
+
+Split each table by whether a row has at least one lit cell in the grid. With $M$ the matched pairs,
+$L$ the left rows with no match and $R$ the right rows with no match, every join on the same
+condition is built from the same three pieces:
+
+$$
+\begin{aligned}
+|A \text{ INNER JOIN } B| &= |M| \\
+|A \text{ LEFT JOIN } B| &= |M| + |L| \\
+|A \text{ RIGHT JOIN } B| &= |M| + |R| \\
+|A \text{ FULL JOIN } B| &= |M| + |L| + |R|
+\end{aligned}
+$$
+
+Here $|M| = 4$, $L$ is Caio, and $R$ holds orders $105$ and $106$, so the four joins return $4$,
+$5$, $6$ and $7$ rows.
+
+## Padding with NULLs
+
+A padded row has the columns of both tables, like every row of a join, but the side without a
+partner is all NULL. In the grid this is a <C c="yellow">dashed cell</C> outside the product: to the
+right of the grid for an unmatched customer, below it for an unmatched order. A left join never has
+fewer rows than its left table, because each left row contributes its matches or one padded row.
+
+## Which side is which
+
+`A LEFT JOIN B` keeps all of $A$; `A RIGHT JOIN B` keeps all of $B$ and is the same as
+`B LEFT JOIN A` with the columns reordered. Most code uses left joins only, with the table whose rows
+must all survive written first.
+
+## Anti joins
+
+The padded rows of a left join are exactly the left rows with no partner. Filtering on a column that
+cannot be NULL in a real match keeps only them:
+
+```sql
+SELECT c.*
+FROM customers c
+LEFT JOIN orders o
+  ON c.id = o.customer_id
+WHERE o.order_id IS NULL
+```
+
+`WHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)` returns the same customers. The
+opposite, a semi join (`EXISTS`), keeps each left row that has at least one match, once, however many
+matches it has.
+
+## Why Venn diagrams mislead
+
+Joins are often drawn as two overlapping circles. The picture suggests that the inner join is an
+intersection of two sets of rows, so it could never be larger than either table. But a join's rows
+are pairs from the product, not rows of $A$ or $B$: a customer with two orders appears twice, and
+a join without a key on either side can return far more rows than both tables together. The grid
+shows that directly. The next lesson counts join rows in general.

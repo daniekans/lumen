@@ -1,0 +1,51 @@
+A join combines rows from two tables into wider rows. Every kind of join starts from the same object,
+the Cartesian product of the two tables, and differs only in which pairs it keeps and what it adds.
+
+## The cross join is the product
+
+For tables $A$ and $B$, the cross join pairs every row of $A$ with every row of $B$:
+
+$$
+A \times B = \{(a, b) : a \in A,\ b \in B\}, \qquad |A \times B| = |A| \cdot |B|.
+$$
+
+In the grid each customer is a row, each order is a column, and each cell is one pair. With $4$
+customers and $6$ orders there are $24$ cells, and `CROSS JOIN` returns all of them.
+
+## The inner join filters the product
+
+An inner join with condition $\theta$ keeps the pairs for which $\theta$ is true:
+
+$$
+A \bowtie_\theta B = \{(a, b) \in A \times B : \theta(a, b)\}.
+$$
+
+The usual condition compares a foreign key with the key it references, `c.id = o.customer_id`.
+The <StepLink step="condition">sweep</StepLink> tests each cell, and the <C c="blue">lit cells</C>
+are exactly the rows of the result. A database rarely builds the whole product (hash and merge
+joins avoid it), but the result is always the same set of pairs.
+
+## Repeated and missing rows
+
+A customer appears once per matching order: Ana has two lit cells, so she fills two rows, while
+Caio has none and is absent from the result. The size of the result is the number of lit cells,
+
+$$
+|A \bowtie B| = \sum_{a \in A} \text{matches}(a),
+$$
+
+which <StepLink step="fan-out">the counts beside the grid</StepLink> add up: $2 + 1 + 0 + 1 = 4$.
+
+## NULL never matches
+
+SQL uses three truth values: true, false and unknown. Any comparison with NULL is unknown, and a join
+keeps only pairs where the condition is true. Order $106$, with a NULL `customer_id`, therefore
+matches no customer, and neither does order $105$, whose customer $9$ does not exist. Both vanish from
+an inner join; the next item keeps them with an outer join.
+
+## Other conditions
+
+Nothing requires the condition to be an equality. A join on `c.id < o.customer_id` is still a
+filtered product, sometimes called a theta join. Range conditions like this appear in practice when
+matching events to time intervals. They are also a common source of results far larger than
+expected, as <StepLink step="theta">the last step</StepLink> shows with `<>`.

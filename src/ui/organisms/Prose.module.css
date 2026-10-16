@@ -54,6 +54,20 @@
   font-size: 0.85em;
 }
 
+.prose :global(pre) {
+  margin: var(--space-3) 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: 8px;
+  background: var(--surface-active);
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.prose :global(pre code) {
+  padding: 0;
+  background: none;
+}
+
 .prose :global(.katex-display) {
   margin: var(--space-4) 0;
   padding: var(--space-3) 0;
