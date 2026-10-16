@@ -249,7 +249,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Task                                                                       | Status |
 | -------------------------------------------------------------------------- | ------ |
 | Pre-calculus / Functions (items below)                                     | review |
-| Data Engineering / Relational model and SQL joins (first interleaved unit) | todo   |
+| Data Engineering / Relational model and SQL joins (first interleaved unit) | doing  |
 | Pre-calculus / Algebra essentials                                          | todo   |
 
 #### Functions unit plan
@@ -279,6 +279,33 @@ excluded values). The checkpoint uses `problemCount: 10`, one problem per genera
 are published; open questions for review: the transformations dock wraps to two rows at 1440 px.
 
 After the pilot: continue unit by unit, updating this tracker and `docs/ROADMAP.md`.
+
+#### Relational model and joins unit plan
+
+Folder `src/content/data-engineering/relational-foundations/relational-model-and-joins/`. Same
+process as the Functions unit. The math link: a table is a relation (a subset of a Cartesian
+product), a key makes it a function, and every join is a filtered product. Join logic lives in
+`src/lib/relational` (tested), and tables are drawn with `RelationTable` from the kit. Practice
+prompts show tables as KaTeX arrays and SQL in `\texttt`.
+
+Skills: `relations` (a table as a set of tuples, products, degree and cardinality), `keys` (primary
+and candidate keys, foreign keys, referential integrity), `inner-join` (cross, inner and theta joins),
+`outer-join` (left, right, full and anti joins, NULL padding), `row-counts` (predict how many rows a
+join returns).
+
+| #   | Item                        | Kind       | Skills                             | Content                                                                                                                    | Status |
+| --- | --------------------------- | ---------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | tables-as-relations         | explore    | relations                          | Two domains, their product as a grid, a relation as lit cells that fly into a table; order; a key as a function            | review |
+| 2   | keys-and-references         | explore    | keys                               | Primary key, foreign key arrows from orders to customers (many to one), customers with no orders, an orphan                | review |
+| 3   | joins-as-products           | explore    | inner-join                         | Grid of row pairs: cross join, the ON condition lights matching cells, the result table, fan-out, NULL keys                | todo   |
+| 4   | outer-joins                 | explore    | outer-join                         | Same grid: unmatched rows padded with NULLs for left, right and full joins; anti join; why Venn diagrams mislead           | todo   |
+| 5   | join-row-counts             | lesson     | row-counts, inner-join, outer-join | Join size as a sum of rectangles $a_k \times b_k$ per key; one to many, many to many, left join, NULLs, ON vs WHERE        | todo   |
+| 6   | practice-relations-and-keys | practice   | relations, keys                    | Product sizes, number of relations, candidate keys, functional dependencies, orphan rows                                   | todo   |
+| 7   | practice-joins              | practice   | inner-join, outer-join, row-counts | Row counts of cross, inner, left and full joins on small tables, anti joins, fan-out, ON vs WHERE                          | todo   |
+| 8   | checkpoint                  | checkpoint | all                                | Mix of the practice generators plus a self-graded proof (an inner join on a key of $A$ has at most $\lvert B \rvert$ rows) | todo   |
+
+Batches: (1) the plan, `src/lib/relational`, `RelationTable`, items 1 and 2; (2) items 3 and 4;
+(3) items 5 to 8.
 
 ## Risks
 

@@ -1,0 +1,56 @@
+.table text {
+  pointer-events: none;
+}
+
+.title {
+  fill: var(--fg-muted);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.frame {
+  fill: var(--bg-elevated);
+  stroke: var(--viz-grid-strong);
+  stroke-width: 1.25;
+}
+
+.header {
+  fill: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.keyLine {
+  stroke: var(--fg-muted);
+  stroke-width: 1.25;
+}
+
+.rule {
+  stroke: var(--viz-grid-strong);
+  stroke-width: 1;
+}
+
+.row {
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    opacity var(--dur-slow) var(--ease-out);
+}
+
+.rowFill {
+  transition: fill var(--dur-slow) var(--ease-out);
+}
+
+.cell {
+  fill: var(--viz-fg);
+  font-family: var(--font-mono);
+}
+
+.null {
+  fill: var(--fg-subtle);
+  font-style: italic;
+}
+
+.interactive {
+  cursor: pointer;
+}

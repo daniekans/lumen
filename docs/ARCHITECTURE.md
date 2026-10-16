@@ -4,7 +4,8 @@
 
 ```
 src/
-  lib/             Pure TypeScript: math, neural networks. No React. Unit tested.
+  lib/             Pure TypeScript: math, neural networks, practice, relational operations (joins,
+                   keys). No React. Unit tested.
   styles/          Design tokens (CSS), motion constants and the visualization palette.
   ui/              Application chrome, organized by atomic design:
     atoms/           Button, IconButton, Slider, Switch, Tooltip, Kbd, Badge, Tex, Divider,
@@ -20,6 +21,7 @@ src/
                      AxisInterval (domains, ranges and solution sets on an axis)
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
+    table/           RelationTable (database tables with keys, NULLs and animated rows), tableLayout
     anim/            useSequence, useAnimatedValue, tween (requestAnimationFrame)
     interaction/     useDrag
     runtime/         VizControls, useVizStep, useStepEffect

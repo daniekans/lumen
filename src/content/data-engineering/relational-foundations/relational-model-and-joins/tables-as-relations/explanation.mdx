@@ -1,0 +1,50 @@
+A database table looks like a grid of values, but the relational model treats it as a set: a
+relation. The definition comes straight from set theory, and it explains why rows have no order,
+why keys matter, and, in the next items, what a join computes.
+
+## Domains and their product
+
+Each column takes values from a set called its domain. For a table of people and cities the domains
+are a set of names $N$ and a set of cities $C$. Their Cartesian product is the set of all pairs:
+
+$$
+N \times C = \{(n, c) : n \in N,\ c \in C\}, \qquad |N \times C| = |N| \cdot |C|.
+$$
+
+Here that is $4 \cdot 3 = 12$ pairs, one per cell of the <StepLink step="product">grid</StepLink>.
+
+## A relation is a subset
+
+A relation on $N$ and $C$ is any subset of the product:
+
+$$
+R \subseteq N \times C.
+$$
+
+The <C c="blue">lit cells</C> are the pairs that hold. Since every subset is a possible relation,
+there are $2^{12}$ different relations between these two domains, one for each way of lighting the
+grid.
+
+## The table is the subset, written out
+
+Each pair in $R$ becomes a row, called a tuple, and each position in the pair becomes a named column,
+called an attribute. The number of attributes is the degree of the relation and the number of tuples
+is its cardinality. The <StepLink step="table">table</StepLink> `lives_in` has degree $2$ and
+cardinality $|R|$.
+
+## No order, no duplicates
+
+A set has no first element and holds each element once. So two tables with the same rows in a
+different order are the same relation, and a tuple cannot appear twice. SQL relaxes the second rule:
+a table without a key can hold duplicate rows, and a query result can too. It keeps the first rule:
+without `ORDER BY`, a query may return rows in any order.
+
+## A relation that is a function
+
+When each name appears in exactly one tuple, the relation assigns one city to every name. That is the
+definition of a function $f : N \to C$, written as a set of pairs. The column `name` then determines
+`city`, and `name` identifies each row, which makes it a key of the relation.
+
+Adding (Ana, Recife) in <StepLink step="function">the last step</StepLink> gives Ana two cities. It is
+still a relation, but no longer a function of `name`, and `name` stops being a key. Keys, and columns
+that point at the keys of other tables, are the subject of the next item.

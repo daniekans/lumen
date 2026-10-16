@@ -1,0 +1,53 @@
+Rows in one table often need to talk about rows in another: an order belongs to a customer. The
+relational model does this with values, not pointers. A key identifies a row, and a foreign key
+stores that identifier in another table.
+
+## Keys
+
+A set of columns $K$ is a key of a table when no two rows agree on all of $K$. Then $K$ determines
+every other column, so the table is a function from key values to rows:
+
+$$
+\text{id} \mapsto (\text{id}, \text{name}).
+$$
+
+A table can have several such keys, called candidate keys. The one chosen to identify rows is the
+primary key, and SQL also requires it to be non-NULL. In <StepLink step="primary-key">the first
+step</StepLink> a second row with id $2$ would make id stop being a key, so the database rejects it.
+
+## Foreign keys
+
+A foreign key is a column whose values must appear in a key of another table. Here
+`orders.customer_id` references `customers.id`. Each order holds one customer id, so the
+references form a function
+
+$$
+\text{orders} \to \text{customers}.
+$$
+
+Like any function, it may send several inputs to the same output: Ana has two orders. This is a
+many-to-one relationship from the side of orders.
+
+## One to many
+
+Read the arrows backward and each customer has a set of orders, possibly empty. A customer is not
+required to have orders, which is why Caio has no arrow in <StepLink step="one-to-many">this
+step</StepLink>. The count per customer is what a join has to deal with later: joining customers to
+orders repeats each customer once per order.
+
+## Referential integrity
+
+The constraint is that every non-NULL foreign key value matches an existing key. A row that breaks it
+is an orphan, like order $106$ pointing at customer $9$. NULL is allowed unless the column is
+declared `NOT NULL`; it means the order has no customer, not that it points at a missing one.
+
+Deleting a referenced row would create orphans, so the foreign key declares what happens in that
+case (<StepLink step="on-delete">the last step</StepLink>):
+
+- `RESTRICT` (or `NO ACTION`) rejects the delete;
+- `CASCADE` deletes the referencing orders as well;
+- `SET NULL` keeps the orders and sets their `customer_id` to NULL.
+
+Many analytical warehouses declare foreign keys without enforcing them. Orphans can then exist, and
+the type of join decides whether they appear in a result. The next item shows joins as a product of
+two tables, filtered by a condition like `orders.customer_id = customers.id`.
