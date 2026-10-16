@@ -14,9 +14,17 @@ interface StepListProps {
   /** Ids of steps whose check is already answered correctly. */
   solved?: ReadonlySet<string>
   onCheck?: (stepId: string, correct: boolean) => void
+  onClearCheck?: (stepId: string) => void
 }
 
-export function StepList({ steps, active, onSelect, solved, onCheck }: StepListProps) {
+export function StepList({
+  steps,
+  active,
+  onSelect,
+  solved,
+  onCheck,
+  onClearCheck,
+}: StepListProps) {
   return (
     <ol className={styles.list}>
       {steps.map((s, i) => {
@@ -67,6 +75,7 @@ export function StepList({ steps, active, onSelect, solved, onCheck }: StepListP
                         check={s.check}
                         solved={isSolved}
                         onAnswer={(correct) => onCheck?.(s.id, correct)}
+                        onClear={() => onClearCheck?.(s.id)}
                       />
                     )}
                   </div>

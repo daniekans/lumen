@@ -3,6 +3,10 @@
   flex: none;
   height: 100%;
   overflow: hidden;
+}
+
+/* Docked: part of the layout. Floating: the shared glass surface (set in TSX). */
+.docked {
   border-left: 1px solid var(--border);
   background: var(--bg);
 }
@@ -99,7 +103,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin: 0 0 var(--space-5) calc(-1 * var(--space-2));
+  margin: 0 0 var(--space-5);
 }
 
 .manual {

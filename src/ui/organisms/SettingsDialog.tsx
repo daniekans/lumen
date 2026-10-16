@@ -24,9 +24,15 @@ export function SettingsDialog() {
         <Dialog.Content
           className={clsx(surfaces.glass, styles.content)}
           aria-describedby={undefined}
+          tabIndex={-1}
+          // Focus the dialog itself rather than its first button, so no tooltip pops up on open.
+          onOpenAutoFocus={(e) => {
+            e.preventDefault()
+            ;(e.currentTarget as HTMLElement | null)?.focus()
+          }}
         >
           <div className={styles.head}>
-            <Dialog.Title className={styles.title}>Progress</Dialog.Title>
+            <Dialog.Title className={styles.title}>Progress and backup</Dialog.Title>
             <Dialog.Close asChild>
               <IconButton label="Close" shortcut="Esc" size="sm">
                 <X size={15} />
@@ -80,6 +86,27 @@ function ProgressSettings() {
 
   return (
     <>
+      <div className={styles.group}>
+        <p className={styles.label}>How progress works</p>
+        <dl className={styles.terms}>
+          <dt>Units</dt>
+          <dd>
+            Each course is split into units. A unit holds explorations (interactive visuals with
+            steps) and lessons (the same, plus questions).
+          </dd>
+          <dt>Done</dt>
+          <dd>
+            An exploration is done once you have visited all its steps; a lesson also needs every
+            question answered correctly. You can mark anything done or not done yourself.
+          </dd>
+          <dt>Progress rings</dt>
+          <dd>How much of a unit is done. An empty ring means not started.</dd>
+          <dt>Skills</dt>
+          <dd>
+            What a unit teaches, rated by you from new to mastered. Ratings never change the rings.
+          </dd>
+        </dl>
+      </div>
       <div className={styles.group}>
         <p className={styles.label}>Backup</p>
         <p className={styles.text}>

@@ -1,0 +1,46 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 30px;
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.toggle:hover {
+  border-color: var(--fg-muted);
+  background: var(--surface-hover);
+}
+
+.toggle:active {
+  transform: scale(0.97);
+}
+
+.toggle svg {
+  color: var(--fg-muted);
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+.done {
+  border-color: var(--viz-teal);
+  background: color-mix(in srgb, var(--viz-teal) 16%, transparent);
+}
+
+.done:hover {
+  border-color: var(--viz-teal);
+  background: color-mix(in srgb, var(--viz-teal) 22%, transparent);
+}
+
+.done svg {
+  color: var(--viz-teal);
+}

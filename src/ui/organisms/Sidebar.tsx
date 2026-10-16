@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Check, ChevronRight, PanelLeftClose, Search, Settings } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
-import { catalog, getArea, hasItems, visibleCourses, type Unit } from '@/catalog'
-import { isItemComplete, unitSummary, useProgress } from '@/progress'
+import { catalog, getArea, hasItems, visibleCourses, type Item, type Unit } from '@/catalog'
+import { itemProgress, unitSummary, useProgress } from '@/progress'
 import { useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
 import { AreaIcon, IconButton, Kbd, KindIcon, ProgressRing, Tooltip } from '../atoms'
@@ -34,7 +34,6 @@ export function Sidebar() {
     setStoredArea(id)
   }
   const activeIds = new Set(segments.map((_, i) => segments.slice(0, i + 1).join('/')))
-  const count = catalog.items.length
 
   return (
     <motion.aside
@@ -97,16 +96,19 @@ export function Sidebar() {
             <Branch
               key={course.id}
               id={course.id}
+              title={course.title}
+              to={course.path}
               defaultOpen
-              header={<span className={clsx(styles.label)}>{course.title}</span>}
               className={styles.course}
             >
               {course.units.filter(hasItems).map((unit) => (
                 <Branch
                   key={unit.id}
                   id={unit.id}
+                  title={unit.title}
+                  to={unit.path}
                   defaultOpen={activeIds.has(unit.id)}
-                  header={<UnitHeader unit={unit} />}
+                  trailing={<UnitRing unit={unit} />}
                 >
                   {unit.items.map((item) => (
                     <NavLink key={item.id} to={item.path} className={clsx(styles.row, styles.item)}>
@@ -121,7 +123,7 @@ export function Sidebar() {
                           )}
                           <KindIcon kind={item.kind} className={styles.kind} />
                           <span className={styles.label}>{item.title}</span>
-                          <ItemDone id={item.id} />
+                          <ItemIndicator item={item} />
                         </>
                       )}
                     </NavLink>
@@ -132,43 +134,59 @@ export function Sidebar() {
           ))}
         </nav>
         <div className={styles.footer}>
-          {count} {count === 1 ? 'item' : 'items'}
-          <IconButton label="Settings and progress" size="sm" onClick={() => openSettings(true)}>
-            <Settings size={15} />
-          </IconButton>
+          <button type="button" className={styles.footerButton} onClick={() => openSettings(true)}>
+            <Settings size={14} />
+            Progress and backup
+          </button>
         </div>
       </div>
     </motion.aside>
   )
 }
 
-function UnitHeader({ unit }: { unit: Unit }) {
+function UnitRing({ unit }: { unit: Unit }) {
   const data = useProgress((s) => s.data)
-  const { fraction } = unitSummary(unit, data)
+  const { itemsDone, itemsTotal, fraction } = unitSummary(unit, data)
   return (
-    <>
-      <span className={styles.label}>{unit.title}</span>
-      <ProgressRing value={fraction} size={13} />
-    </>
+    <Tooltip content={`${itemsDone} of ${itemsTotal} done in this unit`} side="right">
+      <span className={styles.status}>
+        <ProgressRing value={fraction} size={13} label={`${itemsDone} of ${itemsTotal} done`} />
+      </span>
+    </Tooltip>
   )
 }
 
-function ItemDone({ id }: { id: string }) {
-  const item = catalog.byId.get(id)
-  const done = useProgress((s) => item?.type === 'item' && isItemComplete(item, s.data.items[id]))
-  return done ? <Check size={13} className={styles.done} aria-label="Done" /> : null
+function ItemIndicator({ item }: { item: Item }) {
+  // Select the stored record (stable between renders), then derive from it.
+  const stored = useProgress((s) => s.data.items[item.id])
+  const info = itemProgress(item, stored)
+  return (
+    <Tooltip content={info.detail} side="right">
+      <span className={styles.status}>
+        {info.state === 'done' ? (
+          <Check size={13} className={styles.done} aria-label="Done" />
+        ) : (
+          <ProgressRing value={info.fraction} size={11} label={info.detail} />
+        )}
+      </span>
+    </Tooltip>
+  )
 }
 
-/** Collapsible tree level. Remembers the learner's choice; otherwise uses `defaultOpen`. */
+/** Collapsible tree level: a chevron that expands it and a title that opens its page. */
 function Branch({
   id,
-  header,
+  title,
+  to,
+  trailing,
   defaultOpen,
   className,
   children,
 }: {
   id: string
-  header: ReactNode
+  title: string
+  to: string
+  trailing?: ReactNode
   defaultOpen: boolean
   className?: string
   children: ReactNode
@@ -177,16 +195,22 @@ function Branch({
   const open = choice ?? defaultOpen
   return (
     <div>
-      <button
-        type="button"
-        className={clsx(styles.row, className, open && styles.open)}
-        aria-expanded={open}
-        aria-controls={`branch-${id}`}
-        onClick={() => setChoice(!open)}
-      >
-        <ChevronRight size={13} className={styles.chevron} />
-        {header}
-      </button>
+      <div className={clsx(styles.row, styles.branch, className, open && styles.open)}>
+        <button
+          type="button"
+          className={styles.toggle}
+          aria-expanded={open}
+          aria-controls={`branch-${id}`}
+          aria-label={`${open ? 'Collapse' : 'Expand'} ${title}`}
+          onClick={() => setChoice(!open)}
+        >
+          <ChevronRight size={13} className={styles.chevron} />
+        </button>
+        <NavLink to={to} end className={styles.branchLink}>
+          {title}
+        </NavLink>
+        {trailing}
+      </div>
       <AnimatePresence initial={false}>
         {open && (
           <motion.div

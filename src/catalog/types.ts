@@ -41,7 +41,7 @@ export interface UnitMeta {
 export type ItemKind = 'explore' | 'lesson' | 'practice' | 'checkpoint'
 
 export const kindLabel: Record<ItemKind, string> = {
-  explore: 'Explore',
+  explore: 'Exploration',
   lesson: 'Lesson',
   practice: 'Practice',
   checkpoint: 'Checkpoint',

@@ -11,9 +11,15 @@ interface ProgressState {
   error?: string
   visitStep: (itemId: string, stepId: string | undefined) => void
   recordCheck: (itemId: string, stepId: string, correct: boolean) => void
+  /** Forgets a check's answer, so the question can be answered fresh. */
+  clearCheck: (itemId: string, stepId: string) => void
   setItemManual: (itemId: string, manual: ItemProgress['manual'] | undefined) => void
   setSkillStatus: (key: string, status: SkillStatus) => void
-  setUnitStatus: (unit: Unit, status: SkillStatus) => void
+  /**
+   * "I already know this unit": marks every item done and every skill mastered. With `known` false,
+   * removes those choices again so progress reflects what was actually done.
+   */
+  setUnitKnown: (unit: Unit, known: boolean) => void
   /** Removes the learner's override so practice can suggest a status again. */
   clearSkillStatus: (key: string) => void
   exportJson: () => string
@@ -57,6 +63,14 @@ export const useProgress = create<ProgressState>()((set, get) => ({
         }))
       : undefined,
 
+  clearCheck: (itemId, stepId) =>
+    set(({ data }) => ({
+      data: touchItem(data, itemId, (p) => ({
+        ...p,
+        correctChecks: p.correctChecks.filter((id) => id !== stepId),
+      })),
+    })),
+
   setItemManual: (itemId, manual) =>
     set(({ data }) => ({
       data: touchItem(data, itemId, ({ manual: _old, ...p }) => (manual ? { ...p, manual } : p)),
@@ -70,11 +84,19 @@ export const useProgress = create<ProgressState>()((set, get) => ({
       },
     })),
 
-  setUnitStatus: (unit, status) =>
+  setUnitKnown: (unit, known) =>
     set(({ data }) => {
       const skills = { ...data.skills }
-      for (const s of unit.skills) skills[s.key] = { status, source: 'manual', updatedAt: now() }
-      return { data: { ...data, skills } }
+      let next = data
+      for (const s of unit.skills) {
+        if (known) skills[s.key] = { status: 'mastered', source: 'manual', updatedAt: now() }
+        else delete skills[s.key]
+      }
+      for (const i of unit.items)
+        next = touchItem(next, i.id, ({ manual: _old, ...p }) =>
+          known ? { ...p, manual: 'done' } : p,
+        )
+      return { data: { ...next, skills } }
     }),
 
   clearSkillStatus: (key) =>

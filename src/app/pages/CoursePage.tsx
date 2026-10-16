@@ -42,7 +42,7 @@ export function CoursePage({ course }: { course: Course }) {
                       <Badge>planned</Badge>
                     ) : (
                       <>
-                        {summary.itemsDone} / {summary.itemsTotal} done
+                        {summary.itemsDone} of {summary.itemsTotal} done
                         <ProgressRing value={summary.fraction} size={16} />
                       </>
                     )}

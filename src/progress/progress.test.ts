@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Item, Unit } from '@/catalog/types'
-import { isItemComplete, unitSummary } from './derive'
+import { isItemComplete, itemProgress, unitSummary } from './derive'
 import { emptyProgress, migrate } from './schema'
 import type { ItemProgress } from './types'
 
@@ -49,8 +49,22 @@ describe('isItemComplete', () => {
   })
 })
 
+describe('itemProgress', () => {
+  it('reports not started, in progress with detail, and done', () => {
+    const item = makeItem('lesson')
+    expect(itemProgress(item, undefined).state).toBe('not-started')
+    const mid = itemProgress(item, progress({ visitedSteps: ['s1'] }))
+    expect(mid.state).toBe('in-progress')
+    expect(mid.detail).toBe('In progress: 1 of 2 steps, 0 of 1 questions')
+    expect(mid.fraction).toBeCloseTo(1 / 3)
+    expect(
+      itemProgress(item, progress({ visitedSteps: ['s1', 's2'], correctChecks: ['s2'] })).state,
+    ).toBe('done')
+  })
+})
+
 describe('unitSummary', () => {
-  it('combines item completion and skill statuses', () => {
+  it('counts items for progress and skills separately', () => {
     const unit = {
       items: [makeItem('explore')],
       skills: [
@@ -65,7 +79,7 @@ describe('unitSummary', () => {
     const s = unitSummary(unit, data)
     expect(s.itemsDone).toBe(1)
     expect(s.skills).toEqual({ new: 1, practiced: 0, proficient: 0, mastered: 1 })
-    expect(s.fraction).toBeCloseTo(0.75)
+    expect(s.fraction).toBe(1)
   })
 })
 

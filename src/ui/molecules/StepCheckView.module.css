@@ -90,3 +90,8 @@
   color: var(--fg);
   font-weight: 600;
 }
+
+.hint {
+  color: var(--fg-subtle);
+  font-size: var(--text-xs);
+}

@@ -1,14 +1,14 @@
 import { MDXProvider } from '@mdx-js/react'
 import clsx from 'clsx'
-import { Check, ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Suspense, useState, type CSSProperties } from 'react'
 import { ancestors, kindLabel, type Item } from '@/catalog'
 import { isItemComplete, useProgress } from '@/progress'
 import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
-import { Badge, Button, IconButton, ResizeHandle } from '../atoms'
-import { StepList } from '../molecules'
+import { Badge, IconButton, ResizeHandle } from '../atoms'
+import { DoneToggle, StepList } from '../molecules'
 import styles from './ExplanationPane.module.css'
 import { mdxComponents } from './mdxComponents'
 import prose from './Prose.module.css'
@@ -33,6 +33,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
   const Explanation = entry.Explanation
   const progress = useProgress((s) => s.data.items[entry.id])
   const recordCheck = useProgress((s) => s.recordCheck)
+  const clearCheck = useProgress((s) => s.clearCheck)
   const setManual = useProgress((s) => s.setItemManual)
   const done = isItemComplete(entry, progress)
   const solved = new Set(progress?.correctChecks)
@@ -45,7 +46,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
   return (
     <motion.aside
       key={mode}
-      className={clsx(styles.aside, floating && [surfaces.glass, styles.floating])}
+      className={clsx(styles.aside, floating ? [surfaces.glass, styles.floating] : styles.docked)}
       style={{ '--aside-width': `${width}px` } as CSSProperties}
       initial={false}
       animate={{ width: open ? width : 0, opacity: open ? 1 : 0 }}
@@ -89,14 +90,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
         <h1 className={styles.title}>{entry.title}</h1>
         <p className={styles.summary}>{entry.summary}</p>
         <div className={styles.status}>
-          <Button
-            size="sm"
-            variant={done ? 'default' : 'ghost'}
-            icon={done ? <Check size={13} /> : undefined}
-            onClick={toggleDone}
-          >
-            {done ? 'Done' : 'Mark as done'}
-          </Button>
+          <DoneToggle done={done} onToggle={toggleDone} />
           {progress?.manual && <span className={styles.manual}>set by you</span>}
         </div>
 
@@ -132,6 +126,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
               onSelect={onStep}
               solved={solved}
               onCheck={(stepId, correct) => recordCheck(entry.id, stepId, correct)}
+              onClearCheck={(stepId) => clearCheck(entry.id, stepId)}
             />
           </section>
         )}

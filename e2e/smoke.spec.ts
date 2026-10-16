@@ -107,7 +107,7 @@ test('progress survives export, reset and import', async ({ page }, testInfo) =>
   await page.getByRole('button', { name: /Multiplication as rotation and scaling: New/ }).click()
   await page.getByRole('menuitemradio', { name: /Proficient/ }).click()
 
-  await page.getByRole('button', { name: 'Settings and progress' }).click()
+  await page.getByRole('button', { name: 'Progress and backup' }).click()
   const [download] = await Promise.all([
     page.waitForEvent('download'),
     page.getByRole('button', { name: 'Export' }).click(),
@@ -122,13 +122,33 @@ test('progress survives export, reset and import', async ({ page }, testInfo) =>
     page.getByRole('button', { name: /Multiplication as rotation and scaling: New/ }),
   ).toBeVisible()
 
-  await page.getByRole('button', { name: 'Settings and progress' }).click()
+  await page.getByRole('button', { name: 'Progress and backup' }).click()
   await page.locator('input[type="file"]').setInputFiles(file)
   await expect(page.getByText(/Imported progress/)).toBeVisible()
   await page.getByRole('button', { name: 'Close' }).click()
   await expect(
     page.getByRole('button', { name: /Multiplication as rotation and scaling: Proficient/ }),
   ).toBeVisible()
+})
+
+test('a chosen answer can be cleared', async ({ page }) => {
+  await page.goto('/mathematics/calculus-1/derivatives/derivative-as-limit')
+  await page.locator('aside ol > li > button').nth(2).click()
+  const wrong = page.getByRole('radio', { name: /Nothing, because/ })
+  await wrong.click()
+  await expect(page.getByRole('status')).toContainText('Not quite.')
+  await wrong.click()
+  await expect(page.getByRole('status')).toHaveCount(0)
+  await expect(wrong).toHaveAttribute('aria-checked', 'false')
+})
+
+test('"I already know this unit" marks content done and can be undone', async ({ page }) => {
+  await page.goto('/mathematics/calculus-1/derivatives')
+  await expect(page.getByText('0 of 1 done')).toBeVisible()
+  await page.getByRole('button', { name: 'I already know this unit' }).click()
+  await expect(page.getByText('1 of 1 done')).toBeVisible()
+  await page.getByRole('button', { name: /Undo/ }).click()
+  await expect(page.getByText('0 of 1 done')).toBeVisible()
 })
 
 test('theme toggle switches tokens', async ({ page }) => {

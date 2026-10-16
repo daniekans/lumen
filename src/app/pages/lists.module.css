@@ -65,3 +65,27 @@ a.row:hover {
   color: var(--fg-subtle);
   font-size: var(--text-sm);
 }
+
+.progress {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-right: var(--space-3);
+  color: var(--fg-muted);
+  font-size: var(--text-sm);
+}
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 96px;
+}
+
+.intro {
+  max-width: 640px;
+  margin: 0 0 var(--space-3);
+  color: var(--fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}

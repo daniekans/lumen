@@ -39,7 +39,7 @@ export function StatusPicker({ status, manual, onChange, onClear, label }: Statu
             <>
               <Menu.Separator className={styles.separator} />
               <Menu.Item className={styles.item} onSelect={onClear}>
-                Clear my choice
+                Reset to new
               </Menu.Item>
             </>
           )}

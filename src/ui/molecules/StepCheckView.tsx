@@ -9,17 +9,31 @@ interface StepCheckViewProps {
   /** Already answered correctly in an earlier visit. */
   solved: boolean
   onAnswer: (correct: boolean) => void
+  /** Called when the learner clears their answer to start over. */
+  onClear: () => void
 }
 
-/** A question inside a lesson step. Answers give feedback and can be retried; nothing is locked. */
-export function StepCheckView({ check, solved, onAnswer }: StepCheckViewProps) {
-  const [picked, setPicked] = useState<number | null>(null)
-  const [text, setText] = useState('')
+/**
+ * A question inside a lesson step. Answers give feedback and can be changed or cleared at any time;
+ * nothing is locked. A question solved earlier shows its correct answer.
+ */
+export function StepCheckView({ check, solved, onAnswer, onClear }: StepCheckViewProps) {
+  const [picked, setPicked] = useState<number | null>(
+    solved && check.kind === 'choice' ? check.answer : null,
+  )
+  const [text, setText] = useState(solved && check.kind === 'number' ? String(check.answer) : '')
   const [result, setResult] = useState<boolean | null>(solved ? true : null)
 
   const submit = (correct: boolean) => {
     setResult(correct)
     onAnswer(correct)
+  }
+
+  const clear = () => {
+    setPicked(null)
+    setText('')
+    setResult(null)
+    onClear()
   }
 
   return (
@@ -47,6 +61,7 @@ export function StepCheckView({ check, solved, onAnswer }: StepCheckViewProps) {
                   result === false && chosen && styles.wrong,
                 )}
                 onClick={() => {
+                  if (chosen) return clear()
                   setPicked(i)
                   submit(i === check.answer)
                 }}
@@ -77,7 +92,15 @@ export function StepCheckView({ check, solved, onAnswer }: StepCheckViewProps) {
           <Button type="submit" size="sm">
             Check
           </Button>
+          {result !== null && (
+            <Button variant="ghost" size="sm" onClick={clear}>
+              Clear
+            </Button>
+          )}
         </form>
+      )}
+      {check.kind === 'choice' && picked !== null && (
+        <span className={styles.hint}>Click your answer again to clear it.</span>
       )}
       {result !== null && (
         <p className={styles.feedback} role="status">
