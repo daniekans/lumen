@@ -1,7 +1,7 @@
-import { defineProblems, tex, type Rng } from '@/lib/practice'
+import { defineProblems, inlineCode, tex, type Rng } from '@/lib/practice'
 import { encodeColumn, joinSize, valueCounts, type JoinKind, type Value } from '@/lib/relational'
 
-const { code, tables } = tex
+const { tables } = tex
 
 const NAMES = ['Ana', 'Ben', 'Caio', 'Dara', 'Eva', 'Femi', 'Gus', 'Hana', 'Ines']
 const ON = 'ON c.id = o.customer_id'
@@ -46,7 +46,7 @@ const perCustomer = ({ ids, refs }: Shop) => {
 const strayCount = ({ ids, refs }: Shop) =>
   refs.filter((r) => r === null || !ids.includes(r as number)).length
 
-const sql = (s: string) => `$${code(s)}$`
+const sql = inlineCode
 
 const kindSql: Record<'inner' | 'left' | 'right' | 'full', string> = {
   inner: 'JOIN',
@@ -78,7 +78,7 @@ export const problems = defineProblems([
       const m = rng.int(3, 40)
       const n = rng.int(2, 12)
       return {
-        prompt: `A table $${code('sizes')}$ has $${m}$ rows and $${code('colors')}$ has $${n}$. How many rows does ${sql('SELECT * FROM sizes CROSS JOIN colors')} return?`,
+        prompt: `A table ${inlineCode('sizes')} has $${m}$ rows and ${inlineCode('colors')} has $${n}$. How many rows does ${sql('SELECT * FROM sizes CROSS JOIN colors')} return?`,
         answer: { kind: 'number', value: m * n },
         hints: ['A cross join pairs every row of one table with every row of the other.'],
         solution: [
@@ -200,7 +200,7 @@ export const problems = defineProblems([
       const s = shop(rng, rng.int(1, 2))
       const lonely = s.ids.filter((id) => !s.refs.includes(id))
       return {
-        prompt: `List the $${code('c.id')}$ values returned by ${sql(`SELECT c.id FROM customers c LEFT JOIN orders o ${ON} WHERE o.order_id IS NULL`)}. ${shopTables(s)}`,
+        prompt: `List the ${inlineCode('c.id')} values returned by ${sql(`SELECT c.id FROM customers c LEFT JOIN orders o ${ON} WHERE o.order_id IS NULL`)}. ${shopTables(s)}`,
         answer: { kind: 'list', values: lonely },
         hints: [
           'In a left join, o.order_id is NULL only on padded rows.',
@@ -271,7 +271,7 @@ export const problems = defineProblems([
       const t = rng.int(0, 2)
       const templates = [
         {
-          prompt: `$${code('customers')}$ has $${m}$ rows and primary key $${code('id')}$. $${code('orders')}$ has $${n}$ rows, and its $${code('customer_id')}$ is never NULL and always matches a customer. How many rows does ${sql(`orders o JOIN customers c ${ON}`)} return?`,
+          prompt: `${inlineCode('customers')} has $${m}$ rows and primary key ${inlineCode('id')}. ${inlineCode('orders')} has $${n}$ rows, and its ${inlineCode('customer_id')} is never NULL and always matches a customer. How many rows does ${sql(`orders o JOIN customers c ${ON}`)} return?`,
           options: [`Exactly $${n}$`, `Exactly $${m}$`, `Exactly $${m * n}$`, `At most $${m}$`],
           why: [
             'Because $\\texttt{id}$ is unique, each order matches at most one customer.',
@@ -279,7 +279,7 @@ export const problems = defineProblems([
           ],
         },
         {
-          prompt: `$${code('customers')}$ has $${m}$ rows and primary key $${code('id')}$; $${code('orders')}$ has $${n}$ rows. What is certain about the row count of ${sql(`customers c LEFT JOIN orders o ${ON}`)}?`,
+          prompt: `${inlineCode('customers')} has $${m}$ rows and primary key ${inlineCode('id')}; ${inlineCode('orders')} has $${n}$ rows. What is certain about the row count of ${sql(`customers c LEFT JOIN orders o ${ON}`)}?`,
           options: [`At least $${m}$`, `Exactly $${n}$`, `At most $${m}$`, `Exactly $${m + n}$`],
           why: [
             'Each customer contributes its matching orders, or one padded row when it has none.',
@@ -287,7 +287,7 @@ export const problems = defineProblems([
           ],
         },
         {
-          prompt: `Tables $${code('a')}$ ($${m}$ rows) and $${code('b')}$ ($${n}$ rows) are joined on a column that is unique in neither. What is the largest number of rows ${sql('a JOIN b ON a.k = b.k')} can return?`,
+          prompt: `Tables ${inlineCode('a')} ($${m}$ rows) and ${inlineCode('b')} ($${n}$ rows) are joined on a column that is unique in neither. What is the largest number of rows ${sql('a JOIN b ON a.k = b.k')} can return?`,
           options: [`$${m * n}$`, `$${m + n}$`, `$${n}$`, `$${m}$`],
           why: [
             'A key value with $a$ rows on one side and $b$ on the other gives $a \\cdot b$ rows, and the sum over values is at most the product of the table sizes.',

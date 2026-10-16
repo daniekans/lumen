@@ -15,11 +15,11 @@ export function Breadcrumbs({ items }: { items: readonly Crumb[] }) {
         <Fragment key={i}>
           {i > 0 && <span className={styles.sep}>/</span>}
           {i === items.length - 1 || !c.to ? (
-            <span className={styles.current} aria-current="page">
+            <span className={styles.current} aria-current="page" title={c.label}>
               {c.label}
             </span>
           ) : (
-            <Link className={styles.link} to={c.to}>
+            <Link className={styles.link} to={c.to} title={c.label}>
               {c.label}
             </Link>
           )}

@@ -3,7 +3,13 @@ import type { Rng } from './rng'
 
 export type Difficulty = 1 | 2 | 3
 
-/** One generated problem. Text fields accept inline $...$ and display $$...$$ TeX. */
+/** Code shown as text in a prompt (it wraps, unlike TeX), e.g. a SQL query or a column name. */
+export const inlineCode = (s: string) => `\`${s}\``
+
+/**
+ * One generated problem. Text fields accept inline $...$ and display $$...$$ TeX, and `code` in
+ * backticks (see `inlineCode`).
+ */
 export interface Problem {
   prompt: string
   answer: Answer

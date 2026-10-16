@@ -1,4 +1,4 @@
-import { defineProblems, tex, type Rng } from '@/lib/practice'
+import { defineProblems, inlineCode, tex, type Rng } from '@/lib/practice'
 import { determines, encodeColumn, isKey, orphans, type Row } from '@/lib/relational'
 
 const { code, table, tables } = tex
@@ -151,11 +151,11 @@ export const problems = defineProblems([
         .join(', ')
       return {
         prompt: `Which single column is a key of this table? $$${table(columns, rows, 'staff')}$$`,
-        answer: { kind: 'choice', options: columns.map((c) => `$${code(c)}$`), correct: key },
+        answer: { kind: 'choice', options: columns.map(inlineCode), correct: key },
         hints: ['A key column has no repeated values and no NULLs.'],
         solution: [
           `$${repeats}$ each repeat a value, so two rows agree on them.`,
-          `Every value of $${code(columns[key]!)}$ is different, so it identifies each row.`,
+          `Every value of ${inlineCode(columns[key]!)} is different, so it identifies each row.`,
         ],
         data: {
           key,
@@ -302,7 +302,7 @@ export const problems = defineProblems([
       const orderIds = refs.map((_, i) => 101 + i)
       const bad = orphans(refs, ids).map((i) => orderIds[i]!)
       return {
-        prompt: `$${code('orders.customer_id')}$ references $${code('customers.id')}$. List the $${code('order_id')}$ of every order that breaks the foreign key. $$${tables({ columns: ['id'], rows: ids.map((v) => [v]), title: 'customers' }, { columns: ['order_id', 'customer_id'], rows: refs.map((r, i) => [orderIds[i]!, r]), title: 'orders' })}$$`,
+        prompt: `${inlineCode('orders.customer_id')} references ${inlineCode('customers.id')}. List the ${inlineCode('order_id')} of every order that breaks the foreign key. $$${tables({ columns: ['id'], rows: ids.map((v) => [v]), title: 'customers' }, { columns: ['order_id', 'customer_id'], rows: refs.map((r, i) => [orderIds[i]!, r]), title: 'orders' })}$$`,
         answer: { kind: 'list', values: bad },
         hints: [
           'Compare each customer_id with the list of ids.',
@@ -333,7 +333,7 @@ export const problems = defineProblems([
       const value = cascade ? 1 + hits : nulls + hits
       const rule = cascade ? 'ON DELETE CASCADE' : 'ON DELETE SET NULL'
       return {
-        prompt: `The foreign key is declared with $${code(rule)}$. After $${code(`DELETE FROM customers WHERE id = ${target}`)}$, ${cascade ? 'how many rows were deleted in total, from both tables?' : `how many orders have a NULL $${code('customer_id')}$?`} $$${tables({ columns: ['id'], rows: ids.map((v) => [v]), title: 'customers' }, { columns: ['order_id', 'customer_id'], rows: refs.map((r, i) => [101 + i, r]), title: 'orders' })}$$`,
+        prompt: `The foreign key is declared with ${inlineCode(rule)}. After ${inlineCode(`DELETE FROM customers WHERE id = ${target}`)}, ${cascade ? 'how many rows were deleted in total, from both tables?' : `how many orders have a NULL ${inlineCode('customer_id')}?`} $$${tables({ columns: ['id'], rows: ids.map((v) => [v]), title: 'customers' }, { columns: ['order_id', 'customer_id'], rows: refs.map((r, i) => [101 + i, r]), title: 'orders' })}$$`,
         answer: { kind: 'number', value },
         hints: [
           `Count the orders that reference customer $${target}$.`,
