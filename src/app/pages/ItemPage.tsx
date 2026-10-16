@@ -12,7 +12,7 @@ import { ControlDock, ExplanationPane, LissajousMark, TopBar } from '@/ui/organi
 import { VizLayout } from '@/ui/templates'
 import { VizRuntimeContext, type VizRuntimeValue } from '@/viz-kit/runtime'
 import { crumbsFor } from '../crumbs'
-import { ErrorBoundary } from '../ErrorBoundary'
+import { ErrorBoundary } from '@/ui/organisms'
 import { isTyping } from '../useGlobalHotkeys'
 import { usePageTitle } from '../usePageTitle'
 import styles from './ItemPage.module.css'

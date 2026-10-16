@@ -44,7 +44,7 @@
   --dur-slow: 480ms;
 
   /* Glass: the one surface style for everything that floats over content. */
-  --glass-blur: blur(28px) saturate(1.4);
+  --glass-blur: blur(18px) saturate(1.3);
 
   /* Visualization palette (shared by both themes, tuned per theme below) */
   --viz-stroke-width: 2px;

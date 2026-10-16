@@ -9,6 +9,7 @@ import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
 import { Badge, IconButton, ResizeHandle } from '../atoms'
 import { DoneToggle, StepList } from '../molecules'
+import { ErrorBoundary } from './ErrorBoundary'
 import styles from './ExplanationPane.module.css'
 import { mdxComponents } from './mdxComponents'
 import prose from './Prose.module.css'
@@ -139,9 +140,11 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
             </div>
             <div className={prose.prose}>
               <MDXProvider components={mdxComponents}>
-                <Suspense fallback={<p className={styles.loading}>Loading…</p>}>
-                  <Explanation />
-                </Suspense>
+                <ErrorBoundary compact>
+                  <Suspense fallback={<p className={styles.loading}>Loading…</p>}>
+                    <Explanation />
+                  </Suspense>
+                </ErrorBoundary>
               </MDXProvider>
             </div>
           </>

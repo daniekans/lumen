@@ -54,6 +54,10 @@ in TSX (`clsx(surfaces.glass, styles.panel)`).
 When part of a visualization is too small to read at normal size, offer an expand button that opens
 it in a `VizSheet` rather than shrinking the rest of the layout.
 
+Write only the standard `backdrop-filter` property. The production CSS minifier adds the
+`-webkit-` prefix itself, and when both are written by hand it keeps only the prefixed one, which
+Chrome rejects for values with `var()`. That removed every blur on the deployed site once.
+
 ## Motion rules
 
 - Default visualization transitions take 0.6 to 1.0 s with `ease.inOut`. UI transitions take

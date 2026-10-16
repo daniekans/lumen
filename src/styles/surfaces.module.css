@@ -8,5 +8,4 @@
   background: var(--glass);
   box-shadow: var(--shadow);
   backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
 }
