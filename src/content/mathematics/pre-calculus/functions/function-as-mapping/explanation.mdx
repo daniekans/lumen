@@ -1,0 +1,48 @@
+A function is a rule that takes an input and gives back exactly one output. Almost everything in
+calculus is a statement about functions, so it pays to see the definition from two sides: as arrows
+between two sets, and as a curve in the plane.
+
+## Inputs and outputs
+
+A function $f$ from a set of inputs to a set of outputs assigns to each input $x$ one output, written
+$f(x)$. For the rule shown here,
+
+$$
+f(x) = x^2, \qquad f(2) = 4, \quad f(-1) = 1, \quad f(0) = 0.
+$$
+
+Each arrow in the mapping is one evaluation. Reading $f(2)$ means following the arrow that starts at
+$2$.
+
+## Exactly one output
+
+The definition allows two inputs to share an output: $f(-1) = f(1) = 1$. It does not allow one input
+to have two outputs. The <C c="red">red arrow</C> in <StepLink step="one-output">this step</StepLink>
+would send $1$ to both $1$ and $4$, and then $f(1)$ would have no single value.
+
+## From a mapping to a graph
+
+Put the inputs on a horizontal axis and the outputs on a vertical one. The arrow for $x$ now goes up
+from $x$ and across to $f(x)$, and its corner is the point
+
+$$
+(x, f(x)).
+$$
+
+The graph of $f$ is the set of all these corners. With every real number as an input they fill in
+the <C c="blue">curve</C>. To evaluate $f$ from a graph, go up from $x$ to the curve, then across to
+the $y$-axis, as the <C c="yellow">yellow guide</C> does when you <StepLink step="curve">drag
+$x$</StepLink>.
+
+## The vertical line test
+
+A vertical line contains every point with one fixed $x$. If it meets a curve twice, that input has
+two outputs, so the curve is not the graph of a function of $x$. The sideways parabola
+
+$$
+x = (y - 2)^2 - 2
+$$
+
+fails the test for every $x > -2$: the line crosses it at $y = 2 \pm \sqrt{x + 2}$. Where a vertical
+line misses a graph entirely, that $x$ is simply not an input. Which inputs a function accepts is its
+domain, the subject of the next exploration.

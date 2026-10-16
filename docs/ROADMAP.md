@@ -13,7 +13,7 @@ awaiting feedback), `done`.
 | 2A    | Content tree, progress store, lessons                                                    | done    |
 | 2B    | Practice engine: math input, answer checking, generators, sessions, checkpoints          | done    |
 | 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills       | next    |
-| 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit | next    |
+| 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit | doing   |
 | 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree  | planned |
 | 4     | Pan and zoom on stages with axes                                                         | planned |
 | 5     | 3D stages for multivariable calculus and linear algebra                                  | planned |
@@ -22,9 +22,9 @@ awaiting feedback), `done`.
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2C and 2D can run
 in either order; 2D was recommended first because the dashboard is more useful with real content.
 
-**Suggested next session:** start phase 2D with the Functions unit. Plan its items (explorations,
-one lesson, practice sets, checkpoint), list them in `LEARNING_PLATFORM.md`, then build one item per
-step and check each one visually before moving on.
+**Suggested next session:** continue phase 2D with the Functions unit plan in
+`LEARNING_PLATFORM.md` ("Functions unit plan"). Item 1 (function-as-mapping) is a draft waiting for
+Daniel's review; apply that feedback, publish it, then build item 2 (domain-and-range).
 
 ### Phase 3: Explore page
 
@@ -66,17 +66,18 @@ runtime, steps, controls and palette.
 Items in the content tree, by path under `src/content`. The full curriculum plan is in
 [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md).
 
-| Path                                                                     | Kind       | Status | Notes                                      |
-| ------------------------------------------------------------------------ | ---------- | ------ | ------------------------------------------ |
-| mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson     | done   | Two checks (concept, computed value)       |
-| mathematics/calculus-1/derivatives/difference-quotients                  | practice   | done   | Six generators, verified by property tests |
-| mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems including a self-graded proof |
-| mathematics/calculus-1/integrals/riemann-sums                            | explore    | done   | Empty space below the x-axis at some sizes |
-| mathematics/linear-algebra/linear-transformations/matrix-transformations | explore    | done   | `MatrixView` could move to `ui` if reused  |
-| mathematics/complex-numbers/arithmetic/complex-multiplication            | explore    | done   |                                            |
-| machine-learning/neural-networks/foundations/forward-pass                | explore    | done   |                                            |
-| machine-learning/neural-networks/training/backpropagation                | explore    | done   |                                            |
-| ai-engineering/retrieval/fundamentals/rag-pipeline                       | explore    | done   | Vector store view opens in a larger sheet  |
+| Path                                                                     | Kind       | Status | Notes                                          |
+| ------------------------------------------------------------------------ | ---------- | ------ | ---------------------------------------------- |
+| mathematics/pre-calculus/functions/function-as-mapping                   | explore    | draft  | Mapping folds into a graph; vertical line test |
+| mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson     | done   | Two checks (concept, computed value)           |
+| mathematics/calculus-1/derivatives/difference-quotients                  | practice   | done   | Six generators, verified by property tests     |
+| mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems including a self-graded proof     |
+| mathematics/calculus-1/integrals/riemann-sums                            | explore    | done   | Empty space below the x-axis at some sizes     |
+| mathematics/linear-algebra/linear-transformations/matrix-transformations | explore    | done   | `MatrixView` could move to `ui` if reused      |
+| mathematics/complex-numbers/arithmetic/complex-multiplication            | explore    | done   |                                                |
+| machine-learning/neural-networks/foundations/forward-pass                | explore    | done   |                                                |
+| machine-learning/neural-networks/training/backpropagation                | explore    | done   |                                                |
+| ai-engineering/retrieval/fundamentals/rag-pipeline                       | explore    | done   | Vector store view opens in a larger sheet      |
 
 Planned units without content (all of pre-calculus, limits, applications of derivatives, relational
 model and joins) appear on their course pages as planned.
