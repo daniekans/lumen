@@ -229,6 +229,11 @@ Status: `todo`, `doing`, `done`.
 | Checkpoints with worksheet view and self-graded problems                     | done   |
 | Skill statuses: suggested from results, manually settable in both directions | done   |
 
+Follow-ups after review (done): sessions and checkpoint sheets persist across visits, earlier
+problems can be reviewed read-only, the counter shows the viewed problem, difficulty changes apply
+immediately to an unanswered problem, the math field hint is a dimmed overlay, and checkpoints print
+as clean worksheets.
+
 ### 2C. Dashboard
 
 | Task                                                       | Status |

@@ -5,15 +5,61 @@ Tracker for the project. Update the tables whenever a visualization changes stat
 Status values: `idea` (backlog), `draft` (in the repo with `status: 'draft'`), `review` (published,
 awaiting feedback), `done`.
 
-## Current phase
+## Phases
 
-**Phase 2: learning platform.** Phase 1 (platform, design system, visualization kit, seven
-visualizations, deployment to GitHub Pages) is done and reviewed. Phase 2 adds areas, courses and
-units, lessons, practice with checked answers, and progress. Plan and task tracker:
-[LEARNING_PLATFORM.md](LEARNING_PLATFORM.md).
+| Phase | What                                                                                     | Status  |
+| ----- | ---------------------------------------------------------------------------------------- | ------- |
+| 1     | Platform, design system, visualization kit, first seven visualizations, GitHub Pages     | done    |
+| 2A    | Content tree, progress store, lessons                                                    | done    |
+| 2B    | Practice engine: math input, answer checking, generators, sessions, checkpoints          | done    |
+| 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills       | next    |
+| 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit | next    |
+| 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree  | planned |
+| 4     | Pan and zoom on stages with axes                                                         | planned |
+| 5     | 3D stages for multivariable calculus and linear algebra                                  | planned |
+| later | Presentation mode, internationalization (pt-BR), mobile layout                           | planned |
 
-Data Engineering and Architecture units are interleaved with the math track instead of coming last;
-the schedule is in the Curriculum section of the learning platform plan.
+Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2C and 2D can run
+in either order; 2D was recommended first because the dashboard is more useful with real content.
+
+**Suggested next session:** start phase 2D with the Functions unit. Plan its items (explorations,
+one lesson, practice sets, checkpoint), list them in `LEARNING_PLATFORM.md`, then build one item per
+step and check each one visually before moving on.
+
+### Phase 3: Explore page
+
+A gallery of explorations and lessons, independent of courses: a grid of cards with a live or static
+preview, filters by area and tag, and search. Cards open the item normally. Needs a preview per item:
+either a small static SVG thumbnail rendered from the visualization at a fixed step, or a
+`thumbnail` export in the item folder. The catalog already lists every item, so this is mostly UI.
+
+### Phase 4: Pan and zoom
+
+Feasible with modest work because every primitive draws through `useCoords()`. The Stage would hold
+a view transform (center and scale) on top of its fitted domain, changed by wheel, pinch and drag on
+empty space, with a reset button and limits. Grid and axes already cover the visible view, so they
+extend naturally. Things to handle: drag conflicts with draggable points (drag only on background),
+label density when zoomed out (axis ticks already adapt via `niceStep`), and opting out for diagrams
+where zoom makes no sense (a `zoomable` prop, off by default).
+
+### Phase 5: 3D
+
+Needed for surfaces, gradients, partial derivatives and 3D linear maps. Two options, to decide at
+the start of the phase:
+
+- **Own projection in SVG** (orbit camera, painter's ordering): keeps the exact 2D look (crisp strokes,
+  same tokens, KaTeX labels), enough for curves, vectors, grids, wireframe and simple shaded surfaces.
+- **react-three-fiber (three.js)**: real depth, lighting and large meshes, at the cost of a heavier
+  bundle and more work to match the flat, clean aesthetic.
+
+A likely path is SVG first for 3Blue1Brown-style line drawings, and three.js only if a visualization
+needs shaded surfaces that SVG cannot handle well. Either way it plugs in as a `Stage3D` using the same
+runtime, steps, controls and palette.
+
+### Later
+
+- Presentation mode and internationalization: see [PRODUCT_VISION.md](PRODUCT_VISION.md).
+- Mobile layout: panes as bottom sheets, dock as a drawer.
 
 ## Content
 
@@ -93,37 +139,9 @@ model and joins) appear on their course pages as planned.
 - Bayes' theorem as area
 - Random walks
 
-## Platform
+## Platform notes
 
-### Done
-
-- App shell: sidebar, top bar, explanation pane, floating control dock, command palette
-- Dark and light themes from one token set; keyboard shortcuts
-- Visualization kit: Stage, plot primitives, diagram primitives, neural network drawing,
-  animation hooks, drag, steps runtime
-- Folder-based registry with code splitting and draft status
-- Prose lint, unit tests, Playwright smoke tests, CI
-- Glass surface shared by all overlays; resizable and floating explanation pane; `VizSheet`
-- Viz animations on the kit's own requestAnimationFrame tween (fixed instant preset animations)
-
-### Next
-
-- Presentation mode for recording video lessons (stage only, larger labels, keyboard-driven steps,
-  recording aspect ratios). Details in [PRODUCT_VISION.md](PRODUCT_VISION.md).
-- Internationalization, Brazilian Portuguese first. Details in [PRODUCT_VISION.md](PRODUCT_VISION.md).
-
-- Mobile layout: panes as bottom sheets, dock collapses into a drawer
-- Shareable state in the URL (current step, key parameters)
-- Section landing pages with ordered learning paths
-- Thumbnails rendered from each visualization for the home cards
-- 3D: a `Stage3D` built on react-three-fiber with the same runtime and controls
-- Audio: optional sonification service (Web Audio) behind a toggle
-- Deployment (GitHub Pages or Vercel) with SPA fallback
-- Visual regression snapshots per step
-- Split vendor code (KaTeX, motion, Radix) out of the main chunk; it is 856 kB (272 kB gzipped)
-
-## Open questions for review
-
-- Is the home page hero copy right?
-- Should the explanation pane be open by default on first visit?
-- Preferred deployment target?
+- Main JS chunk is about 890 kB (276 kB gzipped). Splitting vendor code (KaTeX, motion, Radix) is a
+  possible improvement.
+- Other ideas: shareable state in the URL (step, parameters), thumbnails for cards, visual regression
+  snapshots per step, optional sonification.
