@@ -1,0 +1,4 @@
+# One KaTeX version for both the TeX atom and rehype-katex (MDX), so the
+# rendered HTML matches the single katex.min.css the app loads.
+overrides:
+  katex: 0.19.0
