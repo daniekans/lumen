@@ -250,7 +250,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | -------------------------------------------------------------------------- | ------ |
 | Pre-calculus / Functions (items below)                                     | review |
 | Data Engineering / Relational model and SQL joins (first interleaved unit) | review |
-| Pre-calculus / Algebra essentials                                          | todo   |
+| Pre-calculus / Algebra essentials                                          | doing  |
 
 #### Functions unit plan
 
@@ -308,6 +308,36 @@ Built in three batches; all eight items are published and await review. The chec
 `problemCount: 10`: nine practice generators plus the proof. Practice prompts draw tables with
 `tex.table` and `tex.tables` (side by side, padded to equal height) from `@/lib/practice`, and store
 key columns in problem data with `encodeColumn` from `@/lib/relational`.
+
+#### Algebra essentials unit plan
+
+Folder `src/content/mathematics/pre-calculus/algebra-essentials/`. Same process as the Functions
+unit. The thread through the unit: every rule is a picture first. Exponent laws are tiles that join
+and cancel, radicals are sides of squares, factoring is arranging area tiles into a rectangle, and
+solving an equation or inequality is reading where two graphs meet or which one is higher.
+
+Skills: `exponents`, `radicals`, `factor`, `rational-expressions`, `equations`, `inequalities`,
+`absolute-value` (titles in `unit.ts`).
+
+The answer checker accepts any equivalent expression, so an answer that must be in a simplified
+form (a factored polynomial, a simplest radical) is asked as a `choice` whose distractors include
+equal but unsimplified forms, or as a `number` (an exponent, a coefficient).
+
+| #   | Item                                | Kind       | Skills                                  | Content                                                                                                                       | Status |
+| --- | ----------------------------------- | ---------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | exponent-laws                       | explore    | exponents                               | Factors as tiles: products join rows, quotients cancel pairs across a bar, zero and negative exponents, $(a^m)^n$ as a grid   | review |
+| 2   | radicals                            | explore    | radicals                                | $\sqrt{A}$ as the side of a square, $\sqrt{k^2 r} = k\sqrt{r}$ as a grid, $\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}$, cube roots | review |
+| 3   | practice-exponents-and-radicals     | practice   | exponents, radicals                     | Exponent laws, negative and rational exponents, simplest radical form, rationalizing, adding radicals                         | review |
+| 4   | factoring-as-area                   | explore    | factor                                  | Algebra tiles: $x^2 + bx + c$ arranged into $(x + p)(x + q)$, common factors, difference of squares                           | todo   |
+| 5   | rational-expressions                | lesson     | rational-expressions, factor            | Cancel common factors (and keep the excluded values: the graph has a hole), multiply, add over a common denominator           | todo   |
+| 6   | practice-factoring-and-fractions    | practice   | factor, rational-expressions            | Common factors, trinomials, difference of squares, simplify, multiply and add rational expressions                            | todo   |
+| 7   | solving-equations-and-inequalities  | explore    | equations, inequalities                 | Solutions as intersections, inequalities as where one graph is above, flipping on negative factors, sign charts               | todo   |
+| 8   | absolute-value                      | explore    | absolute-value                          | $\lvert x - a \rvert$ as distance on a number line, $\lvert x - a \rvert < r$ as an interval around $a$, the V graph          | todo   |
+| 9   | practice-equations-and-inequalities | practice   | equations, inequalities, absolute-value | Linear, quadratic and rational equations (extraneous roots), linear and quadratic inequalities, absolute value                | todo   |
+| 10  | checkpoint                          | checkpoint | all                                     | Mix of the practice generators plus a self-graded proof ($\sqrt{2}$ is irrational)                                            | todo   |
+
+Batches: items 1 to 3 (published, awaiting review), then 4 to 6, then 7 to 10. Number answers that
+are repeating decimals show as fractions (`answerTex`), so generators can return any rational.
 
 ## Risks
 

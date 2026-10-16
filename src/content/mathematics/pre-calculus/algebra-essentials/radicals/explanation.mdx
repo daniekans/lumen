@@ -1,0 +1,57 @@
+A root undoes a power. The square root of $A$ answers: which side length gives a square of area
+$A$? Thinking of roots as sides of squares makes their rules, and their most common mistake, visible.
+
+## Square roots
+
+For $A \geq 0$, $\sqrt{A}$ is the nonnegative number whose square is $A$:
+
+$$
+\sqrt{A} \geq 0, \qquad \left(\sqrt{A}\right)^2 = A.
+$$
+
+So $\sqrt{25} = 5$, not $\pm 5$. The equation $x^2 = 25$ has two solutions, $x = \pm\sqrt{25}$,
+and the sign comes from the equation, not from the root. For the same reason
+$\sqrt{x^2} = \lvert x \rvert$.
+
+## Products and quotients
+
+$$
+\sqrt{ab} = \sqrt{a}\,\sqrt{b}, \qquad \sqrt{\frac{a}{b}} = \frac{\sqrt{a}}{\sqrt{b}}, \qquad a,
+b \geq 0.
+$$
+
+To simplify, write the number as $k^2 r$ with the largest possible square $k^2$; then
+$\sqrt{k^2 r} = k\sqrt{r}$. In <StepLink step="simplify">the grid step</StepLink>,
+$\sqrt{18} = \sqrt{9 \cdot 2} = 3\sqrt{2}$. Using a smaller square leaves work undone:
+$\sqrt{72} = 2\sqrt{18}$ is true but not simplest, because $72 = 36 \cdot 2$ gives $6\sqrt{2}$.
+
+## Sums do not split
+
+$$
+\sqrt{a + b} \neq \sqrt{a} + \sqrt{b} \quad \text{(unless } a \text{ or } b \text{ is } 0\text{)}.
+$$
+
+For $a = 9$ and $b = 16$ the <C c="yellow">two sides</C> add to $7$. The <C c="teal">square of area $25$</C> has side $5$.
+
+Only like radicals combine: $2\sqrt{3} + 5\sqrt{3} = 7\sqrt{3}$, just as $2x + 5x = 7x$.
+
+## Rationalizing a denominator
+
+Multiplying by $\frac{\sqrt{b}}{\sqrt{b}} = 1$ moves a root out of the denominator:
+
+$$
+\frac{a}{\sqrt{b}} = \frac{a\sqrt{b}}{b}, \qquad \text{for example} \quad \frac{6}{\sqrt{3}} =
+\frac{6\sqrt{3}}{3} = 2\sqrt{3}.
+$$
+
+## Other roots and rational exponents
+
+$\sqrt[n]{a}$ is the number whose $n$-th power is $a$. The power rule $(a^m)^n = a^{mn}$ forces
+
+$$
+a^{1/n} = \sqrt[n]{a}, \qquad a^{m/n} = \left(\sqrt[n]{a}\right)^m = \sqrt[n]{a^m}.
+$$
+
+Taking the root first keeps the numbers small: $8^{2/3} = (\sqrt[3]{8})^2 = 2^2 = 4$, and
+$16^{-3/4} = \frac{1}{(\sqrt[4]{16})^3} = \frac{1}{8}$. Odd roots of negative numbers exist,
+$\sqrt[3]{-8} = -2$; even roots of negative numbers are not real.

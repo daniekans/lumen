@@ -48,4 +48,22 @@ export const answerTex = (a: Answer): string | undefined => {
   }
 }
 
-const formatNumber = (v: number) => (Number.isInteger(v) ? String(v) : String(+v.toFixed(6)))
+/** A non-integer close to p/q with a small q, as [p, q]; otherwise null. */
+const asFraction = (v: number): [number, number] | null => {
+  for (let q = 2; q <= 1000; q++) {
+    const p = Math.round(v * q)
+    if (Math.abs(p / q - v) < 1e-12 * Math.max(1, Math.abs(v))) return [p, q]
+  }
+  return null
+}
+
+/**
+ * Integers and short decimals as they are; repeating decimals with a small denominator as fractions
+ * (-\frac{5}{9}), so the shown answer is exact; anything else rounded to six places.
+ */
+const formatNumber = (v: number) => {
+  if (Number.isInteger(v) || v === +v.toFixed(6)) return String(v)
+  const f = asFraction(v)
+  if (f) return `${f[0] < 0 ? '-' : ''}\\frac{${Math.abs(f[0])}}{${f[1]}}`
+  return String(+v.toFixed(6))
+}

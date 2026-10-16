@@ -1,0 +1,57 @@
+How do you multiply, divide or raise powers without writing out every factor? Each exponent law
+follows from one definition, and each one is a statement about counting factors.
+
+## Definition
+
+For a whole number $m$,
+
+$$
+a^m = \underbrace{a \cdot a \cdots a}_{m \text{ factors}}.
+$$
+
+The base is $a$ and the exponent $m$ counts the factors, drawn as tiles.
+
+## Product rule
+
+$$
+a^m \cdot a^n = a^{m + n}
+$$
+
+Writing <C c="blue">$m$ factors</C> next to <C c="yellow">$n$ more</C> gives $m + n$ factors. The
+rule needs the same base: $2^3 \cdot 3^2$ does not combine.
+
+## Quotient rule
+
+$$
+\frac{a^m}{a^n} = a^{m - n}, \qquad a \neq 0
+$$
+
+Each factor below the bar cancels one above it. In <StepLink step="quotient">the quotient
+step</StepLink>, $\frac{a^5}{a^2}$ leaves three factors.
+
+## Zero and negative exponents
+
+The quotient rule only works for every $m$ and $n$ if
+
+$$
+a^0 = 1, \qquad a^{-n} = \frac{1}{a^n}, \qquad a \neq 0.
+$$
+
+When all factors cancel the quotient is $1$, and leftovers below the bar stay below. A negative
+exponent means a reciprocal, never a negative number: $2^{-3} = \frac{1}{8}$.
+
+## Power rules
+
+$$
+(a^m)^n = a^{mn}, \qquad (ab)^n = a^n b^n, \qquad \left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}.
+$$
+
+$(a^m)^n$ is a grid of $n$ rows with $m$ factors each. The other two rules hold because the factors
+of a product can be regrouped in any order.
+
+## Common mistakes
+
+- $a^m + a^n$ is not $a^{m + n}$: the laws are about products, not sums. $2^2 + 2^3 = 12$, while
+  $2^5 = 32$.
+- $(a + b)^2$ is not $a^2 + b^2$: the power of a product rule does not apply to sums.
+- $-2^4 = -16$ but $(-2)^4 = 16$: the exponent applies only to what it touches.

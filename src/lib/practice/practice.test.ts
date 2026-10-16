@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { answerTex } from './answers'
 import { checkAnswer } from './check'
 import { autoDifficulty, nextGenerator, suggestStatus, type Attempt } from './session'
 import { createRng } from './rng'
@@ -59,6 +60,15 @@ describe('checkAnswer', () => {
       checkAnswer({ kind: 'choice', options: ['a', 'b'], correct: 1 }, { choice: 1 }).verdict,
     ).toBe('correct')
     expect(checkAnswer({ kind: 'self' }, { self: false }).verdict).toBe('incorrect')
+  })
+})
+
+describe('answerTex', () => {
+  it('keeps short decimals and writes repeating ones as fractions', () => {
+    expect(answerTex({ kind: 'number', value: 2.5 })).toBe('2.5')
+    expect(answerTex({ kind: 'number', value: -5 / 9 })).toBe('-\\frac{5}{9}')
+    expect(answerTex({ kind: 'list', values: [1 / 3, 4] })).toBe('\\frac{1}{3},\\ 4')
+    expect(answerTex({ kind: 'number', value: Math.SQRT2 })).toBe('1.414214')
   })
 })
 
