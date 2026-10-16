@@ -1,0 +1,27 @@
+Two skills that work as a pair: composing functions, and undoing a function.
+
+## Composition
+
+$(f \circ g)(x) = f(g(x))$ applies $g$ first. To evaluate, work from the inside out. To find the
+formula, put the whole expression $g(x)$, in parentheses, wherever $f$ has $x$. For $f(x) = x^2 + 1$
+and $g(x) = 2x - 3$:
+
+$$
+f(g(x)) = (2x - 3)^2 + 1 = 4x^2 - 12x + 10.
+$$
+
+## Inverses
+
+To find $f^{-1}$:
+
+1. Write $y = f(x)$.
+2. Solve for $x$ in terms of $y$.
+3. Rename $y$ to $x$.
+
+For a fraction, multiply out the denominator first, collect every term with $x$ on one side, then
+factor $x$ out. Check any answer by composing: $f(f^{-1}(x))$ should simplify to $x$.
+
+## Answering
+
+Equivalent forms are accepted, so $\frac{x - 3}{2}$ and $\frac{1}{2}x - \frac{3}{2}$ both count. Type
+a cube root from the keyboard's root key with index $3$.

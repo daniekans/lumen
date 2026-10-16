@@ -22,10 +22,9 @@ awaiting feedback), `done`.
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2C and 2D can run
 in either order; 2D was recommended first because the dashboard is more useful with real content.
 
-**Suggested next session:** continue phase 2D with the Functions unit plan in
-`LEARNING_PLATFORM.md` ("Functions unit plan"). Items 1 to 7 are published; build the last batch
-(items 8 to 10: two practice sets and the checkpoint). Collect Daniel's feedback
-after a batch.
+**Suggested next session:** the Functions unit is complete and published (items in `review` until
+Daniel's feedback). Next in phase 2D: Data Engineering / Relational model and SQL joins. Plan its
+items in `LEARNING_PLATFORM.md` the way the Functions unit plan does, then build them in batches.
 
 ### Phase 3: Explore page
 
@@ -76,6 +75,9 @@ Items in the content tree, by path under `src/content`. The full curriculum plan
 | mathematics/pre-calculus/functions/composition                           | explore    | review | Three number lines; order switch                 |
 | mathematics/pre-calculus/functions/inverses                              | explore    | review | Graph reflects across y = x                      |
 | mathematics/pre-calculus/functions/transformations                       | explore    | review | Dock wraps to two rows at 1440 px                |
+| mathematics/pre-calculus/functions/practice-compose-and-invert           | practice   | review | Seven generators, verified by property tests     |
+| mathematics/pre-calculus/functions/practice-transformations              | practice   | review | Five generators, verified by property tests      |
+| mathematics/pre-calculus/functions/checkpoint                            | checkpoint | review | Ten problems including a self-graded proof       |
 | mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson     | done   | Two checks (concept, computed value)             |
 | mathematics/calculus-1/derivatives/difference-quotients                  | practice   | done   | Six generators, verified by property tests       |
 | mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems including a self-graded proof       |

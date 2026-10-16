@@ -57,6 +57,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Keep things simple and low maintenance. Only free services.
 - Content is built in batches of several items, with Daniel's feedback collected after a batch, not
   after every item.
+- Saving tokens matters as much as batching: a new phase or batch should be startable from a fresh
+  session using only the repo docs. Every final answer that ends a piece of work suggests a short
+  prompt for continuing in a clean session (not needed for questions or small adjustments that
+  belong to the current conversation).
 - After a finished batch or a set of adjustments, commit, push and deploy without asking. Ask first
   only when a choice is not straightforward and Daniel's judgment would matter.
 

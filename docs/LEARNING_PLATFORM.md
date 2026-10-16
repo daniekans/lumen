@@ -248,7 +248,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 
 | Task                                                                       | Status |
 | -------------------------------------------------------------------------- | ------ |
-| Pre-calculus / Functions (items below)                                     | doing  |
+| Pre-calculus / Functions (items below)                                     | review |
 | Data Engineering / Relational model and SQL joins (first interleaved unit) | todo   |
 | Pre-calculus / Algebra essentials                                          | todo   |
 
@@ -270,12 +270,13 @@ Skills (local ids in `unit.ts`): `definition` (what makes a relation a function)
 | 5   | composition                  | explore    | compose                | Three number lines: $x \to g(x) \to f(g(x))$; order matters                                             | review |
 | 6   | inverses                     | explore    | inverse                | Reflection across $y = x$, horizontal line test, restricting the domain                                 | review |
 | 7   | transformations              | explore    | transform              | $a\,f(b(x - h)) + k$ with sliders: shifts, stretches, reflections                                       | review |
-| 8   | practice-compose-and-invert  | practice   | compose, inverse       | Compose formulas, evaluate compositions, find inverse formulas                                          | todo   |
-| 9   | practice-transformations     | practice   | transform              | Formula from a described transformation and the reverse                                                 | todo   |
-| 10  | checkpoint                   | checkpoint | all                    | Mix of the practice generators plus a self-graded proof (a composition of injective functions)          | todo   |
+| 8   | practice-compose-and-invert  | practice   | compose, inverse       | Compose formulas, evaluate compositions, find inverse formulas                                          | review |
+| 9   | practice-transformations     | practice   | transform              | Formula from a described transformation and the reverse                                                 | review |
+| 10  | checkpoint                   | checkpoint | all                    | Mix of the practice generators plus a self-graded proof (a composition of injective functions)          | review |
 
-Answer kinds today have no `interval`; domain answers use `choice` or endpoints as `number` until
-the pilot shows an interval kind is worth adding.
+Answer kinds today have no `interval`; domain and range answers use `choice` (and `list` for
+excluded values). The checkpoint uses `problemCount: 10`, one problem per generator. All ten items
+are published; open questions for review: the transformations dock wraps to two rows at 1440 px.
 
 After the pilot: continue unit by unit, updating this tracker and `docs/ROADMAP.md`.
 

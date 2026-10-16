@@ -17,7 +17,9 @@ pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo 
    same commit series, so the next session sees the true state.
 
 Daniel prefers short sessions. Keep answers concise, work in focused steps, and leave the repository
-(and its docs) in a state the next session can continue from without this conversation.
+(and its docs) in a state the next session can continue from without this conversation. Build content
+in batches, then commit, push and deploy without asking. When a piece of work ends, close the answer
+with a short prompt Daniel can paste into a clean session to continue (see `docs/DECISIONS.md`).
 
 ## Environment
 
