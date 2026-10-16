@@ -1,0 +1,47 @@
+An inverse function answers the question in reverse: given an output, which input produced it?
+When that question always has exactly one answer, the answers form a new function, $f^{-1}$.
+
+## Definition
+
+$f^{-1}$ is the inverse of $f$ when each one undoes the other:
+
+$$
+f^{-1}(f(x)) = x \quad\text{and}\quad f(f^{-1}(y)) = y.
+$$
+
+The notation $f^{-1}$ does not mean $\frac{1}{f}$. For $f(x) = 2x + 1$,
+
+$$
+f^{-1}(x) = \frac{x - 1}{2}, \qquad f(1) = 3, \quad f^{-1}(3) = 1.
+$$
+
+## Finding a formula
+
+Write $y = f(x)$ and solve for $x$:
+
+$$
+y = 2x + 1 \;\Rightarrow\; x = \frac{y - 1}{2}.
+$$
+
+Then rename the variable to get $f^{-1}(x) = \frac{x - 1}{2}$. Check the result by composing:
+$f(f^{-1}(x)) = 2 \cdot \frac{x - 1}{2} + 1 = x$.
+
+## The graph is a reflection
+
+If $(a, b)$ is on the graph of $f$, then $f(a) = b$, so $f^{-1}(b) = a$ and $(b, a)$ is on the
+graph of $f^{-1}$. Swapping the two coordinates reflects a point across the line <C c="yellow">$y = x$</C>, so the graph of $f^{-1}$ in <C c="teal">teal</C> is the mirror image of
+the graph of $f$ in <C c="blue">blue</C>.
+
+## When an inverse exists
+
+$f$ has an inverse exactly when it is one-to-one: different inputs give different outputs. On the
+graph, every horizontal line meets it at most once. $f(x) = x^2 - 1$ fails, because $f(2) = f(-2)$.
+
+Restricting the domain can fix this. On $x \geq 0$ the outputs no longer repeat, and solving
+$y = x^2 - 1$ with $x \geq 0$ gives
+
+$$
+f^{-1}(x) = \sqrt{x + 1}, \qquad x \geq -1.
+$$
+
+The domain of $f^{-1}$ is the range of $f$, and the range of $f^{-1}$ is the domain of $f$.

@@ -15,9 +15,7 @@ $$
 z_j = \sum_i w_{ji}\, a^{(l-1)}_i + b_j, \qquad a^{(l)}_j = \sigma(z_j) = \frac{1}{1 + e^{-z_j}}.
 $$
 
-A <C c="blue">positive weight</C> means "a larger input pushes this neuron up". A
-
-<C c="red">negative weight</C> pushes it down. The bias shifts how easily the neuron activates. The
+A <C c="blue">positive weight</C> means "a larger input pushes this neuron up". A <C c="red">negative weight</C> pushes it down. The bias shifts how easily the neuron activates. The
 sigmoid maps any real $z$ into $(0, 1)$, so large positive sums give activations near 1 and large
 negative sums give activations near 0.
 

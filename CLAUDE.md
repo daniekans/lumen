@@ -67,6 +67,8 @@ Daniel prefers short sessions. Keep answers concise, work in focused steps, and 
   dev server re-bundles on first use and reloads the page. After dependency changes, restart dev.
 - **One KaTeX version** (pnpm override in `pnpm-workspace.yaml`); otherwise MDX math loses styling.
 - **`pkill -f <pattern>` can kill your own shell** when the pattern appears in the command. Kill by PID.
+- **An MDX line that starts with `<C>` or `<StepLink>`** becomes a block when Prettier runs, which
+  splits the paragraph. Keep a word before the tag; `pnpm lint` checks this.
 - **Deep links on GitHub Pages return HTTP 404** with the app's `404.html`. That is expected.
 
 ## Verifying a change

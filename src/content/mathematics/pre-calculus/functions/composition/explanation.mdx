@@ -1,0 +1,39 @@
+Composition answers the question: what happens when the output of one function becomes the input of
+another? The result is a new function, and most formulas in calculus are built this way.
+
+## Definition
+
+For functions $f$ and $g$, the composition $f \circ g$ (read "$f$ after $g$") is
+
+$$
+(f \circ g)(x) = f(g(x)).
+$$
+
+The function written on the right acts first. With $g(x) = x + 1$ and $f(u) = u^2$,
+
+$$
+(f \circ g)(x) = f(x + 1) = (x + 1)^2.
+$$
+
+The <C c="teal">first arrow</C> applies $g$, the <C c="blue">second</C> applies $f$ to the result.
+
+## Order matters
+
+Composing the other way gives a different function:
+
+$$
+(g \circ f)(x) = g(x^2) = x^2 + 1.
+$$
+
+At $x = 1$, $(f \circ g)(1) = 4$ but $(g \circ f)(1) = 2$. Switch the order in the <StepLink step="order">third step</StepLink> and watch the middle line rearrange.
+
+## Computing a composition
+
+Work from the inside out. To find $f(g(-3))$, first $g(-3) = -2$, then $f(-2) = 4$. To find the
+formula, substitute the whole expression $g(x)$ for the variable of $f$, keeping it in parentheses.
+
+## Domain
+
+$x$ must be in the domain of $g$, and $g(x)$ must be in the domain of $f$. For example, with
+$f(u) = \sqrt{u}$ and $g(x) = x - 2$, the composition $f(g(x)) = \sqrt{x - 2}$ needs $x \geq 2$,
+even though $g$ accepts every real number.

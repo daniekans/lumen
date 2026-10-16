@@ -1,0 +1,38 @@
+Many graphs are copies of a few basic ones, moved and resized. Knowing how four numbers act on a
+graph lets you sketch $y = -2(x - 1)^2 + 3$ from the graph of $x^2$ without plotting points.
+
+## The general form
+
+$$
+y = a\,f\big(b(x - h)\big) + k
+$$
+
+Numbers outside $f$ act on outputs, so they move the graph vertically. Numbers inside act on inputs,
+so they move it horizontally, and in the opposite way to what the sign suggests.
+
+| Change     | Effect on the graph                                                        |
+| ---------- | -------------------------------------------------------------------------- |
+| $f(x) + k$ | up by $k$ (down if $k < 0$)                                                |
+| $f(x - h)$ | right by $h$ (left if $h < 0$)                                             |
+| $a f(x)$   | vertical stretch by $a$; reflection in the $x$-axis if $a < 0$             |
+| $f(bx)$    | horizontal squeeze by $\frac{1}{b}$; reflection in the $y$-axis if $b < 0$ |
+
+## Why inside changes go backward
+
+The graph of $g(x) = f(x - 2)$ at $x$ shows what $f$ shows at $x - 2$. To reproduce the point that
+$f$ has at $0$, $g$ needs $x - 2 = 0$, that is $x = 2$. Everything arrives two units later, so the
+graph moves right. The same argument explains why $f(2x)$ is squeezed: $g$ reaches the input $4$
+of $f$ already at $x = 2$.
+
+## Following points
+
+A point $(x_0, y_0)$ on the graph of $f$ moves to
+
+$$
+\left(\frac{x_0}{b} + h,\ a\,y_0 + k\right).
+$$
+
+To sketch a transformed graph, move two or three <C c="yellow">key points</C> this way, such as the
+vertex of $x^2$ or the corner of $|x|$, and draw the same shape through them. For
+$y = -2(x - 1)^2 + 3$ the vertex $(0, 0)$ goes to $(1, 3)$ and the point $(1, 1)$ goes to
+$(2, 1)$.

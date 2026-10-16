@@ -42,6 +42,12 @@ for (const file of ROOTS.flatMap(walk)) {
       for (const { pattern, message } of BANNED) {
         if (pattern.test(line)) problems.push(`${file}:${i + 1}  ${message}`)
       }
+      // Prettier treats an MDX line that starts with an inline component as a block and splits
+      // the paragraph around it. Keep at least one word before the tag on its line.
+      if (extname(file) === '.mdx' && /^<(?:C|StepLink)[\s>]/.test(line))
+        problems.push(
+          `${file}:${i + 1}  inline component at the start of a line (Prettier splits the paragraph)`,
+        )
     })
 }
 
