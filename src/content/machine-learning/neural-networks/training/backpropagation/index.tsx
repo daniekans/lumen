@@ -12,11 +12,13 @@ import {
   MathLabel,
   NeuralNet,
   Overlay,
+  SeriesPlot,
   Stage,
   TextLabel,
   useSequence,
   useStepEffect,
   VizControls,
+  VizSheet,
   weightEdge,
 } from '@/viz-kit'
 
@@ -39,6 +41,7 @@ export default function Backpropagation() {
   const [showError, setShowError] = useState(false)
   const [gradFrom, setGradFrom] = useState(NONE)
   const [lr, setLr] = useState(2)
+  const [expanded, setExpanded] = useState(false)
   const [history, setHistory] = useState(() => [lossOf(initialNet())])
   const seq = useSequence()
 
@@ -163,10 +166,19 @@ export default function Backpropagation() {
         ariaLabel="Neural network training on one example with backpropagation"
         overlay={
           <Overlay corner="top-left">
-            <ReadoutPanel>
-              <Readout label="cost $C$" value={fmt(loss, 4)} color={vc.yellow} />
+            <ReadoutPanel title="Training" onExpand={() => setExpanded(true)}>
+              <Readout
+                label="cost $C$"
+                value={fmt(loss, 4)}
+                color={vc.yellow}
+                hint="Squared error between the output and the target. Training pushes it down."
+              />
               <Sparkline values={history} min={0} width={170} color={vc.yellow} />
-              <Readout label="steps" value={history.length - 1} />
+              <Readout
+                label="steps"
+                value={history.length - 1}
+                hint="Gradient descent steps taken so far, each one on the same example."
+              />
             </ReadoutPanel>
           </Overlay>
         }
@@ -199,6 +211,17 @@ export default function Backpropagation() {
           </TextLabel>
         ))}
       </Stage>
+
+      <VizSheet open={expanded} onClose={() => setExpanded(false)} title="Cost over training steps">
+        <SeriesPlot
+          values={history}
+          min={0}
+          color={vc.yellow}
+          xLabel="step"
+          yLabel="cost"
+          ariaLabel="The cost after each training step"
+        />
+      </VizSheet>
 
       <VizControls>
         <Button

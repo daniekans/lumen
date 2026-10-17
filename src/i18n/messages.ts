@@ -131,6 +131,7 @@ export const en = {
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     resetView: 'Reset view (or double-click the background)',
+    expandPanel: 'Open larger',
   },
 
   skills: {
@@ -263,9 +264,27 @@ export const en = {
       start: 'Start here',
     },
     area: { eyebrow: 'Area', courses: 'Courses' },
-    course: { eyebrow: 'Course', units: 'Units' },
+    course: {
+      eyebrow: 'Course',
+      units: 'Units',
+      unitNumber: (index: number) => `Unit ${n(index)}`,
+      continueWith: (item: string) => `Continue: ${item}`,
+    },
     unit: {
       eyebrow: 'Unit',
+      position: (index: number, total: number) => `Unit ${n(index)} of ${n(total)}`,
+      upNext: 'Up next',
+      start: 'Start',
+      continue: 'Continue',
+      allDone: 'Every item in this unit is done. Practice and the checkpoint stay open for review.',
+      groups: {
+        learn: 'Explore and read',
+        practice: 'Practice',
+        checkpoint: 'Checkpoint',
+      },
+      checkpointPasses: (pass: number) => `Passes at ${formatPercent(pass)}`,
+      terms: 'Terms introduced',
+      termsIntro: 'Words and symbols this unit defines. Select one to read its summary.',
       markKnown: 'I already know this unit',
       unmarkKnown: 'Undo "I already know this unit"',
       markKnownHint:
