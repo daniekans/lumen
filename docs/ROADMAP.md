@@ -34,9 +34,10 @@ Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.m
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the next content unit in the suggested order (Pre-calculus: Polynomial
-and rational functions, a refresher of about five items). Its stages should use `zoomable` and,
-where a slider view is worth linking, `useVizParam`.
+**Suggested next session:** the next content unit in the suggested order (Pre-calculus: Exponential
+and logarithmic functions, a refresher of about five items). Polynomial and rational functions was
+built on 2026-10-17 and awaits Daniel's review. Stages use `zoomable`, titled readout panels with
+hints, and `useVizParam` where a view is worth linking.
 
 ### Phase 3: Explore page
 
@@ -221,6 +222,11 @@ Items in the content tree, by path under `src/content`. The full curriculum plan
 | mathematics/pre-calculus/algebra-essentials/equations-and-inequalities                             | explore    | done   | Crossings, squaring, sign chart, distance                              |
 | mathematics/pre-calculus/algebra-essentials/practice-equations-and-inequalities                    | practice   | done   | Ten generators; solution sets checked by sampling                      |
 | mathematics/pre-calculus/algebra-essentials/checkpoint                                             | checkpoint | done   | Ten problems including a self-graded proof                             |
+| mathematics/pre-calculus/polynomial-and-rational/lines-and-parabolas                               | explore    | review | Slope triangle, vertex drag, completing the square, zeros              |
+| mathematics/pre-calculus/polynomial-and-rational/polynomial-graphs                                 | explore    | review | Draggable zeros, multiplicity sliders, leading term, turning points    |
+| mathematics/pre-calculus/polynomial-and-rational/rational-functions                                | explore    | review | Vertical, horizontal and slant asymptotes; a whole graph read          |
+| mathematics/pre-calculus/polynomial-and-rational/practice-polynomial-and-rational                  | practice   | review | Eleven generators, verified from the prompt TeX                        |
+| mathematics/pre-calculus/polynomial-and-rational/checkpoint                                        | checkpoint | review | Nine practice generators plus a proof (vertex and discriminant)        |
 | mathematics/pre-calculus/functions/function-as-mapping                                             | explore    | done   | Mapping folds into a graph; vertical line test                         |
 | mathematics/pre-calculus/functions/domain-and-range                                                | explore    | done   | Shadows on both axes (`AxisInterval` in the kit)                       |
 | mathematics/pre-calculus/functions/reading-graphs                                                  | lesson     | done   | Four checks on one cubic                                               |

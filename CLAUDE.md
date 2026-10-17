@@ -75,6 +75,9 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 - **`pkill -f <pattern>` can kill your own shell** when the pattern appears in the command. Kill by PID.
 - **An MDX line that starts with `<C>` or `<StepLink>`** becomes a block when Prettier runs, which
   splits the paragraph. Keep a word before the tag; `pnpm lint` checks this.
+- **Vitest caches transformed modules** in `node_modules/.vitest-cache`, keyed on file content, so
+  an `import.meta.glob` in an unchanged file (the catalog registry) misses new content folders and
+  `registry.test.ts` reports "introduced in unknown item". Delete that folder and rerun.
 - **Deep links on GitHub Pages return HTTP 404** with the app's `404.html`. That is expected.
 
 ## Verifying a change

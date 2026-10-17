@@ -231,7 +231,7 @@ order.
 
 1. Algebra essentials, batch 3 (done)
 2. DE: Storage and file formats (done)
-3. Pre-calculus: Polynomial and rational functions (refresher)
+3. Pre-calculus: Polynomial and rational functions (refresher, built, in review)
 4. Pre-calculus: Exponential and logarithmic functions (refresher)
 5. Calculus 1: Limits
 6. Linear Algebra: Vectors and linear combinations
@@ -299,6 +299,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Data Engineering / Relational model and SQL joins (first interleaved unit) | done   |
 | Pre-calculus / Algebra essentials                                          | done   |
 | Data Engineering / Storage and file formats (core depth)                   | done   |
+| Pre-calculus / Polynomial and rational functions (refresher)               | review |
 
 #### Functions unit plan
 
@@ -432,6 +433,30 @@ Row groups and footer statistics live in `src/lib/storage/parquet.ts` (`rowGroup
 $4$ row groups of $6$, pages of $3$ values; its days are chosen so every unsorted range contains
 $12$ and the sorted file reads one row group for day $12$ and none for day $7$. The checkpoint takes
 nine generators from the three practice sets plus the proof.
+
+#### Polynomial and rational functions unit plan
+
+Folder `src/content/mathematics/pre-calculus/polynomial-and-rational/`. The first refresher unit:
+three explorations, one practice set and a checkpoint, built in one batch. The thread: a polynomial
+is read from its factors (zeros and multiplicities) and its leading term (the ends); a rational
+function is read from the factors of its denominator (holes and vertical asymptotes) and the degrees
+(the line it approaches). Polynomial arithmetic lives in `src/lib/math/polynomial.ts` (`polyEval`,
+`polyMul`, `polyFromRoots`, `polyDivide`, `polyDerivative`, `signChanges`, tested).
+`FunctionPlot` takes `breaks` so a curve is never joined across a pole. `tex.num` and `tex.signed`
+write rational numbers in readouts and prompts.
+
+Skills: `lines`, `quadratics`, `end-behavior`, `zeros`, `asymptotes` (titles in `unit.ts`).
+
+| #   | Item                             | Kind       | Skills              | Content                                                                                                          | Status |
+| --- | -------------------------------- | ---------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | lines-and-parabolas              | explore    | lines, quadratics   | Slope as rise over run with draggable $P$ and $Q$; vertex form; completing the square; zeros $h \pm \sqrt{-k/a}$ | review |
+| 2   | polynomial-graphs                | explore    | zeros, end-behavior | Draggable zeros, multiplicity sliders (cross or touch), leading term overlay, turning points at most $n - 1$     | review |
+| 3   | rational-functions               | explore    | asymptotes          | $\frac{1}{(x - c)^m}$ near a pole; horizontal by degrees; slant by long division; a whole graph with a hole      | review |
+| 4   | practice-polynomial-and-rational | practice   | all                 | Slope, line, vertex form, extreme value, end behavior, touching zero, least degree, asymptotes, hole             | review |
+| 5   | checkpoint                       | checkpoint | all                 | Nine practice generators plus a self-graded proof (vertex at $-\frac{b}{2a}$ and the discriminant)               | review |
+
+Practice answers are verified from the prompt's own TeX (`evaluateTex` on numerator and denominator),
+so a prompt that disagrees with its answer fails the test.
 
 ## Risks
 
