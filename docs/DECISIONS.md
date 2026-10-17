@@ -115,6 +115,11 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   itself never navigates (2026-10-17), so a curious click does not leave the lesson. Terms have a
   faint dashed underline, step links a dotted one, so the two read differently.
 
+- Phase 9 (2026-10-17): course and unit pages stay separate routes with different jobs. The course
+  page is a map (path of units, next unit with "Continue"); the unit page is a workspace (up next,
+  items grouped by role, terms, skills). "Next" is always the first item in order that is not done.
+  Readout panel extras (collapse, expand, hints) are opt-in props, not a new component.
+
 - Commits carry no Claude attribution (2026-10-17): no Co-Authored-By trailer, so Claude is not
   listed as a contributor on the public repo. History was rewritten once to remove the old
   trailers. Only the GitHub noreply address appears as author and committer.

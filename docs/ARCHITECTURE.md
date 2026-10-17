@@ -18,7 +18,9 @@ src/
   viz-kit/         Building blocks for visualizations (public API in viz-kit/index.ts)
     stage/           Stage, coordinate system, Overlay, HtmlBox, VizSheet
     math-plot/       Grid, Axes, FunctionPlot, Path, Segment, Vector, Point, Arc, MathLabel, TextLabel,
-                     AxisInterval (domains, ranges and solution sets on an axis)
+                     AxisInterval (domains, ranges and solution sets on an axis), TransformedGrid
+                     (the grid of the plane under a 2x2 matrix, filling any view), SeriesPlot (a
+                     value over time with labeled axes, in its own Stage)
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
     table/           RelationTable (database tables with keys, NULLs and animated rows), tableLayout,
@@ -175,6 +177,11 @@ CSS modules plugin parses the referenced file without a source path and logs a w
 
 `VizSheet` opens a large panel over the stage for an enlarged part of a visualization (usually a
 second `<Stage>`), leaving the control dock usable. The RAG vector store view uses it.
+
+Readout panels (`ReadoutPanel` with `Readout` rows in an `Overlay`) have three opt-in extras: a
+`title` lets the panel collapse to it, `onExpand` adds an "Open larger" button (the item opens its
+own `VizSheet`, as `backpropagation` does with a `SeriesPlot` of the cost), and a `hint` on a
+`Readout` shows a one-line meaning as a tooltip on its label.
 
 The explanation pane can be resized (drag its left edge, double-click to reset) and switched between
 docked and floating. Width and mode persist in the UI store.

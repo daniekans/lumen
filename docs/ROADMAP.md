@@ -20,7 +20,7 @@ awaiting feedback), `done`.
 | 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
 | 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | done    |
 | 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | done    |
-| 9     | Light UI polish: distinct course and unit pages, matrix zoom, interactive readout panels  | planned |
+| 9     | Light UI polish: distinct course and unit pages, matrix zoom, interactive readout panels  | done    |
 | later | Presentation mode, internationalization (pt-BR), mobile layout                            | planned |
 
 Phase numbers are labels, not an order. A phase starts when the content needs it: 3D (phase 5)
@@ -189,6 +189,16 @@ example the cost and sparkline in `backpropagation` or the matrix and determinan
 - tooltips on readout labels with a one-line meaning (`Readout` gets an optional `hint`);
 - panels can collapse to their title, so they never hide the drawing.
 
+Done on 2026-10-17. The course page is a path of unit cards: a ring per unit, one kind icon per
+item (teal when done, each a link), planned units dimmed, and a "Continue" link on the first
+unfinished unit (`nextUnit`, `nextItem` in `src/progress/derive.ts`). The unit page has "Unit n
+of m" as its eyebrow, prerequisites as chips, an "Up next" card, items grouped as Explore and read,
+Practice and Checkpoint (with its pass mark or best score), the unit's glossary terms as chips that
+open the term popover, then skills. `matrix-transformations` is zoomable, drawing its grid with the
+kit's `TransformedGrid`. Readout panels got `title` (collapsible), `onExpand` and `hint`; they are
+applied in `matrix-transformations` and `backpropagation` (whose cost opens a `SeriesPlot`). Other
+items' panels can adopt them as they are revisited.
+
 ### Later
 
 - Presentation mode and internationalization: see [PRODUCT_VISION.md](PRODUCT_VISION.md).
@@ -241,7 +251,7 @@ Items in the content tree, by path under `src/content`. The full curriculum plan
 | mathematics/calculus-1/derivatives/difference-quotients                                            | practice   | done   | Six generators, verified by property tests                             |
 | mathematics/calculus-1/derivatives/checkpoint                                                      | checkpoint | done   | Six problems including a self-graded proof                             |
 | mathematics/calculus-1/integrals/riemann-sums                                                      | explore    | done   | Empty space below the x-axis at some sizes                             |
-| mathematics/linear-algebra/linear-transformations/matrix-transformations                           | explore    | done   | `MatrixView` could move to `ui` if reused                              |
+| mathematics/linear-algebra/linear-transformations/matrix-transformations                           | explore    | done   | Zoomable (`TransformedGrid`); `MatrixView` could move to `ui`          |
 | mathematics/complex-numbers/arithmetic/complex-multiplication                                      | explore    | done   |                                                                        |
 | machine-learning/neural-networks/foundations/forward-pass                                          | explore    | done   |                                                                        |
 | machine-learning/neural-networks/training/backpropagation                                          | explore    | done   |                                                                        |
