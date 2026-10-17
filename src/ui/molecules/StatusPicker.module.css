@@ -68,3 +68,14 @@
     transform: translateY(-4px);
   }
 }
+
+.menu[data-state='closed'] {
+  animation: popOut var(--dur-fast) var(--ease-out) forwards;
+}
+
+@keyframes popOut {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}

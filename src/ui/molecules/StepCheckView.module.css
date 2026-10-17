@@ -95,3 +95,15 @@
   color: var(--fg-subtle);
   font-size: var(--text-xs);
 }
+
+.feedback {
+  animation: reveal var(--dur-base) var(--ease-out);
+}
+
+/* New feedback, hints and solutions fade in instead of appearing at once. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}

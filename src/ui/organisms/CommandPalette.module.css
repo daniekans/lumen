@@ -108,3 +108,25 @@
     transform: translate(-50%, -6px) scale(0.98);
   }
 }
+
+/* Radix keeps the closing dialog mounted until this animation ends. */
+.overlay[data-state='closed'] {
+  animation: fadeOut var(--dur-fast) var(--ease-out) forwards;
+}
+
+.content[data-state='closed'] {
+  animation: popOut var(--dur-fast) var(--ease-out) forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes popOut {
+  to {
+    opacity: 0;
+    transform: translate(-50%, -4px) scale(0.98);
+  }
+}

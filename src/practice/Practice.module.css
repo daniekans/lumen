@@ -284,3 +284,17 @@
   margin: 0;
   accent-color: var(--fg);
 }
+
+.panel,
+.feedback,
+.panel li {
+  animation: reveal var(--dur-base) var(--ease-out);
+}
+
+/* New feedback, hints and solutions fade in instead of appearing at once. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}

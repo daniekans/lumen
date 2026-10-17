@@ -26,6 +26,26 @@
   font-size: var(--text-sm);
   line-height: 1.5;
   z-index: 100;
+  transform-origin: var(--radix-popover-content-transform-origin);
+  animation: popIn var(--dur-base) var(--ease-out);
+}
+
+.popover[data-state='closed'] {
+  animation: popOut var(--dur-fast) var(--ease-out) forwards;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.97);
+  }
+}
+
+@keyframes popOut {
+  to {
+    opacity: 0;
+    transform: translateY(2px) scale(0.98);
+  }
 }
 
 .head {

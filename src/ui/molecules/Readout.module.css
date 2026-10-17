@@ -84,3 +84,18 @@
 .collapsed {
   min-width: 0;
 }
+
+/* Holds the rows of a titled panel, so they fade back in when it expands. */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: reveal var(--dur-base) var(--ease-out);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}

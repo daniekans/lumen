@@ -72,7 +72,7 @@ export function ReadoutPanel({ title, onExpand, children }: ReadoutPanelProps) {
           )}
         </div>
       )}
-      {!collapsed && children}
+      {!collapsed && (title ? <div className={styles.content}>{children}</div> : children)}
     </div>
   )
 }
