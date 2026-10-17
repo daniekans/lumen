@@ -107,6 +107,11 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   resets on each step. A link with parameters skips the opening step's handler. Fullscreen
   shows the stage area with a small step bar, not the explanation.
 
+- Phase 7 (2026-10-17): a glossary entry's "used in" list is inferred from `<Term id="...">`
+  links in explanations (scanned at build time), not declared per item. Term ids are global, not
+  unit-local like skills, so `<Term id="domain">` works from any unit; a clash gets a qualified id
+  (`attribute-domain`). Step captions and visualization labels do not count as uses.
+
 - Commits carry no Claude attribution (2026-10-17): no Co-Authored-By trailer, so Claude is not
   listed as a contributor on the public repo. History was rewritten once to remove the old
   trailers. Only the GitHub noreply address appears as author and committer.

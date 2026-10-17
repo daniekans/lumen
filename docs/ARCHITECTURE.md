@@ -45,7 +45,7 @@ nothing.
 src/content/
   areas.ts                                   areas and their order
   <area>/<course>/course.ts                  defineCourse({ title, description, order })
-  <area>/<course>/<unit>/unit.ts             defineUnit({ title, description, order, skills })
+  <area>/<course>/<unit>/unit.ts             defineUnit({ title, description, order, skills, terms })
   <area>/<course>/<unit>/<item>/meta.ts      defineItem({ kind, title, steps, skills, ... })
   <area>/<course>/<unit>/<item>/index.tsx    the visual
   <area>/<course>/<unit>/<item>/explanation.mdx
@@ -60,6 +60,13 @@ sidebar. `status: 'draft'` hides an item from production builds.
 Item kinds: `explore` (visual with steps), `lesson` (the same, plus `check` questions on steps),
 `practice` and `checkpoint` (a `problems.ts` instead of `index.tsx`, rendered by `src/practice`).
 Skills are declared per unit and referenced by items and problems.
+
+Glossary terms are declared per unit (`terms` in `unit.ts`) with a global id and the item that
+introduces them. Explanations link a word to its entry with `<Term id="...">`. A Vite plugin
+(`src/catalog/termUsesPlugin.ts`) scans every `explanation.mdx` for those tags at build time and
+exposes the map as `virtual:lumen/term-uses`, so the glossary page (`/glossary`) lists where each term
+is used without bundling MDX source. `buildCatalog` reports duplicate ids, unknown items and unknown
+links, and `registry.test.ts` fails on any catalog problem. Terms also appear in the command palette.
 
 One catch-all route renders any depth through `NodePage`. Paths that moved are listed in
 `src/catalog/redirects.ts`; add an entry whenever content moves, because the site is public.

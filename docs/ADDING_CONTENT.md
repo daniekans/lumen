@@ -19,6 +19,11 @@ Write the steps in `meta.ts` before the component. Each step is one thing the le
 Lessons add a `check` to the steps worth testing (`choice` or `number`). List the unit's skills in
 `unit.ts` and reference them from the item's `skills`.
 
+Declare the terms and symbols the item defines in the unit's `terms`: `{ id, title, tex?, summary,
+introducedIn }`, where `id` is global (check the glossary for an existing one first) and
+`introducedIn` is the item slug. Declare what the item actually defines, not every noun. The
+summary is one or two sentences and may use inline TeX.
+
 The component reacts to steps with `useStepEffect`:
 
 ```tsx
@@ -72,12 +77,18 @@ Write TeX-heavy files with an editor or the Write tool rather than shell heredoc
 
 Follow `docs/WRITING.md`. Use `<C c="blue">` to match colors and `<StepLink step="id">` to link to steps.
 
+Link the first mention of a term defined elsewhere (another item or unit) with
+`<Term id="domain">domain</Term>`. These links are the only record of where a term is used, so add
+them in practice and checkpoint explanations too. Keep a word before the tag on its line and do not
+start a list item with it (Prettier splits the paragraph).
+
 ## 5. Check
 
 - [ ] At most three hues, all from `vc`
 - [ ] Every step looks right in both themes (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`)
 - [ ] Check answers are correct (compute them, do not trust memory)
 - [ ] Practice and checkpoint items: `problems.test.ts` verifies every generator independently
+- [ ] New terms declared in `unit.ts`; terms from other items linked with `<Term>`
 - [ ] No console errors
 - [ ] Dragging and controls cancel running sequences where they conflict
 - [ ] Works with `prefers-reduced-motion`

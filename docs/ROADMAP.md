@@ -18,7 +18,7 @@ awaiting feedback), `done`.
 | 4     | Pan and zoom on stages with axes, and a fullscreen mode                                   | done    |
 | 5     | 3D stages for multivariable calculus and linear algebra                                   | planned |
 | 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
-| 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | planned |
+| 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | done    |
 | 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | done    |
 | 9     | Light UI polish: distinct course and unit pages, matrix zoom, interactive readout panels  | planned |
 | later | Presentation mode, internationalization (pt-BR), mobile layout                            | planned |
@@ -140,8 +140,10 @@ palette. Cheap because the data is small and declared next to the content:
 - The cost is the retrofit of existing units (about 13): one pass per unit, reading its items'
   summaries and explanations. New units declare terms as part of `ADDING_CONTENT.md`.
 
-Decide at the start: whether "used in" is declared or inferred from `<Term>` uses (inferred is less
-upkeep).
+Done on 2026-10-17. "Used in" is inferred from `<Term id="...">` links in explanations, scanned at
+build time by a Vite plugin (`src/catalog/termUsesPlugin.ts`). Term ids are global. The page is
+`/glossary` (sidebar footer and command palette). All 11 units with content were retrofitted:
+97 terms. New units declare terms as part of `ADDING_CONTENT.md`.
 
 ### Phase 8: Internationalization groundwork
 
