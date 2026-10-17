@@ -82,15 +82,11 @@ export default function EquationsAndInequalities() {
 
   useStepEffect({
     intersection: () =>
-      void seq.run(({ tween }) =>
-        tween(-1, 2, { duration: 1.6, onUpdate: (v) => setC(Math.round(v * 20) / 20) }),
-      ),
+      void seq.run(({ tween }) => tween(-1, 2, { duration: 1.6, onUpdate: setC })),
     extraneous: () => setForm('squared'),
     inequality: () => setSign('<'),
     'sign-chart': () =>
-      void seq.run(({ tween }) =>
-        tween(-3.5, -1, { duration: 1.4, onUpdate: (v) => setX(Math.round(v * 20) / 20) }),
-      ),
+      void seq.run(({ tween }) => tween(-3.5, -1, { duration: 1.4, onUpdate: setX })),
     absolute: () => setAbsSign('<'),
   })
 

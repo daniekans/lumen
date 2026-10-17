@@ -67,13 +67,13 @@ export default function LinesAndParabolas() {
       ),
     complete: () =>
       void seq.run(({ tween }) =>
-        tween(0, -2, { duration: 1.2, onUpdate: (b) => setS({ b: Math.round(b * 4) / 4, c: -1 }) }),
+        tween(0, -2, { duration: 1.2, onUpdate: (b) => setS({ b, c: -1 }) }),
       ),
     zeros: () =>
       void seq.run(({ tween }) =>
         tween(1, -2, {
           duration: 1.6,
-          onUpdate: (k) => setV({ a: 1, h: 1, k: Math.round(k * 4) / 4 }),
+          onUpdate: (k) => setV({ a: 1, h: 1, k }),
         }),
       ),
   })

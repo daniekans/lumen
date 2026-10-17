@@ -56,6 +56,8 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 - Colors come from `vc` / `role` (`src/styles/viz-colors.ts`); at most three hues per visualization.
   Floating panels combine `surfaces.glass` in TSX.
 - Animation: `useSequence`, `useAnimatedValue` (both on the kit's own rAF `tween`) or CSS transitions.
+  Tweens set continuous values; snap only values the learner sets (drags, sliders). Rounding inside
+  `onUpdate` makes the curve move in visible steps.
 
 ## Pitfalls already hit (and the fix)
 
