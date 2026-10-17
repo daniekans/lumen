@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { Circle, CircleCheck, RotateCcw } from 'lucide-react'
 import { IconButton, Tooltip } from '../atoms'
 import styles from './DoneToggle.module.css'
+import { msg } from '@/i18n'
 
 interface DoneToggleProps {
   done: boolean
@@ -15,13 +16,7 @@ interface DoneToggleProps {
 export function DoneToggle({ done, onToggle, onReset }: DoneToggleProps) {
   return (
     <span className={styles.group}>
-      <Tooltip
-        content={
-          done
-            ? 'Click to mark as not done and clear its progress'
-            : 'Visiting every step and answering every question does this for you'
-        }
-      >
+      <Tooltip content={done ? msg.item.undoneHint : msg.item.doneHint}>
         <button
           type="button"
           aria-pressed={done}
@@ -29,11 +24,11 @@ export function DoneToggle({ done, onToggle, onReset }: DoneToggleProps) {
           onClick={onToggle}
         >
           {done ? <CircleCheck size={16} /> : <Circle size={16} />}
-          {done ? 'Done' : 'Mark as done'}
+          {done ? msg.progress.done : msg.item.markDone}
         </button>
       </Tooltip>
       {onReset && !done && (
-        <IconButton label="Reset progress" size="sm" onClick={onReset}>
+        <IconButton label={msg.item.resetProgress} size="sm" onClick={onReset}>
           <RotateCcw size={14} />
         </IconButton>
       )}

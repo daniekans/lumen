@@ -2,13 +2,14 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Moon, Sun } from 'lucide-react'
 import { useUi } from '@/state/ui'
 import { IconButton } from '../atoms'
+import { msg } from '@/i18n'
 
 export function ThemeToggle() {
   const theme = useUi((s) => s.theme)
   const toggle = useUi((s) => s.toggleTheme)
   return (
     <IconButton
-      label={theme === 'dark' ? 'Light theme' : 'Dark theme'}
+      label={theme === 'dark' ? msg.shell.lightTheme : msg.shell.darkTheme}
       shortcut="T"
       onClick={toggle}
     >

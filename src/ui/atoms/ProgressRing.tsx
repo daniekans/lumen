@@ -1,3 +1,5 @@
+import { msg } from '@/i18n'
+
 interface ProgressRingProps {
   /** 0 to 1. */
   value: number
@@ -16,7 +18,7 @@ export function ProgressRing({ value, size = 14, label }: ProgressRingProps) {
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       role="img"
-      aria-label={label ?? `${Math.round(v * 100)}%`}
+      aria-label={label ?? msg.shell.progressRing(v)}
     >
       <circle
         cx={size / 2}

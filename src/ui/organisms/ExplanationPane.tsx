@@ -57,7 +57,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
       initial={false}
       animate={{ width: open ? width : 0, opacity: open ? 1 : 0 }}
       transition={resizing ? { duration: 0 } : spring.pane}
-      aria-label="Explanation"
+      aria-label={msg.item.explanation}
       aria-hidden={!open}
       inert={!open}
     >
@@ -69,7 +69,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
           onResizeStart={() => setResizing(true)}
           onResizeEnd={() => setResizing(false)}
           defaultWidth={ASIDE_WIDTH.default}
-          label="Resize explanation"
+          label={msg.item.resizeExplanation}
         />
       )}
       <motion.div
@@ -83,10 +83,10 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
           <div className={styles.meta}>
             {unit && <Badge>{unit.title}</Badge>}
             <Badge>{msg.catalog.kind[entry.kind]}</Badge>
-            <Badge>{entry.level}</Badge>
+            <Badge>{msg.catalog.level[entry.level]}</Badge>
           </div>
           <IconButton
-            label={floating ? 'Dock to the side' : 'Float over the stage'}
+            label={floating ? msg.item.dock : msg.item.float}
             size="sm"
             onClick={toggleMode}
           >
@@ -101,16 +101,16 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
             onToggle={toggleDone}
             onReset={inProgress ? () => resetItem(entry.id) : undefined}
           />
-          {progress?.manual && <span className={styles.manual}>set by you</span>}
+          {progress?.manual && <span className={styles.manual}>{msg.item.setByYou}</span>}
         </div>
 
         {steps.length > 0 && (
           <section>
             <div className={styles.stepsHead}>
-              <span className={styles.label}>Steps</span>
+              <span className={styles.label}>{msg.item.steps}</span>
               <span className={styles.stepNav}>
                 <IconButton
-                  label="Previous step"
+                  label={msg.item.previousStep}
                   shortcut="←"
                   size="sm"
                   disabled={stepIndex === 0}
@@ -120,7 +120,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
                 </IconButton>
                 {stepIndex + 1} / {steps.length}
                 <IconButton
-                  label="Next step"
+                  label={msg.item.nextStep}
                   shortcut="→"
                   size="sm"
                   disabled={stepIndex === steps.length - 1}
@@ -145,12 +145,12 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
           <>
             <hr className={styles.rule} />
             <div className={styles.label} style={{ marginBottom: 'var(--space-3)' }}>
-              Explanation
+              {msg.item.explanation}
             </div>
             <div className={prose.prose}>
               <MDXProvider components={mdxComponents}>
                 <ErrorBoundary compact>
-                  <Suspense fallback={<p className={styles.loading}>Loading…</p>}>
+                  <Suspense fallback={<p className={styles.loading}>{msg.common.loading}</p>}>
                     <Explanation />
                   </Suspense>
                 </ErrorBoundary>

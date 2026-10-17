@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { IconButton, RichText } from '../atoms'
 import styles from './MathInput.module.css'
 import './mathlive-theme.css'
+import { msg } from '@/i18n'
 
 let loading: Promise<void> | undefined
 
@@ -104,11 +105,11 @@ export function MathInput({
             )}
           </>
         ) : (
-          <div className={styles.loading}>Loading the math input…</div>
+          <div className={styles.loading}>{msg.mathInput.loading}</div>
         )}
       </div>
       <IconButton
-        label="Math keyboard"
+        label={msg.mathInput.keyboard}
         variant="default"
         disabled={!ready || readOnly}
         onClick={() => {

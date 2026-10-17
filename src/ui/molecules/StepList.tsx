@@ -6,6 +6,7 @@ import { ease, spring } from '@/styles/motion'
 import { RichText } from '../atoms'
 import { StepCheckView } from './StepCheckView'
 import styles from './StepList.module.css'
+import { msg } from '@/i18n'
 
 interface StepListProps {
   steps: readonly VizStep[]
@@ -52,7 +53,7 @@ export function StepList({
               <span className={styles.title}>
                 {s.title}
                 {s.check && isSolved && (
-                  <Check size={12} className={styles.solved} aria-label="Answered" />
+                  <Check size={12} className={styles.solved} aria-label={msg.item.answered} />
                 )}
               </span>
             </button>

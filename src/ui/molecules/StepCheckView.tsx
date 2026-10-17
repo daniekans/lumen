@@ -3,6 +3,7 @@ import type { StepCheck } from '@/catalog/types'
 import { Button, RichText } from '../atoms'
 import { ChoiceOptions } from './ChoiceOptions'
 import styles from './StepCheckView.module.css'
+import { msg } from '@/i18n'
 
 interface StepCheckViewProps {
   check: StepCheck
@@ -68,28 +69,28 @@ export function StepCheckView({ check, solved, onAnswer, onClear }: StepCheckVie
             inputMode="decimal"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Your answer"
-            aria-label="Your answer"
+            placeholder={msg.common.yourAnswer}
+            aria-label={msg.common.yourAnswer}
           />
           <Button type="submit" size="sm">
-            Check
+            {msg.common.check}
           </Button>
           {result !== null && (
             <Button variant="ghost" size="sm" onClick={clear}>
-              Clear
+              {msg.common.clear}
             </Button>
           )}
         </form>
       )}
       {check.kind === 'choice' && picked !== null && (
-        <span className={styles.hint}>Click your answer again to clear it.</span>
+        <span className={styles.hint}>{msg.item.clearChoiceHint}</span>
       )}
       {result !== null && (
         <p className={styles.feedback} role="status">
           <span>
-            <strong>{result ? 'Correct.' : 'Not quite.'}</strong>{' '}
+            <strong>{result ? msg.common.correct : msg.common.notQuite}</strong>{' '}
             {check.explanation && <RichText>{check.explanation}</RichText>}
-            {!result && !check.explanation && 'Try again.'}
+            {!result && !check.explanation && msg.item.tryAgain}
           </span>
         </p>
       )}

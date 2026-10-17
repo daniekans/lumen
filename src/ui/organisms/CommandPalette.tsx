@@ -8,6 +8,7 @@ import { useUi } from '@/state/ui'
 import { Kbd, KindIcon } from '../atoms'
 import styles from './CommandPalette.module.css'
 import surfaces from '@/styles/surfaces.module.css'
+import { msg } from '@/i18n'
 
 export function CommandPalette() {
   const open = useUi((s) => s.paletteOpen)
@@ -24,7 +25,7 @@ export function CommandPalette() {
             className="sr-only"
             style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
           >
-            Search visualizations
+            {msg.palette.title}
           </Dialog.Title>
           {open && <PaletteBody onDone={() => setOpen(false)} />}
         </Dialog.Content>
@@ -65,7 +66,7 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
         <input
           autoFocus
           className={styles.input}
-          placeholder="Search courses, units and topics"
+          placeholder={msg.palette.placeholder}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value)
@@ -73,10 +74,10 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
           }}
           onKeyDown={onKeyDown}
         />
-        <Kbd>Esc</Kbd>
+        <Kbd>{msg.keys.escape}</Kbd>
       </div>
       {results.length === 0 ? (
-        <div className={styles.empty}>No matches for “{query}”.</div>
+        <div className={styles.empty}>{msg.palette.noMatches(query)}</div>
       ) : (
         <ul className={styles.list} role="listbox">
           {results.map(({ node, context }, i) => (
@@ -92,7 +93,9 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
               <span className={styles.itemTitle}>
                 {node.type === 'item' && <KindIcon kind={node.kind} />}
                 {node.title}
-                {node.type !== 'item' && <span className={styles.itemType}>{node.type}</span>}
+                {node.type !== 'item' && (
+                  <span className={styles.itemType}>{msg.catalog.nodeType[node.type]}</span>
+                )}
               </span>
               <span className={styles.itemSection}>{context}</span>
             </li>

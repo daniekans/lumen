@@ -10,6 +10,7 @@ import { ease, spring } from '@/styles/motion'
 import { AreaIcon, IconButton, Kbd, KindIcon, ProgressRing, Tooltip } from '../atoms'
 import { LissajousMark } from './LissajousMark'
 import styles from './Sidebar.module.css'
+import { msg } from '@/i18n'
 
 export function Sidebar() {
   const open = useUi((s) => s.sidebarOpen)
@@ -49,19 +50,19 @@ export function Sidebar() {
         <div className={styles.brand}>
           <Link to="/" className={styles.logo}>
             <LissajousMark size={22} />
-            Lumen
+            {msg.app.name}
           </Link>
-          <IconButton label="Hide sidebar" shortcut="[" size="sm" onClick={toggle}>
+          <IconButton label={msg.shell.hideSidebar} shortcut="[" size="sm" onClick={toggle}>
             <PanelLeftClose size={16} />
           </IconButton>
         </div>
         <button type="button" className={styles.search} onClick={() => openPalette(true)}>
           <Search size={14} />
-          <span>Search</span>
-          <Kbd>Ctrl K</Kbd>
+          <span>{msg.common.search}</span>
+          <Kbd>{msg.keys.search}</Kbd>
         </button>
 
-        <div className={styles.areas} role="tablist" aria-label="Areas">
+        <div className={styles.areas} role="tablist" aria-label={msg.shell.areas}>
           {catalog.areas.map((a) => (
             <Tooltip key={a.id} content={a.title}>
               <button
@@ -86,12 +87,12 @@ export function Sidebar() {
         </div>
         <div className={styles.areaTitle}>
           {area.title}
-          <Link to={area.path}>Overview</Link>
+          <Link to={area.path}>{msg.shell.areaOverview}</Link>
         </div>
 
-        <nav className={styles.nav} aria-label={`${area.title} contents`}>
+        <nav className={styles.nav} aria-label={msg.shell.areaContents(area.title)}>
           {visibleCourses(area).length === 0 && (
-            <p className={styles.empty}>Nothing here yet. Content for this area is on the way.</p>
+            <p className={styles.empty}>{msg.shell.areaEmpty}</p>
           )}
           {visibleCourses(area).map((course) => (
             <Branch
@@ -137,7 +138,7 @@ export function Sidebar() {
         <div className={styles.footer}>
           <button type="button" className={styles.footerButton} onClick={() => openSettings(true)}>
             <Settings size={14} />
-            Progress and backup
+            {msg.settings.title}
           </button>
         </div>
       </div>
@@ -149,9 +150,13 @@ function UnitRing({ unit }: { unit: Unit }) {
   const data = useProgress((s) => s.data)
   const { itemsDone, itemsTotal, fraction } = unitSummary(unit, data)
   return (
-    <Tooltip content={`${itemsDone} of ${itemsTotal} done in this unit`} side="right">
+    <Tooltip content={msg.progress.itemsDoneInUnit(itemsDone, itemsTotal)} side="right">
       <span className={styles.status}>
-        <ProgressRing value={fraction} size={13} label={`${itemsDone} of ${itemsTotal} done`} />
+        <ProgressRing
+          value={fraction}
+          size={13}
+          label={msg.progress.itemsDone(itemsDone, itemsTotal)}
+        />
       </span>
     </Tooltip>
   )
@@ -165,7 +170,7 @@ function ItemIndicator({ item }: { item: Item }) {
     <Tooltip content={info.detail} side="right">
       <span className={styles.status}>
         {info.state === 'done' ? (
-          <Check size={13} className={styles.done} aria-label="Done" />
+          <Check size={13} className={styles.done} aria-label={msg.progress.done} />
         ) : (
           <ProgressRing value={info.fraction} size={11} label={info.detail} />
         )}
@@ -202,7 +207,7 @@ function Branch({
           className={styles.toggle}
           aria-expanded={open}
           aria-controls={`branch-${id}`}
-          aria-label={`${open ? 'Collapse' : 'Expand'} ${title}`}
+          aria-label={open ? msg.shell.collapse(title) : msg.shell.expand(title)}
           onClick={() => setChoice(!open)}
         >
           <ChevronRight size={13} className={styles.chevron} />

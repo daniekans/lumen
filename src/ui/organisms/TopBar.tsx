@@ -5,6 +5,7 @@ import { useUi } from '@/state/ui'
 import { IconButton } from '../atoms'
 import { ThemeToggle } from './ThemeToggle'
 import styles from './TopBar.module.css'
+import { msg } from '@/i18n'
 
 interface TopBarProps {
   /** Breadcrumb or title content on the left. */
@@ -28,7 +29,7 @@ export function TopBar({ children, actions }: TopBarProps) {
               exit={{ opacity: 0, width: 0 }}
               style={{ display: 'inline-flex', overflow: 'hidden' }}
             >
-              <IconButton label="Show sidebar" shortcut="[" onClick={toggleSidebar}>
+              <IconButton label={msg.shell.showSidebar} shortcut="[" onClick={toggleSidebar}>
                 <PanelLeftOpen size={16} />
               </IconButton>
             </motion.span>
@@ -38,7 +39,11 @@ export function TopBar({ children, actions }: TopBarProps) {
       </div>
       <div className={styles.right}>
         {actions}
-        <IconButton label="Search" shortcut="Ctrl K" onClick={() => openPalette(true)}>
+        <IconButton
+          label={msg.common.search}
+          shortcut={msg.keys.search}
+          onClick={() => openPalette(true)}
+        >
           <Search size={16} />
         </IconButton>
         <ThemeToggle />

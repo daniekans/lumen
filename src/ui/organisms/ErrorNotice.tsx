@@ -1,4 +1,5 @@
 import { Button } from '../atoms'
+import { msg } from '@/i18n'
 
 interface ErrorNoticeProps {
   error: unknown
@@ -22,18 +23,12 @@ export function ErrorNotice({ error, stale, compact = false }: ErrorNoticeProps)
     >
       <div style={{ maxWidth: 440, textAlign: compact ? 'left' : 'center' }}>
         <p style={{ margin: '0 0 var(--space-2)', color: 'var(--fg)', fontWeight: 500 }}>
-          {stale
-            ? 'This page was updated since it was opened.'
-            : 'This part of the page failed to load.'}
+          {stale ? msg.errors.staleTitle : msg.errors.failedTitle}
         </p>
         <p style={{ margin: '0 0 var(--space-4)', fontSize: 'var(--text-sm)' }}>
-          {stale ? (
-            'Reload to get the current version.'
-          ) : (
-            <code style={{ fontSize: 12 }}>{message}</code>
-          )}
+          {stale ? msg.errors.staleHint : <code style={{ fontSize: 12 }}>{message}</code>}
         </p>
-        <Button onClick={() => window.location.reload()}>Reload</Button>
+        <Button onClick={() => window.location.reload()}>{msg.errors.reload}</Button>
       </div>
     </div>
   )

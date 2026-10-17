@@ -1,17 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import clsx from 'clsx'
 import { Download, Upload, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { useProgress } from '@/progress'
 import { useUi } from '@/state/ui'
 import surfaces from '@/styles/surfaces.module.css'
 import { Button, IconButton } from '../atoms'
 import styles from './SettingsDialog.module.css'
-
-const formatDate = (iso?: string) =>
-  iso
-    ? new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-    : 'never'
+import { msg } from '@/i18n'
 
 /** Progress backup (export and import) and reset. Progress lives only in this browser. */
 export function SettingsDialog() {
@@ -32,9 +28,9 @@ export function SettingsDialog() {
           }}
         >
           <div className={styles.head}>
-            <Dialog.Title className={styles.title}>Progress and backup</Dialog.Title>
+            <Dialog.Title className={styles.title}>{msg.settings.title}</Dialog.Title>
             <Dialog.Close asChild>
-              <IconButton label="Close" shortcut="Esc" size="sm">
+              <IconButton label={msg.common.close} shortcut={msg.keys.escape} size="sm">
                 <X size={15} />
               </IconButton>
             </Dialog.Close>
@@ -66,17 +62,17 @@ function ProgressSettings() {
     a.download = `lumen-progress-${new Date().toISOString().slice(0, 10)}.json`
     a.click()
     URL.revokeObjectURL(url)
-    setMessage({ text: 'Progress exported.' })
+    setMessage({ text: msg.settings.exported })
   }
 
   const upload = async (f: File | undefined) => {
     if (!f) return
     try {
       importJson(await f.text())
-      setMessage({ text: `Imported progress from ${f.name}.` })
+      setMessage({ text: msg.settings.imported(f.name) })
     } catch (e) {
       setMessage({
-        text: e instanceof Error ? e.message : 'Could not read that file.',
+        text: e instanceof Error ? e.message : msg.settings.unreadableFile,
         error: true,
       })
     } finally {
@@ -87,39 +83,25 @@ function ProgressSettings() {
   return (
     <>
       <div className={styles.group}>
-        <p className={styles.label}>How progress works</p>
+        <p className={styles.label}>{msg.settings.howItWorks}</p>
         <dl className={styles.terms}>
-          <dt>Units</dt>
-          <dd>
-            Each course is split into units. A unit holds explorations (interactive visuals with
-            steps) and lessons (the same, plus questions).
-          </dd>
-          <dt>Done</dt>
-          <dd>
-            An exploration is done once you have visited all its steps; a lesson also needs every
-            question answered correctly. You can mark anything done or not done yourself.
-          </dd>
-          <dt>Progress rings</dt>
-          <dd>How much of a unit is done. An empty ring means not started.</dd>
-          <dt>Skills</dt>
-          <dd>
-            What a unit teaches, rated by you from new to mastered. Ratings never change the rings.
-          </dd>
+          {msg.settings.terms.map(({ term, text }) => (
+            <Fragment key={term}>
+              <dt>{term}</dt>
+              <dd>{text}</dd>
+            </Fragment>
+          ))}
         </dl>
       </div>
       <div className={styles.group}>
-        <p className={styles.label}>Backup</p>
-        <p className={styles.text}>
-          Progress is stored in this browser only: {items} visited {items === 1 ? 'item' : 'items'},{' '}
-          {skills} {skills === 1 ? 'skill status' : 'skill statuses'}. Export a file to keep a copy
-          or to move to another browser. Last export: {formatDate(data.lastExportAt)}.
-        </p>
+        <p className={styles.label}>{msg.settings.backup}</p>
+        <p className={styles.text}>{msg.settings.backupStatus(items, skills, data.lastExportAt)}</p>
         <div className={styles.row}>
           <Button icon={<Download size={14} />} onClick={download}>
-            Export
+            {msg.settings.export}
           </Button>
           <Button icon={<Upload size={14} />} onClick={() => file.current?.click()}>
-            Import
+            {msg.settings.import}
           </Button>
           <input
             ref={file}
@@ -133,14 +115,14 @@ function ProgressSettings() {
           <p className={clsx(styles.message, message.error && styles.error)}>{message.text}</p>
         )}
         {storeError && (
-          <p className={clsx(styles.message, styles.error)}>Storage problem: {storeError}</p>
+          <p className={clsx(styles.message, styles.error)}>
+            {msg.settings.storageProblem(storeError)}
+          </p>
         )}
       </div>
       <div className={styles.group}>
-        <p className={styles.label}>Reset</p>
-        <p className={styles.text}>
-          Clears all progress in this browser. Exported files are not affected.
-        </p>
+        <p className={styles.label}>{msg.settings.reset}</p>
+        <p className={styles.text}>{msg.settings.resetHint}</p>
         <div className={styles.row}>
           {confirmReset ? (
             <>
@@ -149,17 +131,17 @@ function ProgressSettings() {
                 onClick={() => {
                   reset()
                   setConfirmReset(false)
-                  setMessage({ text: 'Progress cleared.' })
+                  setMessage({ text: msg.settings.cleared })
                 }}
               >
-                Clear all progress
+                {msg.settings.clearAll}
               </Button>
               <Button variant="ghost" onClick={() => setConfirmReset(false)}>
-                Cancel
+                {msg.common.cancel}
               </Button>
             </>
           ) : (
-            <Button onClick={() => setConfirmReset(true)}>Reset progress</Button>
+            <Button onClick={() => setConfirmReset(true)}>{msg.settings.resetProgress}</Button>
           )}
         </div>
       </div>

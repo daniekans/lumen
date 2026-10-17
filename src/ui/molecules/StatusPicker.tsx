@@ -21,7 +21,10 @@ interface StatusPickerProps {
 export function StatusPicker({ status, manual, onChange, onClear, label }: StatusPickerProps) {
   return (
     <Menu.Root>
-      <Menu.Trigger className={styles.trigger} aria-label={`${label}: ${msg.progress.skillStatus[status]}`}>
+      <Menu.Trigger
+        className={styles.trigger}
+        aria-label={msg.skills.picker(label, msg.progress.skillStatus[status])}
+      >
         <StatusDots status={status} />
         {msg.progress.skillStatus[status]}
         <ChevronDown size={12} />
@@ -40,7 +43,7 @@ export function StatusPicker({ status, manual, onChange, onClear, label }: Statu
             <>
               <Menu.Separator className={styles.separator} />
               <Menu.Item className={styles.item} onSelect={onClear}>
-                Reset to new
+                {msg.skills.resetToNew}
               </Menu.Item>
             </>
           )}

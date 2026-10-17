@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router'
 import styles from './Breadcrumbs.module.css'
+import { msg } from '@/i18n'
 
 export interface Crumb {
   label: string
@@ -10,7 +11,7 @@ export interface Crumb {
 /** Path of links where the last item is the current page. */
 export function Breadcrumbs({ items }: { items: readonly Crumb[] }) {
   return (
-    <nav className={styles.crumbs} aria-label="Breadcrumb">
+    <nav className={styles.crumbs} aria-label={msg.shell.breadcrumb}>
       {items.map((c, i) => (
         <Fragment key={i}>
           {i > 0 && <span className={styles.sep}>/</span>}

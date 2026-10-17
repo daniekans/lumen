@@ -7,6 +7,7 @@ import { unitSummary, useProgress } from '@/progress'
 import { Badge, ProgressRing } from '../atoms'
 import { CourseGlyph } from './CourseGlyph'
 import styles from './CourseCard.module.css'
+import { msg } from '@/i18n'
 
 const accents = [
   'var(--viz-blue)',
@@ -38,13 +39,11 @@ export function CourseCard({ course, index = 0 }: { course: Course; index?: numb
       <p className={styles.summary}>{course.description}</p>
       <div className={styles.foot}>
         {planned ? (
-          <Badge>planned</Badge>
+          <Badge>{msg.common.planned}</Badge>
         ) : (
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <ProgressRing value={fraction} />
-            <Badge>
-              {course.units.length} {course.units.length === 1 ? 'unit' : 'units'}
-            </Badge>
+            <Badge>{msg.progress.units(course.units.length)}</Badge>
           </span>
         )}
         <ArrowRight size={16} className={styles.arrow} />
