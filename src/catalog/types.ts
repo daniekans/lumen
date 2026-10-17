@@ -41,12 +41,6 @@ export interface UnitMeta {
 
 export type ItemKind = 'explore' | 'lesson' | 'practice' | 'checkpoint'
 
-export const kindLabel: Record<ItemKind, string> = {
-  explore: 'Exploration',
-  lesson: 'Lesson',
-  practice: 'Practice',
-  checkpoint: 'Checkpoint',
-}
 export type ItemLevel = 'intro' | 'core' | 'advanced'
 export type ItemStatus = 'draft' | 'published'
 

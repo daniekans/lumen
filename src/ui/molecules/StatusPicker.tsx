@@ -1,7 +1,8 @@
 import * as Menu from '@radix-ui/react-dropdown-menu'
 import clsx from 'clsx'
 import { ChevronDown } from 'lucide-react'
-import { SKILL_STATUSES, statusLabel, type SkillStatus } from '@/progress/types'
+import { msg } from '@/i18n'
+import { SKILL_STATUSES, type SkillStatus } from '@/progress/types'
 import surfaces from '@/styles/surfaces.module.css'
 import { StatusDots } from '../atoms'
 import styles from './StatusPicker.module.css'
@@ -20,9 +21,9 @@ interface StatusPickerProps {
 export function StatusPicker({ status, manual, onChange, onClear, label }: StatusPickerProps) {
   return (
     <Menu.Root>
-      <Menu.Trigger className={styles.trigger} aria-label={`${label}: ${statusLabel[status]}`}>
+      <Menu.Trigger className={styles.trigger} aria-label={`${label}: ${msg.progress.skillStatus[status]}`}>
         <StatusDots status={status} />
-        {statusLabel[status]}
+        {msg.progress.skillStatus[status]}
         <ChevronDown size={12} />
       </Menu.Trigger>
       <Menu.Portal>
@@ -30,7 +31,7 @@ export function StatusPicker({ status, manual, onChange, onClear, label }: Statu
           <Menu.RadioGroup value={status} onValueChange={(v) => onChange(v as SkillStatus)}>
             {SKILL_STATUSES.map((s) => (
               <Menu.RadioItem key={s} value={s} className={styles.item}>
-                {statusLabel[s]}
+                {msg.progress.skillStatus[s]}
                 <StatusDots status={s} />
               </Menu.RadioItem>
             ))}

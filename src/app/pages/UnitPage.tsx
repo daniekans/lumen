@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { Link } from 'react-router'
-import { getUnit, kindLabel, type Unit } from '@/catalog'
+import { getUnit, type Unit } from '@/catalog'
+import { msg } from '@/i18n'
 import { isUnitMarkedKnown, itemProgress, skillStatus, unitSummary, useProgress } from '@/progress'
 import { Button, KindIcon, ProgressRing, Tooltip } from '@/ui/atoms'
 import { Breadcrumbs, StatusPicker } from '@/ui/molecules'
@@ -88,7 +89,7 @@ export function UnitPage({ unit }: { unit: Unit }) {
                       <span className={styles.description}>{item.summary}</span>
                     </span>
                     <span className={styles.trail}>
-                      {kindLabel[item.kind]}
+                      {msg.catalog.kind[item.kind]}
                       <span className={styles.state}>
                         {info.state === 'done' ? (
                           <Check size={14} color="var(--viz-teal)" />

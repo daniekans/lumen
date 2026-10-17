@@ -1,13 +1,6 @@
 export const SKILL_STATUSES = ['new', 'practiced', 'proficient', 'mastered'] as const
 export type SkillStatus = (typeof SKILL_STATUSES)[number]
 
-export const statusLabel: Record<SkillStatus, string> = {
-  new: 'New',
-  practiced: 'Practiced',
-  proficient: 'Proficient',
-  mastered: 'Mastered',
-}
-
 export interface SkillProgress {
   status: SkillStatus
   /** `manual` when the learner set it; it then wins over anything practice suggests. */

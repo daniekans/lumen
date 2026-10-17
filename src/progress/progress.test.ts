@@ -55,7 +55,7 @@ describe('itemProgress', () => {
     expect(itemProgress(item, undefined).state).toBe('not-started')
     const mid = itemProgress(item, progress({ visitedSteps: ['s1'] }))
     expect(mid.state).toBe('in-progress')
-    expect(mid.detail).toBe('In progress: 1 of 2 steps, 0 of 1 questions')
+    expect(mid.detail).toBe('In progress: 1 of 2 steps, 0 of 1 question')
     expect(mid.fraction).toBeCloseTo(1 / 3)
     expect(
       itemProgress(item, progress({ visitedSteps: ['s1', 's2'], correctChecks: ['s2'] })).state,

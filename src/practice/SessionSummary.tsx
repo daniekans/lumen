@@ -2,7 +2,8 @@ import { RotateCcw } from 'lucide-react'
 import { Link } from 'react-router'
 import { getUnit } from '@/catalog'
 import { attemptsBySkill, suggestStatus, type Attempt } from '@/lib/practice'
-import { SKILL_STATUSES, skillStatus, statusLabel, useProgress } from '@/progress'
+import { msg } from '@/i18n'
+import { SKILL_STATUSES, skillStatus, useProgress } from '@/progress'
 import { Button, StatusDots } from '@/ui/atoms'
 import styles from './Practice.module.css'
 
@@ -49,13 +50,13 @@ export function SessionSummary({ attempts, onRestart, onReview, next }: SessionS
             {s.title}
             <br />
             <span>
-              <StatusDots status={s.current} /> {statusLabel[s.current]}
-              {s.suggested && ` · this session suggests ${statusLabel[s.suggested].toLowerCase()}`}
+              <StatusDots status={s.current} /> {msg.progress.skillStatus[s.current]}
+              {s.suggested && ` · this session suggests ${msg.progress.skillStatus[s.suggested].toLowerCase()}`}
             </span>
           </div>
           {s.suggested && (
             <Button size="sm" onClick={() => apply(s.key, s.suggested!)}>
-              Set to {statusLabel[s.suggested]}
+              Set to {msg.progress.skillStatus[s.suggested]}
             </Button>
           )}
         </div>

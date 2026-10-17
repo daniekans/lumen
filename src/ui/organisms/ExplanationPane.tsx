@@ -3,7 +3,8 @@ import clsx from 'clsx'
 import { ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Suspense, useState, type CSSProperties } from 'react'
-import { ancestors, kindLabel, type Item } from '@/catalog'
+import { ancestors, type Item } from '@/catalog'
+import { msg } from '@/i18n'
 import { isItemComplete, itemProgress, useProgress } from '@/progress'
 import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
@@ -81,7 +82,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
         <div className={styles.head}>
           <div className={styles.meta}>
             {unit && <Badge>{unit.title}</Badge>}
-            <Badge>{kindLabel[entry.kind]}</Badge>
+            <Badge>{msg.catalog.kind[entry.kind]}</Badge>
             <Badge>{entry.level}</Badge>
           </div>
           <IconButton

@@ -1,3 +1,4 @@
+import { msg } from '@/i18n'
 import {
   CURRENT_VERSION,
   SKILL_STATUSES,
@@ -63,10 +64,10 @@ const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x) => typeof x ===
 export const migrate = (raw: unknown): ProgressData => {
   if (raw === undefined || raw === null) return emptyProgress()
   if (!isRecord(raw) || typeof raw.version !== 'number') {
-    throw new Error('This file does not contain Lumen progress data.')
+    throw new Error(msg.progress.importError.notProgress)
   }
   if (raw.version > CURRENT_VERSION) {
-    throw new Error('This progress file comes from a newer version of Lumen.')
+    throw new Error(msg.progress.importError.newerVersion)
   }
   // Version 1 is the first format. Future migrations go here, oldest first.
   const data = emptyProgress()

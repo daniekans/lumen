@@ -1,4 +1,5 @@
 import type { Item, Unit } from '@/catalog/types'
+import { msg } from '@/i18n'
 import type { ItemProgress, ProgressData, SkillStatus } from './types'
 
 /*
@@ -48,38 +49,39 @@ export const isItemComplete = (item: Item, p: ItemProgress | undefined): boolean
 }
 
 export const itemProgress = (item: Item, p: ItemProgress | undefined): ItemProgressInfo => {
-  if (isItemComplete(item, p)) return { state: 'done', fraction: 1, detail: 'Done' }
+  if (isItemComplete(item, p)) return { state: 'done', fraction: 1, detail: msg.progress.done }
   if (item.kind === 'practice') {
     const correct = p?.practice?.correct ?? 0
     return correct === 0
-      ? { state: 'not-started', fraction: 0, detail: 'Not started' }
+      ? { state: 'not-started', fraction: 0, detail: msg.progress.notStarted }
       : {
           state: 'in-progress',
           fraction: correct / PRACTICE_GOAL,
-          detail: `In progress: ${correct} of ${PRACTICE_GOAL} correct answers`,
+          detail: msg.progress.inProgressDetail([
+            msg.progress.correctAnswersOf(correct, PRACTICE_GOAL),
+          ]),
         }
   }
   if (item.kind === 'checkpoint') {
     const best = p?.checkpoint?.best
     return best === undefined
-      ? { state: 'not-started', fraction: 0, detail: 'Not started' }
+      ? { state: 'not-started', fraction: 0, detail: msg.progress.notStarted }
       : {
           state: 'in-progress',
           fraction: best / CHECKPOINT_PASS,
-          detail: `Best score ${Math.round(best * 100)}%, ${Math.round(CHECKPOINT_PASS * 100)}% passes`,
+          detail: msg.progress.bestScore(best, CHECKPOINT_PASS),
         }
   }
   const c = parts(item, p)
   const total = c.steps + c.checks
   const fraction = total ? (c.stepsVisited + c.checksCorrect) / total : 0
-  if (!p || fraction === 0) return { state: 'not-started', fraction: 0, detail: 'Not started' }
-  const detail = [
-    c.steps ? `${c.stepsVisited} of ${c.steps} steps` : '',
-    c.checks ? `${c.checksCorrect} of ${c.checks} questions` : '',
-  ]
-    .filter(Boolean)
-    .join(', ')
-  return { state: 'in-progress', fraction, detail: `In progress: ${detail}` }
+  if (!p || fraction === 0)
+    return { state: 'not-started', fraction: 0, detail: msg.progress.notStarted }
+  const detail = msg.progress.inProgressDetail([
+    ...(c.steps ? [msg.progress.stepsOf(c.stepsVisited, c.steps)] : []),
+    ...(c.checks ? [msg.progress.questionsOf(c.checksCorrect, c.checks)] : []),
+  ])
+  return { state: 'in-progress', fraction, detail }
 }
 
 export const skillStatus = (data: ProgressData, key: string): SkillStatus =>
