@@ -237,6 +237,7 @@ export const en = {
     noMatches: (query: string) => `No terms match “${query}”.`,
     introducedIn: 'Introduced in',
     usedIn: 'Used in',
+    openEntry: 'Open in glossary',
   },
 
   mixed: {

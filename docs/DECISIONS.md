@@ -111,6 +111,9 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   links in explanations (scanned at build time), not declared per item. Term ids are global, not
   unit-local like skills, so `<Term id="domain">` works from any unit; a clash gets a qualified id
   (`attribute-domain`). Step captions and visualization labels do not count as uses.
+- Clicking a `<Term>` opens a popover with the summary and an "Open in glossary" link; the word
+  itself never navigates (2026-10-17), so a curious click does not leave the lesson. Terms have a
+  faint dashed underline, step links a dotted one, so the two read differently.
 
 - Commits carry no Claude attribution (2026-10-17): no Co-Authored-By trailer, so Claude is not
   listed as a contributor on the public repo. History was rewritten once to remove the old

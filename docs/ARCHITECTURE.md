@@ -62,7 +62,7 @@ Item kinds: `explore` (visual with steps), `lesson` (the same, plus `check` ques
 Skills are declared per unit and referenced by items and problems.
 
 Glossary terms are declared per unit (`terms` in `unit.ts`) with a global id and the item that
-introduces them. Explanations link a word to its entry with `<Term id="...">`. A Vite plugin
+introduces them. Explanations mark a word with `<Term id="...">`, which opens the summary in a popover with a link to the entry. A Vite plugin
 (`src/catalog/termUsesPlugin.ts`) scans every `explanation.mdx` for those tags at build time and
 exposes the map as `virtual:lumen/term-uses`, so the glossary page (`/glossary`) lists where each term
 is used without bundling MDX source. `buildCatalog` reports duplicate ids, unknown items and unknown

@@ -1,8 +1,14 @@
+import * as Popover from '@radix-ui/react-popover'
+import clsx from 'clsx'
+import { ArrowRight } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { getTerm } from '@/catalog'
+import { msg } from '@/i18n'
+import surfaces from '@/styles/surfaces.module.css'
 import { useVizRuntime } from '@/viz-kit/runtime'
-import { RichText, Tex, Tooltip } from '../atoms'
+import { RichText, Tex, usePortalContainer } from '../atoms'
+import styles from './MdxWidgets.module.css'
 
 /** Link in an explanation that jumps the visualization to a step: <StepLink step="limit">...</StepLink> */
 export function StepLink({ step, children }: { step: string; children: ReactNode }) {
@@ -33,35 +39,37 @@ export function C({ c, children }: { c: string; children: ReactNode }) {
 }
 
 /**
- * A word linked to its glossary entry: <Term id="domain">domain</Term>. Hover shows the summary.
- * These links are also how the glossary knows which items use a term (termUsesPlugin.ts).
+ * A word with a glossary entry: <Term id="domain">domain</Term>. Clicking it opens the summary in
+ * place, with a link to the glossary, so reading never leaves the page by accident. These tags are
+ * also how the glossary knows which items use a term (termUsesPlugin.ts).
  */
 export function Term({ id, children }: { id: string; children?: ReactNode }) {
+  const container = usePortalContainer()
   const term = getTerm(id)
   if (!term) return <>{children}</>
   return (
-    <Tooltip
-      content={
-        <span style={{ display: 'block', maxWidth: 300, lineHeight: 1.5 }}>
-          <strong style={{ fontWeight: 600 }}>{term.title}</strong>
-          {term.tex && (
-            <>
-              {' '}
-              <Tex>{term.tex}</Tex>
-            </>
-          )}
-          <span style={{ display: 'block', color: 'var(--fg-muted)' }}>
+    <Popover.Root>
+      <Popover.Trigger className={styles.trigger}>{children ?? term.title}</Popover.Trigger>
+      <Popover.Portal container={container}>
+        <Popover.Content
+          side="top"
+          sideOffset={6}
+          collisionPadding={12}
+          className={clsx(surfaces.glass, styles.popover)}
+        >
+          <span className={styles.head}>
+            <strong>{term.title}</strong>
+            {term.tex && <Tex>{term.tex}</Tex>}
+          </span>
+          <span className={styles.summary}>
             <RichText>{term.summary}</RichText>
           </span>
-        </span>
-      }
-    >
-      <Link
-        to={term.path}
-        style={{ color: 'inherit', textDecoration: 'underline dotted', textUnderlineOffset: 3 }}
-      >
-        {children ?? term.title}
-      </Link>
-    </Tooltip>
+          <Link to={term.path} className={styles.link}>
+            {msg.glossary.openEntry}
+            <ArrowRight size={12} />
+          </Link>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   )
 }
