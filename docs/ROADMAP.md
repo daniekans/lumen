@@ -23,10 +23,10 @@ awaiting feedback), `done`.
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2C and 2D can run
 in either order; 2D was recommended first because the dashboard is more useful with real content.
 
-**Suggested next session:** the curriculum was reprioritized (fundamentals as refreshers, tracks
-in parallel; see `LEARNING_PLATFORM.md`, Curriculum). Next: Algebra essentials batch 3, trimmed to
-items 7 to 9 (equations, inequalities and absolute value; their practice; the checkpoint). Then
-follow "Suggested order of units", starting with DE: Storage and file formats.
+**Suggested next session:** Algebra essentials is complete (all nine items await review). Next,
+per "Suggested order of units" in `LEARNING_PLATFORM.md`: DE: Storage and file formats. Plan the
+unit (refresher or core depth, skills, items, batches) in `LEARNING_PLATFORM.md`, then build its
+first batch.
 
 ### Phase 3: Explore page
 
@@ -100,6 +100,9 @@ Items in the content tree, by path under `src/content`. The full curriculum plan
 | mathematics/pre-calculus/algebra-essentials/factoring-as-area                                  | explore    | review | Tiles fly into rectangles; strip turns for $a^2 - b^2$  |
 | mathematics/pre-calculus/algebra-essentials/rational-expressions                               | lesson     | review | Holes and asymptotes; heights add for sums; four checks |
 | mathematics/pre-calculus/algebra-essentials/practice-factoring-and-fractions                   | practice   | review | Nine generators; factored forms asked as choices        |
+| mathematics/pre-calculus/algebra-essentials/equations-and-inequalities                         | explore    | review | Crossings, squaring, sign chart, distance               |
+| mathematics/pre-calculus/algebra-essentials/practice-equations-and-inequalities                | practice   | review | Ten generators; solution sets checked by sampling       |
+| mathematics/pre-calculus/algebra-essentials/checkpoint                                         | checkpoint | review | Ten problems including a self-graded proof              |
 | mathematics/pre-calculus/functions/function-as-mapping                                         | explore    | done   | Mapping folds into a graph; vertical line test          |
 | mathematics/pre-calculus/functions/domain-and-range                                            | explore    | review | Shadows on both axes (`AxisInterval` in the kit)        |
 | mathematics/pre-calculus/functions/reading-graphs                                              | lesson     | review | Four checks on one cubic                                |

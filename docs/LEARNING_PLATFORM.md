@@ -225,7 +225,7 @@ courses.
 A rotation across tracks, so the interesting material arrives early. Any unit can be picked out of
 order.
 
-1. Algebra essentials, batch 3 (trimmed, see its plan)
+1. Algebra essentials, batch 3 (done)
 2. DE: Storage and file formats
 3. Pre-calculus: Polynomial and rational functions (refresher)
 4. Pre-calculus: Exponential and logarithmic functions (refresher)
@@ -286,7 +286,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | -------------------------------------------------------------------------- | ------ |
 | Pre-calculus / Functions (items below)                                     | review |
 | Data Engineering / Relational model and SQL joins (first interleaved unit) | review |
-| Pre-calculus / Algebra essentials                                          | doing  |
+| Pre-calculus / Algebra essentials                                          | review |
 
 #### Functions unit plan
 
@@ -367,13 +367,15 @@ equal but unsimplified forms, or as a `number` (an exponent, a coefficient).
 | 4   | factoring-as-area                   | explore    | factor                                  | Algebra tiles: $x^2 + bx + c$ arranged into $(x + p)(x + q)$, common factors, difference of squares                                    | review |
 | 5   | rational-expressions                | lesson     | rational-expressions, factor            | Cancel common factors (and keep the excluded values: the graph has a hole), multiply, add over a common denominator                    | review |
 | 6   | practice-factoring-and-fractions    | practice   | factor, rational-expressions            | Common factors, trinomials, difference of squares, simplify, multiply and add rational expressions                                     | review |
-| 7   | equations-and-inequalities          | explore    | equations, inequalities, absolute-value | Solutions as intersections, inequalities as where one graph is above, sign charts, $\lvert x - a \rvert < r$ as an interval around $a$ | todo   |
-| 8   | practice-equations-and-inequalities | practice   | equations, inequalities, absolute-value | Linear, quadratic and rational equations (extraneous roots), linear and quadratic inequalities, absolute value                         | todo   |
-| 9   | checkpoint                          | checkpoint | all                                     | Mix of the practice generators plus a self-graded proof ($\sqrt{2}$ is irrational)                                                     | todo   |
+| 7   | equations-and-inequalities          | explore    | equations, inequalities, absolute-value | Solutions as intersections, inequalities as where one graph is above, sign charts, $\lvert x - a \rvert < r$ as an interval around $a$ | review |
+| 8   | practice-equations-and-inequalities | practice   | equations, inequalities, absolute-value | Linear, quadratic and rational equations (extraneous roots), linear and quadratic inequalities, absolute value                         | review |
+| 9   | checkpoint                          | checkpoint | all                                     | Mix of the practice generators plus a self-graded proof ($\sqrt{2}$ is irrational)                                                     | review |
 
-Batches: items 1 to 3 and 4 to 6 (published, awaiting review), then 7 to 9. Batch 3 was trimmed
-from four items to three when fundamentals became refreshers: one exploration covers equations,
-inequalities and absolute value. Number answers that
+Built in three batches; all nine items are published and await review. Batch 3 was trimmed from
+four items to three when fundamentals became refreshers: one exploration covers equations,
+inequalities and absolute value. Solution sets are asked as choices in interval notation; the
+practice test parses each option and compares it with the inequality at every endpoint and between
+them. The checkpoint takes nine generators from the three practice sets plus the proof. Number answers that
 are repeating decimals show as fractions (`answerTex`), so generators can return any rational.
 
 ## Risks

@@ -1,0 +1,79 @@
+An equation or an inequality in one variable is a question about two graphs. Draw both sides
+as functions of $x$, the <C c="blue">left side</C> and the <C c="teal">right side</C>: an equation
+asks where they meet, an inequality asks where one is higher. Algebra finds the exact numbers; the
+picture says how many to expect and whether an answer is plausible.
+
+## Equations as intersections
+
+$x^2 = x + c$ has a solution for each crossing of the parabola and the line. Moving everything to
+one side gives $x^2 - x - c = 0$, and the quadratic formula gives
+
+$$
+x = \frac{1 \pm \sqrt{1 + 4c}}{2}.
+$$
+
+The discriminant $1 + 4c$ counts the crossings: positive gives two, zero gives one (the line touches
+the parabola at $c = -\frac{1}{4}$), negative gives none. In general, $ax^2 + bx + c = 0$ has
+discriminant $b^2 - 4ac$.
+
+Linear equations have one crossing unless the lines are parallel. Collect the $x$ terms on one side:
+$3x - 5 = x + 7$ gives $2x = 12$, so $x = 6$.
+
+## Extraneous solutions
+
+Some steps change the solution set. Squaring both sides of $\sqrt{x + 2} = x$ gives $x + 2 = x^2$,
+whose solutions are $x = -1$ and $x = 2$. Only $x = 2$ works: at $x = -1$ the left side is
+$\sqrt{1} = 1$ and the right side is $-1$. Squaring cannot tell $u = v$ from $u = -v$, so it adds
+the solutions of $-\sqrt{x + 2} = x$. <StepLink step="extraneous">The second step</StepLink> shows
+both pictures: the squared equation has one more crossing.
+
+Multiplying by an expression that can be zero does the same. In
+
+$$
+\frac{x^2 + 1}{x - 2} = \frac{3x - 1}{x - 2},
+$$
+
+clearing the denominator gives $x^2 - 3x + 2 = 0$, with solutions $1$ and $2$. But $x = 2$ is
+excluded from the domain, so the only solution is $x = 1$. After squaring or clearing denominators,
+substitute every candidate into the original equation.
+
+## Inequalities
+
+An inequality holds on whole intervals, and its boundary points are the solutions of the matching
+equation. $x^2 < x + 2$ holds between the crossings, on $(-1, 2)$; $x^2 > x + 2$ holds on
+$(-\infty, -1) \cup (2, \infty)$. With $\leq$ or $\geq$ the endpoints belong to the set, written
+with square brackets.
+
+For linear inequalities, solve as for an equation, but multiplying or dividing by a negative number
+reverses the inequality: $-2x < 6$ means $x > -3$. Multiplying by $-1$ reflects the number line,
+which reverses the order.
+
+## Sign charts
+
+A polynomial in factored form changes sign only where a factor is zero. For
+$p(x) = (x + 2)(x - 1)(x - 3)$:
+
+| interval        | $x + 2$ | $x - 1$ | $x - 3$ | $p(x)$ |
+| --------------- | ------- | ------- | ------- | ------ |
+| $(-\infty, -2)$ | $-$     | $-$     | $-$     | $-$    |
+| $(-2, 1)$       | $+$     | $-$     | $-$     | $+$    |
+| $(1, 3)$        | $+$     | $+$     | $-$     | $-$    |
+| $(3, \infty)$   | $+$     | $+$     | $+$     | $+$    |
+
+So $p(x) > 0$ on $(-2, 1) \cup (3, \infty)$. A quotient works the same way, with one difference: a
+zero of the denominator is never in the solution set, even with $\geq$. For example,
+$\frac{x - 1}{x + 2} \geq 0$ on $(-\infty, -2) \cup [1, \infty)$.
+
+## Absolute value
+
+$\lvert u \rvert$ is the distance from $u$ to $0$, so $\lvert x - a \rvert$ is the distance from
+$x$ to $a$. That turns each statement into a picture on the number line:
+
+$$
+\lvert x - a \rvert = r \iff x = a \pm r, \qquad
+\lvert x - a \rvert < r \iff a - r < x < a + r.
+$$
+
+$\lvert x - a \rvert > r$ is the outside: $x < a - r$ or $x > a + r$. With a coefficient, divide
+first: $\lvert 2x - 6 \rvert < 4$ is $\lvert x - 3 \rvert < 2$, the interval $(1, 5)$. A negative
+$r$ has no solutions for $=$ and $<$, since a distance is never negative.
