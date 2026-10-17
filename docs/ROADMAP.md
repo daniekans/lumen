@@ -20,7 +20,7 @@ awaiting feedback), `done`.
 | 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
 | 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | planned |
 | 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | done    |
-| 9     | Course and unit pages with distinct roles: the course as a map, the unit as a workspace   | idea    |
+| 9     | Light UI polish: distinct course and unit pages, matrix zoom, interactive readout panels  | planned |
 | later | Presentation mode, internationalization (pt-BR), mobile layout                            | planned |
 
 Phase numbers are labels, not an order. A phase starts when the content needs it: 3D (phase 5)
@@ -158,30 +158,34 @@ Done on 2026-10-17: about 220 strings moved into `src/i18n/messages.ts` (`msg`),
 in `src/lib` returns issue codes, worded by the UI. Next for i18n (not planned): a `pt-BR` object
 of type `Messages`, a locale setting, then content translation as in `PRODUCT_VISION.md`.
 
-### Phase 9: Course and unit pages (idea, waiting for Daniel's choice)
+### Phase 9: Light UI polish
 
-Today both pages use the same `DocumentLayout` and the same list rows (number or icon, title,
-description, progress), so they look alike. Two directions were considered on 2026-10-17:
+Small improvements, no new routes and no heavy features. Agreed with Daniel on 2026-10-17.
 
-- **One page (master and detail):** the course page lists units on the left and opens the
-  selected unit on the right. Against it: the sidebar already shows the course tree, so this
-  would be a second master and detail beside it; the unit page's controls (skill status pickers,
-  "I already know this unit", prerequisites) are dense for a side pane; it fits the planned mobile
-  layout poorly; and units need their own URLs anyway (links, redirects, the glossary and Explore
-  pages, `?unit=` would only replace `/unit`).
-- **Separate pages with different jobs (recommended):** the course page answers "where am I and
-  what comes next", the unit page answers "what do I do here and how well do I know it".
-  - Course page as a map: units on a vertical path with their rings, the next unit highlighted
-    with a "Continue" link to its next item, a row of small kind icons per unit (one per item,
-    filled when done), planned units dimmed, and links to suggested prerequisites in other
-    tracks. Optionally a row expands in place to list its items, for a quick jump without
-    leaving the page.
-  - Unit page as a workspace: items grouped by role (explore and lessons, practice, checkpoint),
-    the next item called out, the checkpoint shown with its best score, skills with their
-    statuses as today, and a different header (unit number within the course, prerequisites as
-    chips).
+**Course and unit pages, a little more distinct.** Both pages stay separate (units keep their
+own URLs, the sidebar already shows the tree, and the unit page's controls need room), but today
+they share the same `DocumentLayout` and list rows, so they look alike. Give each its own job:
 
-Mostly UI over data the catalog and progress store already have; no new routes.
+- Course page as a map: units on a vertical path with their rings, the next unit highlighted with
+  a "Continue" link to its next item, a row of small kind icons per unit (one per item, filled
+  when done), planned units dimmed.
+- Unit page as a workspace: items grouped by role (explore and lessons, practice, checkpoint), the
+  next item called out, the checkpoint with its best score, skills as today, and a header with the
+  unit number within the course and prerequisites as chips.
+
+**Zoom on `matrix-transformations`.** It has no labeled axes, only a grid of the plane and the
+transformed grid, so phase 4 left it out, but zooming out helps to follow a matrix that stretches
+the plane. Draw the transformed grid over the visible view (it uses a fixed `REACH` today, whose
+edges would show when zoomed out), then add `zoomable`.
+
+**Readout panels that do a bit more.** The corner panels (`Overlay` with `ReadoutPanel`, for
+example the cost and sparkline in `backpropagation` or the matrix and determinant in
+`matrix-transformations`) are static and small. Light options, in the kit so every item gets them:
+
+- an expand button on a panel that opens its content larger in a `VizSheet`, as the RAG vector
+  store does (for example, the cost sparkline with axes);
+- tooltips on readout labels with a one-line meaning (`Readout` gets an optional `hint`);
+- panels can collapse to their title, so they never hide the drawing.
 
 ### Later
 
