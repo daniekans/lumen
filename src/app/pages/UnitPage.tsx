@@ -22,13 +22,15 @@ import { usePageTitle } from '../usePageTitle'
 import styles from './lists.module.css'
 import page from './UnitPage.module.css'
 
-const groups: { key: keyof typeof msg.pages.unit.groups; kinds: readonly ItemKind[] }[] = [
-  { key: 'learn', kinds: ['explore', 'lesson'] },
-  { key: 'practice', kinds: ['practice'] },
-  { key: 'checkpoint', kinds: ['checkpoint'] },
-]
+/** Each kind of item gets its own badge, so practice and checkpoints stand out in the list. */
+const kindClass: Record<ItemKind, string | undefined> = {
+  explore: page.learn,
+  lesson: page.learn,
+  practice: page.practice,
+  checkpoint: page.checkpoint,
+}
 
-/** A unit as a workspace: what to do next, the items by role, terms and skills. */
+/** A unit as a workspace: what to do next, its items in order, terms and skills. */
 export function UnitPage({ unit }: { unit: Unit }) {
   usePageTitle(unit.title)
   const data = useProgress((s) => s.data)
@@ -54,18 +56,18 @@ export function UnitPage({ unit }: { unit: Unit }) {
       <li key={item.id}>
         <Link
           to={item.path}
-          className={styles.row}
+          className={clsx(styles.row, item.kind === 'checkpoint' && page.final)}
           onPointerEnter={() => void item.preload()}
         >
-          <span className={styles.lead}>
-            <KindIcon kind={item.kind} size={16} />
+          <span className={clsx(page.badge, kindClass[item.kind])}>
+            <KindIcon kind={item.kind} size={15} />
           </span>
           <span className={styles.body}>
             <span className={styles.title}>{item.title}</span>
             <span className={styles.description}>{item.summary}</span>
           </span>
           <span className={styles.trail}>
-            {msg.catalog.kind[item.kind]}
+            <span className={page.kind}>{msg.catalog.kind[item.kind]}</span>
             <span className={clsx(styles.state, item.kind === 'checkpoint' && page.score)}>
               {info.state === 'done' ? (
                 <Check size={14} color="var(--viz-teal)" />
@@ -153,15 +155,11 @@ export function UnitPage({ unit }: { unit: Unit }) {
         </p>
       )}
 
-      {groups.map((g) => {
-        const items = unit.items.filter((i) => g.kinds.includes(i.kind))
-        if (items.length === 0) return null
-        return (
-          <DocumentSection key={g.key} title={msg.pages.unit.groups[g.key]}>
-            <ol className={styles.list}>{items.map(row)}</ol>
-          </DocumentSection>
-        )
-      })}
+      {unit.items.length > 0 && (
+        <DocumentSection title={msg.pages.unit.items}>
+          <ol className={styles.list}>{unit.items.map(row)}</ol>
+        </DocumentSection>
+      )}
 
       {unit.terms.length > 0 && (
         <DocumentSection title={msg.pages.unit.terms}>

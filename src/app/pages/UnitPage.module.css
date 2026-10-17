@@ -115,3 +115,43 @@
     display: none;
   }
 }
+
+/* Kind badges: outlined for explorations and lessons, filled for practice, solid for the checkpoint. */
+.badge {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.learn {
+  border: 1px solid var(--border-strong);
+  color: var(--fg-muted);
+}
+
+.practice {
+  background: var(--surface-active);
+  color: var(--fg);
+}
+
+.checkpoint {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.kind {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--fg-muted);
+  font-size: 11px;
+}
+
+.final {
+  border-bottom: 0;
+  background: var(--surface);
+}

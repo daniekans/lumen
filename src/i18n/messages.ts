@@ -277,11 +277,6 @@ export const en = {
       start: 'Start',
       continue: 'Continue',
       allDone: 'Every item in this unit is done. Practice and the checkpoint stay open for review.',
-      groups: {
-        learn: 'Explore and read',
-        practice: 'Practice',
-        checkpoint: 'Checkpoint',
-      },
       checkpointPasses: (pass: number) => `Passes at ${formatPercent(pass)}`,
       terms: 'Terms introduced',
       termsIntro: 'Words and symbols this unit defines. Select one to read its summary.',
