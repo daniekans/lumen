@@ -51,6 +51,8 @@ useStepEffect({
   fixed reach must cover the visible view instead (`useCoords().view`), as `TransformedGrid` does.
 - Readout panels: give a panel a `title` (it can then collapse) and a `hint` on readouts whose
   meaning is not obvious. A panel with a chart can take `onExpand` and open a `VizSheet`.
+- Points on zoomable stages show `(x, y)` on hover. Pass `coords={false}` for points whose
+  coordinates mean nothing, or a function to word them (complex numbers use `a + bi`).
 - Values worth linking (sliders, toggles) can use `useVizParam(name, default)` instead of
   `useState`, so the URL keeps them. Values that belong together go in one parameter with a codec
   (`numbersCodec`). A choice the step handlers set must be a parameter too, since a link with

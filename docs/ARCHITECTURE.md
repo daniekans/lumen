@@ -183,6 +183,11 @@ Readout panels (`ReadoutPanel` with `Readout` rows in an `Overlay`) have three o
 own `VizSheet`, as `backpropagation` does with a `SeriesPlot` of the cost), and a `hint` on a
 `Readout` shows a one-line meaning as a tooltip on its label.
 
+On zoomable stages a `Point` shows its coordinates on hover and while dragged. Points register
+their pixel position with the stage (`src/viz-kit/stage/pointHover.ts`), which picks the nearest
+visible one to the pointer, so nothing is added to the drawing. `coords` turns it off or on, or
+formats the text.
+
 The explanation pane can be resized (drag its left edge, double-click to reset) and switched between
 docked and floating. Width and mode persist in the UI store.
 

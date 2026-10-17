@@ -192,12 +192,13 @@ example the cost and sparkline in `backpropagation` or the matrix and determinan
 Done on 2026-10-17. The course page is a path of unit cards: a ring per unit, one kind icon per
 item (teal when done, each a link), planned units dimmed, and a "Continue" link on the first
 unfinished unit (`nextUnit`, `nextItem` in `src/progress/derive.ts`). The unit page has "Unit n
-of m" as its eyebrow, prerequisites as chips, an "Up next" card, items grouped as Explore and read,
-Practice and Checkpoint (with its pass mark or best score), the unit's glossary terms as chips that
-open the term popover, then skills. `matrix-transformations` is zoomable, drawing its grid with the
+of m" as its eyebrow, prerequisites as chips, an "Up next" card, items in course order with a badge
+per kind (the checkpoint shows its pass mark or best score), the unit's glossary terms as chips
+that open the term popover, then skills. `matrix-transformations` is zoomable, drawing its grid with the
 kit's `TransformedGrid`. Readout panels got `title` (collapsible), `onExpand` and `hint`; they are
 applied in `matrix-transformations` and `backpropagation` (whose cost opens a `SeriesPlot`). Other
-items' panels can adopt them as they are revisited.
+items' panels can adopt them as they are revisited. After review: points show their coordinates on
+hover (`Point` `coords`, on for zoomable stages), and floating UI animates out as well as in.
 
 ### Later
 

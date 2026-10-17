@@ -117,8 +117,17 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 
 - Phase 9 (2026-10-17): course and unit pages stay separate routes with different jobs. The course
   page is a map (path of units, next unit with "Continue"); the unit page is a workspace (up next,
-  items grouped by role, terms, skills). "Next" is always the first item in order that is not done.
+  items, terms, skills). "Next" is always the first item in order that is not done.
   Readout panel extras (collapse, expand, hints) are opt-in props, not a new component.
+- Unit page items stay in course order, the same as the sidebar (2026-10-17): grouping them by
+  role broke the natural sequence. Kinds are told apart by badge style instead (outlined for
+  explorations and lessons, filled for practice, solid with a tinted row for the checkpoint).
+- Points show their coordinates on hover on coordinate planes (zoomable stages), and while dragged
+  (2026-10-17). The stage finds the nearest visible point, so no hit areas are added and dragging
+  and panning are unaffected. Diagrams stay without it; an item can format the text (complex
+  numbers show `a + bi`) or turn it off with `coords`.
+- Floating UI animates both ways (2026-10-17): tooltips, the term popover, menus and dialogs fade
+  out as well as in; hints, solutions, answer feedback and expanded readout panels fade in.
 
 - Commits carry no Claude attribution (2026-10-17): no Co-Authored-By trailer, so Claude is not
   listed as a contributor on the public repo. History was rewritten once to remove the old
