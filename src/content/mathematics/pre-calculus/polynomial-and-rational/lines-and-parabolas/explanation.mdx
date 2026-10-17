@@ -1,0 +1,71 @@
+Lines and parabolas are the polynomials of degree one and two. Most of what later units do with
+curves (tangent lines, linear approximation, least squares) starts from a line, and the parabola is
+the simplest curve with a turning point.
+
+## Slope
+
+The slope of the line through $(x_1, y_1)$ and $(x_2, y_2)$ is the rise over the run:
+
+$$
+m = \frac{\Delta y}{\Delta x} = \frac{y_2 - y_1}{x_2 - x_1}.
+$$
+
+It does not depend on which two points you pick: the triangles in <StepLink step="slope">the first step</StepLink> are similar, so their ratios agree. That is what
+makes a graph a line. The line meets the $y$-axis at its intercept $b$, which gives the
+slope-intercept form
+
+$$
+y = mx + b,
+$$
+
+and through a known point $(x_1, y_1)$ the point-slope form $y - y_1 = m(x - x_1)$. Parallel lines
+have equal slopes; a horizontal line has $m = 0$, and a vertical line $x = c$ has no slope (it is
+not the graph of a <Term id="function">function</Term>).
+
+## Vertex form
+
+Every parabola is a copy of $y = ax^2$ moved so its vertex sits at $(h, k)$:
+
+$$
+y = a(x - h)^2 + k.
+$$
+
+This is a <Term id="graph-transformation">transformation</Term> of $x^2$: $a$ stretches and, when
+negative, reflects; $h$ and $k$ shift. The vertical line $x = h$ is the axis of symmetry, and $k$
+is the smallest value of $y$ when $a > 0$ (the largest when $a < 0$).
+
+## Completing the square
+
+A parabola usually comes as $ax^2 + bx + c$. To find its vertex, complete the square. For $a = 1$,
+
+$$
+x^2 + bx + c = \left(x + \frac{b}{2}\right)^2 + c - \frac{b^2}{4},
+$$
+
+because $\left(x + \frac{b}{2}\right)^2 = x^2 + bx + \frac{b^2}{4}$, and the extra
+$\frac{b^2}{4}$ is subtracted again. The vertex is $\left(-\frac{b}{2}, c - \frac{b^2}{4}\right)$,
+the end of the <C c="yellow">arrow</C> in <StepLink step="complete">the third step</StepLink>. For
+example $x^2 - 6x + 5 = (x - 3)^2 - 4$, with vertex $(3, -4)$.
+
+With a leading coefficient, factor it out of the first two terms:
+
+$$
+2x^2 + 8x + 3 = 2(x^2 + 4x) + 3 = 2(x + 2)^2 - 8 + 3 = 2(x + 2)^2 - 5.
+$$
+
+In general the vertex is at $x = -\frac{b}{2a}$, and its $y$-coordinate is the value there.
+
+## Zeros
+
+Vertex form gives the zeros directly. $a(x - h)^2 + k = 0$ means $(x - h)^2 = -\frac{k}{a}$, so
+
+$$
+x = h \pm \sqrt{-\frac{k}{a}}.
+$$
+
+The two <C c="teal">zeros</C> sit at the same distance from the axis of symmetry. If $k$ and $a$
+have the same sign, the parabola opens away from the $x$-axis and never reaches it: no zeros.
+Expanding this formula gives the <Term id="quadratic-formula">quadratic formula</Term>, and
+$-\frac{k}{a} = \frac{b^2 - 4ac}{4a^2}$ shows why the <Term id="discriminant">discriminant</Term> counts the zeros.
+
+Next: polynomials of higher degree, where the leading term decides the ends of the graph.

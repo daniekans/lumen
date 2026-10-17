@@ -1,0 +1,54 @@
+A <Term id="polynomial">polynomial</Term> of degree $n$ is a sum of powers of $x$ up to $x^n$. Its
+graph is smooth and unbroken, and three facts sketch most of it without plotting points: where the
+zeros are, how the graph behaves at each zero, and where the ends go.
+
+## Zeros from factors
+
+When a polynomial is written as a product,
+
+$$
+p(x) = a(x - r_1)(x - r_2)\cdots(x - r_n),
+$$
+
+it is zero exactly where one factor is: at $r_1, \dots, r_n$. This is why <Term id="factoring">factoring</Term> matters for graphs. A polynomial of degree $n$ has at most
+$n$ real zeros; some factors, such as $x^2 + 1$, have none.
+
+## Multiplicity
+
+A factor can repeat. In $(x - 1)^2(x + 3)$ the zero $1$ has <Term id="multiplicity">multiplicity</Term> $2$. Near a zero $r$ of multiplicity $m$, the other
+factors are almost constant, so the graph looks like a multiple of $(x - r)^m$:
+
+- odd $m$: the sign changes, and the graph crosses the axis;
+- even $m$: the sign stays, and the graph touches the axis and turns back;
+- $m \geq 2$: the graph is flat at the zero, flatter as $m$ grows.
+
+Each multiplicity can be set separately in <StepLink step="multiplicity">the second step</StepLink>.
+
+## End behavior
+
+Expanding gives $p(x) = ax^n + (\text{lower powers})$. Dividing by the leading term,
+
+$$
+\frac{p(x)}{ax^n} = 1 + \frac{\text{lower powers}}{ax^n} \to 1 \quad \text{as } \lvert x \rvert \to \infty,
+$$
+
+so far from the origin $p$ and $ax^n$ are almost the same curve. The <Term id="end-behavior">end behavior</Term> depends only on $n$ and the sign of $a$:
+
+|          | $a > 0$                           | $a < 0$                           |
+| -------- | --------------------------------- | --------------------------------- |
+| $n$ even | both ends up                      | both ends down                    |
+| $n$ odd  | down on the left, up on the right | up on the left, down on the right |
+
+For example $-2(x - 1)^2(x + 3)$ has leading term $-2x^3$: it rises on the left and falls on the
+right, crosses at $-3$ and touches at $1$.
+
+## Turning points
+
+A <Term id="turning-point">turning point</Term> is where the graph switches between rising and
+falling. Between two neighboring zeros the graph leaves the axis and comes back, so it turns at
+least once. A polynomial of degree $n$ has at most $n - 1$ turning points; the proof needs the <Term id="derivative">derivative</Term>, which has degree $n - 1$ and so at most $n - 1$ zeros.
+
+Read backward, this bounds the degree from a graph: a graph with three turning points comes from a
+polynomial of degree at least $4$.
+
+Next: quotients of polynomials, whose graphs can break apart.

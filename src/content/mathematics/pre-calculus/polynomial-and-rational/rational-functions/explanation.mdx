@@ -1,0 +1,57 @@
+A <Term id="rational-function">rational function</Term> is a quotient $\frac{p(x)}{q(x)}$ of two
+polynomials. Its graph is made of smooth pieces separated where $q(x) = 0$, and far from the origin
+it settles toward a line. Two questions sketch it: what happens near each zero of the denominator,
+and what happens as $x \to \pm\infty$.
+
+## Vertical asymptotes
+
+Near a zero $c$ of the denominator where the numerator is not zero, the quotient divides a number
+of ordinary size by a number close to $0$, so its size grows without bound. The graph runs along
+the line $x = c$, a vertical <Term id="asymptote">asymptote</Term>.
+
+The <Term id="multiplicity">multiplicity</Term> of $c$ in the denominator sets the signs on the two
+sides, as for zeros of polynomials: $\frac{1}{x - c}$ goes to $-\infty$ on the left and $+\infty$
+on the right, while $\frac{1}{(x - c)^2}$ is positive on both sides. Drag $x$ in <StepLink step="vertical">the first step</StepLink> to see the values grow.
+
+If the factor $x - c$ cancels with the numerator, there is no asymptote but a <Term id="hole">hole</Term>: one missing point. Always factor and cancel before reading
+asymptotes, and remember that $c$ stays an <Term id="excluded-value">excluded value</Term>.
+
+## Horizontal asymptotes
+
+For large $\lvert x \rvert$ only the leading terms matter. Dividing the numerator and denominator
+by the highest power of $x$ in the denominator shows the limit. With degrees $n$ (numerator) and
+$d$ (denominator) and leading coefficients $a$ and $b$:
+
+$$
+\frac{p(x)}{q(x)} \to \begin{cases} 0 & n < d, \\ \frac{a}{b} & n = d, \\ \pm\infty & n > d. \end{cases}
+$$
+
+So $\frac{2x + 1}{x^2 - 4} \to 0$ and $\frac{2x^2 - 2}{x^2 - 4} \to 2$: the <Term id="horizontal-asymptote">horizontal asymptote</Term> is $y = 0$ or $y = \frac{a}{b}$.
+
+## Slant asymptotes
+
+When $n = d + 1$ there is no horizontal asymptote, but long division splits the function into a
+line and a remainder:
+
+$$
+\frac{x^2 - 1}{x - 2} = x + 2 + \frac{3}{x - 2}.
+$$
+
+The remainder term goes to $0$, so the graph approaches the <Term id="slant-asymptote">slant asymptote</Term> $y = x + 2$, from above on the right and from
+below on the left. The <C c="yellow">gap</C> in <StepLink step="slant">the third step</StepLink> is
+that remainder.
+
+## Reading a whole graph
+
+For $f(x) = \frac{(x + 1)(x - 3)(x - 1)}{(x - 1)(x + 2)(x - 2)}$:
+
+1. Cancel $x - 1$. The hole is at $x = 1$, with height $\frac{(2)(-2)}{(3)(-1)} = \frac{4}{3}$.
+2. The remaining denominator $(x + 2)(x - 2)$ gives vertical asymptotes $x = -2$ and $x = 2$.
+3. The remaining numerator gives the zeros $-1$ and $3$.
+4. The degrees are equal with leading coefficients $1$ and $1$, so $y = 1$ is the horizontal
+   asymptote.
+
+A horizontal asymptote describes only the ends, so the graph may cross it in the middle: here at
+$x = \frac{1}{2}$. A vertical asymptote is never crossed, since the function is undefined there.
+
+In calculus these become limits: an asymptote is a limit that is infinite, or a limit at infinity.
