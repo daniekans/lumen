@@ -3,7 +3,7 @@ import { answerTex } from './answers'
 import { checkAnswer } from './check'
 import { autoDifficulty, nextGenerator, suggestStatus, type Attempt } from './session'
 import { createRng } from './rng'
-import { frac, paren, poly, sum } from './tex'
+import { frac, num, paren, poly, signed, sum } from './tex'
 import type { ProblemGenerator } from './problems'
 
 const tex = (s: string) => ({ tex: s })
@@ -88,6 +88,12 @@ describe('tex helpers', () => {
     expect(frac(6, 4)).toBe('\\frac{3}{2}')
     expect(frac(-2, 6)).toBe('-\\frac{1}{3}')
     expect(frac(4, -2)).toBe('-2')
+    expect(num(0.75)).toBe('\\frac{3}{4}')
+    expect(num(-2)).toBe('-2')
+    expect(num(Math.SQRT2)).toBe('1.41')
+    expect(signed(-0.5)).toBe(' - \\frac{1}{2}')
+    expect(signed(3)).toBe(' + 3')
+    expect(signed(0)).toBe('')
   })
 })
 

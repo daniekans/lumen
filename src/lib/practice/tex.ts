@@ -50,6 +50,25 @@ export const frac = (p: number, q: number) => {
   return `${n < 0 ? '-' : ''}\\frac{${Math.abs(n)}}{${d}}`
 }
 
+/**
+ * A number as TeX: a reduced fraction when it is close to one with a denominator up to `maxDen`
+ * (0.75 -> '\\frac{3}{4}'), otherwise a decimal with at most two places.
+ */
+export const num = (v: number, maxDen = 16) => {
+  for (let q = 1; q <= maxDen; q++) {
+    const p = Math.round(v * q)
+    if (Math.abs(p / q - v) < 1e-9) return frac(p, q)
+  }
+  return String(+v.toFixed(2))
+}
+
+/** A number after a term: ' + 3', ' - \\frac{1}{2}', or '' for zero. */
+export const signed = (v: number, maxDen = 16) => {
+  const t = num(Math.abs(v), maxDen)
+  if (t === '0') return ''
+  return v < 0 ? ` - ${t}` : ` + ${t}`
+}
+
 /** Identifiers and SQL in a monospace font, with the characters TeX reserves escaped. */
 export const code = (s: string) => `\\texttt{${s.replace(/[_{}%&#]/g, (c) => `\\${c}`)}}`
 
