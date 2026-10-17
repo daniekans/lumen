@@ -1,0 +1,25 @@
+Ten problems that cover the whole unit. Work them on paper first, then enter the answers in any
+order and check the sheet at the end. The checkpoint passes at $80\%$.
+
+## What it covers
+
+- bytes and pages a scan reads in row and column layouts, and the offset of a value;
+- dictionary and delta encoded sizes, and the entropy of a column;
+- row groups skipped by footer statistics, and what a query reads with projection and pushdown;
+- the row groups a filter reads in a sorted file;
+- one short proof, graded by you against the solution.
+
+## Useful facts
+
+$$
+\begin{aligned}
+\text{pages: } & \left\lceil \frac{N w}{P} \right\rceil \\
+\text{bits per code: } & b = \lceil \log_2 d \rceil \\
+\text{entropy: } & H = \sum_k p_k \log_2 \frac{1}{p_k}
+\end{aligned}
+$$
+
+A row group is skipped only when its $[\min, \max]$ rules out every row. Row $i$ (from $0$) is in
+row group $\lfloor i / R \rfloor$.
+
+If a problem feels unfamiliar, the matching practice set in this unit has more of the same kind.

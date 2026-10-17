@@ -34,5 +34,8 @@ export default defineConfig({
   test: {
     include: ['src/**/*.test.ts'],
     environment: 'node',
+    // Problem sets render every generated problem over 150 seeds, which takes seconds per set
+    // when the files run in parallel.
+    testTimeout: 30_000,
   },
 })

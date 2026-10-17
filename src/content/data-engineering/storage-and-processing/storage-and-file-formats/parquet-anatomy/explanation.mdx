@@ -1,0 +1,51 @@
+A column layout reads only the columns a query names, but an analytical query also filters rows.
+Parquet, the default file format of data lakes, combines the two: it keeps a table's columns apart
+and writes enough metadata to skip rows as well, all without an index.
+
+## Three levels
+
+A Parquet file cuts its rows into <StepLink step="row-groups">row groups</StepLink>. Inside a row
+group every column is a <StepLink step="column-chunks">column chunk</StepLink>, and every chunk is a
+sequence of <StepLink step="pages">pages</StepLink>. With $N$ rows, row groups of $R$ rows and $C$
+columns, the file has
+
+$$
+G = \left\lceil \frac{N}{R} \right\rceil \text{ row groups and } G \cdot C \text{ column chunks.}
+$$
+
+The page is where the previous items apply: each page is encoded (dictionary, run-length, delta)
+and then compressed with a codec such as Snappy or Zstd.
+
+## The footer
+
+The file ends with a <StepLink step="footer">footer</StepLink>: the schema, the offset of every
+column chunk, and per chunk the minimum, the maximum and the number of NULLs. A reader fetches the
+last bytes of the file, which give the footer's length, then the footer, and plans from there.
+
+## Projection
+
+A query that names a few columns reads only their chunks. For `SELECT SUM(amount)` that is one chunk
+per row group, <StepLink step="projection">$8$ of the $24$ pages</StepLink>: the cost of a column
+layout, with pages counted per chunk.
+
+## Predicate pushdown
+
+A filter is pushed down to the file: before reading a row group, the reader checks whether its
+statistics allow a match. For `day = t` the row group is skipped when
+
+$$
+t < \min \quad \text{or} \quad t > \max .
+$$
+
+Statistics only skip what they can rule out. In this file every row group covers most of the month,
+so <StepLink step="pushdown">nothing is skipped</StepLink>. Writing the rows sorted by day gives each
+row group a narrow range, and the same query <StepLink step="sorted">reads one row group</StepLink>.
+This is why tables are often sorted or clustered by the columns people filter on, usually a date.
+Sorting also lengthens runs, which helps the encodings.
+
+## Choosing a file format
+
+Parquet suits large tables read by analytical engines: few columns, many rows, written in batches.
+Row formats fit the other jobs. CSV is plain text that any tool opens but has no types and no
+statistics. JSON lines carry nested records but repeat every field name. Avro writes rows in binary
+with a schema, which suits streams and pipelines that append one record at a time.

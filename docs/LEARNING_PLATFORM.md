@@ -206,7 +206,7 @@ prerequisites shown on unit pages, never gates.
 | #   | Unit                                                                          | Suggested math              |
 | --- | ----------------------------------------------------------------------------- | --------------------------- |
 | 1   | Relational model and SQL joins (done)                                         | Functions                   |
-| 2   | Storage and file formats (row vs columnar, Parquet, encoding, compression)    | Exponentials and logs       |
+| 2   | Storage and file formats (done)                                               | Exponentials and logs       |
 | 3   | Partitioning, bucketing and hashing                                           | Sums, distributions of keys |
 | 4   | Distributed processing (shuffles, stages, skew, cost models)                  | Limits, asymptotic growth   |
 | 5   | Data modeling (normalization, dimensional models, slowly changing dimensions) | Relations and keys          |
@@ -226,7 +226,7 @@ A rotation across tracks, so the interesting material arrives early. Any unit ca
 order.
 
 1. Algebra essentials, batch 3 (done)
-2. DE: Storage and file formats
+2. DE: Storage and file formats (done)
 3. Pre-calculus: Polynomial and rational functions (refresher)
 4. Pre-calculus: Exponential and logarithmic functions (refresher)
 5. Calculus 1: Limits
@@ -287,7 +287,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Pre-calculus / Functions (items below)                                     | review |
 | Data Engineering / Relational model and SQL joins (first interleaved unit) | review |
 | Pre-calculus / Algebra essentials                                          | review |
-| Data Engineering / Storage and file formats (core depth)                   | doing  |
+| Data Engineering / Storage and file formats (core depth)                   | review |
 
 #### Functions unit plan
 
@@ -403,12 +403,12 @@ groups, column chunks, pages, footer statistics, predicate pushdown, choosing a 
 | 4   | encodings                         | explore    | encoding              | Dictionary codes, bit packing with $\lceil \log_2 d \rceil$ bits, run-length on a sorted column, delta for timestamps                 | review |
 | 5   | entropy-and-compression           | lesson     | compression, encoding | Information $\log_2 (1/p)$, entropy as the floor for symbol codes, sorting to lengthen runs, codecs layered on encodings              | review |
 | 6   | practice-encoding-and-compression | practice   | encoding, compression | Bit widths, dictionary and run-length sizes, delta ranges, entropy of small distributions, compression ratios                         | review |
-| 7   | parquet-anatomy                   | explore    | parquet, scan-cost    | File, row groups, column chunks, pages, footer; min and max statistics skip row groups; sorting tightens the ranges                   | todo   |
-| 8   | practice-parquet                  | practice   | parquet, scan-cost    | Row groups skipped by a predicate, bytes read with projection and pushdown, choosing among CSV, JSON, Avro and Parquet                | todo   |
-| 9   | checkpoint                        | checkpoint | all                   | Mix of the practice generators plus a self-graded proof (a column with $d$ distinct values has at least $d$ runs, sorted exactly $d$) | todo   |
+| 7   | parquet-anatomy                   | explore    | parquet, scan-cost    | File, row groups, column chunks, pages, footer; min and max statistics skip row groups; sorting tightens the ranges                   | review |
+| 8   | practice-parquet                  | practice   | parquet, scan-cost    | Row groups skipped by a predicate, bytes read with projection and pushdown, choosing among CSV, JSON, Avro and Parquet                | review |
+| 9   | checkpoint                        | checkpoint | all                   | Mix of the practice generators plus a self-graded proof (a column with $d$ distinct values has at least $d$ runs, sorted exactly $d$) | review |
 
 Batches: 1 = items 1 to 3 (layouts and scan cost), 2 = items 4 to 6 (encoding and compression),
-3 = items 7 to 9 (Parquet and the checkpoint). Batches 1 and 2 are published and await review. The cost model: a table of $N$ rows with column
+3 = items 7 to 9 (Parquet and the checkpoint). All nine items are published and await review. The cost model: a table of $N$ rows with column
 widths $w_j$ (row width $W = \sum_j w_j$) and pages of $P$ bytes. A row layout stores rows back to
 back, so any full scan reads $\lceil NW/P \rceil$ pages; a column layout gives each column its own
 pages, so a scan of the columns $S$ reads $\sum_{j \in S} \lceil N w_j / P \rceil$. A point lookup
@@ -416,6 +416,11 @@ whose position is known reads one page in a row layout and one page per selected
 layout. Encodings and entropy live in `src/lib/storage/encoding.ts` (`codeBits`,
 `bitsFor`, `dictionaryEncode`, `runLengths`, `deltaEncode`, `entropy`); the city column of
 `encodings` (counts $6, 4, 4, 2$, $86$ bytes as text, $25$ encoded) is reused by the lesson.
+Row groups and footer statistics live in `src/lib/storage/parquet.ts` (`rowGroups`,
+`groupRanges`, `mayMatch`, `groupsRead`, `groupsSpanned`). The exploration's file has $24$ rows in
+$4$ row groups of $6$, pages of $3$ values; its days are chosen so every unsorted range contains
+$12$ and the sorted file reads one row group for day $12$ and none for day $7$. The checkpoint takes
+nine generators from the three practice sets plus the proof.
 
 ## Risks
 

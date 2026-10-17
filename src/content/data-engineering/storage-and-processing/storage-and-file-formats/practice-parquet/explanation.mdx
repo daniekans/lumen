@@ -1,0 +1,38 @@
+The problems use the structure of a Parquet file: $N$ rows cut into row groups of $R$ rows, one
+column chunk per column in each row group, and a footer with the min and max of every chunk.
+
+## Counting
+
+$$
+G = \left\lceil \frac{N}{R} \right\rceil \text{ row groups}, \qquad G \cdot C \text{ column chunks}
+$$
+
+Counting rows from $0$, row $i$ is in row group $\lfloor i / R \rfloor$.
+
+## Skipping
+
+A row group is skipped when its range $[\min, \max]$ cannot satisfy the filter:
+
+$$
+\begin{aligned}
+x = v: & \quad v < \min \text{ or } v > \max \\
+x > v: & \quad \max \leq v \\
+x < v: & \quad \min \geq v \\
+x \text{ between } a \text{ and } b: & \quad \max < a \text{ or } \min > b
+\end{aligned}
+$$
+
+## What a query reads
+
+The reader fetches the chunks of the columns it needs, the selected ones and the filter column, in
+every row group it cannot skip. Without compression that is
+
+$$
+(\text{row groups read}) \cdot R \cdot \sum_{\text{needed}} w_j \text{ bytes.}
+$$
+
+## Formats
+
+Parquet for large tables read a few columns at a time, Avro for records written one at a time with
+a schema, JSON lines for nested records read whole, CSV for small exchanges with people and
+spreadsheets.

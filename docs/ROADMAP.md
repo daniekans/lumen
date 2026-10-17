@@ -23,9 +23,9 @@ awaiting feedback), `done`.
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2C and 2D can run
 in either order; 2D was recommended first because the dashboard is more useful with real content.
 
-**Suggested next session:** DE: Storage and file formats is planned in `LEARNING_PLATFORM.md`
-and batches 1 and 2 (items 1 to 6) are published. Next: batch 3 of that unit (Parquet anatomy, its
-practice, the checkpoint).
+**Suggested next session:** DE: Storage and file formats is complete (all nine items published,
+awaiting review). Next in the suggested order (`LEARNING_PLATFORM.md`): plan and build
+Pre-calculus: Polynomial and rational functions, a refresher unit of about five items.
 
 ### Phase 3: Explore page
 
@@ -91,50 +91,53 @@ practice (typing, small functions, clear names), since Daniel cares about it.
 Items in the content tree, by path under `src/content`. The full curriculum plan is in
 [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md).
 
-| Path                                                                                               | Kind       | Status | Notes                                                             |
-| -------------------------------------------------------------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------- |
-| mathematics/pre-calculus/algebra-essentials/exponent-laws                                          | explore    | review | Tiles join, cancel across a bar, and repeat in a grid             |
-| mathematics/pre-calculus/algebra-essentials/radicals                                               | explore    | review | Roots as sides of squares; oblique cube for cube roots            |
-| mathematics/pre-calculus/algebra-essentials/practice-exponents-and-radicals                        | practice   | review | Eight generators; simplest forms asked as choices                 |
-| mathematics/pre-calculus/algebra-essentials/factoring-as-area                                      | explore    | review | Tiles fly into rectangles; strip turns for $a^2 - b^2$            |
-| mathematics/pre-calculus/algebra-essentials/rational-expressions                                   | lesson     | review | Holes and asymptotes; heights add for sums; four checks           |
-| mathematics/pre-calculus/algebra-essentials/practice-factoring-and-fractions                       | practice   | review | Nine generators; factored forms asked as choices                  |
-| mathematics/pre-calculus/algebra-essentials/equations-and-inequalities                             | explore    | review | Crossings, squaring, sign chart, distance                         |
-| mathematics/pre-calculus/algebra-essentials/practice-equations-and-inequalities                    | practice   | review | Ten generators; solution sets checked by sampling                 |
-| mathematics/pre-calculus/algebra-essentials/checkpoint                                             | checkpoint | review | Ten problems including a self-graded proof                        |
-| mathematics/pre-calculus/functions/function-as-mapping                                             | explore    | done   | Mapping folds into a graph; vertical line test                    |
-| mathematics/pre-calculus/functions/domain-and-range                                                | explore    | review | Shadows on both axes (`AxisInterval` in the kit)                  |
-| mathematics/pre-calculus/functions/reading-graphs                                                  | lesson     | review | Four checks on one cubic                                          |
-| mathematics/pre-calculus/functions/practice-evaluate-and-domain                                    | practice   | review | Seven generators, verified by property tests                      |
-| mathematics/pre-calculus/functions/composition                                                     | explore    | review | Three number lines; order switch                                  |
-| mathematics/pre-calculus/functions/inverses                                                        | explore    | review | Graph reflects across y = x                                       |
-| mathematics/pre-calculus/functions/transformations                                                 | explore    | review | Dock wraps to two rows at 1440 px                                 |
-| mathematics/pre-calculus/functions/practice-compose-and-invert                                     | practice   | review | Seven generators, verified by property tests                      |
-| mathematics/pre-calculus/functions/practice-transformations                                        | practice   | review | Five generators, verified by property tests                       |
-| mathematics/pre-calculus/functions/checkpoint                                                      | checkpoint | review | Ten problems including a self-graded proof                        |
-| data-engineering/storage-and-processing/storage-and-file-formats/row-vs-columnar                   | explore    | review | Values fly into pages; layout toggle; scan, lookup, insert        |
-| data-engineering/storage-and-processing/storage-and-file-formats/scan-cost                         | lesson     | review | Table as an $N \times W$ area cut into pages; five checks         |
-| data-engineering/storage-and-processing/storage-and-file-formats/practice-layouts                  | practice   | review | Eight generators, verified by brute-force page counts             |
-| data-engineering/storage-and-processing/storage-and-file-formats/encodings                         | explore    | review | Dictionary, bit packing with a $d$ slider, runs, sorting, deltas  |
-| data-engineering/storage-and-processing/storage-and-file-formats/entropy-and-compression           | lesson     | review | Information, entropy as the floor, order and codecs; seven checks |
-| data-engineering/storage-and-processing/storage-and-file-formats/practice-encoding-and-compression | practice   | review | Nine generators, verified independently                           |
-| data-engineering/relational-foundations/relational-model-and-joins/tables-as-relations             | explore    | review | Product grid; pairs fly into the table                            |
-| data-engineering/relational-foundations/relational-model-and-joins/keys-and-references             | explore    | review | FK arrows; ON DELETE options                                      |
-| data-engineering/relational-foundations/relational-model-and-joins/joins-as-products               | explore    | review | `JoinGrid` in the kit; condition sweep, theta joins               |
-| data-engineering/relational-foundations/relational-model-and-joins/outer-joins                     | explore    | review | NULL-padded cells beside the grid; anti join                      |
-| data-engineering/relational-foundations/relational-model-and-joins/join-row-counts                 | lesson     | review | Join size as rectangles $a_k \times b_k$; five checks             |
-| data-engineering/relational-foundations/relational-model-and-joins/practice-relations-and-keys     | practice   | review | Eight generators, verified by property tests                      |
-| data-engineering/relational-foundations/relational-model-and-joins/practice-joins                  | practice   | review | Eight generators, checked against materialized joins              |
-| data-engineering/relational-foundations/relational-model-and-joins/checkpoint                      | checkpoint | review | Ten problems including a self-graded proof                        |
-| mathematics/calculus-1/derivatives/derivative-as-limit                                             | lesson     | done   | Two checks (concept, computed value)                              |
-| mathematics/calculus-1/derivatives/difference-quotients                                            | practice   | done   | Six generators, verified by property tests                        |
-| mathematics/calculus-1/derivatives/checkpoint                                                      | checkpoint | done   | Six problems including a self-graded proof                        |
-| mathematics/calculus-1/integrals/riemann-sums                                                      | explore    | done   | Empty space below the x-axis at some sizes                        |
-| mathematics/linear-algebra/linear-transformations/matrix-transformations                           | explore    | done   | `MatrixView` could move to `ui` if reused                         |
-| mathematics/complex-numbers/arithmetic/complex-multiplication                                      | explore    | done   |                                                                   |
-| machine-learning/neural-networks/foundations/forward-pass                                          | explore    | done   |                                                                   |
-| machine-learning/neural-networks/training/backpropagation                                          | explore    | done   |                                                                   |
-| ai-engineering/retrieval/fundamentals/rag-pipeline                                                 | explore    | done   | Vector store view opens in a larger sheet                         |
+| Path                                                                                               | Kind       | Status | Notes                                                                  |
+| -------------------------------------------------------------------------------------------------- | ---------- | ------ | ---------------------------------------------------------------------- |
+| mathematics/pre-calculus/algebra-essentials/exponent-laws                                          | explore    | review | Tiles join, cancel across a bar, and repeat in a grid                  |
+| mathematics/pre-calculus/algebra-essentials/radicals                                               | explore    | review | Roots as sides of squares; oblique cube for cube roots                 |
+| mathematics/pre-calculus/algebra-essentials/practice-exponents-and-radicals                        | practice   | review | Eight generators; simplest forms asked as choices                      |
+| mathematics/pre-calculus/algebra-essentials/factoring-as-area                                      | explore    | review | Tiles fly into rectangles; strip turns for $a^2 - b^2$                 |
+| mathematics/pre-calculus/algebra-essentials/rational-expressions                                   | lesson     | review | Holes and asymptotes; heights add for sums; four checks                |
+| mathematics/pre-calculus/algebra-essentials/practice-factoring-and-fractions                       | practice   | review | Nine generators; factored forms asked as choices                       |
+| mathematics/pre-calculus/algebra-essentials/equations-and-inequalities                             | explore    | review | Crossings, squaring, sign chart, distance                              |
+| mathematics/pre-calculus/algebra-essentials/practice-equations-and-inequalities                    | practice   | review | Ten generators; solution sets checked by sampling                      |
+| mathematics/pre-calculus/algebra-essentials/checkpoint                                             | checkpoint | review | Ten problems including a self-graded proof                             |
+| mathematics/pre-calculus/functions/function-as-mapping                                             | explore    | done   | Mapping folds into a graph; vertical line test                         |
+| mathematics/pre-calculus/functions/domain-and-range                                                | explore    | review | Shadows on both axes (`AxisInterval` in the kit)                       |
+| mathematics/pre-calculus/functions/reading-graphs                                                  | lesson     | review | Four checks on one cubic                                               |
+| mathematics/pre-calculus/functions/practice-evaluate-and-domain                                    | practice   | review | Seven generators, verified by property tests                           |
+| mathematics/pre-calculus/functions/composition                                                     | explore    | review | Three number lines; order switch                                       |
+| mathematics/pre-calculus/functions/inverses                                                        | explore    | review | Graph reflects across y = x                                            |
+| mathematics/pre-calculus/functions/transformations                                                 | explore    | review | Dock wraps to two rows at 1440 px                                      |
+| mathematics/pre-calculus/functions/practice-compose-and-invert                                     | practice   | review | Seven generators, verified by property tests                           |
+| mathematics/pre-calculus/functions/practice-transformations                                        | practice   | review | Five generators, verified by property tests                            |
+| mathematics/pre-calculus/functions/checkpoint                                                      | checkpoint | review | Ten problems including a self-graded proof                             |
+| data-engineering/storage-and-processing/storage-and-file-formats/row-vs-columnar                   | explore    | review | Values fly into pages; layout toggle; scan, lookup, insert             |
+| data-engineering/storage-and-processing/storage-and-file-formats/scan-cost                         | lesson     | review | Table as an $N \times W$ area cut into pages; five checks              |
+| data-engineering/storage-and-processing/storage-and-file-formats/practice-layouts                  | practice   | review | Eight generators, verified by brute-force page counts                  |
+| data-engineering/storage-and-processing/storage-and-file-formats/encodings                         | explore    | review | Dictionary, bit packing with a $d$ slider, runs, sorting, deltas       |
+| data-engineering/storage-and-processing/storage-and-file-formats/entropy-and-compression           | lesson     | review | Information, entropy as the floor, order and codecs; seven checks      |
+| data-engineering/storage-and-processing/storage-and-file-formats/practice-encoding-and-compression | practice   | review | Nine generators, verified independently                                |
+| data-engineering/storage-and-processing/storage-and-file-formats/parquet-anatomy                   | explore    | review | Row groups, chunks, pages, footer; pushdown with a $t$ slider, sorting |
+| data-engineering/storage-and-processing/storage-and-file-formats/practice-parquet                  | practice   | review | Seven generators, verified by brute force and materialized row groups  |
+| data-engineering/storage-and-processing/storage-and-file-formats/checkpoint                        | checkpoint | review | Nine practice generators plus a proof about runs                       |
+| data-engineering/relational-foundations/relational-model-and-joins/tables-as-relations             | explore    | review | Product grid; pairs fly into the table                                 |
+| data-engineering/relational-foundations/relational-model-and-joins/keys-and-references             | explore    | review | FK arrows; ON DELETE options                                           |
+| data-engineering/relational-foundations/relational-model-and-joins/joins-as-products               | explore    | review | `JoinGrid` in the kit; condition sweep, theta joins                    |
+| data-engineering/relational-foundations/relational-model-and-joins/outer-joins                     | explore    | review | NULL-padded cells beside the grid; anti join                           |
+| data-engineering/relational-foundations/relational-model-and-joins/join-row-counts                 | lesson     | review | Join size as rectangles $a_k \times b_k$; five checks                  |
+| data-engineering/relational-foundations/relational-model-and-joins/practice-relations-and-keys     | practice   | review | Eight generators, verified by property tests                           |
+| data-engineering/relational-foundations/relational-model-and-joins/practice-joins                  | practice   | review | Eight generators, checked against materialized joins                   |
+| data-engineering/relational-foundations/relational-model-and-joins/checkpoint                      | checkpoint | review | Ten problems including a self-graded proof                             |
+| mathematics/calculus-1/derivatives/derivative-as-limit                                             | lesson     | done   | Two checks (concept, computed value)                                   |
+| mathematics/calculus-1/derivatives/difference-quotients                                            | practice   | done   | Six generators, verified by property tests                             |
+| mathematics/calculus-1/derivatives/checkpoint                                                      | checkpoint | done   | Six problems including a self-graded proof                             |
+| mathematics/calculus-1/integrals/riemann-sums                                                      | explore    | done   | Empty space below the x-axis at some sizes                             |
+| mathematics/linear-algebra/linear-transformations/matrix-transformations                           | explore    | done   | `MatrixView` could move to `ui` if reused                              |
+| mathematics/complex-numbers/arithmetic/complex-multiplication                                      | explore    | done   |                                                                        |
+| machine-learning/neural-networks/foundations/forward-pass                                          | explore    | done   |                                                                        |
+| machine-learning/neural-networks/training/backpropagation                                          | explore    | done   |                                                                        |
+| ai-engineering/retrieval/fundamentals/rag-pipeline                                                 | explore    | done   | Vector store view opens in a larger sheet                              |
 
 Planned units without content (the rest of pre-calculus, limits, applications of derivatives) appear
 on their course pages as planned.
