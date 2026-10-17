@@ -12,6 +12,13 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Studies on an irregular schedule, so everything must work on demand.
 - Plans to record video lessons with the visualizations, possibly in Brazilian Portuguese.
 - Works in short Claude sessions to save tokens; the repo docs must carry all context.
+- Senior software engineer before data engineering (once a "Python Expert" role); values typing,
+  decoupling, clean code and design patterns. Used NumPy, pandas and a little SymPy while learning
+  data science, but without the link to the math, so the "why" faded. Enjoys 3Blue1Brown, Welch
+  Labs, Mathologer, Numberphile, Computerphile and Veritasium.
+- Main interest is intermediate and advanced material: Calculus, Linear Algebra, Data Engineering
+  and Architecture, Machine Learning, Deep Learning and AI Engineering. Fundamentals matter for a
+  smooth curve and for a possible product, but they are not where his time should go.
 
 ## Look and feel
 
@@ -47,8 +54,16 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 
 - Math track starts with pre-calculus. The first pilot unit is Pre-calculus / Functions, built end to
   end before scaling content. Algebra essentials comes right after.
-- Data Engineering units are interleaved with the math, roughly one after every two math units, at
-  points where the math supports them (see `LEARNING_PLATFORM.md`, Curriculum).
+- Two unit depths (decided 2026-10-16): refresher units (about 5 items, one batch) for pre-calculus
+  and other prerequisites, core units (8 to 10 items) from Calculus 1 and the DE units on. Functions
+  and Algebra essentials keep their full depth; Algebra essentials batch 3 was trimmed to 3 items.
+- Pre-calculus has five units: Linear and quadratic merged into Polynomial and rational functions,
+  and Sequences and series moved to Calculus 2.
+- Each area is its own track. Data Engineering is not gated by the math: links between tracks are
+  suggested prerequisites only. Linear Algebra runs alongside or right after Calculus 1, since it
+  does not need calculus and it unlocks Machine Learning.
+- `LEARNING_PLATFORM.md` (Curriculum, Suggested order of units) rotates across tracks so advanced
+  material arrives early. Daniel may pick any unit out of order.
 - Content must be mathematically correct: answers are computed and tested, never written from memory.
 
 ## Engineering
@@ -76,3 +91,6 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - An Explore page to browse visualizations without the course structure.
 - Pan and zoom on stages, especially those with axes.
 - 3D visualizations when multivariable calculus and linear algebra need them, in the same aesthetic.
+- Code lessons: tie the math to the code that applies it (NumPy, pandas, SymPy, scikit-learn,
+  PyTorch-style models). Not a Python course: the goal is the "why" behind real code. Feasibility
+  and options are in `ROADMAP.md` (Code lessons).

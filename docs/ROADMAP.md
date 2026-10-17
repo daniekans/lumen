@@ -17,14 +17,16 @@ awaiting feedback), `done`.
 | 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree  | planned |
 | 4     | Pan and zoom on stages with axes                                                         | planned |
 | 5     | 3D stages for multivariable calculus and linear algebra                                  | planned |
+| 6     | Code lessons: the math of an item as real NumPy, pandas, SymPy or PyTorch code           | idea    |
 | later | Presentation mode, internationalization (pt-BR), mobile layout                           | planned |
 
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2C and 2D can run
 in either order; 2D was recommended first because the dashboard is more useful with real content.
 
-**Suggested next session:** Algebra essentials is planned in `LEARNING_PLATFORM.md`; batches 1 and 2
-(items 1 to 6: exponents, radicals, factoring, rational expressions) are published. Next: batch 3,
-items 7 to 10 (solving equations and inequalities, absolute value, their practice, the checkpoint).
+**Suggested next session:** the curriculum was reprioritized (fundamentals as refreshers, tracks
+in parallel; see `LEARNING_PLATFORM.md`, Curriculum). Next: Algebra essentials batch 3, trimmed to
+items 7 to 9 (equations, inequalities and absolute value; their practice; the checkpoint). Then
+follow "Suggested order of units", starting with DE: Storage and file formats.
 
 ### Phase 3: Explore page
 
@@ -55,6 +57,30 @@ the start of the phase:
 A likely path is SVG first for 3Blue1Brown-style line drawings, and three.js only if a visualization
 needs shaded surfaces that SVG cannot handle well. Either way it plugs in as a `Stage3D` using the same
 runtime, steps, controls and palette.
+
+### Phase 6: Code lessons (idea, not planned yet)
+
+Goal: show how the math of an item is applied in real code, so the "why" behind NumPy, pandas,
+SymPy, scikit-learn and deep learning code is not lost. Not a Python course. Feasible on GitHub
+Pages with no server:
+
+- **Code view on existing items (cheapest).** A tab or pane next to the stage with the same
+  computation in Python, highlighted at build time (for example Shiki), with lines linked to steps
+  and to the symbols in the visualization: $A\mathbf{v}$ next to `A @ v`, a Riemann sum next to
+  `np.sum(f(x) * dx)`. Read-only, no runtime cost.
+- **Runnable cells.** Pyodide (CPython compiled to WebAssembly) runs NumPy, pandas, SymPy and
+  scikit-learn in the browser, in a Web Worker, loaded only on pages that need it (several MB on
+  first load, then cached). Cells could feed values back to the stage, such as plotting a
+  learner's function.
+- **A `code` item kind.** Standalone lessons built like notebooks: short cells, each tied to a
+  formula, with checks that compare the printed result with a value computed independently in
+  TypeScript, the same way practice answers are verified.
+- **Deep learning.** PyTorch does not run in Pyodide. Build models from scratch in NumPy (which is
+  where the math shows), then show the equivalent PyTorch code read-only, line by line.
+
+A likely path: code view first, applied to a few items in Linear Algebra and Machine Learning;
+runnable cells and the `code` kind once those show what is worth running. Code should model good
+practice (typing, small functions, clear names), since Daniel cares about it.
 
 ### Later
 

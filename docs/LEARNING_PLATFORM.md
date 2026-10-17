@@ -10,8 +10,10 @@ practice with checked answers, and progress.
   smooth difficulty curve that ends in mastery, not familiarity.
 - Every concept is seen (visualization), explained (text and formulas), and practiced (problems with
   feedback). Practice includes pen-and-paper work whose results are typed in and checked.
-- Math comes first, starting from pre-calculus. Data Engineering and Architecture units are
-  interleaved with the math instead of waiting until the end.
+- The focus is intermediate and advanced material. Fundamentals are refreshers: enough for a smooth
+  curve, not full courses (see Curriculum, Unit depths).
+- Math starts from pre-calculus. Data Engineering and Architecture run as their own track alongside
+  the math instead of waiting until the end.
 
 Decisions already made:
 
@@ -162,47 +164,81 @@ Progress describes where things stand. It never creates obligations: no reminder
 
 ## Curriculum
 
-### Mathematics (first)
+Daniel's focus is intermediate and advanced material: Calculus, Linear Algebra, Probability, Data
+Engineering and Architecture, Machine Learning and AI Engineering. Fundamentals stay in the plan
+so the difficulty curve is smooth, but they are refreshers and get less depth. Syllabi (OpenStax
+Precalculus and Calculus, MIT 18.01, 18.06, 18.05) are the reference for what each unit covers.
 
-Based on standard syllabi (OpenStax Precalculus and Calculus, MIT 18.01, 18.06, 18.05) so nothing is
-skipped.
+### Unit depths
 
-1. **Pre-calculus**
-   1. Algebra essentials: exponents and radicals, factoring, rational expressions, equations and
-      inequalities, absolute value
-   2. Functions: definition, domain and range, reading graphs, composition, inverses, transformations
-   3. Linear and quadratic functions: slope, forms of a line, parabolas, completing the square
-   4. Polynomial and rational functions: end behavior, zeros, asymptotes
-   5. Exponential and logarithmic functions: growth and decay, e, log rules, equations
-   6. Trigonometry: radians, the unit circle, graphs, identities, inverse functions
-   7. Sequences and series: sigma notation, arithmetic and geometric, sums
-2. **Calculus 1**: limits (intuition, laws, one-sided and infinite, squeeze, epsilon-delta,
-   continuity), derivatives (definition, rules, chain rule, implicit, related rates), applications
-   (extrema, mean value theorem, curve sketching, optimization, L'Hôpital, linear approximation),
-   integrals (Riemann sums, fundamental theorem, substitution)
-3. **Calculus 2**: integration techniques, applications, sequences and series, Taylor series,
-   parametric and polar
-4. **Linear Algebra**, **Discrete Math** (sets, logic, relations, graphs), **Probability and
-   Statistics**, **Multivariable Calculus**, **Optimization**
+| Depth     | Items                                                        | Batches | Used for                                   |
+| --------- | ------------------------------------------------------------ | ------- | ------------------------------------------ |
+| Refresher | About 5: two or three explorations, one practice, checkpoint | 1       | Pre-calculus and other prerequisites       |
+| Core      | 8 to 10: explorations, lessons, practice sets, checkpoint    | 2 or 3  | Everything from Calculus 1 and DE units on |
 
-### Data Engineering and Architecture (interleaved)
+A refresher explores the ideas that later units lean on (and the ones easy to get wrong), and skips
+drill that "I already know this unit" would mark done anyway. Functions and Algebra essentials were
+built before this rule and stay as they are.
 
-Cadence: roughly one Data Engineering unit after every two math units, placed where the math supports
-it.
+### Tracks
 
-| After                               | Data Engineering unit                                                                       | Link to the math                       |
-| ----------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------- |
-| Pre-calculus: Functions             | Relational model and SQL joins                                                              | Sets, relations, functions as mappings |
-| Pre-calculus: Exponentials and logs | Storage and file formats (row vs columnar, Parquet, compression)                            | Growth, log scales, cost models        |
-| Pre-calculus: Sequences and series  | Partitioning, bucketing and hashing                                                         | Sums, distributions of keys            |
-| Calculus 1: Limits                  | Distributed processing (shuffles, stages, skew)                                             | Rates and asymptotic behavior          |
-| Calculus 1: Derivatives             | Streaming (event time, windows, watermarks)                                                 | Change over time                       |
-| Discrete Math                       | Data modeling (normalization, dimensional models, slowly changing dimensions)               | Relations and keys                     |
-| Probability                         | Probabilistic data structures (Bloom filters, HyperLogLog), sampling                        | Probability, expectation               |
-| Later                               | Architecture: lakehouse, medallion layers, lambda and kappa, data mesh, CAP and consistency | Trade-off reasoning                    |
+Areas run as parallel tracks. Each track has its own order; links between tracks are suggested
+prerequisites shown on unit pages, never gates.
 
-Machine Learning and AI Engineering follow once Linear Algebra and Probability are in place; the
-existing neural network and RAG visualizations become the seeds of those courses.
+**Mathematics**
+
+1. Pre-calculus (refresher): Functions (done), Algebra essentials, Polynomial and rational functions
+   (lines and parabolas included), Exponential and logarithmic functions, Trigonometry.
+2. Calculus 1 (core): limits, derivatives, applications, integrals.
+3. Linear Algebra (core): vectors and span, linear maps and matrices, determinants, systems,
+   eigenvectors, orthogonality and projections, SVD. It does not depend on calculus, so it can run
+   alongside Calculus 1.
+4. Probability and Statistics (core): distributions, expectation, the central limit theorem,
+   Bayes, estimation.
+5. Calculus 2 (core): integration techniques, sequences and series (sigma notation, geometric sums,
+   Taylor series), parametric and polar.
+6. Multivariable Calculus and Optimization (core): gradients, the chain rule in many variables,
+   gradient descent, convexity, constrained optimization. These feed Machine Learning directly.
+7. Discrete Math (refresher, on demand): sets, logic, relations, graphs, as other units need them.
+
+**Data Engineering and Architecture** (core)
+
+| #   | Unit                                                                          | Suggested math              |
+| --- | ----------------------------------------------------------------------------- | --------------------------- |
+| 1   | Relational model and SQL joins (done)                                         | Functions                   |
+| 2   | Storage and file formats (row vs columnar, Parquet, encoding, compression)    | Exponentials and logs       |
+| 3   | Partitioning, bucketing and hashing                                           | Sums, distributions of keys |
+| 4   | Distributed processing (shuffles, stages, skew, cost models)                  | Limits, asymptotic growth   |
+| 5   | Data modeling (normalization, dimensional models, slowly changing dimensions) | Relations and keys          |
+| 6   | Streaming (event time, windows, watermarks, exactly-once)                     | Change over time            |
+| 7   | Probabilistic data structures (Bloom filters, HyperLogLog, sampling)          | Probability, expectation    |
+| 8   | Architecture (lakehouse, medallion layers, lambda and kappa, data mesh, CAP)  | Trade-off reasoning         |
+
+**Machine Learning and AI Engineering** (core) start once Linear Algebra and Probability have their
+first units: linear regression as a projection, gradient descent, classification, neural networks,
+deep learning (convolution, attention, transformers), generative models; then embeddings,
+retrieval, evaluation and agents. The existing neural network and RAG visualizations seed these
+courses.
+
+### Suggested order of units
+
+A rotation across tracks, so the interesting material arrives early. Any unit can be picked out of
+order.
+
+1. Algebra essentials, batch 3 (trimmed, see its plan)
+2. DE: Storage and file formats
+3. Pre-calculus: Polynomial and rational functions (refresher)
+4. Pre-calculus: Exponential and logarithmic functions (refresher)
+5. Calculus 1: Limits
+6. Linear Algebra: Vectors and linear combinations
+7. DE: Partitioning, bucketing and hashing
+8. Pre-calculus: Trigonometry (refresher)
+9. Calculus 1: Derivatives
+10. Linear Algebra: Linear maps and matrices
+11. DE: Distributed processing
+
+After that, keep rotating: Calculus 1, Linear Algebra, Probability, one DE unit every two or three
+math units, and Machine Learning once its prerequisites exist.
 
 ## Phases and tracker
 
@@ -323,20 +359,21 @@ The answer checker accepts any equivalent expression, so an answer that must be 
 form (a factored polynomial, a simplest radical) is asked as a `choice` whose distractors include
 equal but unsimplified forms, or as a `number` (an exponent, a coefficient).
 
-| #   | Item                                | Kind       | Skills                                  | Content                                                                                                                       | Status |
-| --- | ----------------------------------- | ---------- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | exponent-laws                       | explore    | exponents                               | Factors as tiles: products join rows, quotients cancel pairs across a bar, zero and negative exponents, $(a^m)^n$ as a grid   | review |
-| 2   | radicals                            | explore    | radicals                                | $\sqrt{A}$ as the side of a square, $\sqrt{k^2 r} = k\sqrt{r}$ as a grid, $\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}$, cube roots | review |
-| 3   | practice-exponents-and-radicals     | practice   | exponents, radicals                     | Exponent laws, negative and rational exponents, simplest radical form, rationalizing, adding radicals                         | review |
-| 4   | factoring-as-area                   | explore    | factor                                  | Algebra tiles: $x^2 + bx + c$ arranged into $(x + p)(x + q)$, common factors, difference of squares                           | review |
-| 5   | rational-expressions                | lesson     | rational-expressions, factor            | Cancel common factors (and keep the excluded values: the graph has a hole), multiply, add over a common denominator           | review |
-| 6   | practice-factoring-and-fractions    | practice   | factor, rational-expressions            | Common factors, trinomials, difference of squares, simplify, multiply and add rational expressions                            | review |
-| 7   | solving-equations-and-inequalities  | explore    | equations, inequalities                 | Solutions as intersections, inequalities as where one graph is above, flipping on negative factors, sign charts               | todo   |
-| 8   | absolute-value                      | explore    | absolute-value                          | $\lvert x - a \rvert$ as distance on a number line, $\lvert x - a \rvert < r$ as an interval around $a$, the V graph          | todo   |
-| 9   | practice-equations-and-inequalities | practice   | equations, inequalities, absolute-value | Linear, quadratic and rational equations (extraneous roots), linear and quadratic inequalities, absolute value                | todo   |
-| 10  | checkpoint                          | checkpoint | all                                     | Mix of the practice generators plus a self-graded proof ($\sqrt{2}$ is irrational)                                            | todo   |
+| #   | Item                                | Kind       | Skills                                  | Content                                                                                                                                | Status |
+| --- | ----------------------------------- | ---------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | exponent-laws                       | explore    | exponents                               | Factors as tiles: products join rows, quotients cancel pairs across a bar, zero and negative exponents, $(a^m)^n$ as a grid            | review |
+| 2   | radicals                            | explore    | radicals                                | $\sqrt{A}$ as the side of a square, $\sqrt{k^2 r} = k\sqrt{r}$ as a grid, $\sqrt{a + b} \neq \sqrt{a} + \sqrt{b}$, cube roots          | review |
+| 3   | practice-exponents-and-radicals     | practice   | exponents, radicals                     | Exponent laws, negative and rational exponents, simplest radical form, rationalizing, adding radicals                                  | review |
+| 4   | factoring-as-area                   | explore    | factor                                  | Algebra tiles: $x^2 + bx + c$ arranged into $(x + p)(x + q)$, common factors, difference of squares                                    | review |
+| 5   | rational-expressions                | lesson     | rational-expressions, factor            | Cancel common factors (and keep the excluded values: the graph has a hole), multiply, add over a common denominator                    | review |
+| 6   | practice-factoring-and-fractions    | practice   | factor, rational-expressions            | Common factors, trinomials, difference of squares, simplify, multiply and add rational expressions                                     | review |
+| 7   | equations-and-inequalities          | explore    | equations, inequalities, absolute-value | Solutions as intersections, inequalities as where one graph is above, sign charts, $\lvert x - a \rvert < r$ as an interval around $a$ | todo   |
+| 8   | practice-equations-and-inequalities | practice   | equations, inequalities, absolute-value | Linear, quadratic and rational equations (extraneous roots), linear and quadratic inequalities, absolute value                         | todo   |
+| 9   | checkpoint                          | checkpoint | all                                     | Mix of the practice generators plus a self-graded proof ($\sqrt{2}$ is irrational)                                                     | todo   |
 
-Batches: items 1 to 3 and 4 to 6 (published, awaiting review), then 7 to 10. Number answers that
+Batches: items 1 to 3 and 4 to 6 (published, awaiting review), then 7 to 9. Batch 3 was trimmed
+from four items to three when fundamentals became refreshers: one exploration covers equations,
+inequalities and absolute value. Number answers that
 are repeating decimals show as fractions (`answerTex`), so generators can return any rational.
 
 ## Risks

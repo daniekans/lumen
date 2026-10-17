@@ -4,5 +4,5 @@ export const unit = defineUnit({
   title: 'Trigonometry',
   description:
     'Radians, the unit circle, graphs of sine and cosine, identities and inverse functions.',
-  order: 6,
+  order: 5,
 })
