@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { RotateCcw, Shuffle } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import type { Item } from '@/catalog'
 import {
   createRng,
   nextGenerator,
@@ -48,24 +47,36 @@ const drawEntry = (
   return { generatorId: g.id, seed, checked: false, hints: 0, solution: false }
 }
 
+interface PracticeSessionProps {
+  /** Every generator a stored problem may come from, with global skill keys (`withSkillKeys`). */
+  generators: readonly ProblemGenerator[]
+  /** Where new problems are drawn from. Defaults to `generators`. */
+  pool?: readonly ProblemGenerator[]
+  stored: PracticeSessionState | undefined
+  onSave: (session: PracticeSessionState) => void
+  /** Called once per problem, with its first answer. */
+  onAnswer?: (correct: boolean) => void
+  /** Linked from the summary. */
+  next?: { title: string; path: string }
+}
+
 /**
  * On-demand practice in sessions of eight problems. The session is stored with the learner's
  * progress, so leaving and coming back continues where it stopped; "Start over" draws a new one.
  * Earlier problems of the session can be reviewed (read-only) from the progress dots.
  */
 export function PracticeSession({
-  item,
   generators,
-}: {
-  item: Item
-  generators: readonly ProblemGenerator[]
-}) {
+  pool: wanted,
+  stored,
+  onSave: save,
+  onAnswer,
+  next,
+}: PracticeSessionProps) {
   const hydrated = useProgress((s) => s.hydrated)
-  const stored = useProgress((s) => s.data.items[item.id]?.session)
-  const setSession = useProgress((s) => s.setSession)
-  const recordPractice = useProgress((s) => s.recordPractice)
   const [viewing, setViewing] = useState<number | null>(null)
   const byId = useMemo(() => new Map(generators.map((g) => [g.id, g])), [generators])
+  const pool = wanted?.length ? wanted : generators
 
   // A stored session is usable only if every problem still exists in the current problem set.
   const session =
@@ -74,16 +85,16 @@ export function PracticeSession({
       : undefined
 
   const fresh = (difficulty: DifficultyChoice): PracticeSessionState => ({
-    entries: [drawEntry(generators, [], difficulty)],
+    entries: [drawEntry(pool, [], difficulty)],
     difficulty,
     finished: false,
   })
 
   useEffect(() => {
-    if (hydrated && !session) setSession(item.id, fresh(stored?.difficulty ?? 'auto'))
-    // `fresh` only reads props; re-running when they change is not needed.
+    if (hydrated && !session) save(fresh(stored?.difficulty ?? 'auto'))
+    // `fresh` and `save` only read props; re-running when they change is not needed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated, session, item.id, setSession])
+  }, [hydrated, session])
 
   if (!session) return <div className={styles.scroll} />
 
@@ -93,11 +104,9 @@ export function PracticeSession({
   const entry = entries[index]!
   const generator = byId.get(entry.generatorId)!
   const problem = generator.generate(createRng(entry.seed + 1))
-  const save = (next: PracticeSessionState) => setSession(item.id, next)
-
   const update = (i: number, patch: Partial<SessionEntry>) => {
     const before = entries[i]!
-    if (patch.outcome && !before.outcome) recordPractice(item.id, patch.outcome.correct)
+    if (patch.outcome && !before.outcome) onAnswer?.(patch.outcome.correct)
     save({ ...session, entries: entries.map((e, k) => (k === i ? { ...e, ...patch } : e)) })
   }
 
@@ -107,7 +116,7 @@ export function PracticeSession({
       difficulty: choice,
       entries: [
         ...entries.slice(0, last),
-        drawEntry(generators, attemptsOf(entries.slice(0, last), byId), choice),
+        drawEntry(pool, attemptsOf(entries.slice(0, last), byId), choice),
       ],
     })
 
@@ -116,7 +125,7 @@ export function PracticeSession({
     if (entries.length >= SESSION_LENGTH) return save({ ...session, finished: true })
     save({
       ...session,
-      entries: [...entries, drawEntry(generators, attemptsOf(entries, byId), difficulty)],
+      entries: [...entries, drawEntry(pool, attemptsOf(entries, byId), difficulty)],
     })
   }
 
@@ -177,7 +186,7 @@ export function PracticeSession({
       <div className={styles.column}>
         {finished && !reviewing ? (
           <SessionSummary
-            item={item}
+            next={next}
             attempts={attemptsOf(entries, byId)}
             onRestart={restart}
             onReview={() => setViewing(0)}

@@ -81,6 +81,10 @@ Pure logic lives in `src/lib/practice` so it could also run on a server:
 `src/practice` renders practice items as sessions of eight problems (first answers count, hints and
 solutions on demand, status suggestions the learner may apply) and checkpoints as printable
 worksheets checked all at once. The math field is `MathInput` (MathLive, loaded only on these pages).
+`PracticeSession` does not know about items: it takes generators (skills as global keys, see
+`withSkillKeys`), the stored session and callbacks. Mixed practice (`/practice`, `MixedPractice`)
+uses it with the generators of every practice item in the chosen units, and stores its scope and
+session in `ProgressData.mixed`. Its answers do not count toward item progress.
 
 ## Progress
 

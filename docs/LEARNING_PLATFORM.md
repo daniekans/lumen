@@ -272,11 +272,18 @@ as clean worksheets.
 
 ### 2C. Dashboard
 
-| Task                                                       | Status |
-| ---------------------------------------------------------- | ------ |
-| Home dashboard (continue, course progress, mixed practice) | todo   |
-| Mixed practice across chosen skills                        | todo   |
-| Course prerequisite map                                    | todo   |
+| Task                                                       | Status  |
+| ---------------------------------------------------------- | ------- |
+| Home dashboard (continue, course progress, mixed practice) | done    |
+| Mixed practice across chosen skills                        | done    |
+| Course prerequisite map                                    | dropped |
+
+Kept small on purpose (2026-10-17): the home page keeps its hero and course cards (which already
+show progress) and gains a "Mixed practice" button next to "Continue". Mixed practice lives at
+`/practice`: pick units (all by default), optionally skip skills already mastered, then a normal
+session of eight problems drawn from those units' practice items. Its answers do not count toward
+item progress; status suggestions at the end apply as usual. The prerequisite map was dropped:
+unit pages already list suggested prerequisites, and a map adds little for one learner.
 
 ### 2D. Pilot content
 

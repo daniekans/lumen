@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Shuffle } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useNavigate } from 'react-router'
 import { catalog, getItem } from '@/catalog'
@@ -35,14 +35,21 @@ export function HomePage() {
                 A personal course in mathematics, data engineering, machine learning and AI
                 engineering. Each concept is something to see, then to read, then to practice.
               </motion.p>
-              {start && (
-                <motion.div {...reveal(0.16)}>
+              <motion.div className={styles.actions} {...reveal(0.16)}>
+                {start && (
                   <Button variant="primary" onClick={() => navigate(start.path)}>
                     {lastItem ? `Continue: ${lastItem.title}` : 'Start here'}
                     <ArrowRight size={15} />
                   </Button>
-                </motion.div>
-              )}
+                )}
+                <Button
+                  variant="ghost"
+                  icon={<Shuffle size={14} />}
+                  onClick={() => navigate('/practice')}
+                >
+                  Mixed practice
+                </Button>
+              </motion.div>
             </div>
             <motion.div className={styles.figure} {...reveal(0.2)}>
               <LissajousMark size={300} strokeWidth={2} speed={0.12} tracer />

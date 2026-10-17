@@ -263,3 +263,24 @@
     display: none !important;
   }
 }
+
+.unitGroup {
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  border: 0;
+}
+
+.unitRow {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.unitRow input {
+  margin: 0;
+  accent-color: var(--fg);
+}

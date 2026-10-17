@@ -12,22 +12,27 @@ awaiting feedback), `done`.
 | 1     | Platform, design system, visualization kit, first seven visualizations, GitHub Pages     | done    |
 | 2A    | Content tree, progress store, lessons                                                    | done    |
 | 2B    | Practice engine: math input, answer checking, generators, sessions, checkpoints          | done    |
-| 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills       | next    |
+| 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills       | done    |
 | 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit | done    |
 | 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree  | planned |
-| 4     | Pan and zoom on stages with axes                                                         | planned |
+| 4     | Pan and zoom on stages with axes, and a fullscreen mode                                  | planned |
 | 5     | 3D stages for multivariable calculus and linear algebra                                  | planned |
-| 6     | Code lessons: the math of an item as real NumPy, pandas, SymPy or PyTorch code           | idea    |
+| 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)       | idea    |
 | later | Presentation mode, internationalization (pt-BR), mobile layout                           | planned |
+
+Phase numbers are labels, not an order. A phase starts when the content needs it: 3D (phase 5)
+when a linear algebra or calculus visualization calls for it, code lessons (phase 6) when items
+that apply them come up, and pan, zoom and fullscreen (phase 4) whenever it is worth doing before
+more content. Pick the next phase or content unit by what helps the curriculum next.
 
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2D closed on
 2026-10-17 with four reviewed units (Functions, Relational model and joins, Algebra essentials,
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** either phase 2C (home dashboard and mixed practice, now that real
-content exists) or the next content unit in the suggested order: Pre-calculus: Polynomial and
-rational functions, a refresher of about five items.
+**Suggested next session:** the next content unit in the suggested order (Pre-calculus: Polynomial
+and rational functions, a refresher of about five items), or phase 4 if pan, zoom and fullscreen
+should come first.
 
 ### Phase 3: Explore page
 
@@ -36,7 +41,7 @@ preview, filters by area and tag, and search. Cards open the item normally. Need
 either a small static SVG thumbnail rendered from the visualization at a fixed step, or a
 `thumbnail` export in the item folder. The catalog already lists every item, so this is mostly UI.
 
-### Phase 4: Pan and zoom
+### Phase 4: Pan and zoom, fullscreen
 
 Feasible with modest work because every primitive draws through `useCoords()`. The Stage would hold
 a view transform (center and scale) on top of its fitted domain, changed by wheel, pinch and drag on
@@ -44,6 +49,10 @@ empty space, with a reset button and limits. Grid and axes already cover the vis
 extend naturally. Things to handle: drag conflicts with draggable points (drag only on background),
 label density when zoomed out (axis ticks already adapt via `niceStep`), and opting out for diagrams
 where zoom makes no sense (a `zoomable` prop, off by default).
+
+Fullscreen mode: one toggle (button and a key) that hides the sidebar, top bar and explanation
+pane and puts the stage in the browser's fullscreen, keeping the dock and step navigation (arrow
+keys). Not yet a presentation mode: no speaker notes, scripted timing or recording aids.
 
 ### Phase 5: 3D
 
@@ -61,8 +70,11 @@ runtime, steps, controls and palette.
 
 ### Phase 6: Code lessons (idea, not planned yet)
 
-Goal: show how the math of an item is applied in real code, so the "why" behind NumPy, pandas,
-SymPy, scikit-learn and deep learning code is not lost. Not a Python course. Feasible on GitHub
+Goal: show how the math of an item is applied in real code, so the "why" behind NumPy, SymPy,
+scikit-learn and deep learning code is not lost, and how data engineering ideas show up in real
+dataframe and SQL engines. Not a Python course. NumPy matters most on the math side (it is linear
+algebra in code); on the data side, Spark's DataFrame API and its execution model matter more than
+pandas. Feasible on GitHub
 Pages with no server:
 
 - **Code view on existing items (cheapest).** A tab or pane next to the stage with the same
@@ -76,6 +88,11 @@ Pages with no server:
 - **A `code` item kind.** Standalone lessons built like notebooks: short cells, each tied to a
   formula, with checks that compare the printed result with a value computed independently in
   TypeScript, the same way practice answers are verified.
+- **Data engineering.** Spark does not run in the browser (it needs a JVM). Two pieces fit: real
+  SQL and dataframe queries in DuckDB-Wasm (columnar, Parquet-aware, small enough to lazy load),
+  and PySpark code shown read-only next to a visualization of what Spark does with it: partitions,
+  narrow versus wide transformations, shuffles, the logical and physical plan, predicate pushdown
+  and partition pruning. The storage unit's Parquet items are a natural first place.
 - **Deep learning.** PyTorch does not run in Pyodide. Build models from scratch in NumPy (which is
   where the math shows), then show the equivalent PyTorch code read-only, line by line.
 

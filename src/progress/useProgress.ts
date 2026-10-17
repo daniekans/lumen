@@ -5,6 +5,7 @@ import { createLocalStore, createMemoryStore, type ProgressStore } from './stora
 import type {
   CheckpointSheetState,
   ItemProgress,
+  MixedPracticeState,
   PracticeSessionState,
   ProgressData,
   SkillStatus,
@@ -33,6 +34,8 @@ interface ProgressState {
   setSession: (itemId: string, session: PracticeSessionState | undefined) => void
   /** Stores (or clears, with undefined) the checkpoint sheet in progress. */
   setSheet: (itemId: string, sheet: CheckpointSheetState | undefined) => void
+  /** Stores (or clears, with undefined) the mixed practice scope and its session. */
+  setMixed: (mixed: MixedPracticeState | undefined) => void
   /** Applies a status that practice suggested and the learner accepted. */
   applySuggestedStatus: (key: string, status: SkillStatus) => void
   setSkillStatus: (key: string, status: SkillStatus) => void
@@ -140,6 +143,12 @@ export const useProgress = create<ProgressState>()((set, get) => ({
     set(({ data }) => ({
       data: touchItem(data, itemId, ({ sheet: _old, ...p }) => (sheet ? { ...p, sheet } : p)),
     })),
+
+  setMixed: (mixed) =>
+    set(({ data }) => {
+      const { mixed: _old, ...rest } = data
+      return { data: mixed ? { ...rest, mixed } : rest }
+    }),
 
   applySuggestedStatus: (key, status) =>
     set(({ data }) => ({

@@ -112,6 +112,12 @@ describe('migrate', () => {
     expect(data.lastItemId).toBe('i')
   })
 
+  it('keeps a valid mixed practice scope and drops a malformed one', () => {
+    const mixed = { units: ['a/b/c'], skipMastered: true }
+    expect(migrate({ version: 1, mixed }).mixed).toEqual(mixed)
+    expect(migrate({ version: 1, mixed: { units: [1], skipMastered: true } }).mixed).toBeUndefined()
+  })
+
   it('rejects files that are not progress data or come from a newer version', () => {
     expect(() => migrate({ hello: 'world' })).toThrow(/does not contain/)
     expect(() => migrate({ version: 99 })).toThrow(/newer version/)

@@ -65,6 +65,15 @@ export interface CheckpointSheetState {
   scored: boolean
 }
 
+/** Mixed practice: problems drawn from the practice items of several units. */
+export interface MixedPracticeState {
+  /** Unit ids the problems come from. */
+  units: string[]
+  /** Leave out problems whose skills are all mastered. */
+  skipMastered: boolean
+  session?: PracticeSessionState
+}
+
 /** Everything persisted about the learner. Bump `version` and add a migration when it changes. */
 export interface ProgressData {
   version: 1
@@ -72,6 +81,7 @@ export interface ProgressData {
   items: Record<string, ItemProgress>
   lastItemId?: string
   lastExportAt?: string
+  mixed?: MixedPracticeState
 }
 
 export const CURRENT_VERSION = 1 as const

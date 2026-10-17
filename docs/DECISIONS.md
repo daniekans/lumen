@@ -84,6 +84,15 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - After a finished batch or a set of adjustments, commit, push and deploy without asking. Ask first
   only when a choice is not straightforward and Daniel's judgment would matter.
 
+- Roadmap phases are not sequential (2026-10-17). Their numbers are labels; a phase starts when the
+  curriculum needs it (3D when a visualization calls for it, code lessons when applicable items come
+  up) or when it is worth doing before more content (pan, zoom and fullscreen).
+- Phase 2C was kept small (2026-10-17): a "Mixed practice" button on the home page and a `/practice`
+  page that mixes the practice of chosen units. Mixed answers do not move item progress. No
+  prerequisite map. Daniel does not expect much value from it for now.
+- Phase 4 includes a fullscreen mode (stage only, dock and step keys kept). It is not the
+  presentation mode yet.
+
 ## Future direction (record, do not build yet)
 
 - Possibly a product for other learners: backend, accounts, premium tier. Keep the seams listed in
@@ -93,6 +102,7 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - An Explore page to browse visualizations without the course structure.
 - Pan and zoom on stages, especially those with axes.
 - 3D visualizations when multivariable calculus and linear algebra need them, in the same aesthetic.
-- Code lessons: tie the math to the code that applies it (NumPy, pandas, SymPy, scikit-learn,
-  PyTorch-style models). Not a Python course: the goal is the "why" behind real code. Feasibility
+- Code lessons: tie the math to the code that applies it (NumPy, SymPy, scikit-learn,
+  PyTorch-style models), and data engineering ideas to the engines that apply them (Spark
+  DataFrames and plans first, SQL; pandas matters less). Not a Python course: the goal is the "why" behind real code. Feasibility
   and options are in `ROADMAP.md` (Code lessons).

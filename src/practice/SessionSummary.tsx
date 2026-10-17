@@ -1,34 +1,35 @@
 import { RotateCcw } from 'lucide-react'
 import { Link } from 'react-router'
-import { getUnit, neighbours, type Item } from '@/catalog'
+import { getUnit } from '@/catalog'
 import { attemptsBySkill, suggestStatus, type Attempt } from '@/lib/practice'
 import { SKILL_STATUSES, skillStatus, statusLabel, useProgress } from '@/progress'
 import { Button, StatusDots } from '@/ui/atoms'
 import styles from './Practice.module.css'
 
 interface SessionSummaryProps {
-  item: Item
+  /** Attempts with global skill keys (`unit#skill`). */
   attempts: readonly Attempt[]
   onRestart: () => void
   /** Opens the session's problems read-only, starting from the first. */
   onReview: () => void
+  next?: { title: string; path: string }
 }
 
+const skillTitle = (key: string) =>
+  getUnit(key.split('#')[0]!)?.skills.find((s) => s.key === key)?.title ?? key
+
 /** End of a session: the score, and status suggestions per skill that the learner may apply. */
-export function SessionSummary({ item, attempts, onRestart, onReview }: SessionSummaryProps) {
+export function SessionSummary({ attempts, onRestart, onReview, next }: SessionSummaryProps) {
   const data = useProgress((s) => s.data)
   const apply = useProgress((s) => s.applySuggestedStatus)
-  const unit = getUnit(item.unitId)
   const correct = attempts.filter((a) => a.correct).length
-  const { next } = neighbours(item)
-  const bySkill = [...attemptsBySkill(attempts)].map(([id, list]) => {
-    const key = `${item.unitId}#${id}`
+  const bySkill = [...attemptsBySkill(attempts)].map(([key, list]) => {
     const current = skillStatus(data, key)
     const suggested = suggestStatus(list)
     const higher = suggested && SKILL_STATUSES.indexOf(suggested) > SKILL_STATUSES.indexOf(current)
     return {
       key,
-      title: unit?.skills.find((s) => s.id === id)?.title ?? id,
+      title: skillTitle(key),
       current,
       suggested: higher ? suggested : undefined,
     }

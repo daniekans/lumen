@@ -2,6 +2,7 @@ import {
   CURRENT_VERSION,
   SKILL_STATUSES,
   type CheckpointSheetState,
+  type MixedPracticeState,
   type PracticeSessionState,
   type ProgressData,
 } from './types'
@@ -45,6 +46,13 @@ const validSheet = (v: unknown): v is CheckpointSheetState =>
   isRecord(v.responses) &&
   Object.values(v.responses).every(validResponse) &&
   isRecord(v.selfGrades)
+
+const validMixed = (v: unknown): v is MixedPracticeState =>
+  isRecord(v) &&
+  Array.isArray(v.units) &&
+  v.units.every((u) => typeof u === 'string') &&
+  typeof v.skipMastered === 'boolean' &&
+  (v.session === undefined || validSession(v.session))
 
 const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : [])
 
@@ -92,5 +100,6 @@ export const migrate = (raw: unknown): ProgressData => {
     }
   if (typeof raw.lastItemId === 'string') data.lastItemId = raw.lastItemId
   if (typeof raw.lastExportAt === 'string') data.lastExportAt = raw.lastExportAt
+  if (validMixed(raw.mixed)) data.mixed = raw.mixed
   return data
 }
