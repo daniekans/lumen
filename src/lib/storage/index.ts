@@ -84,3 +84,4 @@ export const pagesOfCells = (
   const slot = ([r, c]: readonly [number, number]) => (layout === 'row' ? r * cols : c * rows + r)
   return [...new Set(cells.map((cell) => Math.floor(slot(cell) / perPage)))].sort((a, b) => a - b)
 }
+export * from './encoding'

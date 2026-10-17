@@ -1,0 +1,62 @@
+Encodings shrink a column, but how far can that go? Information theory gives a floor: a number of
+bits per value that no code writing values one at a time can beat, set by how often each value
+occurs. This lesson builds it from the city column of the previous item.
+
+## Information
+
+A value that occurs with probability $p$ carries
+
+$$
+I = \log_2 \frac{1}{p} \text{ bits.}
+$$
+
+A fair coin flip carries $1$ bit, a value with probability $\frac{1}{8}$ carries $3$: rare values are
+more surprising. In the city column, Tokyo ($p = \frac{1}{8}$) carries $3$ bits and Lisbon
+($p = \frac{3}{8}$) about $1.42$, as in <StepLink step="information">the first step</StepLink>.
+
+## Entropy
+
+Entropy is the average information of a value, each weighted by how often it occurs:
+
+$$
+H = \sum_k p_k \log_2 \frac{1}{p_k}.
+$$
+
+Shannon's source coding theorem says that a code which gives each value its own bit string needs
+at least $H$ bits per value on average. For the cities $H \approx 1.91$, so $16$ values need at
+least about $30.5$ bits; <StepLink step="entropy">bit packing uses $32$</StepLink>.
+
+## The extremes
+
+With $d$ equally likely values, $H = \log_2 d$, the largest possible. Bit packing with
+$\lceil \log_2 d \rceil$ bits is then within one bit of the floor, and exactly on it when $d$ is a
+power of $2$ (<StepLink step="uniform">four cities</StepLink>). The more skewed the counts, the lower
+$H$, and a code that gives common values short words gets there. With probabilities
+$\frac{1}{2}, \frac{1}{4}, \frac{1}{8}, \frac{1}{8}$, the words <StepLink step="skewed">$0$, $10$,
+$110$, $111$</StepLink> average $1.75$ bits, which is $H$. Huffman coding builds such words for any
+distribution and stays within one bit of $H$.
+
+## Order and cardinality
+
+$H$ depends only on the counts, so it treats values as independent draws. Real columns are not:
+sorted, the city column has the <StepLink step="order">same entropy</StepLink> but only $4$ runs,
+and run-length encoding beats $16 \cdot H$. Delta encoding profits from order in the same way.
+
+High cardinality works against compression. A column of $n$ unique ids has entropy
+$H = \log_2 n$, about $20$ bits for a million rows (<StepLink step="cardinality">unique
+values</StepLink>), and its dictionary is as large as the column. Writers such as Parquet fall back
+to plain encoding when the dictionary grows too big.
+
+## Codecs
+
+After encoding, formats compress each page with a general codec: Snappy and LZ4 favor speed, Zstd
+and gzip favor size. They find repeated byte sequences that the encodings left. The result is
+measured by the compression ratio,
+
+$$
+\text{ratio} = \frac{\text{plain size}}{\text{stored size}},
+$$
+
+$86 / 25 = 3.44$ for the cities with a dictionary and bit packing
+(<StepLink step="codecs">sizes</StepLink>). Low cardinality and sorted data give the high ratios
+columnar formats are known for; the next item shows how Parquet records where each value sits.

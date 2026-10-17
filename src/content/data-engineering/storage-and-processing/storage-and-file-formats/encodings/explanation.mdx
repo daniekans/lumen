@@ -1,0 +1,43 @@
+A column layout puts values of one type side by side, and real columns repeat themselves: a few
+countries, a handful of statuses, timestamps that climb a few seconds at a time. An encoding is a
+way of writing the column that uses this structure. It is lossless: the original values can always
+be read back.
+
+## Dictionary codes
+
+List the $d$ distinct values once, in a dictionary, and replace each value with its position there.
+For the city column, $86$ bytes of text become a $21$ byte dictionary plus $16$
+codes: <StepLink step="dictionary">$37$ bytes</StepLink> with one byte per code. Comparing and
+grouping codes is also faster than comparing strings.
+
+## Bit packing
+
+Codes from $0$ to $d - 1$ need
+
+$$
+b = \lceil \log_2 d \rceil \text{ bits each,}
+$$
+
+because $b$ bits can write $2^b$ different numbers. Packed back to back, the $16$ codes take
+$16 \cdot 2 = 32$ bits, <StepLink step="bit-packing">$4$ bytes</StepLink>. The width grows with the
+logarithm: $1000$ distinct values still need only $10$ bits.
+
+## Run-length encoding
+
+A run is a stretch of equal neighbors, and run-length encoding stores each run as a pair (value,
+count). It depends on order. In the original order the cities
+form <StepLink step="runs">$15$ runs</StepLink>, so there is nothing to gain. Sorted, a column with
+$d$ distinct values has exactly $d$ runs, and <StepLink step="sorted">$4$ pairs</StepLink> describe
+it. Parquet combines the two: dictionary codes are written as a hybrid of run-length and
+bit-packed groups, whichever is shorter.
+
+## Delta encoding
+
+Sorted numbers, such as timestamps or ids, are large but close together. Delta encoding stores the
+first value and then the differences $\Delta_i = x_i - x_{i - 1}$. If the largest difference is $m$,
+each one fits in $\lceil \log_2 (m + 1) \rceil$ bits: <StepLink step="delta">$3$ bits</StepLink>
+instead of $64$ for these timestamps.
+
+Each encoding fits a shape of data: dictionaries for few distinct values, run-length for sorted or
+slowly changing columns, deltas for sorted numbers. The next item asks how small a column can get at
+all.

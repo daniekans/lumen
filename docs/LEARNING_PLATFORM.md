@@ -400,20 +400,22 @@ groups, column chunks, pages, footer statistics, predicate pushdown, choosing a 
 | 1   | row-vs-columnar                   | explore    | layouts               | One table written to pages row by row and column by column; a column sum, a point lookup and an insert touch different pages          | review |
 | 2   | scan-cost                         | lesson     | layouts, scan-cost    | The table as an area $N \times W$; a layout cuts it into pages, a query is a region, its cost the pages it touches; wide tables       | review |
 | 3   | practice-layouts                  | practice   | layouts, scan-cost    | Table sizes, bytes and pages scanned in both layouts, value offsets, choosing a layout for a workload                                 | review |
-| 4   | encodings                         | explore    | encoding              | Dictionary codes, bit packing with $\lceil \log_2 d \rceil$ bits, run-length on a sorted column, delta for timestamps                 | todo   |
-| 5   | entropy-and-compression           | lesson     | compression, encoding | Information $\log_2 (1/p)$, entropy as the floor for symbol codes, sorting to lengthen runs, codecs layered on encodings              | todo   |
-| 6   | practice-encoding-and-compression | practice   | encoding, compression | Bit widths, dictionary and run-length sizes, delta ranges, entropy of small distributions, compression ratios                         | todo   |
+| 4   | encodings                         | explore    | encoding              | Dictionary codes, bit packing with $\lceil \log_2 d \rceil$ bits, run-length on a sorted column, delta for timestamps                 | review |
+| 5   | entropy-and-compression           | lesson     | compression, encoding | Information $\log_2 (1/p)$, entropy as the floor for symbol codes, sorting to lengthen runs, codecs layered on encodings              | review |
+| 6   | practice-encoding-and-compression | practice   | encoding, compression | Bit widths, dictionary and run-length sizes, delta ranges, entropy of small distributions, compression ratios                         | review |
 | 7   | parquet-anatomy                   | explore    | parquet, scan-cost    | File, row groups, column chunks, pages, footer; min and max statistics skip row groups; sorting tightens the ranges                   | todo   |
 | 8   | practice-parquet                  | practice   | parquet, scan-cost    | Row groups skipped by a predicate, bytes read with projection and pushdown, choosing among CSV, JSON, Avro and Parquet                | todo   |
 | 9   | checkpoint                        | checkpoint | all                   | Mix of the practice generators plus a self-graded proof (a column with $d$ distinct values has at least $d$ runs, sorted exactly $d$) | todo   |
 
 Batches: 1 = items 1 to 3 (layouts and scan cost), 2 = items 4 to 6 (encoding and compression),
-3 = items 7 to 9 (Parquet and the checkpoint). Batch 1 is published and awaits review. The cost model: a table of $N$ rows with column
+3 = items 7 to 9 (Parquet and the checkpoint). Batches 1 and 2 are published and await review. The cost model: a table of $N$ rows with column
 widths $w_j$ (row width $W = \sum_j w_j$) and pages of $P$ bytes. A row layout stores rows back to
 back, so any full scan reads $\lceil NW/P \rceil$ pages; a column layout gives each column its own
 pages, so a scan of the columns $S$ reads $\sum_{j \in S} \lceil N w_j / P \rceil$. A point lookup
 whose position is known reads one page in a row layout and one page per selected column in a column
-layout.
+layout. Encodings and entropy live in `src/lib/storage/encoding.ts` (`codeBits`,
+`bitsFor`, `dictionaryEncode`, `runLengths`, `deltaEncode`, `entropy`); the city column of
+`encodings` (counts $6, 4, 4, 2$, $86$ bytes as text, $25$ encoded) is reused by the lesson.
 
 ## Risks
 

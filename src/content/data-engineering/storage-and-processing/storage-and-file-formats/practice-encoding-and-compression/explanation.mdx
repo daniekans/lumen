@@ -1,0 +1,32 @@
+The formulas these problems use, for a column of $n$ values with $d$ distinct.
+
+## Encodings
+
+$$
+\begin{aligned}
+\text{bits per code: } & b = \lceil \log_2 d \rceil \\
+\text{dictionary + codes: } & d \cdot w + \frac{n b}{8} \text{ bytes} \\
+\text{runs when sorted: } & d \\
+\text{bits per delta: } & \lceil \log_2 (m + 1) \rceil, \ m = \max \Delta
+\end{aligned}
+$$
+
+Here $w$ is the width of a value in bytes. A run is a maximal stretch of equal neighbors.
+
+## Information and entropy
+
+A value with probability $p$ carries $\log_2 \frac{1}{p}$ bits. The entropy of the column is the
+average,
+
+$$
+H = \sum_k p_k \log_2 \frac{1}{p_k},
+$$
+
+the floor for codes that write each value on its own. It is at most $\log_2 d$, reached when all
+values are equally likely.
+
+## Ratio
+
+$$
+\text{compression ratio} = \frac{\text{plain size}}{\text{stored size}}
+$$
