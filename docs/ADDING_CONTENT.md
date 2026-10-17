@@ -42,6 +42,11 @@ useStepEffect({
 </VizControls>
 ```
 
+- Stages with axes take `zoomable` (pan and zoom). Diagrams leave it off.
+- Values worth linking (sliders, toggles) can use `useVizParam(name, default)` instead of
+  `useState`, so the URL keeps them. Values that belong together go in one parameter with a codec
+  (`numbersCodec`). A choice the step handlers set must be a parameter too, since a link with
+  parameters skips the opening step's handler.
 - Math goes in `src/lib` with a test.
 - If a piece could serve another item, add it to `src/viz-kit` (and export it from the folder's
   `index.ts`) instead of keeping it local.

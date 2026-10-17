@@ -35,8 +35,9 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 
 ## Conventions
 
-- Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `ci:`, `chore:`, `test:`), ending
-  with the Co-Authored-By line.
+- Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `ci:`, `chore:`, `test:`). No
+  Co-Authored-By or other Claude attribution lines (decided 2026-10-17; `.claude/settings.json`
+  turns them off). Author and committer are only Daniel's GitHub noreply address.
 - Writing: follow `docs/WRITING.md` for every string (captions, MDX, UI copy, docs, comments). No em
   dashes, no hype. `pnpm lint` runs a prose lint.
 - UI copy (outside content) goes in `src/i18n/messages.ts` and is read as `msg.<group>.<key>` from

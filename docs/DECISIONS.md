@@ -103,6 +103,14 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   `src/lib` stays free of copy: it returns codes (the checker's `CheckIssue`) that the UI words.
   Content (MDX, captions, problem prompts, labels inside visualizations) is not covered yet.
 
+- Phase 4 (2026-10-17): zoom is opt-in per stage and on for every stage with axes. The view
+  resets on each step. A link with parameters skips the opening step's handler. Fullscreen
+  shows the stage area with a small step bar, not the explanation.
+
+- Commits carry no Claude attribution (2026-10-17): no Co-Authored-By trailer, so Claude is not
+  listed as a contributor on the public repo. History was rewritten once to remove the old
+  trailers. Only the GitHub noreply address appears as author and committer.
+
 ## Future direction (record, do not build yet)
 
 - Possibly a product for other learners: backend, accounts, premium tier. Keep the seams listed in
@@ -110,7 +118,6 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Internationalization, Brazilian Portuguese first.
 - Presentation mode for recording lessons.
 - An Explore page to browse visualizations without the course structure.
-- Pan and zoom on stages, especially those with axes.
 - 3D visualizations when multivariable calculus and linear algebra need them, in the same aesthetic.
 - Code lessons: tie the math to the code that applies it (NumPy, SymPy, scikit-learn,
   PyTorch-style models), and data engineering ideas to the engines that apply them (Spark

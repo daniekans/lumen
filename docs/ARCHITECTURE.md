@@ -117,6 +117,11 @@ DOM node of the control dock. Inside a visualization:
 - `useStepEffect({ stepId: () => ... })` runs a handler each time a step becomes active.
 - `<VizControls>` portals its children into the dock.
 
+The active step is in the query string (`?step=<id>`), and `useVizParam` keeps chosen values there
+too. Both write through `src/viz-kit/runtime/query.ts`: `history.replaceState`, batched, so the
+router does not navigate and history gets no new entries. Fullscreen (`useFullscreen`, key `f`)
+shows the stage area alone, with `FullscreenBar` for the steps.
+
 The explanation pane renders the steps and the MDX explanation. MDX files can use `<StepLink step="id">`
 to jump to a step and `<C c="blue">` to color a term like its counterpart in the visual.
 
@@ -126,6 +131,10 @@ to jump to a step and `<C c="blue">` to color a term like its counterpart in the
 keeping the domain clear of the control dock through `insets`. Primitives take stage units and read
 the mapping through `useCoords()`, so they work in any size. `yUp` selects math orientation; diagrams
 use `yUp={false}` and a design-sized domain such as `x: [0, 1200]`.
+
+A `zoomable` Stage adds a view (zoom and pan) on top of the fitted domain (`useStageView`). Every
+primitive reads the zoomed mapping from `useCoords()`, so nothing else changes; `coords.zoom`
+lets the grid and axes pick a coarser or finer step.
 
 KaTeX labels are HTML, so `MathLabel` portals into an HTML layer above the SVG while still being
 written inside SVG content.

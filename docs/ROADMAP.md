@@ -15,7 +15,7 @@ awaiting feedback), `done`.
 | 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills        | done    |
 | 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit  | done    |
 | 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree   | planned |
-| 4     | Pan and zoom on stages with axes, and a fullscreen mode                                   | planned |
+| 4     | Pan and zoom on stages with axes, and a fullscreen mode                                   | done    |
 | 5     | 3D stages for multivariable calculus and linear algebra                                   | planned |
 | 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
 | 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | planned |
@@ -34,8 +34,8 @@ Storage and file formats). Content units continue after it as ongoing work, in t
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** the next content unit in the suggested order (Pre-calculus: Polynomial
-and rational functions, a refresher of about five items), or phase 4 if pan, zoom and fullscreen
-should come first.
+and rational functions, a refresher of about five items). Its stages should use `zoomable` and,
+where a slider view is worth linking, `useVizParam`.
 
 ### Phase 3: Explore page
 
@@ -62,6 +62,23 @@ visualizations and in old ones when they are touched, not as a sweep of every it
 Fullscreen mode: one toggle (button and a key) that hides the sidebar, top bar and explanation
 pane and puts the stage in the browser's fullscreen, keeping the dock and step navigation (arrow
 keys). Not yet a presentation mode: no speaker notes, scripted timing or recording aids.
+
+Done on 2026-10-17:
+
+- `<Stage zoomable>` (on the ten stages with axes): wheel and pinch zoom about the pointer, drag on
+  the background to pan, double-click or the reset button to return, and zoom buttons in the middle
+  of the right edge. Zoom is limited to 0.25 to 10 and the view center to one domain size away.
+  Draggable points keep working because they call `preventDefault`. The view resets on each step.
+  Grid and axes switch to 1, 2 or 5 multiples of their step as the zoom changes, and tick labels
+  stay along the edge when the origin is out of view. The math is in `coords.ts` (tested).
+- `?step=<id>` opens a step; the URL follows the step through `history.replaceState`, batched,
+  with no new history entries (`src/viz-kit/runtime/query.ts`).
+- `useVizParam(name, default, codec?)` keeps a value in the query string, adopted in
+  `transformations` (`f` for the base function, `p=a_b_h_k`). A link with parameters skips the
+  opening step's `useStepEffect` handler so the linked view is not overwritten.
+- Fullscreen: the button in the top bar or `f` puts the stage area in browser fullscreen (a fixed
+  layer where the API is missing), with a bar for step navigation and exit. Tooltips portal into
+  the fullscreen element (`PortalContainerContext`).
 
 ### Phase 5: 3D
 
