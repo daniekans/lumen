@@ -1,3 +1,5 @@
+import { fmtShort } from './scalar'
+
 export type Vec2 = readonly [number, number]
 
 export const vec = (x: number, y: number): Vec2 => [x, y]
@@ -21,3 +23,7 @@ export const normalize = (a: Vec2): Vec2 => {
   return l === 0 ? [0, 0] : [a[0] / l, a[1] / l]
 }
 export const distance = (a: Vec2, b: Vec2) => length(sub(a, b))
+
+/** A point as "(x, y)" in the short form of `fmtShort`. */
+export const fmtPoint = (p: Vec2, digits = 2) =>
+  `(${fmtShort(p[0], digits)}, ${fmtShort(p[1], digits)})`

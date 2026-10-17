@@ -7,6 +7,8 @@ import {
   cMul,
   complex,
   derivative,
+  fmtPoint,
+  fmtShort,
   det,
   integrate,
   mat2,
@@ -53,6 +55,17 @@ describe('complex', () => {
     const p = cMul(a, b)
     expect(cAbs(p)).toBeCloseTo(cAbs(a) * cAbs(b))
     expect(cArg(p)).toBeCloseTo(cArg(a) + cArg(b))
+  })
+})
+
+describe('fmtShort and fmtPoint', () => {
+  it('drop trailing zeros, round, and use a true minus sign', () => {
+    expect(fmtShort(2)).toBe('2')
+    expect(fmtShort(2.004)).toBe('2')
+    expect(fmtShort(1.5)).toBe('1.5')
+    expect(fmtShort(-0.25)).toBe('\u22120.25')
+    expect(fmtShort(-0.001)).toBe('0')
+    expect(fmtPoint([1.5, -2])).toBe('(1.5, \u22122)')
   })
 })
 

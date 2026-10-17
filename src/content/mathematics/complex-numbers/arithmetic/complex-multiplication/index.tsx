@@ -1,5 +1,15 @@
 import { useState } from 'react'
-import { cAbs, cArg, cFormat, cMul, complex, cPolar, type Complex, type Vec2 } from '@/lib/math'
+import {
+  cAbs,
+  cArg,
+  cFormat,
+  cMul,
+  complex,
+  cPolar,
+  fmtShort,
+  type Complex,
+  type Vec2,
+} from '@/lib/math'
 import { alpha, vc } from '@/styles/viz-colors'
 import { Button, Divider } from '@/ui/atoms'
 import { Readout, ReadoutPanel, ToggleField } from '@/ui/molecules'
@@ -23,6 +33,11 @@ const W = vc.yellow
 const ZW = vc.teal
 
 const toVec = (c: Complex): Vec2 => [c.re, c.im]
+/** Hover text of a point: the complex number it stands for. */
+const asComplex = ([a, b]: Vec2) => {
+  const im = fmtShort(Math.abs(b))
+  return `${fmtShort(a)} ${b < 0 ? '\u2212' : '+'} ${im === '1' ? '' : im}i`
+}
 
 /** Rounds to 0.05 and snaps to whole numbers when close, so dragged points land on tidy values. */
 const snap = ([x, y]: Vec2): Complex => {
@@ -161,14 +176,14 @@ export default function ComplexMultiplication() {
               width={1.5}
               fill={alpha(W, 0.18)}
             />
-            <Point at={map(z.re, z.im)} color={ZW} r={5} />
+            <Point coords={asComplex} at={map(z.re, z.im)} color={ZW} r={5} />
           </g>
         )}
 
         <Arc r={0.45} from={0} to={cArg(z)} color={Z} width={1.5} opacity={0.8} />
         <Arc r={0.7} from={0} to={cArg(w)} color={W} width={1.5} opacity={0.8} />
 
-        <Point at={[1, 0]} color={vc.fg} r={4} />
+        <Point coords={asComplex} at={[1, 0]} color={vc.fg} r={4} />
 
         {showProduct && (
           <>
@@ -196,6 +211,7 @@ export default function ComplexMultiplication() {
         <MathLabel at={toVec(w)} tex="w" color={W} anchor={w.re >= 0 ? 'se' : 'sw'} />
         <MathLabel at={toVec(z)} tex="z" color={Z} anchor={z.re >= 0 ? 'se' : 'sw'} />
         <Point
+          coords={asComplex}
           at={toVec(w)}
           color={W}
           r={5}
@@ -206,6 +222,7 @@ export default function ComplexMultiplication() {
           label="w"
         />
         <Point
+          coords={asComplex}
           at={toVec(z)}
           color={Z}
           r={5}

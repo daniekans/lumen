@@ -22,6 +22,15 @@ export const fmt = (v: number, digits = 2) => {
   return Number(s) === 0 ? (0).toFixed(digits) : s
 }
 
+/**
+ * Short form for reading a value: at most `digits` decimals, trailing zeros dropped, and a true
+ * minus sign. `fmtShort(-0.5)` is "−0.5", `fmtShort(2.004)` is "2".
+ */
+export const fmtShort = (v: number, digits = 2) => {
+  const n = Number(v.toFixed(digits))
+  return n === 0 ? '0' : n < 0 ? `\u2212${-n}` : String(n)
+}
+
 /** Smallest "nice" step (1, 2 or 5 times a power of ten) of at least `raw`. */
 export const niceStep = (raw: number) => {
   const p = 10 ** Math.floor(Math.log10(raw))

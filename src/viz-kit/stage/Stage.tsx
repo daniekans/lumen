@@ -1,6 +1,14 @@
 import clsx from 'clsx'
 import { Minus, Plus, Scan } from 'lucide-react'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent,
+  type ReactNode,
+} from 'react'
 import { msg } from '@/i18n'
 import surfaces from '@/styles/surfaces.module.css'
 import { IconButton } from '@/ui/atoms'
@@ -14,6 +22,7 @@ import {
   type Insets,
   type View,
 } from './coords'
+import { createHoverRegistry } from './pointHover'
 import styles from './Stage.module.css'
 import { useStageView } from './useStageView'
 
@@ -78,11 +87,27 @@ export function Stage({
   )
   const pan = useStageView({ enabled: zoomable, svg, domain: fitted, coordsFor })
   const coords = useMemo(() => coordsFor(pan.view), [coordsFor, pan.view])
-  const ctx = useMemo(() => ({ coords, svg, labelLayer }), [coords, svg, labelLayer])
+  const [registry] = useState(createHoverRegistry)
+  const [hovered, setHovered] = useState<string | null>(null)
+  const hover = useMemo(
+    () => ({ coordinates: zoomable, hovered, register: registry.set }),
+    [zoomable, hovered, registry],
+  )
+  const ctx = useMemo(() => ({ coords, svg, labelLayer, hover }), [coords, svg, labelLayer, hover])
+  const onPointerMove = (e: PointerEvent) => {
+    if (!svg || pan.panning || e.pointerType === 'touch') return
+    const rect = svg.getBoundingClientRect()
+    setHovered(registry.nearest(e.clientX - rect.left, e.clientY - rect.top))
+  }
   const ready = size.width > 0 && size.height > 0
 
   return (
-    <div ref={ref} className={[styles.stage, className].filter(Boolean).join(' ')}>
+    <div
+      ref={ref}
+      className={[styles.stage, className].filter(Boolean).join(' ')}
+      onPointerMove={onPointerMove}
+      onPointerLeave={() => setHovered(null)}
+    >
       <StageContext.Provider value={ctx}>
         <svg
           ref={setSvg}

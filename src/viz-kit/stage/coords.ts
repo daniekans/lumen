@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
 import type { Vec2 } from '@/lib/math'
+import type { PointHover } from './pointHover'
 
 export interface Domain {
   x: readonly [number, number]
@@ -135,6 +136,7 @@ export interface StageContextValue {
   svg: SVGSVGElement | null
   /** HTML layer above the SVG for KaTeX labels and other DOM content positioned in stage space. */
   labelLayer: HTMLDivElement | null
+  hover: PointHover
 }
 
 export const StageContext = createContext<StageContextValue | null>(null)
