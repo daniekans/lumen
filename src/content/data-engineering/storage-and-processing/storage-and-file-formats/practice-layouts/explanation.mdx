@@ -1,0 +1,32 @@
+Every problem here uses one model: a table of $N$ rows with column widths $w_j$, a row of
+$W = \sum_j w_j$ bytes, and pages of $P$ bytes.
+
+## Bytes and pages a scan reads
+
+A row layout cannot skip columns. A column layout reads only the columns $S$ the query uses, and
+each column starts on its own pages:
+
+$$
+\begin{aligned}
+\text{row, bytes: } & NW \\
+\text{row, pages: } & \left\lceil \frac{NW}{P} \right\rceil \\
+\text{column, bytes: } & N \sum_{j \in S} w_j \\
+\text{column, pages: } & \sum_{j \in S} \left\lceil \frac{N w_j}{P} \right\rceil
+\end{aligned}
+$$
+
+## One row
+
+With its position known, one row costs $1$ page in a row layout and one page per selected column in
+a column layout.
+
+## Offsets
+
+Counting rows $r$ and bytes from $0$, with no padding, the value of column $j$ in row $r$ starts at
+
+$$
+\begin{aligned}
+\text{row: } & rW + \sum_{k < j} w_k \\
+\text{column: } & N \sum_{k < j} w_k + r\,w_j
+\end{aligned}
+$$

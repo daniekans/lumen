@@ -1,0 +1,53 @@
+Query engines rarely run out of CPU on a scan; they wait for bytes to arrive from disk, the network
+or cloud storage. A first estimate of a query's cost is therefore the number of bytes, or pages, it
+has to read. This lesson builds that estimate from one picture.
+
+## The table as an area
+
+Give the table $N$ rows and columns of widths $w_1, \dots, w_C$ bytes. A row takes
+$W = \sum_j w_j$ bytes, and the table is an $N \times W$ rectangle of area $NW$ bytes. Storage is
+read in pages of $P$ bytes, so a layout is a way of cutting the rectangle into pieces of area $P$.
+
+## Two ways to cut
+
+A row layout stores rows back to back, which cuts the rectangle into horizontal strips of $P/W$
+rows. A column layout stores each column on its own pages, which cuts every column into vertical
+pieces of $P / w_j$ rows. The number of pages is about the same either way:
+
+$$
+\begin{aligned}
+\text{row layout: } & \left\lceil \frac{NW}{P} \right\rceil \\
+\text{column layout: } & \sum_j \left\lceil \frac{N w_j}{P} \right\rceil
+\end{aligned}
+$$
+
+## A query is a region
+
+A scan of the columns in a set $S$ needs the vertical bands of those columns. Every horizontal
+strip crosses them, so a row layout reads the whole table, while a column layout reads only the
+pages of those bands:
+
+$$
+\text{bytes read} =
+\begin{cases}
+NW & \text{row layout} \\
+N \sum_{j \in S} w_j & \text{column layout.}
+\end{cases}
+$$
+
+The ratio, $\sum_{j \in S} w_j / W$, does not depend on $N$. With $200$ columns of $8$ bytes and a
+query that uses $3$, the column layout reads $1.5\%$ of what the row layout reads, as in the last
+step, <StepLink step="wide">wide tables</StepLink>.
+
+## A row is a line
+
+Fetching one row whose position is known (an index gives it) is a horizontal line one row tall. It
+lies in $1$ strip of a row layout, but it crosses every column of a column layout: $C$ pages, one
+per column, or one per selected column for `SELECT a, b`.
+
+## What the model leaves out
+
+Real engines also compress pages, skip pages using statistics, and cache what they read. Those
+change the constants, and the next items cover the first two. The shape of the comparison stays:
+columns win when queries read few columns of many rows, rows win when they read many columns of few
+rows.

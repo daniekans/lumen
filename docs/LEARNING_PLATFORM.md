@@ -287,6 +287,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Pre-calculus / Functions (items below)                                     | review |
 | Data Engineering / Relational model and SQL joins (first interleaved unit) | review |
 | Pre-calculus / Algebra essentials                                          | review |
+| Data Engineering / Storage and file formats (core depth)                   | doing  |
 
 #### Functions unit plan
 
@@ -377,6 +378,42 @@ inequalities and absolute value. Solution sets are asked as choices in interval 
 practice test parses each option and compares it with the inequality at every endpoint and between
 them. The checkpoint takes nine generators from the three practice sets plus the proof. Number answers that
 are repeating decimals show as fractions (`answerTex`), so generators can return any rational.
+
+#### Storage and file formats unit plan
+
+Folder `src/content/data-engineering/storage-and-processing/storage-and-file-formats/`. Core depth,
+three batches. The course `storage-and-processing` also lists the next two DE units (partitioning,
+distributed processing) as planned. The thread through the unit: storage is a sequence of bytes
+read in pages, so the cost of a query is the pages it touches. A layout decides which pages that
+is, an encoding decides how many bytes a column needs, and file metadata decides which pages can be
+skipped without reading them. The math link is logarithms: $\lceil \log_2 d \rceil$ bits for $d$
+distinct values, information and entropy as the floor for compression, plus ceilings and offsets
+(row-major and column-major order, as with arrays). Logic lives in `src/lib/storage` (tested).
+
+Skills: `layouts` (row and column layouts, where a value lives, which layout fits a workload),
+`scan-cost` (bytes and pages a query reads), `encoding` (dictionary, bit packing, run-length,
+delta), `compression` (entropy, and why order and cardinality drive compression), `parquet` (row
+groups, column chunks, pages, footer statistics, predicate pushdown, choosing a file format).
+
+| #   | Item                              | Kind       | Skills                | Content                                                                                                                               | Status |
+| --- | --------------------------------- | ---------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | row-vs-columnar                   | explore    | layouts               | One table written to pages row by row and column by column; a column sum, a point lookup and an insert touch different pages          | review |
+| 2   | scan-cost                         | lesson     | layouts, scan-cost    | The table as an area $N \times W$; a layout cuts it into pages, a query is a region, its cost the pages it touches; wide tables       | review |
+| 3   | practice-layouts                  | practice   | layouts, scan-cost    | Table sizes, bytes and pages scanned in both layouts, value offsets, choosing a layout for a workload                                 | review |
+| 4   | encodings                         | explore    | encoding              | Dictionary codes, bit packing with $\lceil \log_2 d \rceil$ bits, run-length on a sorted column, delta for timestamps                 | todo   |
+| 5   | entropy-and-compression           | lesson     | compression, encoding | Information $\log_2 (1/p)$, entropy as the floor for symbol codes, sorting to lengthen runs, codecs layered on encodings              | todo   |
+| 6   | practice-encoding-and-compression | practice   | encoding, compression | Bit widths, dictionary and run-length sizes, delta ranges, entropy of small distributions, compression ratios                         | todo   |
+| 7   | parquet-anatomy                   | explore    | parquet, scan-cost    | File, row groups, column chunks, pages, footer; min and max statistics skip row groups; sorting tightens the ranges                   | todo   |
+| 8   | practice-parquet                  | practice   | parquet, scan-cost    | Row groups skipped by a predicate, bytes read with projection and pushdown, choosing among CSV, JSON, Avro and Parquet                | todo   |
+| 9   | checkpoint                        | checkpoint | all                   | Mix of the practice generators plus a self-graded proof (a column with $d$ distinct values has at least $d$ runs, sorted exactly $d$) | todo   |
+
+Batches: 1 = items 1 to 3 (layouts and scan cost), 2 = items 4 to 6 (encoding and compression),
+3 = items 7 to 9 (Parquet and the checkpoint). Batch 1 is published and awaits review. The cost model: a table of $N$ rows with column
+widths $w_j$ (row width $W = \sum_j w_j$) and pages of $P$ bytes. A row layout stores rows back to
+back, so any full scan reads $\lceil NW/P \rceil$ pages; a column layout gives each column its own
+pages, so a scan of the columns $S$ reads $\sum_{j \in S} \lceil N w_j / P \rceil$. A point lookup
+whose position is known reads one page in a row layout and one page per selected column in a column
+layout.
 
 ## Risks
 

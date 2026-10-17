@@ -1,0 +1,36 @@
+A table is a grid, but a disk, a file or an object in cloud storage is one sequence of bytes, and it
+is read in pages (blocks) of a fixed size, not value by value. Storing a table means choosing the
+order its values take in that sequence. That choice decides which queries are cheap.
+
+## Two orders
+
+With $N$ rows and $C$ columns of equal size, the value in row $i$ and column $j$ (both from $0$)
+lands at position
+
+$$
+\text{row layout: } iC + j, \qquad \text{column layout: } jN + i.
+$$
+
+These are the row-major and column-major orders of a two-dimensional array, the same choice NumPy
+makes with `order='C'` and `order='F'`. Values that are neighbors in the sequence share a page.
+
+## Scans favor columns
+
+A query such as `SELECT SUM(total)` uses one column of every row. In a row layout every page holds
+part of every row, so the query reads <StepLink step="row-scan">all $8$ pages</StepLink>. In a
+column layout the totals sit together and the query reads <StepLink step="column-scan">$2$ of them</StepLink>.
+On real tables with dozens of columns the gap is a factor of ten or more, and the next item measures
+it.
+
+## Rows favor rows
+
+Fetching or inserting one whole row is the opposite case. A row layout keeps the row in one place, so
+it costs one page. A column layout spreads it over $C$ places: $4$ pages to
+read <StepLink step="lookup">row 6</StepLink> and $4$ places to write <StepLink step="insert">row 9</StepLink>.
+
+## Which systems use which
+
+Transactional databases (PostgreSQL, MySQL) serve many small reads and writes of whole rows, so they
+store rows. Analytical engines and file formats (BigQuery, Snowflake, DuckDB, Parquet, ORC) serve
+scans of a few columns over many rows, so they store columns, and they take writes in large batches
+so that each column gets whole pages at once.
