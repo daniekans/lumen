@@ -1,16 +1,34 @@
-import { Check } from 'lucide-react'
+import clsx from 'clsx'
+import { ArrowRight, Check } from 'lucide-react'
 import { Link } from 'react-router'
-import { getUnit, type Unit } from '@/catalog'
+import { getCourse, getUnit, type Item, type ItemKind, type Unit } from '@/catalog'
 import { msg } from '@/i18n'
-import { isUnitMarkedKnown, itemProgress, skillStatus, unitSummary, useProgress } from '@/progress'
-import { Button, KindIcon, ProgressRing, Tooltip } from '@/ui/atoms'
+import {
+  CHECKPOINT_PASS,
+  isUnitMarkedKnown,
+  itemProgress,
+  nextItem,
+  skillStatus,
+  unitSummary,
+  useProgress,
+} from '@/progress'
+import { Button, KindIcon, ProgressRing, Tex, Tooltip } from '@/ui/atoms'
 import { Breadcrumbs, StatusPicker } from '@/ui/molecules'
 import { TopBar } from '@/ui/organisms'
+import { Term } from '@/ui/organisms/MdxWidgets'
 import { DocumentLayout, DocumentSection } from '@/ui/templates'
 import { crumbsFor } from '../crumbs'
 import { usePageTitle } from '../usePageTitle'
 import styles from './lists.module.css'
+import page from './UnitPage.module.css'
 
+const groups: { key: keyof typeof msg.pages.unit.groups; kinds: readonly ItemKind[] }[] = [
+  { key: 'learn', kinds: ['explore', 'lesson'] },
+  { key: 'practice', kinds: ['practice'] },
+  { key: 'checkpoint', kinds: ['checkpoint'] },
+]
+
+/** A unit as a workspace: what to do next, the items by role, terms and skills. */
 export function UnitPage({ unit }: { unit: Unit }) {
   usePageTitle(unit.title)
   const data = useProgress((s) => s.data)
@@ -20,6 +38,47 @@ export function UnitPage({ unit }: { unit: Unit }) {
   const known = unit.items.length > 0 && isUnitMarkedKnown(unit, data)
   const summary = unitSummary(unit, data)
   const prerequisites = (unit.prerequisites ?? []).map(getUnit).filter((u) => !!u)
+  const course = getCourse(unit.courseId)
+  const index = course ? course.units.indexOf(unit) : -1
+  const next = nextItem(unit, data)
+
+  const row = (item: Item) => {
+    const info = itemProgress(item, data.items[item.id])
+    const detail =
+      item.kind === 'checkpoint' && info.state === 'not-started'
+        ? msg.pages.unit.checkpointPasses(CHECKPOINT_PASS)
+        : info.state === 'in-progress' && item.kind !== 'checkpoint'
+          ? msg.progress.inProgress
+          : info.detail
+    return (
+      <li key={item.id}>
+        <Link
+          to={item.path}
+          className={styles.row}
+          onPointerEnter={() => void item.preload()}
+        >
+          <span className={styles.lead}>
+            <KindIcon kind={item.kind} size={16} />
+          </span>
+          <span className={styles.body}>
+            <span className={styles.title}>{item.title}</span>
+            <span className={styles.description}>{item.summary}</span>
+          </span>
+          <span className={styles.trail}>
+            {msg.catalog.kind[item.kind]}
+            <span className={clsx(styles.state, item.kind === 'checkpoint' && page.score)}>
+              {info.state === 'done' ? (
+                <Check size={14} color="var(--viz-teal)" />
+              ) : (
+                <ProgressRing value={info.fraction} size={14} />
+              )}
+              {detail}
+            </span>
+          </span>
+        </Link>
+      </li>
+    )
+  }
 
   return (
     <DocumentLayout
@@ -28,7 +87,11 @@ export function UnitPage({ unit }: { unit: Unit }) {
           <Breadcrumbs items={crumbsFor(unit)} />
         </TopBar>
       }
-      eyebrow={msg.pages.unit.eyebrow}
+      eyebrow={
+        course && index >= 0
+          ? msg.pages.unit.position(index + 1, course.units.length)
+          : msg.pages.unit.eyebrow
+      }
       title={unit.title}
       description={unit.description}
       actions={
@@ -50,58 +113,69 @@ export function UnitPage({ unit }: { unit: Unit }) {
       }
     >
       {prerequisites.length > 0 && (
-        <p className={styles.note}>
-          {msg.pages.unit.recommendedFirst}{' '}
-          {prerequisites.map((p, i) => (
-            <span key={p.id}>
-              {i > 0 && ', '}
-              <Link to={p.path} style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>
-                {p.title}
-              </Link>
-            </span>
+        <div className={page.prerequisites}>
+          <span>{msg.pages.unit.recommendedFirst}</span>
+          {prerequisites.map((p) => (
+            <Link key={p.id} to={p.path} className={page.chip}>
+              {p.title}
+            </Link>
           ))}
+        </div>
+      )}
+
+      {unit.items.length === 0 ? (
+        <DocumentSection title={msg.pages.unit.items}>
+          <p className={styles.note}>{msg.pages.unit.planned}</p>
+        </DocumentSection>
+      ) : next ? (
+        <Link to={next.path} className={page.upNext} onPointerEnter={() => void next.preload()}>
+          <span className={page.upNextIcon}>
+            <KindIcon kind={next.kind} size={20} />
+          </span>
+          <span className={styles.body}>
+            <span className={page.upNextLabel}>
+              {msg.pages.unit.upNext} · {msg.catalog.kind[next.kind]}
+            </span>
+            <span className={styles.title}>{next.title}</span>
+            <span className={styles.description}>{next.summary}</span>
+          </span>
+          <span className={page.go}>
+            {itemProgress(next, data.items[next.id]).state === 'not-started'
+              ? msg.pages.unit.start
+              : msg.pages.unit.continue}
+            <ArrowRight size={14} />
+          </span>
+        </Link>
+      ) : (
+        <p className={page.allDone}>
+          <Check size={15} color="var(--viz-teal)" />
+          {msg.pages.unit.allDone}
         </p>
       )}
 
-      <DocumentSection title={msg.pages.unit.items}>
-        {unit.items.length === 0 ? (
-          <p className={styles.note}>{msg.pages.unit.planned}</p>
-        ) : (
-          <ol className={styles.list}>
-            {unit.items.map((item) => {
-              const info = itemProgress(item, data.items[item.id])
-              return (
-                <li key={item.id}>
-                  <Link
-                    to={item.path}
-                    className={styles.row}
-                    onPointerEnter={() => void item.preload()}
-                  >
-                    <span className={styles.lead}>
-                      <KindIcon kind={item.kind} size={16} />
-                    </span>
-                    <span className={styles.body}>
-                      <span className={styles.title}>{item.title}</span>
-                      <span className={styles.description}>{item.summary}</span>
-                    </span>
-                    <span className={styles.trail}>
-                      {msg.catalog.kind[item.kind]}
-                      <span className={styles.state}>
-                        {info.state === 'done' ? (
-                          <Check size={14} color="var(--viz-teal)" />
-                        ) : (
-                          <ProgressRing value={info.fraction} size={14} />
-                        )}
-                        {info.state === 'in-progress' ? msg.progress.inProgress : info.detail}
-                      </span>
-                    </span>
-                  </Link>
-                </li>
-              )
-            })}
-          </ol>
-        )}
-      </DocumentSection>
+      {groups.map((g) => {
+        const items = unit.items.filter((i) => g.kinds.includes(i.kind))
+        if (items.length === 0) return null
+        return (
+          <DocumentSection key={g.key} title={msg.pages.unit.groups[g.key]}>
+            <ol className={styles.list}>{items.map(row)}</ol>
+          </DocumentSection>
+        )
+      })}
+
+      {unit.terms.length > 0 && (
+        <DocumentSection title={msg.pages.unit.terms}>
+          <p className={styles.intro}>{msg.pages.unit.termsIntro}</p>
+          <div className={page.terms}>
+            {unit.terms.map((t) => (
+              <span key={t.id} className={page.term}>
+                <Term id={t.id}>{t.title}</Term>
+                {t.tex && <Tex>{t.tex}</Tex>}
+              </span>
+            ))}
+          </div>
+        </DocumentSection>
+      )}
 
       {unit.skills.length > 0 && (
         <DocumentSection title={msg.pages.unit.skills}>

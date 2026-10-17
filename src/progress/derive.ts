@@ -112,3 +112,11 @@ export const unitSummary = (unit: Unit, data: ProgressData): UnitSummary => {
 export const isUnitMarkedKnown = (unit: Unit, data: ProgressData) =>
   unit.items.every((i) => data.items[i.id]?.manual === 'done') &&
   unit.skills.every((s) => data.skills[s.key]?.status === 'mastered')
+
+/** The item to continue a unit with: the first one in order that is not done. */
+export const nextItem = (unit: Unit, data: ProgressData): Item | undefined =>
+  unit.items.find((i) => !isItemComplete(i, data.items[i.id]))
+
+/** The unit to continue a course with: the first one with content that is not finished. */
+export const nextUnit = <U extends Unit>(units: readonly U[], data: ProgressData): U | undefined =>
+  units.find((u) => nextItem(u, data) !== undefined)

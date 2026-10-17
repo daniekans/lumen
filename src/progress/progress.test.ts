@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Item, Unit } from '@/catalog/types'
-import { isItemComplete, itemProgress, unitSummary } from './derive'
+import { isItemComplete, itemProgress, nextItem, nextUnit, unitSummary } from './derive'
 import { emptyProgress, migrate } from './schema'
 import type { ItemProgress } from './types'
 
@@ -80,6 +80,25 @@ describe('unitSummary', () => {
     expect(s.itemsDone).toBe(1)
     expect(s.skills).toEqual({ new: 1, practiced: 0, proficient: 0, mastered: 1 })
     expect(s.fraction).toBe(1)
+  })
+})
+
+describe('nextItem and nextUnit', () => {
+  it('pick the first item that is not done, and skip finished or empty units', () => {
+    const a = { ...makeItem('explore'), id: 'u1/a' } as Item
+    const b = { ...makeItem('practice'), id: 'u1/b' } as Item
+    const c = { ...makeItem('explore'), id: 'u2/c' } as Item
+    const u1 = { id: 'u1', items: [a, b] } as unknown as Unit
+    const empty = { id: 'e', items: [] } as unknown as Unit
+    const u2 = { id: 'u2', items: [c] } as unknown as Unit
+    const data = emptyProgress()
+    expect(nextItem(u1, data)).toBe(a)
+    expect(nextUnit([empty, u1, u2], data)).toBe(u1)
+    data.items['u1/a'] = progress({ manual: 'done' })
+    expect(nextItem(u1, data)).toBe(b)
+    data.items['u1/b'] = progress({ manual: 'done' })
+    expect(nextItem(u1, data)).toBeUndefined()
+    expect(nextUnit([empty, u1, u2], data)).toBe(u2)
   })
 })
 
