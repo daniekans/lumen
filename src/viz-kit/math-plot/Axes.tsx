@@ -1,4 +1,4 @@
-import { fmt, ticks } from '@/lib/math'
+import { clamp, fmt, stepDigits, ticks, zoomedStep } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
 import { useCoords } from '../stage'
 
@@ -12,15 +12,19 @@ interface AxesProps {
 
 /** x and y axes through the origin with small ticks and mono labels. */
 export function Axes({
-  step = 1,
+  step: base = 1,
   labels = true,
   color = vc.axis,
   labelLimit = Infinity,
 }: AxesProps) {
   const c = useCoords()
+  const step = zoomedStep(base, c.zoom)
   const ox = c.x(0)
   const oy = c.y(0)
-  const digits = step < 1 ? 1 : 0
+  const digits = stepDigits(step)
+  // When the origin is panned out of view, tick labels stay along the nearest edge.
+  const lx = clamp(ox, 36, c.width - 4)
+  const ly = clamp(oy, 0, c.height - 24)
   const xs = ticks(c.view.x[0], c.view.x[1], step).filter(
     (v) => v !== 0 && Math.abs(v) <= labelLimit,
   )
@@ -40,12 +44,12 @@ export function Axes({
       {labels && (
         <g style={{ fill: color, stroke: 'none', fontFamily: 'var(--font-mono)', fontSize: 10.5 }}>
           {xs.map((v) => (
-            <text key={`lx${v}`} x={c.x(v)} y={oy + 18} textAnchor="middle">
+            <text key={`lx${v}`} x={c.x(v)} y={ly + 18} textAnchor="middle">
               {fmt(v, digits)}
             </text>
           ))}
           {ys.map((v) => (
-            <text key={`ly${v}`} x={ox - 9} y={c.y(v) + 3.5} textAnchor="end">
+            <text key={`ly${v}`} x={lx - 9} y={c.y(v) + 3.5} textAnchor="end">
               {fmt(v, digits)}
             </text>
           ))}

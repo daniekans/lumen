@@ -140,6 +140,7 @@ export default function FunctionAsMapping() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-5.5, 5.5], y: Y_VIEW }}
         ariaLabel="Mapping from inputs to outputs that folds into the graph of f(x) = x squared"
         overlay={

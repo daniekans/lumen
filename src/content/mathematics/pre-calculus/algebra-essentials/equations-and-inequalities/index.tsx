@@ -111,6 +111,7 @@ export default function EquationsAndInequalities() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-4.5, 4.5], y: [id === 'sign-chart' ? Y_MIN : -1.5, Y_MAX] }}
         ariaLabel="Graphs whose crossings solve equations and whose order solves inequalities"
         overlay={

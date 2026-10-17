@@ -11,6 +11,8 @@ import {
   integrate,
   mat2,
   niceStep,
+  stepDigits,
+  zoomedStep,
   riemannPieces,
   riemannSum,
   secantSlope,
@@ -51,6 +53,20 @@ describe('complex', () => {
     const p = cMul(a, b)
     expect(cAbs(p)).toBeCloseTo(cAbs(a) * cAbs(b))
     expect(cArg(p)).toBeCloseTo(cArg(a) + cArg(b))
+  })
+})
+
+describe('zoomedStep', () => {
+  it('keeps the step at zoom 1 and scales it by 1, 2 or 5 otherwise', () => {
+    expect(zoomedStep(1, 1)).toBe(1)
+    expect(zoomedStep(1, 0.25)).toBe(5)
+    expect(zoomedStep(1, 0.5)).toBe(2)
+    expect(zoomedStep(1, 2.5)).toBe(0.5)
+    expect(zoomedStep(1, 8)).toBe(0.2)
+    expect(zoomedStep(0.5, 4)).toBe(0.25)
+  })
+  it('counts the decimal places a step needs', () => {
+    expect([1, 5, 0.5, 0.2, 0.25, 0.05].map(stepDigits)).toEqual([0, 0, 1, 1, 2, 2])
   })
 })
 

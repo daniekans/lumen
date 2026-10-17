@@ -142,6 +142,7 @@ export default function DomainAndRange() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: X_VIEW, y: Y_VIEW }}
         ariaLabel="Graph of a function with its domain on the x-axis and its range on the y-axis"
         overlay={

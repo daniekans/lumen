@@ -81,6 +81,7 @@ export default function ReadingGraphs() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-5, 5], y: [-2.5, 4.5] }}
         ariaLabel="Graph of a cubic function on the interval from -4 to 4"
         overlay={

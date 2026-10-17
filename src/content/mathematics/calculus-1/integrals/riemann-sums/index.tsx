@@ -112,6 +112,7 @@ export default function RiemannSums() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-0.4, 6.4], y: [-0.7, 3.2] }}
         ariaLabel="Area under a curve approximated by strips"
         overlay={

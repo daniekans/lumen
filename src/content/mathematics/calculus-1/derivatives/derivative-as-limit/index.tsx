@@ -74,6 +74,7 @@ export default function DerivativeAsLimit() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-0.6, 6.6], y: [-1.1, 4.4] }}
         ariaLabel="Graph of f with a secant line through P and Q"
         overlay={

@@ -2,7 +2,7 @@ import { lazy, Suspense, useMemo, useState } from 'react'
 import { Breadcrumbs } from '@/ui/molecules'
 import { ControlDock, ErrorBoundary, LissajousMark, TopBar } from '@/ui/organisms'
 import { VizLayout } from '@/ui/templates'
-import { VizRuntimeContext, type VizRuntimeValue } from '@/viz-kit/runtime'
+import { createUrlParams, VizRuntimeContext, type VizRuntimeValue } from '@/viz-kit/runtime'
 import { usePageTitle } from '../usePageTitle'
 import styles from './ItemPage.module.css'
 import { msg } from '@/i18n'
@@ -15,7 +15,7 @@ export function MixedPracticePage() {
   const [dock, setDock] = useState<HTMLDivElement | null>(null)
   usePageTitle(msg.mixed.title)
   const runtime = useMemo<VizRuntimeValue>(
-    () => ({ steps: [], stepIndex: 0, goToStep: () => {}, dock }),
+    () => ({ steps: [], stepIndex: 0, goToStep: () => {}, dock, urlParams: createUrlParams() }),
     [dock],
   )
   return (

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { lerp, type Vec2 } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
 import { Divider, Tex } from '@/ui/atoms'
@@ -11,7 +10,10 @@ import {
   Point,
   Stage,
   useSequence,
+  numbersCodec,
   useStepEffect,
+  useVizParam,
+  type ParamCodec,
   Vector,
   VizControls,
 } from '@/viz-kit'
@@ -67,6 +69,12 @@ interface Params {
 }
 const identity: Params = { a: 1, b: 1, h: 0, k: 0 }
 
+const baseCodec: ParamCodec<BaseId> = {
+  encode: (id) => id,
+  decode: (t) => (t in bases ? (t as BaseId) : undefined),
+}
+const paramsCodec = numbersCodec(['a', 'b', 'h', 'k'] as const)
+
 const num = (v: number) => String(+v.toFixed(2))
 
 /** The transformed rule as TeX, written the way a person would: no "1x", no "+ -2". */
@@ -95,8 +103,8 @@ const ruleTex = (base: Base, p: Params) => {
 }
 
 export default function Transformations() {
-  const [baseId, setBaseId] = useState<BaseId>('square')
-  const [p, setP] = useState<Params>(identity)
+  const [baseId, setBaseId] = useVizParam<BaseId>('f', 'square', baseCodec)
+  const [p, setP] = useVizParam('p', identity, paramsCodec)
   const seq = useSequence()
   const base: Base = bases[baseId]
 
@@ -172,6 +180,7 @@ export default function Transformations() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-6, 6], y: [-4, 6] }}
         ariaLabel="Graph of a base function and its transformed copy, with tracked points"
         overlay={

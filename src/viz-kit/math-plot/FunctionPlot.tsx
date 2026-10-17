@@ -30,10 +30,12 @@ export function FunctionPlot({
       const x = a + ((b - a) * k) / samples
       pts.push([x, f(x)])
     }
-    const limit = (c.view.y[1] - c.view.y[0]) * 4
+    // Points far outside the view break the curve, so poles do not draw vertical spikes.
+    const [y0, y1] = c.view.y
+    const margin = (y1 - y0) * 4
     return (
       line<[number, number]>()
-        .defined(([, y]) => Number.isFinite(y) && Math.abs(y) < limit)
+        .defined(([, y]) => Number.isFinite(y) && y > y0 - margin && y < y1 + margin)
         .x(([x]) => c.x(x))
         .y(([, y]) => c.y(y))(pts) ?? ''
     )

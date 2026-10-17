@@ -116,6 +116,7 @@ export default function ComplexMultiplication() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-3.6, 3.6], y: [-1.4, 3.6] }}
         ariaLabel="Complex plane showing z, w and their product"
         overlay={

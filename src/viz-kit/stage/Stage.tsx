@@ -1,6 +1,21 @@
-import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { createCoords, defaultInsets, StageContext, type Domain, type Insets } from './coords'
+import clsx from 'clsx'
+import { Minus, Plus, Scan } from 'lucide-react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { msg } from '@/i18n'
+import surfaces from '@/styles/surfaces.module.css'
+import { IconButton } from '@/ui/atoms'
+import {
+  createCoords,
+  defaultInsets,
+  isIdentityView,
+  StageContext,
+  ZOOM_LIMITS,
+  type Domain,
+  type Insets,
+  type View,
+} from './coords'
 import styles from './Stage.module.css'
+import { useStageView } from './useStageView'
 
 interface StageProps {
   /** Region of the plane (or diagram space) that must always be visible. */
@@ -15,6 +30,11 @@ interface StageProps {
   children: ReactNode
   className?: string
   ariaLabel?: string
+  /**
+   * Lets the learner pan (drag the background) and zoom (wheel, pinch, buttons). For stages with
+   * axes; diagrams leave it off. Draggable points keep working, since they handle their own presses.
+   */
+  zoomable?: boolean
 }
 
 /**
@@ -30,6 +50,7 @@ export function Stage({
   children,
   className,
   ariaLabel,
+  zoomable = false,
 }: StageProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ width: 0, height: 0 })
@@ -49,17 +70,14 @@ export function Stage({
   const [dx0, dx1] = domain.x
   const [dy0, dy1] = domain.y
   const { top, right, bottom, left } = { ...defaultInsets, ...insets }
-  const coords = useMemo(
-    () =>
-      createCoords(
-        { x: [dx0, dx1], y: [dy0, dy1] },
-        size.width,
-        size.height,
-        { top, right, bottom, left },
-        yUp,
-      ),
-    [dx0, dx1, dy0, dy1, size.width, size.height, top, right, bottom, left, yUp],
+  const fitted = useMemo<Domain>(() => ({ x: [dx0, dx1], y: [dy0, dy1] }), [dx0, dx1, dy0, dy1])
+  const coordsFor = useCallback(
+    (v: View) =>
+      createCoords(fitted, size.width, size.height, { top, right, bottom, left }, yUp, v),
+    [fitted, size.width, size.height, top, right, bottom, left, yUp],
   )
+  const pan = useStageView({ enabled: zoomable, svg, domain: fitted, coordsFor })
+  const coords = useMemo(() => coordsFor(pan.view), [coordsFor, pan.view])
   const ctx = useMemo(() => ({ coords, svg, labelLayer }), [coords, svg, labelLayer])
   const ready = size.width > 0 && size.height > 0
 
@@ -68,16 +86,45 @@ export function Stage({
       <StageContext.Provider value={ctx}>
         <svg
           ref={setSvg}
-          className={styles.svg}
+          className={clsx(styles.svg, zoomable && styles.zoomable, pan.panning && styles.panning)}
           width={size.width}
           height={size.height}
           role="img"
           aria-label={ariaLabel}
+          {...pan.handlers}
         >
           {ready && children}
         </svg>
         <div ref={setLabelLayer} className={styles.labels} />
         {ready && overlay}
+        {ready && zoomable && (
+          <div className={clsx(surfaces.glass, styles.zoom)} data-print-hide>
+            <IconButton
+              label={msg.viz.zoomIn}
+              size="sm"
+              disabled={pan.view.zoom >= ZOOM_LIMITS.max}
+              onClick={pan.zoomIn}
+            >
+              <Plus size={14} />
+            </IconButton>
+            <IconButton
+              label={msg.viz.zoomOut}
+              size="sm"
+              disabled={pan.view.zoom <= ZOOM_LIMITS.min}
+              onClick={pan.zoomOut}
+            >
+              <Minus size={14} />
+            </IconButton>
+            <IconButton
+              label={msg.viz.resetView}
+              size="sm"
+              disabled={isIdentityView(pan.view)}
+              onClick={pan.reset}
+            >
+              <Scan size={14} />
+            </IconButton>
+          </div>
+        )}
       </StageContext.Provider>
     </div>
   )

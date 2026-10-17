@@ -1,4 +1,4 @@
-import { ticks } from '@/lib/math'
+import { ticks, zoomedStep } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
 import { useCoords } from '../stage'
 
@@ -11,8 +11,9 @@ interface GridProps {
 }
 
 /** Background coordinate grid covering the whole visible stage. */
-export function Grid({ step = 1, minor = 0, color = vc.grid, opacity = 1 }: GridProps) {
+export function Grid({ step: base = 1, minor = 0, color = vc.grid, opacity = 1 }: GridProps) {
   const c = useCoords()
+  const step = zoomedStep(base, c.zoom)
   const { x: vx, y: vy } = c.view
   const lines = (s: number, width: number, key: string, op: number) => (
     <g key={key} style={{ stroke: color, opacity: op }} strokeWidth={width}>

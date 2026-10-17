@@ -119,6 +119,7 @@ export default function Inverses() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-4, 6], y: [-3, 6] }}
         ariaLabel="Graph of a function, its reflection across the line y = x, and a point with its mirror image"
         overlay={

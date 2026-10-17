@@ -107,6 +107,7 @@ export default function RationalExpressions() {
   return (
     <>
       <Stage
+        zoomable
         domain={{ x: [-5, 5], y: [-5, 6] }}
         ariaLabel="Graph of a rational expression with its holes and vertical asymptotes"
         overlay={

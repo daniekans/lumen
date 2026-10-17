@@ -29,6 +29,19 @@ export const niceStep = (raw: number) => {
   return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p
 }
 
+/**
+ * A grid step for a zoomed view: `step` times a 1, 2 or 5 factor, so lines stay about as far
+ * apart on screen as at zoom 1.
+ */
+export const zoomedStep = (step: number, zoom: number) =>
+  zoom === 1 ? step : +(step * niceStep(1 / zoom)).toPrecision(12)
+
+/** Decimal places that show every multiple of `step` exactly (1 for 0.5, 2 for 0.25). */
+export const stepDigits = (step: number) => {
+  for (let d = 0; d < 10; d++) if (Math.abs(+step.toFixed(d) - step) < 1e-12) return d
+  return 10
+}
+
 /** Multiples of `step` inside [from, to]. */
 export const ticks = (from: number, to: number, step: number) => {
   const out: number[] = []

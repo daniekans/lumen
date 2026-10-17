@@ -122,6 +122,15 @@ export const en = {
     tryAgain: 'Try again.',
     showExplanation: 'Show explanation',
     hideExplanation: 'Hide explanation',
+    fullscreen: 'Fullscreen',
+    exitFullscreen: 'Exit fullscreen',
+    stepOf: (index: number, count: number) => `${n(index)} / ${n(count)}`,
+  },
+
+  viz: {
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    resetView: 'Reset view (or double-click the background)',
   },
 
   skills: {
