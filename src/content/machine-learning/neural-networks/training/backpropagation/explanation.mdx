@@ -1,4 +1,4 @@
-Training means choosing weights that make the network's outputs match known targets.
+Training means choosing <Term id="weights-and-biases">weights</Term> that make the network's outputs match known targets.
 Backpropagation is the algorithm that computes, for every weight at once, which direction reduces
 the error. Gradient descent then takes a step in that direction.
 
@@ -25,7 +25,7 @@ $$
 
 ## Going backward
 
-A neuron in an earlier layer affects the cost only through the neurons it feeds. The chain rule adds
+A neuron in an earlier layer affects the cost only through the neurons it feeds in the <Term id="forward-pass">forward pass</Term>. The chain rule adds
 up those paths, so each layer's $\delta$ comes from the next layer's:
 
 $$
@@ -43,7 +43,7 @@ $$
 \frac{\partial C}{\partial w_{ji}} = a_i \, \delta_j.
 $$
 
-A weight gets a large gradient when its input neuron is active and its output neuron has a large
+A weight gets a large gradient when its input neuron is <Term id="activation">active</Term> and its output neuron has a large
 error. Weights attached to inactive neurons barely change.
 
 ## The update

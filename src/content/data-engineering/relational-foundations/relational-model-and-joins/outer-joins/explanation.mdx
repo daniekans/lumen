@@ -1,4 +1,4 @@
-An inner join silently drops every row that has no partner. Often those rows are the point: customers
+An <Term id="inner-join">inner join</Term> silently drops every row that has no partner. Often those rows are the point: customers
 who never ordered, payments with no invoice. Outer joins keep them by padding the missing side with
 NULLs.
 
@@ -23,7 +23,7 @@ $5$, $6$ and $7$ rows.
 ## Padding with NULLs
 
 A padded row has the columns of both tables, like every row of a join, but the side without a
-partner is all NULL. In the grid this is a <C c="yellow">dashed cell</C> outside the product: to the
+partner is all <Term id="null">NULL</Term>. In the grid this is a <C c="yellow">dashed cell</C> outside the product: to the
 right of the grid for an unmatched customer, below it for an unmatched order. A left join never has
 fewer rows than its left table, because each left row contributes its matches or one padded row.
 

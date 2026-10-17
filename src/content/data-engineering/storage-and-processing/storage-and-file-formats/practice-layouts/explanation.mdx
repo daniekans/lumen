@@ -1,9 +1,9 @@
 Every problem here uses one model: a table of $N$ rows with column widths $w_j$, a row of
-$W = \sum_j w_j$ bytes, and pages of $P$ bytes.
+$W = \sum_j w_j$ bytes, and <Term id="page">pages</Term> of $P$ bytes.
 
 ## Bytes and pages a scan reads
 
-A row layout cannot skip columns. A column layout reads only the columns $S$ the query uses, and
+A <Term id="row-layout">row layout</Term> cannot skip columns. A <Term id="columnar-layout">column layout</Term> reads only the columns $S$ the query uses, and
 each column starts on its own pages:
 
 $$

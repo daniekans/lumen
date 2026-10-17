@@ -1,4 +1,4 @@
-A neural network is a function. This one takes three numbers $x_1, x_2, x_3$ and returns two numbers
+A neural network is a <Term id="function">function</Term>. This one takes three numbers $x_1, x_2, x_3$ and returns two numbers
 $\hat y_1, \hat y_2$. Everything in between is arithmetic that repeats the same pattern.
 
 ## Activations
@@ -21,7 +21,7 @@ negative sums give activations near 0.
 
 ## The whole layer at once
 
-Writing the weights of a layer as a matrix $W$ and the biases as a vector $\mathbf b$, all neurons of
+Writing the weights of a layer as a <Term id="matrix">matrix</Term> $W$ and the biases as a vector $\mathbf b$, all neurons of
 the layer are computed together:
 
 $$
@@ -35,4 +35,4 @@ this example has $3 \cdot 4 + 4 \cdot 4 + 4 \cdot 2 = 36$ weights and $4 + 4 + 2
 
 The weights here are fixed random numbers, so the outputs do not mean anything yet. Choosing weights
 that make the outputs useful is the job of training, covered in
-[Backpropagation](/neural-networks/backpropagation).
+[Backpropagation](/machine-learning/neural-networks/training/backpropagation).

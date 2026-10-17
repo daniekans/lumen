@@ -6,7 +6,7 @@ the wrong place. The count follows from one formula.
 
 Take an equijoin on a column $k$. Rows only pair up when their values are equal, so the result splits
 into one block per value. If value $k$ appears $a_k$ times in $A$ and $b_k$ times in $B$, its block
-is an $a_k \times b_k$ rectangle, a small copy of the product grid from the previous items:
+is an $a_k \times b_k$ rectangle, a small copy of the <Term id="cartesian-product">product grid</Term> from the previous items:
 
 $$
 |A \bowtie B| = \sum_k a_k \, b_k.
@@ -16,14 +16,14 @@ In the first dataset this is $2 \cdot 1 + 1 \cdot 2 + 3 \cdot 2 + 0 \cdot 1 + 1 
 
 ## One to many
 
-If $A.k$ is a key, each $a_k$ is $0$ or $1$ and the sum becomes the number of rows of $B$ whose value
+If $A.k$ is a <Term id="key">key</Term>, each $a_k$ is $0$ or $1$ and the sum becomes the number of rows of $B$ whose value
 appears in $A$:
 
 $$
 |A \bowtie B| \leq |B|.
 $$
 
-Equality holds when every value of $B.k$ is present in $A$, as with a foreign key that is enforced
+Equality holds when every value of $B.k$ is present in $A$, as with a <Term id="foreign-key">foreign key</Term> that is enforced
 and never NULL. Joining a fact table to a dimension on the dimension's key therefore never adds rows.
 If it does, the dimension key is not unique.
 
@@ -37,7 +37,7 @@ totals.
 
 ## Outer joins
 
-A left join keeps rows of $A$ without a partner, one padded row each. In the formula, a value with
+A <Term id="outer-join">left join</Term> keeps rows of $A$ without a partner, one padded row each. In the formula, a value with
 $b_k = 0$ counts as if $b_k$ were $1$:
 
 $$

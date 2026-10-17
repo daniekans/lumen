@@ -28,7 +28,7 @@ least about $30.5$ bits; <StepLink step="entropy">bit packing uses $32$</StepLin
 
 ## The extremes
 
-With $d$ equally likely values, $H = \log_2 d$, the largest possible. Bit packing with
+With $d$ equally likely values, $H = \log_2 d$, the largest possible. <Term id="bit-packing">Bit packing</Term> with
 $\lceil \log_2 d \rceil$ bits is then within one bit of the floor, and exactly on it when $d$ is a
 power of $2$ (<StepLink step="uniform">four cities</StepLink>). The more skewed the counts, the lower
 $H$, and a code that gives common values short words gets there. With probabilities
@@ -40,12 +40,12 @@ distribution and stays within one bit of $H$.
 
 $H$ depends only on the counts, so it treats values as independent draws. Real columns are not:
 sorted, the city column has the <StepLink step="order">same entropy</StepLink> but only $4$ runs,
-and run-length encoding beats $16 \cdot H$. Delta encoding profits from order in the same way.
+and <Term id="run-length-encoding">run-length encoding</Term> beats $16 \cdot H$. Delta encoding profits from order in the same way.
 
 High cardinality works against compression. A column of $n$ unique ids has entropy
 $H = \log_2 n$, about $20$ bits for a million rows (<StepLink step="cardinality">unique
 values</StepLink>), and its dictionary is as large as the column. Writers such as Parquet fall back
-to plain encoding when the dictionary grows too big.
+to plain encoding when the <Term id="dictionary-encoding">dictionary</Term> grows too big.
 
 ## Codecs
 

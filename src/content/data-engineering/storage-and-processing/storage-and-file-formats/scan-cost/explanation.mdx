@@ -6,12 +6,12 @@ has to read. This lesson builds that estimate from one picture.
 
 Give the table $N$ rows and columns of widths $w_1, \dots, w_C$ bytes. A row takes
 $W = \sum_j w_j$ bytes, and the table is an $N \times W$ rectangle of area $NW$ bytes. Storage is
-read in pages of $P$ bytes, so a layout is a way of cutting the rectangle into pieces of area $P$.
+read in <Term id="page">pages</Term> of $P$ bytes, so a layout is a way of cutting the rectangle into pieces of area $P$.
 
 ## Two ways to cut
 
-A row layout stores rows back to back, which cuts the rectangle into horizontal strips of $P/W$
-rows. A column layout stores each column on its own pages, which cuts every column into vertical
+A <Term id="row-layout">row layout</Term> stores rows back to back, which cuts the rectangle into horizontal strips of $P/W$
+rows. A <Term id="columnar-layout">column layout</Term> stores each column on its own pages, which cuts every column into vertical
 pieces of $P / w_j$ rows. The number of pages is about the same either way:
 
 $$
@@ -47,7 +47,7 @@ per column, or one per selected column for `SELECT a, b`.
 
 ## What the model leaves out
 
-Real engines also compress pages, skip pages using statistics, and cache what they read. Those
+Real engines also <Term id="codec">compress pages</Term>, skip pages using <Term id="predicate-pushdown">statistics</Term>, and cache what they read. Those
 change the constants, and the next items cover the first two. The shape of the comparison stays:
 columns win when queries read few columns of many rows, rows win when they read many columns of few
 rows.

@@ -1,4 +1,4 @@
-A column layout reads only the columns a query names, but an analytical query also filters rows.
+A <Term id="columnar-layout">column layout</Term> reads only the columns a query names, but an analytical query also filters rows.
 Parquet, the default file format of data lakes, combines the two: it keeps a table's columns apart
 and writes enough metadata to skip rows as well, all without an index.
 
@@ -13,8 +13,8 @@ $$
 G = \left\lceil \frac{N}{R} \right\rceil \text{ row groups and } G \cdot C \text{ column chunks.}
 $$
 
-The page is where the previous items apply: each page is encoded (dictionary, run-length, delta)
-and then compressed with a codec such as Snappy or Zstd.
+The page is where the previous items apply: each page is encoded (<Term id="dictionary-encoding">dictionary</Term>, <Term id="run-length-encoding">run-length</Term>, <Term id="delta-encoding">delta</Term>)
+and then compressed with a <Term id="codec">codec</Term> such as Snappy or Zstd.
 
 ## The footer
 

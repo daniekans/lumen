@@ -1,25 +1,25 @@
-Two skills: reading a table as a set of tuples, and recognizing the columns that identify rows or
+Two skills: reading a table as a set of <Term id="tuple">tuples</Term>, and recognizing the columns that identify rows or
 point at other tables.
 
 ## Products and relations
 
-A product of domains has one tuple per combination, so sizes multiply:
-$|A \times B| = |A| \cdot |B|$. A relation is any subset of the product, and a set of $n$ elements
+A <Term id="cartesian-product">product</Term> of <Term id="attribute-domain">domains</Term> has one tuple per combination, so sizes multiply:
+$|A \times B| = |A| \cdot |B|$. A <Term id="relation">relation</Term> is any subset of the product, and a set of $n$ elements
 has $2^n$ subsets.
 
-Read as a relation, a table holds each tuple once. Its cardinality counts distinct rows.
+Read as a relation, a table holds each tuple once. Its <Term id="cardinality">cardinality</Term> counts distinct rows.
 
 ## Keys and dependencies
 
-A set of columns is a key when no two rows agree on all of it (and, for SQL primary keys, none of it
+A set of columns is a <Term id="key">key</Term> when no two rows agree on all of it (and, for SQL <Term id="primary-key">primary keys</Term>, none of it
 is NULL). To rule a candidate out, find two rows that agree on it.
 
-$X \to Y$ holds when rows that agree on $X$ also agree on $Y$: the table defines a function from
+$X \to Y$ (a <Term id="functional-dependency">functional dependency</Term>) holds when rows that agree on $X$ also agree on $Y$: the table defines a function from
 values of $X$ to values of $Y$. A key determines every column.
 
 ## Foreign keys
 
-Every non-NULL foreign key value must match a key of the referenced table. NULL is allowed and
+Every non-NULL <Term id="foreign-key">foreign key</Term> value must match a key of the referenced table. NULL is allowed and
 matches nothing. `ON DELETE CASCADE` deletes the referencing rows; `ON DELETE SET NULL` keeps them
 and clears the reference.
 

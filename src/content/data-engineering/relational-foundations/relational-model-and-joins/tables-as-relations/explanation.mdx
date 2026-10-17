@@ -42,8 +42,8 @@ without `ORDER BY`, a query may return rows in any order.
 ## A relation that is a function
 
 When each name appears in exactly one tuple, the relation assigns one city to every name. That is the
-definition of a function $f : N \to C$, written as a set of pairs. The column `name` then determines
-`city`, and `name` identifies each row, which makes it a key of the relation.
+definition of a <Term id="function">function</Term> $f : N \to C$, written as a set of pairs. The column `name` then determines
+`city`, and `name` identifies each row, which makes it a <Term id="key">key</Term> of the relation.
 
 Adding (Ana, Recife) in <StepLink step="function">the last step</StepLink> gives Ana two cities. It is
 still a relation, but no longer a function of `name`, and `name` stops being a key. Keys, and columns

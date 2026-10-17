@@ -1,5 +1,5 @@
-The problems use the structure of a Parquet file: $N$ rows cut into row groups of $R$ rows, one
-column chunk per column in each row group, and a footer with the min and max of every chunk.
+The problems use the structure of a Parquet file: $N$ rows cut into <Term id="row-group">row groups</Term> of $R$ rows, one
+column chunk per column in each row group, and a <Term id="parquet-footer">footer</Term> with the min and max of every chunk.
 
 ## Counting
 
@@ -11,7 +11,7 @@ Counting rows from $0$, row $i$ is in row group $\lfloor i / R \rfloor$.
 
 ## Skipping
 
-A row group is skipped when its range $[\min, \max]$ cannot satisfy the filter:
+A row group is <Term id="predicate-pushdown">skipped</Term> when its range $[\min, \max]$ cannot satisfy the filter:
 
 $$
 \begin{aligned}

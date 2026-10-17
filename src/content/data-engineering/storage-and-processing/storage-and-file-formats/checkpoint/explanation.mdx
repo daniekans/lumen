@@ -4,9 +4,9 @@ order and check the sheet at the end. The checkpoint passes at $80\%$.
 ## What it covers
 
 - bytes and pages a scan reads in row and column layouts, and the offset of a value;
-- dictionary and delta encoded sizes, and the entropy of a column;
-- row groups skipped by footer statistics, and what a query reads with projection and pushdown;
-- the row groups a filter reads in a sorted file;
+- dictionary and <Term id="delta-encoding">delta</Term> encoded sizes, and the <Term id="entropy">entropy</Term> of a column;
+- row groups skipped by <Term id="parquet-footer">footer statistics</Term>, and what a query reads with projection and <Term id="predicate-pushdown">pushdown</Term>;
+- the <Term id="row-group">row groups</Term> a filter reads in a sorted file;
 - one short proof, graded by you against the solution.
 
 ## Useful facts

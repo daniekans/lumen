@@ -1,5 +1,5 @@
 A join combines rows from two tables into wider rows. Every kind of join starts from the same object,
-the Cartesian product of the two tables, and differs only in which pairs it keeps and what it adds.
+the <Term id="cartesian-product">Cartesian product</Term> of the two tables, and differs only in which pairs it keeps and what it adds.
 
 ## The cross join is the product
 
@@ -20,7 +20,7 @@ $$
 A \bowtie_\theta B = \{(a, b) \in A \times B : \theta(a, b)\}.
 $$
 
-The usual condition compares a foreign key with the key it references, `c.id = o.customer_id`.
+The usual condition compares a <Term id="foreign-key">foreign key</Term> with the key it references, `c.id = o.customer_id`.
 The <StepLink step="condition">sweep</StepLink> tests each cell, and the <C c="blue">lit cells</C>
 are exactly the rows of the result. A database rarely builds the whole product (hash and merge
 joins avoid it), but the result is always the same set of pairs.

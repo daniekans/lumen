@@ -8,12 +8,12 @@ $$
 |A \bowtie B| = \sum_k a_k \, b_k.
 $$
 
-NULL matches nothing, not even NULL. A cross join pairs everything: $|A| \cdot |B|$ rows.
+NULL matches nothing, not even NULL. A <Term id="cross-join">cross join</Term> pairs everything: $|A| \cdot |B|$ rows.
 
 ## Outer joins
 
 Add one padded row for each row without a partner: left rows for a left join, right rows for a right
-join, both for a full join. An anti join (`LEFT JOIN ... WHERE right.key IS NULL`) keeps only the
+join, both for a <Term id="outer-join">full join</Term>. An <Term id="anti-join">anti join</Term> (`LEFT JOIN ... WHERE right.key IS NULL`) keeps only the
 padded left rows.
 
 ## Filters
