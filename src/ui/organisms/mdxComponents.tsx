@@ -1,6 +1,6 @@
 import type { MDXComponents } from 'mdx/types'
 import { Link } from 'react-router'
-import { C, StepLink } from './MdxWidgets'
+import { C, StepLink, Term } from './MdxWidgets'
 
 /** Components available in every explanation.mdx, plus overrides for standard elements. */
 export const mdxComponents: MDXComponents = {
@@ -14,4 +14,5 @@ export const mdxComponents: MDXComponents = {
     ),
   StepLink,
   C,
+  Term,
 }

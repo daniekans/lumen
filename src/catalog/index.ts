@@ -1,4 +1,5 @@
 export * from './queries'
 export { catalog } from './registry'
+export { GLOSSARY_PATH } from './build'
 export * from './types'
 export * from './CurrentItem'

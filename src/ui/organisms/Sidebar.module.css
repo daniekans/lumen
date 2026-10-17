@@ -279,6 +279,7 @@
   background: transparent;
   color: var(--fg-subtle);
   font-size: var(--text-xs);
+  white-space: nowrap;
   cursor: pointer;
   transition: color var(--dur-fast) var(--ease-out);
 }

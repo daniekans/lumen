@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router'
+import { GlossaryPage } from './pages/GlossaryPage'
 import { HomePage } from './pages/HomePage'
 import { MixedPracticePage } from './pages/MixedPracticePage'
 import { NodePage } from './pages/NodePage'
@@ -14,6 +15,7 @@ export const router = createBrowserRouter(
       children: [
         { index: true, element: <HomePage /> },
         { path: 'practice', element: <MixedPracticePage /> },
+        { path: 'glossary', element: <GlossaryPage /> },
         // Any depth of the content tree, plus redirects for moved paths and the not-found page.
         { path: '*', element: <NodePage /> },
       ],

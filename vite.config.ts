@@ -6,6 +6,7 @@ import rehypeKatex from 'rehype-katex'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { defineConfig } from 'vite'
+import { termUses } from './src/catalog/termUsesPlugin.ts'
 
 // GitHub Pages serves the site from /lumen/. Locally it is served from the root.
 const base = process.env.LUMEN_BASE ?? '/'
@@ -22,6 +23,7 @@ export default defineConfig({
       }),
     },
     react({ include: /\.(jsx|tsx|mdx)$/ }),
+    termUses(fileURLToPath(new URL('./src/content', import.meta.url))),
   ],
   optimizeDeps: {
     // Libraries reached only through dynamic imports. Bundling them at startup avoids a dev-server

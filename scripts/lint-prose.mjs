@@ -44,7 +44,7 @@ for (const file of ROOTS.flatMap(walk)) {
       }
       // Prettier treats an MDX line that starts with an inline component as a block and splits
       // the paragraph around it. Keep at least one word before the tag on its line.
-      if (extname(file) === '.mdx' && /^<(?:C|StepLink)[\s>]/.test(line))
+      if (extname(file) === '.mdx' && /^<(?:C|StepLink|Term)[\s>]/.test(line))
         problems.push(
           `${file}:${i + 1}  inline component at the start of a line (Prettier splits the paragraph)`,
         )

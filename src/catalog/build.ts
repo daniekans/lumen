@@ -9,6 +9,7 @@ import type {
   LazyComponent,
   Loader,
   ProblemsLoader,
+  Term,
   Unit,
   UnitMeta,
 } from './types'
@@ -27,6 +28,8 @@ export interface CatalogSources {
   lazy: (load: Loader) => LazyComponent
   /** The shared practice runner, which practice and checkpoint items render instead of index.tsx. */
   practiceLoader?: Loader
+  /** Term ids each explanation links with <Term id="...">, keyed by item folder (`a/b/c/d`). */
+  termUses?: Record<string, readonly string[]>
   /** Include items marked as draft. */
   includeDrafts: boolean
   onProblem?: (message: string) => void
@@ -37,7 +40,12 @@ export interface Catalog {
   byId: ReadonlyMap<string, CatalogNode>
   /** Every published item in reading order: areas, courses, units, then item order. */
   items: readonly Item[]
+  /** Every glossary term, sorted by title. */
+  terms: readonly Term[]
+  termsById: ReadonlyMap<string, Term>
 }
+
+export const GLOSSARY_PATH = '/glossary'
 
 const CONTENT_ROOT = /^.*?content\//
 
@@ -68,6 +76,8 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
   )
 
   const unitItems = new Map<string, Item[]>()
+  /** Item folders skipped as drafts, so terms they introduce are dropped quietly. */
+  const draftDirs = new Set<string>()
   for (const [path, meta] of Object.entries(src.items)) {
     const { dir } = split(path)
     const parts = dir.split('/')
@@ -75,7 +85,10 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       problem(`Item ${dir} is not at area/course/unit/item depth`)
       continue
     }
-    if (meta.status === 'draft' && !src.includeDrafts) continue
+    if (meta.status === 'draft' && !src.includeDrafts) {
+      draftDirs.add(dir)
+      continue
+    }
     const kind = meta.kind ?? 'explore'
     const practices = kind === 'practice' || kind === 'checkpoint'
     const loadProblems = problemSets.get(dir)
@@ -108,6 +121,8 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
     unitItems.set(unitId, [...(unitItems.get(unitId) ?? []), item])
   }
 
+  const termsById = new Map<string, Term & { usedIn: string[] }>()
+  const droppedTerms = new Set<string>()
   const courseUnits = new Map<string, Unit[]>()
   for (const [path, meta] of Object.entries(src.units)) {
     const { dir } = split(path)
@@ -122,6 +137,30 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
     for (const it of items)
       for (const s of it.skills ?? [])
         if (!skillIds.has(s)) problem(`Item ${it.id} references unknown skill "${s}"`)
+    const terms: Term[] = []
+    for (const t of meta.terms ?? []) {
+      const introducedIn = `${dir}/${t.introducedIn}`
+      if (termsById.has(t.id) || droppedTerms.has(t.id)) {
+        problem(`Term "${t.id}" in ${dir} is already declared`)
+        continue
+      }
+      if (!items.some((it) => it.id === introducedIn)) {
+        if (!draftDirs.has(introducedIn))
+          problem(`Term "${t.id}" in ${dir} is introduced in unknown item "${t.introducedIn}"`)
+        droppedTerms.add(t.id)
+        continue
+      }
+      const term = {
+        ...t,
+        type: 'term' as const,
+        path: `${GLOSSARY_PATH}#${t.id}`,
+        unitId: dir,
+        introducedIn,
+        usedIn: [],
+      }
+      termsById.set(t.id, term)
+      terms.push(term)
+    }
     const unit: Unit = {
       ...meta,
       ...node(dir),
@@ -129,6 +168,7 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       areaId: parts[0]!,
       courseId: `${parts[0]}/${parts[1]}`,
       skills: (meta.skills ?? []).map((s) => ({ ...s, key: `${dir}#${s.id}`, unitId: dir })),
+      terms,
       items,
     }
     const courseId = unit.courseId
@@ -173,5 +213,17 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       }
     }
   }
-  return { areas, byId, items }
+
+  // Uses are recorded in reading order, after every unit has declared its terms.
+  for (const item of items)
+    for (const id of new Set(src.termUses?.[item.id] ?? [])) {
+      const term = termsById.get(id)
+      if (!term) {
+        if (!droppedTerms.has(id)) problem(`Item ${item.id} links unknown term "${id}"`)
+        continue
+      }
+      if (term.introducedIn !== item.id) term.usedIn.push(item.id)
+    }
+  const terms = [...termsById.values()].sort((a, b) => a.title.localeCompare(b.title))
+  return { areas, byId, items, terms, termsById }
 }

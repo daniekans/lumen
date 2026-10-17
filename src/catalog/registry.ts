@@ -1,4 +1,5 @@
 import { lazy } from 'react'
+import termUses from 'virtual:lumen/term-uses'
 import { areas } from '@/content/areas'
 import { buildCatalog } from './build'
 import type { CourseMeta, ItemMeta, Loader, ProblemsModule, UnitMeta } from './types'
@@ -32,6 +33,9 @@ const explanations = import.meta.glob<{ default: never }>(
 
 const problems = import.meta.glob<ProblemsModule>('../content/*/*/*/*/problems.ts')
 
+/** Problems found while building the catalog. A test keeps this empty. */
+export const catalogProblems: string[] = []
+
 export const catalog = buildCatalog({
   areas,
   courses,
@@ -40,8 +44,12 @@ export const catalog = buildCatalog({
   components,
   explanations,
   problems,
+  termUses,
   practiceLoader: () => import('@/practice/PracticeItem'),
   lazy,
   includeDrafts: import.meta.env.DEV,
-  onProblem: (message) => console.error(`[catalog] ${message}`),
+  onProblem: (message) => {
+    catalogProblems.push(message)
+    console.error(`[catalog] ${message}`)
+  },
 })

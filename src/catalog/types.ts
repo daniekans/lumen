@@ -30,11 +30,28 @@ export interface SkillMeta {
   title: string
 }
 
+/**
+ * A glossary or notation entry, declared by the unit whose item introduces it. Explanations link a
+ * word to it with <Term id="...">; those links are how the index knows where a term is used.
+ */
+export interface TermMeta {
+  /** Global id, unique across the whole catalog (it is the anchor on the glossary page). */
+  id: string
+  title: string
+  /** The symbol, when the entry is notation, e.g. `f^{-1}`. */
+  tex?: string
+  /** One or two sentences. Inline TeX is allowed between $...$. */
+  summary: string
+  /** Slug of the item in this unit that introduces the term. */
+  introducedIn: string
+}
+
 export interface UnitMeta {
   title: string
   description: string
   order: number
   skills?: readonly SkillMeta[]
+  terms?: readonly TermMeta[]
   /** Unit ids (`area/course/unit`) worth taking first. Suggestions only. */
   prerequisites?: readonly string[]
 }
@@ -103,6 +120,17 @@ export interface Skill extends SkillMeta {
   unitId: string
 }
 
+export interface Term extends Omit<TermMeta, 'introducedIn'> {
+  type: 'term'
+  /** Route path of the entry on the glossary page. */
+  path: string
+  unitId: string
+  /** Id of the item that introduces the term. */
+  introducedIn: string
+  /** Ids of the other items whose explanation links the term, in reading order. */
+  usedIn: readonly string[]
+}
+
 export type LazyComponent = LazyExoticComponent<ComponentType>
 export type Loader = () => Promise<{ default: ComponentType }>
 export type ProblemsModule = { problems: readonly ProblemGenerator[] }
@@ -124,11 +152,12 @@ export interface Item extends Omit<ItemMeta, 'kind'>, NodeBase {
   loadProblems?: ProblemsLoader
 }
 
-export interface Unit extends Omit<UnitMeta, 'skills'>, NodeBase {
+export interface Unit extends Omit<UnitMeta, 'skills' | 'terms'>, NodeBase {
   type: 'unit'
   areaId: string
   courseId: string
   skills: readonly Skill[]
+  terms: readonly Term[]
   items: readonly Item[]
 }
 

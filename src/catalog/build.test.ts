@@ -99,4 +99,77 @@ describe('buildCatalog', () => {
     expect(buildCatalog(sources(drafts)).items).toHaveLength(1)
     expect(buildCatalog(sources({ ...drafts, includeDrafts: true })).items).toHaveLength(2)
   })
+
+  describe('terms', () => {
+    const limits = sources().units['../content/math/calc/limits/unit.ts']!
+    const withTerms = (overrides: Partial<CatalogSources> = {}) =>
+      sources({
+        units: {
+          ...sources().units,
+          '../content/math/calc/limits/unit.ts': {
+            ...limits,
+            terms: [
+              { id: 'limit', title: 'Limit', tex: '\\lim', summary: '', introducedIn: 'a' },
+              { id: 'epsilon', title: 'Epsilon', summary: '', introducedIn: 'b' },
+            ],
+          },
+        },
+        ...overrides,
+      })
+
+    it('resolves terms and records uses in reading order', () => {
+      const c = buildCatalog(
+        withTerms({ termUses: { 'math/calc/limits/b': ['limit'], 'math/calc/limits/a': ['limit'] } }),
+      )
+      expect(c.terms.map((t) => t.id)).toEqual(['epsilon', 'limit'])
+      expect(c.termsById.get('limit')).toMatchObject({
+        path: '/glossary#limit',
+        unitId: 'math/calc/limits',
+        introducedIn: 'math/calc/limits/a',
+        usedIn: ['math/calc/limits/b'],
+      })
+      expect(c.areas[0]!.courses[0]!.units[0]!.terms).toHaveLength(2)
+    })
+
+    it('reports duplicates, unknown items and unknown links', () => {
+      const problems: string[] = []
+      buildCatalog(
+        withTerms({
+          units: {
+            ...withTerms().units,
+            '../content/math/calc/derivatives/unit.ts': {
+              title: 'Derivatives',
+              description: '',
+              order: 3,
+              terms: [
+                { id: 'limit', title: 'Limit again', summary: '', introducedIn: 'a' },
+                { id: 'slope', title: 'Slope', summary: '', introducedIn: 'missing' },
+              ],
+            },
+          },
+          termUses: { 'math/calc/limits/a': ['nope'] },
+          onProblem: (m) => problems.push(m),
+        }),
+      )
+      expect(problems.join('\n')).toMatch(/"limit" in math\/calc\/derivatives is already declared/)
+      expect(problems.join('\n')).toMatch(/unknown item "missing"/)
+      expect(problems.join('\n')).toMatch(/links unknown term "nope"/)
+    })
+
+    it('drops terms introduced by hidden drafts without a problem', () => {
+      const problems: string[] = []
+      const c = buildCatalog(
+        withTerms({
+          items: {
+            ...sources().items,
+            '../content/math/calc/limits/b/meta.ts': item('B', 2, { status: 'draft' }),
+          },
+          termUses: { 'math/calc/limits/a': ['epsilon'] },
+          onProblem: (m) => problems.push(m),
+        }),
+      )
+      expect(c.terms.map((t) => t.id)).toEqual(['limit'])
+      expect(problems).toEqual([])
+    })
+  })
 })

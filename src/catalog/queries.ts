@@ -1,6 +1,6 @@
 import { catalog } from './registry'
 import { redirects } from './redirects'
-import type { Area, CatalogNode, Course, Item, Unit } from './types'
+import type { Area, CatalogNode, Course, Item, Term, Unit } from './types'
 
 export const getNode = (id: string): CatalogNode | undefined => catalog.byId.get(id)
 
@@ -12,6 +12,7 @@ export const getArea = (id: string) => getAs<Area>(id, 'area')
 export const getCourse = (id: string) => getAs<Course>(id, 'course')
 export const getUnit = (id: string) => getAs<Unit>(id, 'unit')
 export const getItem = (id: string) => getAs<Item>(id, 'item')
+export const getTerm = (id: string): Term | undefined => catalog.termsById.get(id)
 
 /** The node a route path points to, or a redirect target for paths that moved. */
 export const resolvePath = (
@@ -51,7 +52,7 @@ export const neighbours = (item: Item) => {
 }
 
 export interface SearchResult {
-  node: Item | Unit | Course
+  node: Item | Unit | Course | Term
   /** Human-readable location, e.g. "Mathematics / Calculus 1". */
   context: string
 }
@@ -70,11 +71,18 @@ export const search = (query: string): SearchResult[] => {
           results.push({ node: item, context: `${course.title} / ${unit.title}` })
       }
     }
+  for (const term of catalog.terms) {
+    const unit = getUnit(term.unitId)
+    if (unit) results.push({ node: term, context: unit.title })
+  }
   if (terms.length === 0) return results.filter((r) => r.node.type === 'item')
-  return results.filter(({ node, context }) => {
-    const tags = node.type === 'item' ? node.tags : []
-    const text = node.type === 'item' ? node.summary : node.description
-    const hay = [node.title, text, context, ...tags].join(' ').toLowerCase()
-    return terms.every((t) => hay.includes(t))
-  })
+  const titled = (r: SearchResult) => terms.every((t) => r.node.title.toLowerCase().includes(t))
+  return results
+    .filter(({ node, context }) => {
+      const tags = node.type === 'item' ? node.tags : []
+      const text = node.type === 'item' || node.type === 'term' ? node.summary : node.description
+      const hay = [node.title, text, context, ...tags].join(' ').toLowerCase()
+      return terms.every((t) => hay.includes(t))
+    })
+    .sort((a, b) => Number(titled(b)) - Number(titled(a)))
 }

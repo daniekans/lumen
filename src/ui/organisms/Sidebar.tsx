@@ -1,9 +1,17 @@
 import clsx from 'clsx'
 import { AnimatePresence, motion } from 'motion/react'
-import { Check, ChevronRight, PanelLeftClose, Search, Settings } from 'lucide-react'
+import { BookA, Check, ChevronRight, PanelLeftClose, Search, Settings } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
-import { catalog, getArea, hasItems, visibleCourses, type Item, type Unit } from '@/catalog'
+import {
+  catalog,
+  getArea,
+  GLOSSARY_PATH,
+  hasItems,
+  visibleCourses,
+  type Item,
+  type Unit,
+} from '@/catalog'
 import { itemProgress, unitSummary, useProgress } from '@/progress'
 import { useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
@@ -140,6 +148,10 @@ export function Sidebar() {
             <Settings size={14} />
             {msg.settings.title}
           </button>
+          <Link to={GLOSSARY_PATH} className={styles.footerButton}>
+            <BookA size={14} />
+            {msg.glossary.link}
+          </Link>
         </div>
       </div>
     </motion.aside>

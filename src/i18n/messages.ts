@@ -24,7 +24,7 @@ export const en = {
       ItemLevel,
       string
     >,
-    nodeType: { area: 'area', course: 'course', unit: 'unit', item: 'item' },
+    nodeType: { area: 'area', course: 'course', unit: 'unit', item: 'item', term: 'term' },
   },
 
   progress: {
@@ -93,7 +93,7 @@ export const en = {
 
   palette: {
     title: 'Search visualizations',
-    placeholder: 'Search courses, units and topics',
+    placeholder: 'Search courses, units, topics and terms',
     noMatches: (query: string) => `No matches for “${query}”.`,
   },
 
@@ -225,6 +225,18 @@ export const en = {
     unansweredCount: 'Unanswered problems count as incorrect.',
     checkAnswers: 'Check answers',
     checkAgain: 'Check again',
+  },
+
+  glossary: {
+    title: 'Notation and glossary',
+    link: 'Glossary',
+    description:
+      'Every symbol and term the lessons define, with the item that introduces it and the items that use it.',
+    filter: 'Filter terms',
+    count: (count: number) => `${n(count)} ${plural(count, { one: 'term', other: 'terms' })}`,
+    noMatches: (query: string) => `No terms match “${query}”.`,
+    introducedIn: 'Introduced in',
+    usedIn: 'Used in',
   },
 
   mixed: {
