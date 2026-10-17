@@ -7,23 +7,26 @@ awaiting feedback), `done`.
 
 ## Phases
 
-| Phase | What                                                                                     | Status  |
-| ----- | ---------------------------------------------------------------------------------------- | ------- |
-| 1     | Platform, design system, visualization kit, first seven visualizations, GitHub Pages     | done    |
-| 2A    | Content tree, progress store, lessons                                                    | done    |
-| 2B    | Practice engine: math input, answer checking, generators, sessions, checkpoints          | done    |
-| 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills       | done    |
-| 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit | done    |
-| 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree  | planned |
-| 4     | Pan and zoom on stages with axes, and a fullscreen mode                                  | planned |
-| 5     | 3D stages for multivariable calculus and linear algebra                                  | planned |
-| 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)       | idea    |
-| later | Presentation mode, internationalization (pt-BR), mobile layout                           | planned |
+| Phase | What                                                                                      | Status  |
+| ----- | ----------------------------------------------------------------------------------------- | ------- |
+| 1     | Platform, design system, visualization kit, first seven visualizations, GitHub Pages      | done    |
+| 2A    | Content tree, progress store, lessons                                                     | done    |
+| 2B    | Practice engine: math input, answer checking, generators, sessions, checkpoints           | done    |
+| 2C    | Home dashboard (continue, course progress) and mixed practice across chosen skills        | done    |
+| 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit  | done    |
+| 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree   | planned |
+| 4     | Pan and zoom on stages with axes, and a fullscreen mode                                   | planned |
+| 5     | 3D stages for multivariable calculus and linear algebra                                   | planned |
+| 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
+| 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | planned |
+| 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | planned |
+| later | Presentation mode, internationalization (pt-BR), mobile layout                            | planned |
 
 Phase numbers are labels, not an order. A phase starts when the content needs it: 3D (phase 5)
 when a linear algebra or calculus visualization calls for it, code lessons (phase 6) when items
 that apply them come up, and pan, zoom and fullscreen (phase 4) whenever it is worth doing before
-more content. Pick the next phase or content unit by what helps the curriculum next.
+more content. Phases 7 and 8 get more expensive as content grows, so they are worth doing early.
+Pick the next phase or content unit by what helps the curriculum next.
 
 Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.md). 2D closed on
 2026-10-17 with four reviewed units (Functions, Relational model and joins, Algebra essentials,
@@ -49,6 +52,12 @@ empty space, with a reset button and limits. Grid and axes already cover the vis
 extend naturally. Things to handle: drag conflicts with draggable points (drag only on background),
 label density when zoomed out (axis ticks already adapt via `niceStep`), and opting out for diagrams
 where zoom makes no sense (a `zoomable` prop, off by default).
+
+Step and parameters in the URL: `?step=<id>` for every item (the runtime owns the step, so this is
+one change in `ItemPage`), so a note or a recording script can link an exact view. Parameters
+(slider and toggle values) need each visualization to declare them, through a kit hook such as
+`useVizParam(name, default)` that reads and writes the query string. Adopt it in new
+visualizations and in old ones when they are touched, not as a sweep of every item.
 
 Fullscreen mode: one toggle (button and a key) that hides the sidebar, top bar and explanation
 pane and puts the stage in the browser's fullscreen, keeping the dock and step navigation (arrow
@@ -99,6 +108,31 @@ Pages with no server:
 A likely path: code view first, applied to a few items in Linear Algebra and Machine Learning;
 runnable cells and the `code` kind once those show what is worth running. Code should model good
 practice (typing, small functions, clear names), since Daniel cares about it.
+
+### Phase 7: Notation and glossary index
+
+A page listing every symbol and term (for example $f^{-1}$, domain, cardinality, row group), each
+linked to the item that introduces it and to the items that use it, also reachable from the command
+palette. Cheap because the data is small and declared next to the content:
+
+- Each unit declares its terms in `unit.ts`: `{ id, title, tex?, summary, introducedIn }`, where
+  `introducedIn` is an item slug. The catalog builder resolves them and fails the build on unknown
+  slugs, like skills.
+- Optional: a `<Term id="...">` MDX widget that links a word in an explanation to the index entry.
+- The cost is the retrofit of existing units (about 13): one pass per unit, reading its items'
+  summaries and explanations. New units declare terms as part of `ADDING_CONTENT.md`.
+
+Decide at the start: whether "used in" is declared or inferred from `<Term>` uses (inferred is less
+upkeep).
+
+### Phase 8: Internationalization groundwork
+
+Move UI copy (about 100 to 150 strings in `src/ui`, `src/practice`, `src/app`) into one typed
+messages module, with plural and number helpers, and a lint rule or check against new hard-coded
+copy. No translations and no locale switch yet. To keep it cheap in tokens: list the strings with a
+script first, then move them file by file, one commit per layer. Content (MDX, step captions,
+problem prompts in generators) stays out of scope; its plan is in [PRODUCT_VISION.md](PRODUCT_VISION.md).
+Doing it before phases 4 and 7 means their new UI is written against the messages module.
 
 ### Later
 
@@ -221,7 +255,6 @@ on their course pages as planned.
 
 ## Platform notes
 
-- Main JS chunk is about 890 kB (276 kB gzipped). Splitting vendor code (KaTeX, motion, Radix) is a
-  possible improvement.
-- Other ideas: shareable state in the URL (step, parameters), thumbnails for cards, visual regression
-  snapshots per step, optional sonification.
+- Main JS chunk is about 890 kB (276 kB gzipped). Splitting vendor code is listed in
+  [PRODUCT_VISION.md](PRODUCT_VISION.md) as work before a product.
+- Other ideas: thumbnails for cards, visual regression snapshots per step, optional sonification.

@@ -65,6 +65,8 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - `LEARNING_PLATFORM.md` (Curriculum, Suggested order of units) rotates across tracks so advanced
   material arrives early. Daniel may pick any unit out of order.
 - Content must be mathematically correct: answers are computed and tested, never written from memory.
+- Cross-area topics (sampling, consistent hashing, probabilistic data structures) stay in the area
+  they fit best and arrive after their fundamentals. Not openers, not early side units.
 - Phase 2D (pilot content) closed on 2026-10-17 after Daniel reviewed its four units. New units
   continue as ongoing work in the suggested order, alongside the numbered phases.
 
@@ -90,6 +92,9 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Phase 2C was kept small (2026-10-17): a "Mixed practice" button on the home page and a `/practice`
   page that mixes the practice of chosen units. Mixed answers do not move item progress. No
   prerequisite map. Daniel does not expect much value from it for now.
+- Phase 4 also puts the step (and, opt-in, parameters) in the URL. Phase 7 (notation and glossary
+  index) and phase 8 (UI strings in one module, no translation yet) were added on 2026-10-17.
+  Bundle splitting waits until before a product (`PRODUCT_VISION.md`).
 - Phase 4 includes a fullscreen mode (stage only, dock and step keys kept). It is not the
   presentation mode yet.
 

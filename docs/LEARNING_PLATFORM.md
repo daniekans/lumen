@@ -203,16 +203,20 @@ prerequisites shown on unit pages, never gates.
 
 **Data Engineering and Architecture** (core)
 
-| #   | Unit                                                                          | Suggested math              |
-| --- | ----------------------------------------------------------------------------- | --------------------------- |
-| 1   | Relational model and SQL joins (done)                                         | Functions                   |
-| 2   | Storage and file formats (done)                                               | Exponentials and logs       |
-| 3   | Partitioning, bucketing and hashing                                           | Sums, distributions of keys |
-| 4   | Distributed processing (shuffles, stages, skew, cost models)                  | Limits, asymptotic growth   |
-| 5   | Data modeling (normalization, dimensional models, slowly changing dimensions) | Relations and keys          |
-| 6   | Streaming (event time, windows, watermarks, exactly-once)                     | Change over time            |
-| 7   | Probabilistic data structures (Bloom filters, HyperLogLog, sampling)          | Probability, expectation    |
-| 8   | Architecture (lakehouse, medallion layers, lambda and kappa, data mesh, CAP)  | Trade-off reasoning         |
+| #   | Unit                                                                           | Suggested math              |
+| --- | ------------------------------------------------------------------------------ | --------------------------- |
+| 1   | Relational model and SQL joins (done)                                          | Functions                   |
+| 2   | Storage and file formats (done)                                                | Exponentials and logs       |
+| 3   | Partitioning, bucketing and hashing (consistent hashing included)              | Sums, distributions of keys |
+| 4   | Distributed processing (shuffles, stages, skew, cost models)                   | Limits, asymptotic growth   |
+| 5   | Data modeling (normalization, dimensional models, slowly changing dimensions)  | Relations and keys          |
+| 6   | Streaming (event time, windows, watermarks, exactly-once)                      | Change over time            |
+| 7   | Probabilistic data structures (Bloom filters, HyperLogLog, reservoir sampling) | Probability, expectation    |
+| 8   | Architecture (lakehouse, medallion layers, lambda and kappa, data mesh, CAP)   | Trade-off reasoning         |
+
+Topics that mix areas live in the area they lean on most (sampling theory in Probability,
+consistent hashing in Data Engineering) and come after the fundamentals they need. They are not
+openers and not side units added early; they arrive when the curriculum reaches them.
 
 **Machine Learning and AI Engineering** (core) start once Linear Algebra and Probability have their
 first units: linear regression as a projection, gradient descent, classification, neural networks,

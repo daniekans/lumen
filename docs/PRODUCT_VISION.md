@@ -45,6 +45,13 @@ Rules that keep these seams cheap:
   ids stay in English and never show in the UI, and user-facing text comes from content files or
   component copy only.
 
+## Before a product
+
+Work that does not matter for one learner but would for many:
+
+- Bundle size: the main JS chunk is about 890 kB (276 kB gzipped). Split vendor code (KaTeX,
+  motion, Radix) into its own chunks, check what loads on the home page, and set a size budget in CI.
+
 ## If it becomes a product
 
 Options to evaluate at that time, not decisions:
