@@ -45,13 +45,13 @@ describe('checkAnswer', () => {
   it('flags variables that do not belong in the answer', () => {
     const r = checkAnswer({ kind: 'expression', tex: '2x' }, tex('2y'))
     expect(r.verdict).toBe('incorrect')
-    expect(r.message).toMatch(/only x/)
+    expect(r.issue).toEqual({ kind: 'unknown-variable', allowed: ['x'] })
   })
 
   it('checks unordered lists', () => {
     const a = { kind: 'list', values: [2, -3] } as const
     expect(checkAnswer(a, tex('-3, 2')).verdict).toBe('correct')
-    expect(checkAnswer(a, tex('2')).message).toMatch(/more to find/)
+    expect(checkAnswer(a, tex('2')).issue).toEqual({ kind: 'more-to-find', remaining: 1 })
     expect(checkAnswer(a, tex('2, 3')).verdict).toBe('incorrect')
   })
 

@@ -14,6 +14,7 @@ import { CHECKPOINT_PASS, useProgress, type CheckpointSheetState } from '@/progr
 import { Button, RichText, Tex } from '@/ui/atoms'
 import { AnswerField } from './AnswerField'
 import styles from './Practice.module.css'
+import { msg } from '@/i18n'
 
 interface Entry {
   id: string
@@ -83,7 +84,7 @@ export function CheckpointSheet({
       const r = sheet.responses[e.id]
       results[e.id] = r
         ? checkAnswer(e.problem.answer, r)
-        : { verdict: 'incorrect', message: 'No answer.' }
+        : { verdict: 'incorrect', issue: { kind: 'no-answer' } }
     }
 
   const tally = (s: CheckpointSheetState) => {
@@ -124,34 +125,28 @@ export function CheckpointSheet({
           <div>
             <h2 className={styles.sheetTitle}>{item.title}</h2>
             <p className={styles.sheetIntro}>
-              {entries.length} problems. Work them out on paper, enter your answers, then check them
-              all.
-              {` ${Math.round(CHECKPOINT_PASS * 100)}% passes.`}
+              {msg.checkpoint.intro(entries.length, CHECKPOINT_PASS)}
             </p>
           </div>
           <span className={`${styles.actionGroup} ${styles.noPrint}`}>
             <Button variant="ghost" icon={<Printer size={14} />} onClick={() => window.print()}>
-              Print
+              {msg.checkpoint.print}
             </Button>
             <Button
               variant="ghost"
               icon={<RotateCcw size={14} />}
               onClick={() => setSheet(item.id, freshSheet())}
             >
-              New set
+              {msg.checkpoint.newSet}
             </Button>
           </span>
         </div>
 
         {graded && (
           <article className={`${styles.card} ${styles.noPrint}`} role="status">
-            <p className={styles.summaryScore}>
-              {correct} of {entries.length} ({Math.round(score * 100)}%)
-            </p>
+            <p className={styles.summaryScore}>{msg.checkpoint.score(correct, entries.length)}</p>
             <p className={styles.note} style={{ margin: 0 }}>
-              {score >= CHECKPOINT_PASS
-                ? 'Passed. The unit checkpoint is done.'
-                : 'Not passed yet. Review the solutions below, then draw a new set when you are ready.'}
+              {score >= CHECKPOINT_PASS ? msg.checkpoint.passed : msg.checkpoint.notPassed}
             </p>
           </article>
         )}
@@ -161,7 +156,7 @@ export function CheckpointSheet({
           const self = e.problem.answer.kind === 'self'
           const final = answerTex(e.problem.answer)
           return (
-            <article key={e.id} className={styles.card} aria-label={`Problem ${i + 1}`}>
+            <article key={e.id} className={styles.card} aria-label={msg.checkpoint.problem(i + 1)}>
               <div className={styles.head}>
                 <span className={styles.meta}>
                   <span className={styles.number}>{i + 1}</span>
@@ -197,24 +192,24 @@ export function CheckpointSheet({
                         ? 'incorrect'
                         : undefined
                   }
-                  label={`Answer to problem ${i + 1}`}
+                  label={msg.checkpoint.answerTo(i + 1)}
                   readOnly={graded}
                 />
               </div>
               <div className={styles.printSpace} aria-hidden />
-              {r?.verdict === 'invalid' && <p className={styles.feedback}>{r.message}</p>}
+              {r?.verdict === 'invalid' && r.issue && (
+                <p className={styles.feedback}>{msg.practice.issue(r.issue)}</p>
+              )}
               {sheet.checked && self && !(e.id in sheet.selfGrades) && (
                 <div className={`${styles.actions} ${styles.noPrint}`}>
-                  <span className={styles.note}>
-                    Compare with the solution below. Did you get it?
-                  </span>
+                  <span className={styles.note}>{msg.checkpoint.selfGrade}</span>
                   <span className={styles.actionGroup}>
                     <Button
                       onClick={() =>
                         save({ ...sheet, selfGrades: { ...sheet.selfGrades, [e.id]: true } })
                       }
                     >
-                      Yes
+                      {msg.checkpoint.yes}
                     </Button>
                     <Button
                       variant="ghost"
@@ -222,14 +217,14 @@ export function CheckpointSheet({
                         save({ ...sheet, selfGrades: { ...sheet.selfGrades, [e.id]: false } })
                       }
                     >
-                      No
+                      {msg.checkpoint.no}
                     </Button>
                   </span>
                 </div>
               )}
               {sheet.checked && (self || r?.verdict !== 'correct' || graded) && (
                 <div className={`${styles.panel} ${styles.noPrint}`}>
-                  <p className={styles.panelTitle}>Solution</p>
+                  <p className={styles.panelTitle}>{msg.common.solution}</p>
                   <ol>
                     {e.problem.solution.map((line, k) => (
                       <li key={k}>
@@ -239,7 +234,7 @@ export function CheckpointSheet({
                   </ol>
                   {final && (
                     <p style={{ margin: 'var(--space-3) 0 0' }}>
-                      Answer: <Tex>{final}</Tex>
+                      {msg.common.answer} <Tex>{final}</Tex>
                     </p>
                   )}
                 </div>
@@ -253,12 +248,12 @@ export function CheckpointSheet({
             <span className={styles.note}>
               {sheet.checked
                 ? invalidCount
-                  ? `Fix the ${invalidCount === 1 ? 'answer' : 'answers'} that could not be read, then check again.`
-                  : 'Grade the self-checked problems to see your score.'
-                : 'Unanswered problems count as incorrect.'}
+                  ? msg.checkpoint.fixInvalid(invalidCount)
+                  : msg.checkpoint.gradeSelfChecked
+                : msg.checkpoint.unansweredCount}
             </span>
             <Button variant="primary" onClick={() => save({ ...sheet, checked: true })}>
-              {sheet.checked ? 'Check again' : 'Check answers'}
+              {sheet.checked ? msg.checkpoint.checkAgain : msg.checkpoint.checkAnswers}
             </Button>
           </div>
         )}

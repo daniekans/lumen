@@ -16,14 +16,15 @@ import { VizControls } from '@/viz-kit'
 import { ProblemCard } from './ProblemCard'
 import { SessionSummary } from './SessionSummary'
 import styles from './Practice.module.css'
+import { msg } from '@/i18n'
 
 export const SESSION_LENGTH = 8
 
 const difficultyOptions = [
-  { value: 'auto', label: 'Auto' },
-  { value: '1', label: 'Easy' },
-  { value: '2', label: 'Medium' },
-  { value: '3', label: 'Hard' },
+  { value: 'auto', label: msg.practice.level.auto },
+  { value: '1', label: msg.practice.level[1] },
+  { value: '2', label: msg.practice.level[2] },
+  { value: '3', label: msg.practice.level[3] },
 ] as const
 
 const attemptsOf = (
@@ -145,7 +146,7 @@ export function PracticeSession({
               key={i}
               type="button"
               disabled={!reachable}
-              aria-label={`Problem ${i + 1}${e?.outcome ? (e.outcome.correct ? ', right' : ', wrong') : ''}`}
+              aria-label={msg.practice.problemDot(i + 1, e?.outcome?.correct)}
               aria-current={i === index ? 'step' : undefined}
               onClick={() => setViewing(!finished && i === last ? null : i)}
               className={clsx(
@@ -167,17 +168,17 @@ export function PracticeSession({
   const nextAction = reviewing
     ? finished
       ? index < last
-        ? { label: 'Next', onClick: () => setViewing(index + 1) }
-        : { label: 'Back to the summary', onClick: () => setViewing(null) }
+        ? { label: msg.practice.next, onClick: () => setViewing(index + 1) }
+        : { label: msg.practice.backToSummary, onClick: () => setViewing(null) }
       : index + 1 === last
-        ? { label: 'Back to the current problem', onClick: () => setViewing(null) }
-        : { label: 'Next', onClick: () => setViewing(index + 1) }
+        ? { label: msg.practice.backToCurrent, onClick: () => setViewing(null) }
+        : { label: msg.practice.next, onClick: () => setViewing(index + 1) }
     : {
         label: entry.outcome
           ? entries.length >= SESSION_LENGTH
-            ? 'See results'
-            : 'Next problem'
-          : 'Skip',
+            ? msg.practice.seeResults
+            : msg.practice.nextProblem
+          : msg.practice.skip,
         onClick: advance,
       }
 
@@ -207,7 +208,7 @@ export function PracticeSession({
       </div>
       <VizControls>
         <SegmentedControl
-          label="Difficulty"
+          label={msg.practice.difficulty}
           value={String(difficulty)}
           options={difficultyOptions}
           onChange={(v) => {
@@ -229,10 +230,10 @@ export function PracticeSession({
           }}
           disabled={finished || !!entries[last]!.outcome}
         >
-          Different problem
+          {msg.practice.differentProblem}
         </Button>
         <Button variant="ghost" icon={<RotateCcw size={14} />} onClick={restart}>
-          Start over
+          {msg.practice.startOver}
         </Button>
       </VizControls>
     </div>

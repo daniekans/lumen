@@ -1,6 +1,7 @@
 import type { Answer, Response } from '@/lib/practice'
 import { ChoiceOptions, MathInput } from '@/ui/molecules'
 import styles from './Practice.module.css'
+import { msg } from '@/i18n'
 
 interface AnswerFieldProps {
   answer: Answer
@@ -13,13 +14,6 @@ interface AnswerFieldProps {
   label: string
   autoFocus?: boolean
   readOnly?: boolean
-}
-
-/** Hints shown in the empty field. Plain text with optional $TeX$. */
-const placeholders: Partial<Record<Answer['kind'], string>> = {
-  number: 'A number, like $\\frac{3}{4}$ or $\\sqrt{2}$',
-  expression: 'An expression',
-  list: 'Numbers separated by commas',
 }
 
 /** The right input for an answer kind: math field, options, or a note for self-graded work. */
@@ -45,19 +39,14 @@ export function AnswerField({
         disabled={readOnly}
       />
     )
-  if (answer.kind === 'self')
-    return (
-      <p className={styles.note}>
-        Work this out on paper, then compare with the solution and grade yourself.
-      </p>
-    )
+  if (answer.kind === 'self') return <p className={styles.note}>{msg.practice.selfGraded}</p>
   return (
     <MathInput
       label={label}
       value={response && 'tex' in response ? response.tex : ''}
       onChange={(tex) => onChange(tex ? { tex } : null)}
       onSubmit={onSubmit}
-      placeholder={placeholders[answer.kind]}
+      placeholder={msg.practice.placeholder[answer.kind]}
       status={status}
       autoFocus={autoFocus}
       readOnly={readOnly}

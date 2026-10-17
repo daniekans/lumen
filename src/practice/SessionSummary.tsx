@@ -38,11 +38,9 @@ export function SessionSummary({ attempts, onRestart, onReview, next }: SessionS
 
   return (
     <article className={styles.card}>
-      <p className={styles.summaryScore}>
-        {correct} of {attempts.length} correct
-      </p>
+      <p className={styles.summaryScore}>{msg.practice.score(correct, attempts.length)}</p>
       <p className={styles.note} style={{ margin: '0 0 var(--space-4)' }}>
-        First answers count. Retries, hints and solutions help you learn but do not raise the score.
+        {msg.practice.scoreNote}
       </p>
       {bySkill.map((s) => (
         <div key={s.key} className={styles.skillRow}>
@@ -51,12 +49,12 @@ export function SessionSummary({ attempts, onRestart, onReview, next }: SessionS
             <br />
             <span>
               <StatusDots status={s.current} /> {msg.progress.skillStatus[s.current]}
-              {s.suggested && ` · this session suggests ${msg.progress.skillStatus[s.suggested].toLowerCase()}`}
+              {s.suggested && msg.practice.suggests(msg.progress.skillStatus[s.suggested])}
             </span>
           </div>
           {s.suggested && (
             <Button size="sm" onClick={() => apply(s.key, s.suggested!)}>
-              Set to {msg.progress.skillStatus[s.suggested]}
+              {msg.practice.setTo(msg.progress.skillStatus[s.suggested])}
             </Button>
           )}
         </div>
@@ -64,15 +62,15 @@ export function SessionSummary({ attempts, onRestart, onReview, next }: SessionS
       <div className={styles.actions}>
         <span className={styles.actionGroup}>
           <Button variant="primary" icon={<RotateCcw size={14} />} onClick={onRestart}>
-            Practice again
+            {msg.practice.practiceAgain}
           </Button>
           <Button variant="ghost" onClick={onReview}>
-            Review answers
+            {msg.practice.reviewAnswers}
           </Button>
         </span>
         {next && (
           <Link to={next.path} className={styles.note}>
-            Next: {next.title}
+            {msg.common.next(next.title)}
           </Link>
         )}
       </div>

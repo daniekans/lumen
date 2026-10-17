@@ -8,6 +8,7 @@ import { VizControls } from '@/viz-kit'
 import { problemsOf, withSkillKeys } from './generators'
 import { PracticeSession } from './PracticeSession'
 import styles from './Practice.module.css'
+import { msg } from '@/i18n'
 
 const practiceItems = (unit: Unit) => unit.items.filter((i) => i.kind === 'practice')
 
@@ -44,7 +45,7 @@ export default function MixedPractice() {
       <MixedSession mixed={mixed} />
       <VizControls>
         <Button variant="ghost" icon={<ListChecks size={14} />} onClick={() => setChoosing(true)}>
-          Choose units
+          {msg.mixed.chooseUnits}
         </Button>
       </VizControls>
     </>
@@ -81,11 +82,8 @@ function MixedSetup({
     <div className={styles.scroll}>
       <div className={`${styles.column} ${styles.sheet}`}>
         <div>
-          <h2 className={styles.sheetTitle}>Mixed practice</h2>
-          <p className={styles.sheetIntro}>
-            Eight problems drawn from the practice items of the units you choose. Answers here do
-            not change item progress.
-          </p>
+          <h2 className={styles.sheetTitle}>{msg.mixed.title}</h2>
+          <p className={styles.sheetIntro}>{msg.mixed.intro}</p>
         </div>
         <article className={styles.card}>
           {groups.map(({ course, units: list }) => (
@@ -104,7 +102,7 @@ function MixedSetup({
                     />
                     <span>{u.title}</span>
                     <span className={styles.note}>
-                      {mastered} of {u.skills.length} skills mastered
+                      {msg.mixed.skillsMastered(mastered, u.skills.length)}
                     </span>
                   </label>
                 )
@@ -113,12 +111,12 @@ function MixedSetup({
           ))}
           <div className={styles.actions}>
             <ToggleField
-              label="Skip mastered skills"
+              label={msg.mixed.skipMastered}
               checked={skipMastered}
               onChange={setSkipMastered}
             />
             <Button variant="primary" disabled={units.size === 0} onClick={start}>
-              Start
+              {msg.mixed.start}
             </Button>
           </div>
         </article>
@@ -152,14 +150,12 @@ function MixedSession({ mixed }: { mixed: MixedPracticeState }) {
       <div className={styles.scroll}>
         <article className={`${styles.column} ${styles.card}`}>
           <p className={styles.sheetIntro}>
-            {generators.length === 0
-              ? 'These units have no practice yet.'
-              : 'Every skill in these units is mastered.'}
+            {generators.length === 0 ? msg.mixed.noPractice : msg.mixed.allMastered}
           </p>
           {generators.length > 0 && (
             <div className={styles.actions}>
               <Button onClick={() => setMixed({ ...mixed, skipMastered: false })}>
-                Practice them anyway
+                {msg.mixed.practiceAnyway}
               </Button>
             </div>
           )}

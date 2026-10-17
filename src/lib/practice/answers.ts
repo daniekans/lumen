@@ -25,10 +25,22 @@ export type Answer =
 
 export type Verdict = 'correct' | 'incorrect' | 'invalid'
 
+/**
+ * Why an answer could not be read (`invalid`), or a hint about the mistake. The UI turns it into
+ * words, so this module stays free of copy.
+ */
+export type CheckIssue =
+  | { kind: 'unreadable' }
+  | { kind: 'not-a-number' }
+  | { kind: 'undefined-value' }
+  | { kind: 'list-format' }
+  | { kind: 'more-to-find'; remaining: number }
+  | { kind: 'unknown-variable'; allowed: readonly string[] }
+  | { kind: 'no-answer' }
+
 export interface CheckResult {
   verdict: Verdict
-  /** Explanation for `invalid` (could not read the input) or a hint about the mistake. */
-  message?: string
+  issue?: CheckIssue
 }
 
 /** Answers from the input field are TeX (from the math field) or an option index for choices. */

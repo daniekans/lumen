@@ -5,8 +5,7 @@ import type { SessionEntry } from '@/progress'
 import { Button, RichText, Tex } from '@/ui/atoms'
 import { AnswerField } from './AnswerField'
 import styles from './Practice.module.css'
-
-const levels: Record<Difficulty, string> = { 1: 'Easy', 2: 'Medium', 3: 'Hard' }
+import { msg } from '@/i18n'
 
 interface ProblemCardProps {
   problem: Problem
@@ -65,8 +64,8 @@ export function ProblemCard({
         <span className={styles.meta}>
           <span>{title}</span>
           <span>·</span>
-          <span>{levels[difficulty]}</span>
-          {review && <span className={styles.reviewBadge}>Review</span>}
+          <span>{msg.practice.level[difficulty]}</span>
+          {review && <span className={styles.reviewBadge}>{msg.practice.review}</span>}
         </span>
         {progress}
       </div>
@@ -101,13 +100,13 @@ export function ProblemCard({
                 ? 'incorrect'
                 : undefined
           }
-          label="Your answer"
+          label={msg.common.yourAnswer}
           autoFocus={!review}
           readOnly={locked}
         />
         {answer.kind !== 'choice' && answer.kind !== 'self' && !locked && (
           <Button variant="primary" onClick={check} disabled={!response}>
-            Check
+            {msg.common.check}
           </Button>
         )}
       </div>
@@ -122,38 +121,39 @@ export function ProblemCard({
           <span>
             <strong>
               {result.verdict === 'correct'
-                ? 'Correct.'
+                ? msg.common.correct
                 : result.verdict === 'incorrect'
-                  ? 'Not quite.'
-                  : 'Could not check that.'}
+                  ? msg.common.notQuite
+                  : msg.practice.couldNotCheck}
             </strong>{' '}
-            {result.message ??
-              (result.verdict === 'incorrect' && !review
-                ? 'Try again, open a hint, or see the solution.'
-                : '')}
+            {result.issue
+              ? msg.practice.issue(result.issue)
+              : result.verdict === 'incorrect' && !review
+                ? msg.practice.retryHint
+                : ''}
           </span>
         </p>
       )}
 
       {answer.kind === 'self' && solution && !outcome && !review && (
         <div className={styles.actions}>
-          <span className={styles.note}>How did it go?</span>
+          <span className={styles.note}>{msg.practice.howDidItGo}</span>
           <span className={styles.actionGroup}>
             <Button onClick={() => onUpdate({ outcome: { correct: true, helped: hints > 0 } })}>
-              I got it right
+              {msg.practice.gotItRight}
             </Button>
             <Button
               variant="ghost"
               onClick={() => onUpdate({ outcome: { correct: false, helped: hints > 0 } })}
             >
-              I got it wrong
+              {msg.practice.gotItWrong}
             </Button>
           </span>
         </div>
       )}
       {answer.kind === 'self' && outcome && (
         <p className={styles.feedback} role="status">
-          <strong>{outcome.correct ? 'Marked as right.' : 'Marked as wrong.'}</strong>
+          <strong>{outcome.correct ? msg.practice.markedRight : msg.practice.markedWrong}</strong>
         </p>
       )}
 
@@ -165,7 +165,7 @@ export function ProblemCard({
               icon={<Lightbulb size={14} />}
               onClick={() => onUpdate({ hints: hints + 1 })}
             >
-              {hints === 0 ? 'Hint' : 'Another hint'}
+              {hints === 0 ? msg.practice.hint : msg.practice.anotherHint}
             </Button>
           )}
           {!solution && (
@@ -180,7 +180,7 @@ export function ProblemCard({
                 })
               }
             >
-              {solved || review ? 'Show the worked solution' : 'Show the solution'}
+              {solved || review ? msg.practice.showWorkedSolution : msg.practice.showSolution}
             </Button>
           )}
         </span>
@@ -192,7 +192,7 @@ export function ProblemCard({
 
       {hints > 0 && problem.hints && (
         <div className={styles.panel}>
-          <p className={styles.panelTitle}>Hints</p>
+          <p className={styles.panelTitle}>{msg.practice.hints}</p>
           <ol>
             {problem.hints.slice(0, hints).map((h, i) => (
               <li key={i}>
@@ -205,7 +205,7 @@ export function ProblemCard({
 
       {solution && (
         <div className={styles.panel}>
-          <p className={styles.panelTitle}>Solution</p>
+          <p className={styles.panelTitle}>{msg.common.solution}</p>
           <ol>
             {problem.solution.map((line, i) => (
               <li key={i}>
@@ -215,7 +215,7 @@ export function ProblemCard({
           </ol>
           {final && (
             <p style={{ margin: 'var(--space-3) 0 0' }}>
-              Answer: <Tex>{final}</Tex>
+              {msg.common.answer} <Tex>{final}</Tex>
             </p>
           )}
         </div>

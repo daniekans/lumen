@@ -1,4 +1,5 @@
 import type { ItemKind, ItemLevel } from '@/catalog/types'
+import type { CheckIssue } from '@/lib/practice/answers'
 import type { SkillStatus } from '@/progress/types'
 import { formatDateTime, formatInteger as n, formatPercent, plural } from './format'
 
@@ -132,6 +133,103 @@ export const en = {
   mathInput: {
     loading: 'Loading the math input…',
     keyboard: 'Math keyboard',
+  },
+
+  practice: {
+    difficulty: 'Difficulty',
+    level: { auto: 'Auto', 1: 'Easy', 2: 'Medium', 3: 'Hard' },
+    review: 'Review',
+    couldNotCheck: 'Could not check that.',
+    retryHint: 'Try again, open a hint, or see the solution.',
+    issue: (issue: CheckIssue): string => {
+      switch (issue.kind) {
+        case 'unreadable':
+          return 'That could not be read as math. Check for unbalanced brackets or empty boxes.'
+        case 'not-a-number':
+          return 'The answer should be a number, without variables.'
+        case 'undefined-value':
+          return 'That value is undefined.'
+        case 'list-format':
+          return 'Write the numbers separated by commas.'
+        case 'more-to-find':
+          return `There ${plural(issue.remaining, { one: 'is', other: 'are' })} more to find.`
+        case 'unknown-variable':
+          return `Use only ${issue.allowed.join(', ') || 'numbers'} in your answer.`
+        case 'no-answer':
+          return 'No answer.'
+      }
+    },
+    placeholder: {
+      number: 'A number, like $\\frac{3}{4}$ or $\\sqrt{2}$',
+      expression: 'An expression',
+      list: 'Numbers separated by commas',
+    },
+    selfGraded: 'Work this out on paper, then compare with the solution and grade yourself.',
+    howDidItGo: 'How did it go?',
+    gotItRight: 'I got it right',
+    gotItWrong: 'I got it wrong',
+    markedRight: 'Marked as right.',
+    markedWrong: 'Marked as wrong.',
+    hint: 'Hint',
+    anotherHint: 'Another hint',
+    hints: 'Hints',
+    showSolution: 'Show the solution',
+    showWorkedSolution: 'Show the worked solution',
+    /** Accessible name of a progress dot. */
+    problemDot: (index: number, outcome?: boolean) =>
+      `Problem ${n(index)}${outcome === undefined ? '' : outcome ? ', right' : ', wrong'}`,
+    next: 'Next',
+    backToSummary: 'Back to the summary',
+    backToCurrent: 'Back to the current problem',
+    seeResults: 'See results',
+    nextProblem: 'Next problem',
+    skip: 'Skip',
+    differentProblem: 'Different problem',
+    startOver: 'Start over',
+    score: (correct: number, total: number) => `${n(correct)} of ${n(total)} correct`,
+    scoreNote:
+      'First answers count. Retries, hints and solutions help you learn but do not raise the score.',
+    suggests: (status: string) => ` · this session suggests ${status.toLowerCase()}`,
+    setTo: (status: string) => `Set to ${status}`,
+    practiceAgain: 'Practice again',
+    reviewAnswers: 'Review answers',
+  },
+
+  checkpoint: {
+    intro: (count: number, pass: number) =>
+      `${n(count)} ${plural(count, { one: 'problem', other: 'problems' })}. Work them out on paper, enter your answers, then check them all. ${formatPercent(pass)} passes.`,
+    print: 'Print',
+    newSet: 'New set',
+    score: (correct: number, total: number) =>
+      `${n(correct)} of ${n(total)} (${formatPercent(correct / total)})`,
+    passed: 'Passed. The unit checkpoint is done.',
+    notPassed:
+      'Not passed yet. Review the solutions below, then draw a new set when you are ready.',
+    problem: (index: number) => `Problem ${n(index)}`,
+    answerTo: (index: number) => `Answer to problem ${n(index)}`,
+    selfGrade: 'Compare with the solution below. Did you get it?',
+    yes: 'Yes',
+    no: 'No',
+    fixInvalid: (count: number) =>
+      `Fix the ${plural(count, { one: 'answer', other: 'answers' })} that could not be read, then check again.`,
+    gradeSelfChecked: 'Grade the self-checked problems to see your score.',
+    unansweredCount: 'Unanswered problems count as incorrect.',
+    checkAnswers: 'Check answers',
+    checkAgain: 'Check again',
+  },
+
+  mixed: {
+    title: 'Mixed practice',
+    intro:
+      'Eight problems drawn from the practice items of the units you choose. Answers here do not change item progress.',
+    skillsMastered: (mastered: number, total: number) =>
+      `${n(mastered)} of ${n(total)} ${plural(total, { one: 'skill', other: 'skills' })} mastered`,
+    skipMastered: 'Skip mastered skills',
+    start: 'Start',
+    chooseUnits: 'Choose units',
+    noPractice: 'These units have no practice yet.',
+    allMastered: 'Every skill in these units is mastered.',
+    practiceAnyway: 'Practice them anyway',
   },
 
   settings: {

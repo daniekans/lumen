@@ -68,10 +68,7 @@ export const evaluateTex = (tex: string, values: Record<string, number> = {}) =>
 /** Answers may start with "y =" (e.g. a tangent line); only the right-hand side is compared. */
 const stripLhs = (tex: string) => tex.replace(/^\s*y\s*=/, '')
 
-const unreadable: CheckResult = {
-  verdict: 'invalid',
-  message: 'That could not be read as math. Check for unbalanced brackets or empty boxes.',
-}
+const unreadable: CheckResult = { verdict: 'invalid', issue: { kind: 'unreadable' } }
 
 export const checkAnswer = (answer: Answer, response: Response): CheckResult => {
   switch (answer.kind) {
@@ -88,8 +85,8 @@ export const checkAnswer = (answer: Answer, response: Response): CheckResult => 
       const v = toNumber(node)
       if (v === undefined)
         return variablesOf(node).size
-          ? { verdict: 'invalid', message: 'The answer should be a number, without variables.' }
-          : { verdict: 'invalid', message: 'That value is undefined.' }
+          ? { verdict: 'invalid', issue: { kind: 'not-a-number' } }
+          : { verdict: 'invalid', issue: { kind: 'undefined-value' } }
       return { verdict: close(v, answer.value, answer.tolerance) ? 'correct' : 'incorrect' }
     }
     case 'list': {
@@ -99,7 +96,7 @@ export const checkAnswer = (answer: Answer, response: Response): CheckResult => 
         .filter((s) => s.trim())
         .map((s) => toNumber(parse(s)))
       if (items.length === 0 || items.some((v) => v === undefined))
-        return { verdict: 'invalid', message: 'Write the numbers separated by commas.' }
+        return { verdict: 'invalid', issue: { kind: 'list-format' } }
       const remaining = [...answer.values]
       for (const v of items as number[]) {
         const i = remaining.findIndex((r) => close(v, r, answer.tolerance))
@@ -110,7 +107,7 @@ export const checkAnswer = (answer: Answer, response: Response): CheckResult => 
         ? { verdict: 'correct' }
         : {
             verdict: 'incorrect',
-            message: `There ${remaining.length === 1 ? 'is' : 'are'} more to find.`,
+            issue: { kind: 'more-to-find', remaining: remaining.length },
           }
     }
     case 'expression': {
@@ -126,7 +123,7 @@ export const checkAnswer = (answer: Answer, response: Response): CheckResult => 
         ]
         return {
           verdict: 'incorrect',
-          message: `Use only ${allowed.join(', ') || 'numbers'} in your answer.`,
+          issue: { kind: 'unknown-variable', allowed },
         }
       }
       return { verdict: result ? 'correct' : 'incorrect' }
