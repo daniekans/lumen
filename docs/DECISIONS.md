@@ -65,6 +65,8 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - `LEARNING_PLATFORM.md` (Curriculum, Suggested order of units) rotates across tracks so advanced
   material arrives early. Daniel may pick any unit out of order.
 - Content must be mathematically correct: answers are computed and tested, never written from memory.
+- Phase 2D (pilot content) closed on 2026-10-17 after Daniel reviewed its four units. New units
+  continue as ongoing work in the suggested order, alongside the numbered phases.
 
 ## Engineering
 

@@ -65,6 +65,7 @@ const Y0 = 110
 const CW = 58
 const CH = 19
 const GROUP_GAP = 16
+const PAGE_GAP = 8
 const COL_GAP = 14
 const STATS_X = 385
 
@@ -121,18 +122,18 @@ function Cell({ at, text, state }: { at: Vec2; text: string; state: CellState })
   )
 }
 
-/** A frame around a region of the stage, with an optional dashed line across it. */
+/** A frame around a region of the stage, `pad` units outside it. */
 function Frame({
   at,
   size,
   opacity,
-  dashAt,
+  pad = 2,
   stroke = vc.gridStrong,
 }: {
   at: Vec2
   size: Vec2
   opacity: number
-  dashAt?: number
+  pad?: number
   stroke?: string
 }) {
   const c = useCoords()
@@ -141,25 +142,14 @@ function Frame({
   return (
     <g style={{ opacity, transition: 'opacity var(--dur-slow)' }}>
       <rect
-        x={x - 2 * u}
-        y={y - 2 * u}
-        width={(size[0] + 4) * u}
-        height={(size[1] + 4) * u}
-        rx={5 * u}
-        style={{ fill: 'none', stroke }}
+        x={x - pad * u}
+        y={y - pad * u}
+        width={(size[0] + 2 * pad) * u}
+        height={(size[1] + 2 * pad) * u}
+        rx={(3 + pad) * u}
+        style={{ fill: 'none', stroke, transition: 'stroke var(--dur-slow)' }}
         strokeWidth={1.25}
       />
-      {dashAt !== undefined && (
-        <line
-          x1={x}
-          x2={x + size[0] * u}
-          y1={y + dashAt * u}
-          y2={y + dashAt * u}
-          style={{ stroke }}
-          strokeWidth={1.25}
-          strokeDasharray={`${4 * u} ${3 * u}`}
-        />
-      )}
     </g>
   )
 }
@@ -172,6 +162,7 @@ export default function ParquetAnatomy() {
 
   const groupGap = useAnimatedValue(after(step, 'row-groups') ? GROUP_GAP : 0)
   const colGap = useAnimatedValue(after(step, 'column-chunks') ? COL_GAP : 0)
+  const pageGap = useAnimatedValue(after(step, 'pages') ? PAGE_GAP : 0)
   const sortT = useAnimatedValue(step === 'sorted' ? 1 : 0, { duration: 1.2 })
   const settled = sortT === 0 || sortT === 1
   const sorted = step === 'sorted'
@@ -180,10 +171,15 @@ export default function ParquetAnatomy() {
   const showStats = after(step, 'footer') && settled
 
   const colX = (j: number) => X0 + j * (CW + colGap)
-  const groupY = (g: number) => Y0 + g * (PER_GROUP * CH + groupGap)
-  const posY = (p: number) => groupY(Math.floor(p / PER_GROUP)) + (p % PER_GROUP) * CH
+  const groupH = PER_GROUP * CH + pageGap
+  const groupY = (g: number) => Y0 + g * (groupH + groupGap)
+  /** Top of page `k` (from 0) inside a row group. */
+  const pageY = (k: number) => k * (PER_PAGE * CH + pageGap)
+  const posY = (p: number) => {
+    const r = p % PER_GROUP
+    return groupY(Math.floor(p / PER_GROUP)) + pageY(Math.floor(r / PER_PAGE)) + (r % PER_PAGE) * CH
+  }
   const stackW = COLUMNS.length * CW + (COLUMNS.length - 1) * colGap
-  const groupH = PER_GROUP * CH
   const stackBottom = groupY(GROUPS - 1) + groupH
 
   const stats = STATS[sorted ? 'sorted' : 'plain']
@@ -246,7 +242,7 @@ export default function ParquetAnatomy() {
   return (
     <>
       <Stage
-        domain={{ x: [20, 760], y: [40, 700] }}
+        domain={{ x: [20, 760], y: [40, 730] }}
         yUp={false}
         ariaLabel="A Parquet file drawn as four row groups of six rows, each split into three column chunks of two pages, with a footer of min and max statistics per row group on the right"
         overlay={
@@ -269,7 +265,7 @@ export default function ParquetAnatomy() {
           </TextLabel>
         ))}
 
-        {/* Row group labels and column chunk frames, with a dashed line between the two pages. */}
+        {/* Row group labels, column chunk frames and the page frames inside them. */}
         {Array.from({ length: GROUPS }, (_, g) => (
           <g key={g}>
             <TextLabel
@@ -287,9 +283,36 @@ export default function ParquetAnatomy() {
                 key={name}
                 at={[colX(j), groupY(g)]}
                 size={[CW, groupH]}
+                pad={after(step, 'pages') ? 5 : 2}
                 opacity={after(step, 'column-chunks') ? 1 : 0}
-                dashAt={after(step, 'pages') ? PER_PAGE * CH : undefined}
               />
+            ))}
+            {COLUMNS.flatMap((name, j) =>
+              Array.from({ length: PAGES_PER_CHUNK }, (_, k) => (
+                <Frame
+                  key={`${name}${k}`}
+                  at={[colX(j), groupY(g) + pageY(k)]}
+                  size={[CW, PER_PAGE * CH]}
+                  stroke={step === 'pages' ? vc.yellow : vc.gridStrong}
+                  opacity={after(step, 'pages') ? 1 : 0}
+                />
+              )),
+            )}
+            {Array.from({ length: PAGES_PER_CHUNK }, (_, k) => (
+              <TextLabel
+                key={k}
+                at={[
+                  colX(COLUMNS.length - 1) + CW + 14,
+                  groupY(g) + pageY(k) + (PER_PAGE * CH) / 2,
+                ]}
+                align="start"
+                size={11}
+                mono
+                color={vc.yellow}
+                opacity={step === 'pages' ? 1 : 0}
+              >
+                {`page ${k + 1}`}
+              </TextLabel>
             ))}
           </g>
         ))}
@@ -364,7 +387,7 @@ export default function ParquetAnatomy() {
 
         {(filtering || step === 'projection') && (
           <MathLabel
-            at={[390, 676]}
+            at={[390, 714]}
             size={17}
             tex={
               filtering

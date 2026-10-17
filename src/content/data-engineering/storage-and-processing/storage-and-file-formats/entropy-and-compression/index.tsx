@@ -219,14 +219,18 @@ function OrderView() {
   )
 }
 
-/** Many equally rare values: a bar cut into thin slices. */
+// Ids below 2^20, so plain they need 20 bits.
+const IDS = Array.from({ length: 8 }, (_, k) => 700000 + k)
+const ID_W = BAR_W / IDS.length
+
+/** Many equally rare values: a bar cut into thin slices, and sorted ids with their deltas. */
 function UniqueView() {
   const slices = 64
   const w = BAR_W / slices
   return (
     <>
       <TextLabel at={[BAR_X, 96]} align="start" size={12} mono color={vc.fg}>
-        {'probability of each value (2^20 values, 64 drawn)'}
+        {'probability of each value (1,048,576 values, 64 drawn)'}
       </TextLabel>
       {Array.from({ length: slices }, (_, k) => (
         <Rect
@@ -244,6 +248,35 @@ function UniqueView() {
         tex="p = 2^{-20} \text{ for every value}"
         size={15}
       />
+      {/* Sorted ids: the values carry 20 bits each, their differences almost none. */}
+      {IDS.map((id, k) => (
+        <g key={id}>
+          <Rect
+            at={[BAR_X + k * ID_W, 280]}
+            size={[ID_W - 6, 28]}
+            fill="var(--bg-elevated)"
+            stroke={vc.gridStrong}
+          />
+          <TextLabel at={[BAR_X + k * ID_W + (ID_W - 6) / 2, 294]} size={12} mono color={vc.fg}>
+            {String(id)}
+          </TextLabel>
+          <Rect
+            at={[BAR_X + k * ID_W, 344]}
+            size={[ID_W - 6, 28]}
+            fill={alpha(vc.blue, 0.25)}
+            stroke={vc.blue}
+          />
+          <TextLabel at={[BAR_X + k * ID_W + (ID_W - 6) / 2, 358]} size={12} mono color={vc.fg}>
+            {k === 0 ? String(id) : `+${id - IDS[k - 1]!}`}
+          </TextLabel>
+        </g>
+      ))}
+      <TextLabel at={[BAR_X, 266]} align="start" size={12} mono>
+        ids, sorted: 20 bits each
+      </TextLabel>
+      <TextLabel at={[BAR_X, 330]} align="start" size={12} mono>
+        deltas: 1 bit each after the first
+      </TextLabel>
     </>
   )
 }

@@ -7,6 +7,7 @@ import surfaces from '@/styles/surfaces.module.css'
 interface ReadoutProps {
   /** Plain text with optional $TeX$. */
   label: string
+  /** A node, or plain text with optional $TeX$. */
   value: ReactNode
   color?: string
 }
@@ -18,7 +19,9 @@ export function Readout({ label, value, color }: ReadoutProps) {
         {color && <span className={styles.swatch} style={{ background: color }} />}
         <RichText>{label}</RichText>
       </span>
-      <span className={styles.value}>{value}</span>
+      <span className={styles.value}>
+        {typeof value === 'string' ? <RichText>{value}</RichText> : value}
+      </span>
     </div>
   )
 }

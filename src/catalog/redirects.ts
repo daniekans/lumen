@@ -13,6 +13,7 @@ export const redirects: Readonly<Record<string, string>> = {
   'neural-networks/backpropagation': 'machine-learning/neural-networks/training/backpropagation',
   'ai-engineering/rag-pipeline': 'ai-engineering/retrieval/fundamentals/rag-pipeline',
   // Planned pre-calculus units merged or moved when the curriculum was reprioritized.
-  'mathematics/pre-calculus/linear-and-quadratic': 'mathematics/pre-calculus/polynomial-and-rational',
+  'mathematics/pre-calculus/linear-and-quadratic':
+    'mathematics/pre-calculus/polynomial-and-rational',
   'mathematics/pre-calculus/sequences-and-series': 'mathematics/pre-calculus',
 }

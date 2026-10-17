@@ -76,8 +76,11 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 ## Verifying a change
 
 1. `pnpm lint && pnpm typecheck && pnpm test`
-2. Look at it. `STEPS=1 BASE_URL=http://localhost:<port> node scripts/shoot.mjs <outDir> /<item path>`
-   screenshots both themes and every step and prints console errors. For interaction checks, write a
-   short Playwright script that starts its own Vite server
-   (`createServer({ cacheDir: <scratch dir>, server: { port: 5199 } })`) and delete the script after.
+2. Look at it. Start a check server in the background with
+   `node scripts/check-server.mjs <scratch dir>/vite-cache` (port 5199), then
+   `THEMES=dark STEPS=1 BASE_URL=http://localhost:5199 node scripts/shoot.mjs <outDir> /<item path>`
+   screenshots every step and prints console errors. The item path is the content path with no
+   prefix (`/data-engineering/<course>/<unit>/<item>`). Iterate in one theme and view only the
+   steps that changed; run both themes once at the end. For interaction checks, write a short
+   Playwright script against the same server and delete it after. Stop the server by PID.
 3. `pnpm e2e` (builds and serves a production build) before pushing.
