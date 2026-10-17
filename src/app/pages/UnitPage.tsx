@@ -28,7 +28,7 @@ export function UnitPage({ unit }: { unit: Unit }) {
           <Breadcrumbs items={crumbsFor(unit)} />
         </TopBar>
       }
-      eyebrow="Unit"
+      eyebrow={msg.pages.unit.eyebrow}
       title={unit.title}
       description={unit.description}
       actions={
@@ -36,17 +36,13 @@ export function UnitPage({ unit }: { unit: Unit }) {
           <>
             <span className={styles.progress}>
               <ProgressRing value={summary.fraction} size={18} />
-              {summary.itemsDone} of {summary.itemsTotal} done
+              {msg.progress.itemsDone(summary.itemsDone, summary.itemsTotal)}
             </span>
             <Tooltip
-              content={
-                known
-                  ? 'Removes the marks set by this button. Anything you actually completed stays done.'
-                  : 'Marks everything in this unit as done and every skill as mastered. You can undo it.'
-              }
+              content={known ? msg.pages.unit.unmarkKnownHint : msg.pages.unit.markKnownHint}
             >
               <Button onClick={() => setKnown(unit, !known)}>
-                {known ? 'Undo "I already know this unit"' : 'I already know this unit'}
+                {known ? msg.pages.unit.unmarkKnown : msg.pages.unit.markKnown}
               </Button>
             </Tooltip>
           </>
@@ -55,7 +51,7 @@ export function UnitPage({ unit }: { unit: Unit }) {
     >
       {prerequisites.length > 0 && (
         <p className={styles.note}>
-          Recommended first:{' '}
+          {msg.pages.unit.recommendedFirst}{' '}
           {prerequisites.map((p, i) => (
             <span key={p.id}>
               {i > 0 && ', '}
@@ -67,9 +63,9 @@ export function UnitPage({ unit }: { unit: Unit }) {
         </p>
       )}
 
-      <DocumentSection title="In this unit">
+      <DocumentSection title={msg.pages.unit.items}>
         {unit.items.length === 0 ? (
-          <p className={styles.note}>This unit is planned. Its content has not been written yet.</p>
+          <p className={styles.note}>{msg.pages.unit.planned}</p>
         ) : (
           <ol className={styles.list}>
             {unit.items.map((item) => {
@@ -96,7 +92,7 @@ export function UnitPage({ unit }: { unit: Unit }) {
                         ) : (
                           <ProgressRing value={info.fraction} size={14} />
                         )}
-                        {info.state === 'in-progress' ? 'In progress' : info.detail}
+                        {info.state === 'in-progress' ? msg.progress.inProgress : info.detail}
                       </span>
                     </span>
                   </Link>
@@ -108,12 +104,8 @@ export function UnitPage({ unit }: { unit: Unit }) {
       </DocumentSection>
 
       {unit.skills.length > 0 && (
-        <DocumentSection title="Skills">
-          <p className={styles.intro}>
-            What this unit teaches. Rate how well you know each skill, from new to mastered. This is
-            your own assessment: it does not change the progress above, and you can change it at any
-            time.
-          </p>
+        <DocumentSection title={msg.pages.unit.skills}>
+          <p className={styles.intro}>{msg.pages.unit.skillsIntro}</p>
           <ul className={styles.list}>
             {unit.skills.map((s) => (
               <li key={s.key} className={styles.row} style={{ gridTemplateColumns: '1fr auto' }}>

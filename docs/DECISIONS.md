@@ -97,6 +97,11 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   Bundle splitting waits until before a product (`PRODUCT_VISION.md`).
 - Phase 4 includes a fullscreen mode (stage only, dock and step keys kept). It is not the
   presentation mode yet.
+- Phase 8 (2026-10-17): UI copy is one typed object read as a plain import (`msg` from `@/i18n`),
+  not a hook or a library such as i18next. A locale switch can swap the object and reload the page.
+  Copy with values is a function in the messages; plurals go through `Intl.PluralRules`.
+  `src/lib` stays free of copy: it returns codes (the checker's `CheckIssue`) that the UI words.
+  Content (MDX, captions, problem prompts, labels inside visualizations) is not covered yet.
 
 ## Future direction (record, do not build yet)
 

@@ -9,6 +9,7 @@ import { DocumentLayout, DocumentSection } from '@/ui/templates'
 import { crumbsFor } from '../crumbs'
 import { usePageTitle } from '../usePageTitle'
 import styles from './lists.module.css'
+import { msg } from '@/i18n'
 
 export function CoursePage({ course }: { course: Course }) {
   usePageTitle(course.title)
@@ -20,11 +21,11 @@ export function CoursePage({ course }: { course: Course }) {
           <Breadcrumbs items={crumbsFor(course)} />
         </TopBar>
       }
-      eyebrow="Course"
+      eyebrow={msg.pages.course.eyebrow}
       title={course.title}
       description={course.description}
     >
-      <DocumentSection title="Units">
+      <DocumentSection title={msg.pages.course.units}>
         <ol className={styles.list}>
           {course.units.map((u, i) => {
             const planned = !hasItems(u)
@@ -39,10 +40,10 @@ export function CoursePage({ course }: { course: Course }) {
                   </span>
                   <span className={styles.trail}>
                     {planned ? (
-                      <Badge>planned</Badge>
+                      <Badge>{msg.common.planned}</Badge>
                     ) : (
                       <>
-                        {summary.itemsDone} of {summary.itemsTotal} done
+                        {msg.progress.itemsDone(summary.itemsDone, summary.itemsTotal)}
                         <ProgressRing value={summary.fraction} size={16} />
                       </>
                     )}

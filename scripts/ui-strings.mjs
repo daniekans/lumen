@@ -80,7 +80,7 @@ const looksLikeWords = (s) => {
   const t = s.trim()
   if (!/[A-Za-z]/.test(t)) return false
   if (/^(?:[a-z-]+:|\.|#|\/|@|var\(|https?:|[a-z]+\/)/.test(t)) return false // css, paths, urls
-  if (/[{}\\]|=>/.test(t)) return false // TeX or code
+  if (/=>/.test(t)) return false // code
   return /^[A-Z][a-z]/.test(t) || /[A-Za-z]{2,}[,.]? [A-Za-z]{2,}/.test(t)
 }
 
@@ -186,8 +186,11 @@ if (mode === '--summary') {
   console.log(`${found.length} strings in ${counts.size} files`)
 } else {
   for (const f of found) console.log(`${f.file}:${f.line}\t${f.text}`)
-  if (mode === '--check' && found.length > 0) {
-    console.error(`\n${found.length} hard-coded UI strings. Move them to src/i18n/messages.ts.`)
-    process.exit(1)
+  if (mode === '--check') {
+    if (found.length > 0) {
+      console.error(`\n${found.length} hard-coded UI strings. Move them to src/i18n/messages.ts.`)
+      process.exit(1)
+    }
+    console.log('UI strings check passed.')
   }
 }

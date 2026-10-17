@@ -7,6 +7,7 @@ import { ease } from '@/styles/motion'
 import { AreaIcon, Button } from '@/ui/atoms'
 import { CourseCard, CourseGrid, LissajousMark, TopBar } from '@/ui/organisms'
 import styles from './HomePage.module.css'
+import { msg } from '@/i18n'
 
 const reveal = (delay: number) => ({
   initial: { opacity: 0, y: 14 },
@@ -27,18 +28,17 @@ export function HomePage() {
           <section className={styles.hero}>
             <div>
               <motion.h1 className={styles.title} {...reveal(0)}>
-                See the idea,
+                {msg.pages.home.titleLines[0]}
                 <br />
-                then the formula.
+                {msg.pages.home.titleLines[1]}
               </motion.h1>
               <motion.p className={styles.lede} {...reveal(0.08)}>
-                A personal course in mathematics, data engineering, machine learning and AI
-                engineering. Each concept is something to see, then to read, then to practice.
+                {msg.pages.home.lede}
               </motion.p>
               <motion.div className={styles.actions} {...reveal(0.16)}>
                 {start && (
                   <Button variant="primary" onClick={() => navigate(start.path)}>
-                    {lastItem ? `Continue: ${lastItem.title}` : 'Start here'}
+                    {lastItem ? msg.pages.home.continue(lastItem.title) : msg.pages.home.start}
                     <ArrowRight size={15} />
                   </Button>
                 )}
@@ -47,7 +47,7 @@ export function HomePage() {
                   icon={<Shuffle size={14} />}
                   onClick={() => navigate('/practice')}
                 >
-                  Mixed practice
+                  {msg.mixed.title}
                 </Button>
               </motion.div>
             </div>

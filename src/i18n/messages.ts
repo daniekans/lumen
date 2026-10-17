@@ -232,6 +232,34 @@ export const en = {
     practiceAnyway: 'Practice them anyway',
   },
 
+  pages: {
+    home: {
+      crumb: 'Home',
+      titleLines: ['See the idea,', 'then the formula.'],
+      lede: 'A personal course in mathematics, data engineering, machine learning and AI engineering. Each concept is something to see, then to read, then to practice.',
+      continue: (item: string) => `Continue: ${item}`,
+      start: 'Start here',
+    },
+    area: { eyebrow: 'Area', courses: 'Courses' },
+    course: { eyebrow: 'Course', units: 'Units' },
+    unit: {
+      eyebrow: 'Unit',
+      markKnown: 'I already know this unit',
+      unmarkKnown: 'Undo "I already know this unit"',
+      markKnownHint:
+        'Marks everything in this unit as done and every skill as mastered. You can undo it.',
+      unmarkKnownHint:
+        'Removes the marks set by this button. Anything you actually completed stays done.',
+      recommendedFirst: 'Recommended first:',
+      items: 'In this unit',
+      planned: 'This unit is planned. Its content has not been written yet.',
+      skills: 'Skills',
+      skillsIntro:
+        'What this unit teaches. Rate how well you know each skill, from new to mastered. This is your own assessment: it does not change the progress above, and you can change it at any time.',
+    },
+    notFound: { title: 'Nothing here.', back: 'Back to the index' },
+  },
+
   settings: {
     title: 'Progress and backup',
     howItWorks: 'How progress works',

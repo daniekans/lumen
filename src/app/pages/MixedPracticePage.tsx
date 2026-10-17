@@ -5,6 +5,7 @@ import { VizLayout } from '@/ui/templates'
 import { VizRuntimeContext, type VizRuntimeValue } from '@/viz-kit/runtime'
 import { usePageTitle } from '../usePageTitle'
 import styles from './ItemPage.module.css'
+import { msg } from '@/i18n'
 
 // Lazy, like practice items, so the math field stays out of the main bundle.
 const MixedPractice = lazy(() => import('@/practice/MixedPractice'))
@@ -12,7 +13,7 @@ const MixedPractice = lazy(() => import('@/practice/MixedPractice'))
 /** Mixed practice across units, in the same shell as a practice item but without explanations. */
 export function MixedPracticePage() {
   const [dock, setDock] = useState<HTMLDivElement | null>(null)
-  usePageTitle('Mixed practice')
+  usePageTitle(msg.mixed.title)
   const runtime = useMemo<VizRuntimeValue>(
     () => ({ steps: [], stepIndex: 0, goToStep: () => {}, dock }),
     [dock],
@@ -22,7 +23,9 @@ export function MixedPracticePage() {
       <VizLayout
         topBar={
           <TopBar>
-            <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Mixed practice' }]} />
+            <Breadcrumbs
+              items={[{ label: msg.pages.home.crumb, to: '/' }, { label: msg.mixed.title }]}
+            />
           </TopBar>
         }
         stage={

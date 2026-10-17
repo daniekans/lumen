@@ -39,6 +39,9 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
   with the Co-Authored-By line.
 - Writing: follow `docs/WRITING.md` for every string (captions, MDX, UI copy, docs, comments). No em
   dashes, no hype. `pnpm lint` runs a prose lint.
+- UI copy (outside content) goes in `src/i18n/messages.ts` and is read as `msg.<group>.<key>` from
+  `@/i18n`; `pnpm lint` fails on hard-coded strings (`node scripts/ui-strings.mjs` lists them). Mark a
+  deliberate exception with `// i18n-ignore`.
 - Content lives in `src/content/<area>/<course>/<unit>/<item>/`. Scaffold with `pnpm new:item`.
   When content moves, add a redirect in `src/catalog/redirects.ts`; the site is public.
 - Content imports only from `@/catalog/types`, `@/viz-kit`, `@/ui/*`, `@/lib/*`, `@/styles/*`.

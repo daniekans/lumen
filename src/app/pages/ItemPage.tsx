@@ -16,6 +16,7 @@ import { ErrorBoundary } from '@/ui/organisms'
 import { isTyping } from '../useGlobalHotkeys'
 import { usePageTitle } from '../usePageTitle'
 import styles from './ItemPage.module.css'
+import { msg } from '@/i18n'
 
 export function ItemPage({ item }: { item: Item }) {
   const steps = useMemo(() => item.steps ?? [], [item])
@@ -69,11 +70,11 @@ export function ItemPage({ item }: { item: Item }) {
                       className={styles.next}
                       onPointerEnter={() => void next.preload()}
                     >
-                      Next: {next.title}
+                      {msg.common.next(next.title)}
                     </Link>
                   )}
                   <IconButton
-                    label={asideOpen ? 'Hide explanation' : 'Show explanation'}
+                    label={asideOpen ? msg.item.hideExplanation : msg.item.showExplanation}
                     shortcut="]"
                     onClick={toggleAside}
                   >

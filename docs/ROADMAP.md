@@ -19,7 +19,7 @@ awaiting feedback), `done`.
 | 5     | 3D stages for multivariable calculus and linear algebra                                   | planned |
 | 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
 | 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | planned |
-| 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | planned |
+| 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | done    |
 | later | Presentation mode, internationalization (pt-BR), mobile layout                            | planned |
 
 Phase numbers are labels, not an order. A phase starts when the content needs it: 3D (phase 5)
@@ -133,6 +133,12 @@ copy. No translations and no locale switch yet. To keep it cheap in tokens: list
 script first, then move them file by file, one commit per layer. Content (MDX, step captions,
 problem prompts in generators) stays out of scope; its plan is in [PRODUCT_VISION.md](PRODUCT_VISION.md).
 Doing it before phases 4 and 7 means their new UI is written against the messages module.
+
+Done on 2026-10-17: about 220 strings moved into `src/i18n/messages.ts` (`msg`), with `plural`,
+`count`, `formatInteger`, `formatPercent` and `formatDateTime` in `src/i18n/format.ts`.
+`scripts/ui-strings.mjs` lists hard-coded copy and `pnpm lint` fails on any. The answer checker
+in `src/lib` returns issue codes, worded by the UI. Next for i18n (not planned): a `pt-BR` object
+of type `Messages`, a locale setting, then content translation as in `PRODUCT_VISION.md`.
 
 ### Later
 

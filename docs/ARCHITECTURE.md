@@ -31,6 +31,7 @@ src/
   progress/        Learner progress: schema, derivations, ProgressStore, the progress store hook
   practice/        Practice and checkpoint runner (problem cards, sessions, worksheets)
   state/           UI preferences (theme, panes)
+  i18n/            UI copy (`msg`, typed messages) and plural, number and date helpers
   app/             Router, pages, global hotkeys, theme sync
 ```
 
