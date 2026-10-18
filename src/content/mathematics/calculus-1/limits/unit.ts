@@ -10,6 +10,12 @@ export const unit = defineUnit({
     { id: 'one-sided-limits', title: 'Find one-sided and infinite limits' },
     { id: 'limits-at-infinity', title: 'Find limits at infinity from the dominant terms' },
     { id: 'evaluating-limits', title: 'Evaluate limits with the limit laws and algebra' },
+    {
+      id: 'standard-limits',
+      title: 'Use the squeeze theorem and the standard limits of sin x / x, e and (1 + 1/n)^n',
+    },
+    { id: 'continuity', title: 'Check continuity, classify discontinuities and apply the IVT' },
+    { id: 'growth-rates', title: 'Compare growth rates at infinity and use big-O' },
   ],
   terms: [
     {
@@ -73,6 +79,58 @@ export const unit = defineUnit({
       summary:
         'A substitution result such as $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$ that does not decide the limit: it can be any number, infinite, or not exist. Algebra (factor, rationalize, combine fractions) removes it.',
       introducedIn: 'limit-laws',
+    },
+    {
+      id: 'squeeze-theorem',
+      title: 'Squeeze theorem',
+      summary:
+        'If $g(x) \\le f(x) \\le h(x)$ near $a$ and $g$ and $h$ both tend to $L$ at $a$, then $f$ tends to $L$ too. Also called the sandwich theorem.',
+      introducedIn: 'squeeze-and-standard-limits',
+    },
+    {
+      id: 'continuity',
+      title: 'Continuity',
+      tex: '\\lim_{x \\to a} f(x) = f(a)',
+      summary:
+        '$f$ is continuous at $a$ when $f(a)$ is defined, the limit at $a$ exists, and the two are equal. On an interval: continuous at every point of it.',
+      introducedIn: 'continuity',
+    },
+    {
+      id: 'discontinuity',
+      title: 'Discontinuity',
+      summary:
+        'A point where a function is not continuous. Removable: the limit exists but differs from the value or the value is missing. Jump: the one-sided limits differ. Infinite: a vertical asymptote. Oscillating: no limit at all.',
+      introducedIn: 'continuity',
+    },
+    {
+      id: 'intermediate-value-theorem',
+      title: 'Intermediate value theorem',
+      summary:
+        'If $f$ is continuous on $[a, b]$ and $N$ is between $f(a)$ and $f(b)$, then $f(c) = N$ for some $c$ in $(a, b)$. With $N = 0$: a sign change means a root.',
+      introducedIn: 'continuity',
+    },
+    {
+      id: 'bisection-method',
+      title: 'Bisection method',
+      summary:
+        'Root finding by halving: keep the half of the interval where $f$ changes sign. After $k$ steps the root is trapped in an interval of width $\\frac{b - a}{2^k}$.',
+      introducedIn: 'continuity',
+    },
+    {
+      id: 'logarithmic-scale',
+      title: 'Logarithmic scale',
+      tex: '\\log_{10} y',
+      summary:
+        'An axis where equal steps multiply by the same factor, usually $10$. Exponentials become straight lines on it.',
+      introducedIn: 'growth-rates',
+    },
+    {
+      id: 'big-o',
+      title: 'Big-O notation',
+      tex: 'f = O(g)',
+      summary:
+        '$|f(x)| \\le C\\,|g(x)|$ for some constant $C$ and all large enough $x$. It keeps the order of growth and drops constant factors and lower terms.',
+      introducedIn: 'growth-rates',
     },
   ],
 })

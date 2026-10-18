@@ -1,0 +1,82 @@
+The <Term id="limit-laws">limit laws</Term> and algebra handle polynomials, roots and rational
+functions. Some limits need a different idea: $\frac{\sin x}{x}$ at $0$ gives
+$\frac{0}{0}$, and no factoring removes it. The squeeze theorem settles such limits by trapping
+the function between two simpler ones. Three limits found this way come up so often that they
+are worth knowing by heart.
+
+## The squeeze theorem
+
+If $g(x) \le f(x) \le h(x)$ for every $x$ near $a$ (except possibly at $a$) and
+
+$$
+\lim_{x \to a} g(x) = L = \lim_{x \to a} h(x),
+$$
+
+then $\lim_{x \to a} f(x) = L$. The function has nowhere else to go.
+
+In <StepLink step="squeeze">the first step</StepLink>, $\sin\frac{1}{x}$ swings between $-1$ and
+$1$ ever faster as $x \to 0$, so it has no limit there. Multiplying by $x$ tames it:
+$|x \sin\frac{1}{x}| \le |x|$, so <C c="blue">$x \sin\frac{1}{x}$</C> lies between <C c="teal">$-|x|$ and $|x|$</C>, and
+
+$$
+\lim_{x \to 0} x \sin\frac{1}{x} = 0.
+$$
+
+The same pattern works whenever a bounded factor multiplies something that tends to $0$.
+
+## sin x over x
+
+Take an angle $x$ in radians between $0$ and $\frac{\pi}{2}$ on the unit circle, as in <StepLink step="areas">the second step</StepLink>. Three nested shapes share the corner $O$ and the
+point $A = (1, 0)$:
+
+$$
+\underbrace{\frac{\sin x}{2}}_{\text{triangle } OAP} \le \underbrace{\frac{x}{2}}_{\text{sector}} \le \underbrace{\frac{\tan x}{2}}_{\text{triangle } OAT}.
+$$
+
+Multiply by $\frac{2}{\sin x}$, which is positive, and take reciprocals, which flips the
+inequalities:
+
+$$
+\cos x \le \frac{\sin x}{x} \le 1.
+$$
+
+Both bounds tend to $1$, so by the squeeze theorem
+
+$$
+\lim_{x \to 0} \frac{\sin x}{x} = 1.
+$$
+
+For negative $x$ the quotient is the same as at $-x$, so the limit is two-sided. The sector's
+area is $\frac{x}{2}$ only when $x$ is in radians; in degrees the limit would be
+$\frac{\pi}{180}$. This limit is why calculus measures angles in radians, and it gives
+$\sin' = \cos$ in the Derivatives unit. Related limits follow from it, for example
+$\lim_{x \to 0} \frac{\sin 3x}{x} = 3 \lim_{u \to 0} \frac{\sin u}{u} = 3$ with $u = 3x$.
+
+## The slope of e^x at 0
+
+The quotient $\frac{b^h - 1}{h}$ is the slope of the secant of $b^x$ from $x = 0$ to $x = h$. In <StepLink step="exponential">the exponential step</StepLink> it tends to about $0.693$ for $b = 2$
+and $1.099$ for $b = 3$. Somewhere between them is the base whose slope at $0$ is exactly $1$, and
+that base is the <Term id="euler-number">number $e$</Term>:
+
+$$
+\lim_{h \to 0} \frac{e^h - 1}{h} = 1.
+$$
+
+In general the limit is $\ln b$. That $e^x$ is its own slope everywhere follows from this one
+limit, in the Derivatives unit.
+
+## (1 + 1/n)^n
+
+The compound interest formula gives the third limit:
+
+$$
+\lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e \approx 2.71828.
+$$
+
+The base tends to $1$ and the exponent to $\infty$, and the two effects balance: $1^\infty$ is an <Term id="indeterminate-form">indeterminate form</Term>, like $\frac{0}{0}$. With $t = \frac{1}{n}$
+the same limit reads $\lim_{t \to 0} (1 + t)^{1/t} = e$, which is
+how <StepLink step="compound">the last step</StepLink> draws it. From either side the values approach
+$e$; at $n = 50$ the gap is still about $0.027$. The more general form is
+$\lim_{n \to \infty} \left(1 + \frac{a}{n}\right)^n = e^a$.
+
+Next: continuity, which turns "the limit equals the value" into a definition.

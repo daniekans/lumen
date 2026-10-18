@@ -1,0 +1,84 @@
+A <Term id="limit">limit</Term> ignores the value at the point. Continuity asks for the case where
+the two agree: the graph can be drawn through $a$ without lifting the pen. It is the property that
+lets <Term id="direct-substitution">direct substitution</Term> work, and on an interval it
+guarantees that equations have solutions.
+
+## The definition
+
+$f$ is continuous at $a$ when
+
+$$
+\lim_{x \to a} f(x) = f(a).
+$$
+
+That one equation holds three conditions, checked in <StepLink step="definition">the first step</StepLink>:
+
+1. $f(a)$ is defined.
+2. $\lim_{x \to a} f(x)$ exists.
+3. The two are equal.
+
+A function is continuous on an interval when it is continuous at every point of it (at an
+endpoint, with the one-sided limit from inside). Polynomials are continuous everywhere; rational,
+root, exponential, logarithmic and trigonometric functions are continuous wherever they are
+defined. By the <Term id="limit-laws">limit laws</Term>, sums, products, quotients (where the
+denominator is not $0$) and compositions of continuous functions are continuous.
+
+## Kinds of discontinuity
+
+Each failed condition gives a different picture, as in <StepLink step="discontinuities">the second step</StepLink>:
+
+| Kind        | Example at $a = 1$                     | What fails                                                      |
+| ----------- | -------------------------------------- | --------------------------------------------------------------- |
+| removable   | a hole, or a point moved off the curve | the limit exists but differs from $f(1)$ or $f(1)$ is undefined |
+| jump        | a piecewise function that steps        | the one-sided limits differ                                     |
+| infinite    | $2 + \frac{1}{x - 1}$                  | the values grow without bound                                   |
+| oscillating | $2 + \sin\frac{1}{x - 1}$              | the values never settle                                         |
+
+A removable discontinuity is the mild one: redefine $f(a)$ as the limit and the function becomes
+continuous. That is how $\frac{\sin x}{x}$ with the value $1$ at $0$ becomes continuous
+everywhere, and how a <Term id="hole">hole</Term> in a rational function gets filled.
+
+## Matching pieces
+
+A piecewise function built from continuous pieces can only break where the pieces meet. To make
+
+$$
+f(x) = \begin{cases} x^2 + c & x < 2 \\ 3x - 1 & x \ge 2 \end{cases}
+$$
+
+continuous, the left limit $4 + c$ must equal $f(2) = 5$, so $c = 1$
+(<StepLink step="parameter">the parameter step</StepLink>).
+
+## The intermediate value theorem
+
+If $f$ is continuous on $[a, b]$ and $N$ is any number between $f(a)$ and $f(b)$, then there is
+at least one $c$ in $(a, b)$ with
+
+$$
+f(c) = N.
+$$
+
+A continuous graph cannot get from one height to another without passing every height in between.
+In <StepLink step="ivt">the theorem's step</StepLink>, $f(x) = x^3 - x - 1$ has $f(1) = -1$ and
+$f(2) = 5$, so it takes every value between $-1$ and $5$ on $(1, 2)$. Continuity is essential: a
+jump can skip values. The theorem says a $c$ exists, not where it is or how many there are.
+
+Its most common use is $N = 0$: when $f(a)$ and $f(b)$ have opposite signs, $f$ has a root in
+$(a, b)$.
+
+## Bisection
+
+The theorem turns into an algorithm. Start with an interval where $f$ changes sign, check the sign
+at the midpoint $m$, and keep the half whose ends still differ in sign:
+
+$$
+[a, b] \to [a, m] \text{ or } [m, b].
+$$
+
+The root stays trapped, and the interval halves each time, so after $k$ steps its width is
+$\frac{b - a}{2^k}$. In <StepLink step="bisection">the last step</StepLink> the root of
+$x^3 - x - 1$ is about $1.3247$; ten steps narrow $[1, 2]$ to a width under $0.001$. Bisection is
+slow next to Newton's method (in Applications of derivatives) but it never fails on a continuous
+function with a sign change. The same halving idea is binary search over a sorted array.
+
+Next: practice with continuity and the standard limits.

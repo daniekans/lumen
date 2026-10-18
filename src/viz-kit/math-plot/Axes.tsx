@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { clamp, fmt, stepDigits, ticks, zoomedStep } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
 import { useCoords } from '../stage'
@@ -8,6 +9,8 @@ interface AxesProps {
   color?: string
   /** Hide tick labels whose absolute value exceeds this. */
   labelLimit?: number
+  /** Custom y tick labels, such as powers of ten on a logarithmic axis. Null hides a label. */
+  formatY?: (v: number) => ReactNode
 }
 
 /** x and y axes through the origin with small ticks and mono labels. */
@@ -16,6 +19,7 @@ export function Axes({
   labels = true,
   color = vc.axis,
   labelLimit = Infinity,
+  formatY,
 }: AxesProps) {
   const c = useCoords()
   const step = zoomedStep(base, c.zoom)
@@ -50,7 +54,7 @@ export function Axes({
           ))}
           {ys.map((v) => (
             <text key={`ly${v}`} x={lx - 9} y={c.y(v) + 3.5} textAnchor="end">
-              {fmt(v, digits)}
+              {formatY ? formatY(v) : fmt(v, digits)}
             </text>
           ))}
         </g>

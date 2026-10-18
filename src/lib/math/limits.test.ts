@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { approachInputs, limit, oneSidedLimit } from '.'
+import { approachInputs, bisection, limit, lnGamma, oneSidedLimit } from '.'
 
 describe('limits', () => {
   it('approaches from each side', () => {
@@ -35,5 +35,27 @@ describe('limits', () => {
     expect(limit((x) => Math.sqrt(4 * x * x + 1) / (x + 3), Infinity)).toBeCloseTo(2, 6)
     expect(limit((x) => Math.sqrt(4 * x * x + 1) / (x + 3), -Infinity)).toBeCloseTo(-2, 6)
     expect(limit((x) => (x * x) / (x + 1), Infinity)).toBe(Infinity)
+  })
+
+  it('bisects toward a root, halving the interval each step', () => {
+    const f = (x: number) => x ** 3 - x - 1
+    const steps = bisection(f, 1, 2, 20)
+    expect(steps).toHaveLength(21)
+    steps.forEach((s, k) => {
+      expect(s.b - s.a).toBeCloseTo(2 ** -k, 12)
+      expect(Math.sign(s.fa)).not.toBe(Math.sign(s.fb))
+    })
+    expect(steps.at(-1)!.mid).toBeCloseTo(1.324717957, 5)
+    expect(() => bisection(f, 2, 3, 1)).toThrow()
+  })
+
+  it('computes ln Γ, so factorials far past the float range', () => {
+    let fact = 1
+    for (let n = 1; n <= 20; n++) {
+      fact *= n
+      expect(lnGamma(n + 1)).toBeCloseTo(Math.log(fact), 9)
+    }
+    expect(lnGamma(0.5)).toBeCloseTo(Math.log(Math.sqrt(Math.PI)), 12)
+    expect(lnGamma(1001) / Math.LN10).toBeCloseTo(2567.6046, 3)
   })
 })

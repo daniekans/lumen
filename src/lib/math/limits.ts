@@ -54,3 +54,49 @@ export const limit = (f: Fn, a: number): number => {
     return (l + r) / 2
   return NaN
 }
+
+/** One interval of the bisection method, with the signs of f at its ends. */
+export interface Bracket {
+  a: number
+  b: number
+  mid: number
+  fa: number
+  fb: number
+  fmid: number
+}
+
+/**
+ * The first n + 1 intervals of the bisection method for a root of f in [a, b], where f(a) and
+ * f(b) have opposite signs. Each step keeps the half whose ends still have opposite signs, so by
+ * the intermediate value theorem (for continuous f) every interval contains a root.
+ */
+export const bisection = (f: Fn, a: number, b: number, n: number): Bracket[] => {
+  if (Math.sign(f(a)) === Math.sign(f(b))) throw new Error('f(a) and f(b) must differ in sign')
+  const out: Bracket[] = []
+  let [lo, hi] = [a, b]
+  for (let k = 0; k <= n; k++) {
+    const mid = (lo + hi) / 2
+    const [fa, fb, fmid] = [f(lo), f(hi), f(mid)]
+    out.push({ a: lo, b: hi, mid, fa, fb, fmid })
+    if (fmid === 0) break
+    if (Math.sign(fmid) === Math.sign(fa)) lo = mid
+    else hi = mid
+  }
+  return out
+}
+
+const LANCZOS = [
+  0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313,
+  -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6,
+  1.5056327351493116e-7,
+]
+
+/** ln Γ(x) for x > 0 (Lanczos approximation, about 15 digits). Γ(n + 1) = n!. */
+export const lnGamma = (x: number): number => {
+  if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - lnGamma(1 - x)
+  const z = x - 1
+  let s = LANCZOS[0]!
+  for (let i = 1; i < LANCZOS.length; i++) s += LANCZOS[i]! / (z + i)
+  const t = z + 7.5
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(s)
+}
