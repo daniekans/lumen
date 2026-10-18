@@ -17,6 +17,9 @@ src/
     templates/       AppShell, VizLayout, DocumentLayout
   viz-kit/         Building blocks for visualizations (public API in viz-kit/index.ts)
     stage/           Stage, coordinate system, Overlay, HtmlBox, VizSheet
+    stage3d/         Stage3D (orthographic orbit camera on top of Stage), camera math, and 3D
+                     primitives: Vector3D, Segment3D, Line3D, Path3D, Plane3D, Grid3D, Axes3D,
+                     Point3D, MathLabel3D, DropLines3D
     math-plot/       Grid, Axes, FunctionPlot, Path, Segment, Vector, Point, Arc, MathLabel, TextLabel,
                      AxisInterval (domains, ranges and solution sets on an axis), TransformedGrid
                      (the grid of the plane under a 2x2 matrix, filling any view), SeriesPlot (a
@@ -148,7 +151,15 @@ lets the grid and axes pick a coarser or finer step.
 KaTeX labels are HTML, so `MathLabel` portals into an HTML layer above the SVG while still being
 written inside SVG content.
 
-Future renderers (a canvas layer for particles, WebGL or react-three-fiber for 3D) mount inside the
+`<Stage3D radius={...}>` draws 3D scenes in the same SVG. It holds an orbit camera (`azimuth`,
+`elevation`, `zoom`, with $z$ up) and renders a plain `Stage` whose domain is the screen plane;
+`useProjection()` maps a point of space to that plane orthographically (`camera.ts`, tested), and
+each 3D primitive projects its points and draws with the 2D primitives. Dragging the background
+orbits, so 3D stages do not pan; the wheel and buttons zoom. `Point3D` drags on a given plane
+(`dragPlane`) or parallel to the screen. Pass `camera` and `onCameraChange` to drive the camera
+from steps. Shapes are drawn in tree order, without depth sorting.
+
+Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the
 same Stage container and read the same coordinates. Audio would be a service in `viz-kit` with a hook,
 lazily loaded like everything else.
 

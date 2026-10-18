@@ -17,7 +17,7 @@ awaiting feedback), `done`.
 | 2D    | Pilot content: Pre-calculus / Functions end to end, then the first Data Engineering unit  | done    |
 | 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree   | planned |
 | 4     | Pan and zoom on stages with axes, and a fullscreen mode                                   | done    |
-| 5     | 3D stages for multivariable calculus and linear algebra                                   | planned |
+| 5     | 3D stages for multivariable calculus and linear algebra                                   | done    |
 | 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
 | 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | done    |
 | 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | done    |
@@ -35,11 +35,11 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Vectors and linear combinations batch 1 (items 1 to 4) awaits
-Daniel's review. Then start phase 5 (3D): decide SVG projection or three.js (SVG first is the
-likely path), build a `Stage3D` with an orbit camera in the kit, and use it for batch 2 of the unit
-(`plans/linear-algebra.md`); item 5 (dot product) is 2D and can come first. Stages use `zoomable`,
-titled readout panels with hints, and `useVizParam` where a view is worth linking.
+**Suggested next session:** Vectors and linear combinations batch 2 (items 5 to 8: dot product,
+span and independence, lines and planes, practice) awaits Daniel's review, and so does the 3D
+stage it introduced (phase 5). Then batch 3 (items 9 to 11: basis and coordinates, its practice,
+the unit checkpoint) in `plans/linear-algebra.md`. Stages use `zoomable`, titled readout panels
+with hints, and `useVizParam` where a view is worth linking; 3D items use `Stage3D`.
 
 ### Phase 3: Explore page
 
@@ -48,19 +48,20 @@ preview, filters by area and tag, and search. Cards open the item normally. Need
 either a small static SVG thumbnail rendered from the visualization at a fixed step, or a
 `thumbnail` export in the item folder. The catalog already lists every item, so this is mostly UI.
 
-### Phase 5: 3D
+### Phase 5: 3D (done 2026-10-18)
 
-Needed for surfaces, gradients, partial derivatives and 3D linear maps. Two options, to decide at
-the start of the phase:
+Built as an own projection in SVG, the first of the two options considered (the other was
+react-three-fiber). `Stage3D` (`src/viz-kit/stage3d/`) wraps the 2D `Stage` with an orthographic
+orbit camera: drag the background to orbit, wheel or buttons to zoom, double-click to reset. The
+primitives (`Vector3D`, `Segment3D`, `Line3D`, `Path3D`, `Plane3D`, `Grid3D`, `Axes3D`, `Point3D`,
+`MathLabel3D`, `DropLines3D`) project their points and draw with the 2D kit, so strokes, colors,
+KaTeX labels and point hover work as in 2D. A step can drive the camera (`camera` and
+`onCameraChange` make it controlled). Drawing order is tree order; translucent planes keep it
+readable. First used by Vectors items 6 and 7.
 
-- **Own projection in SVG** (orbit camera, painter's ordering): keeps the exact 2D look (crisp strokes,
-  same tokens, KaTeX labels), enough for curves, vectors, grids, wireframe and simple shaded surfaces.
-- **react-three-fiber (three.js)**: real depth, lighting and large meshes, at the cost of a heavier
-  bundle and more work to match the flat, clean aesthetic.
-
-A likely path is SVG first for 3Blue1Brown-style line drawings, and three.js only if a visualization
-needs shaded surfaces that SVG cannot handle well. Either way it plugs in as a `Stage3D` using the same
-runtime, steps, controls and palette.
+Later, if needed: depth sorting of primitives (painter's ordering) for scenes where order matters,
+pinch to zoom on touch screens, a perspective option, and react-three-fiber only for shaded
+surfaces that SVG cannot draw well.
 
 ### Phase 6: Code lessons (idea, not planned yet)
 

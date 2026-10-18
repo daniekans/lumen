@@ -57,6 +57,10 @@ useStepEffect({
   `useState`, so the URL keeps them. Values that belong together go in one parameter with a codec
   (`numbersCodec`). A choice the step handlers set must be a parameter too, since a link with
   parameters skips the opening step's handler.
+- 3D scenes use `<Stage3D radius={...}>` with `Grid3D`, `Axes3D` and the other `*3D` primitives
+  (points as `Vec3` from `@/lib/math`). Draw back to front in tree order and keep planes
+  translucent. Check the home view: a direction pointing at the viewer looks short, and a right
+  angle with it looks wrong, so pick vectors (or a `home` camera) that read well.
 - Math goes in `src/lib` with a test.
 - If a piece could serve another item, add it to `src/viz-kit` (and export it from the folder's
   `index.ts`) instead of keeping it local.

@@ -20,7 +20,8 @@ order.
 5. Outline the Calculus courses (done, approved 2026-10-17)
 6. Calculus 1: Limits (done)
 7. Outline Linear Algebra (done, approved 2026-10-18), then Linear Algebra: Vectors and linear
-   combinations (batch 1 built 2026-10-18, in review; phase 5 (3D) before batch 2)
+   combinations (batch 1 approved; batch 2 and phase 5 (3D) built 2026-10-18, in review; then
+   batch 3, items 9 to 11)
 8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)
 9. Pre-calculus: Trigonometry (refresher)
 10. Calculus 1: Derivatives

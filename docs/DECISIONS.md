@@ -188,6 +188,12 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   listed as a contributor on the public repo. History was rewritten once to remove the old
   trailers. Only the GitHub noreply address appears as author and committer.
 
+- Phase 5 (2026-10-18): 3D is drawn in SVG with an orthographic orbit camera (`Stage3D`), not
+  three.js. It keeps the 2D look (same strokes, palette, KaTeX labels) and costs no bundle size.
+  Orthographic, so parallel lines stay parallel and equal steps stay equal, which matters for
+  linear algebra. The camera keeps the learner's orbit across steps; a step that moves the camera
+  returns it home when the next step starts. three.js only if a shaded surface needs it.
+
 ## Future direction (record, do not build yet)
 
 - Possibly a product for other learners: backend, accounts, premium tier. Keep the seams listed in
