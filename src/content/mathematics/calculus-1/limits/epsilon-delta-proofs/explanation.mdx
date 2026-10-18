@@ -1,0 +1,90 @@
+The <Term id="epsilon-delta">epsilon-delta definition</Term> turns "the limit is $L$" into a
+statement that can be proved. A proof is a rule that takes any $\varepsilon > 0$ and returns a
+$\delta > 0$ that works, together with the check that it does. Finding the rule and writing the
+proof are two separate jobs, done in opposite directions.
+
+## Scratch work, then the proof
+
+Scratch work starts from the goal and simplifies it until it reads as a condition on $|x - a|$.
+For $\lim_{x \to 1} (2x + 1) = 3$:
+
+$$
+|(2x + 1) - 3| = |2x - 2| = 2|x - 1| < \varepsilon \iff |x - 1| < \frac{\varepsilon}{2}.
+$$
+
+The proof then runs forward and never mentions the scratch work:
+
+> Let $\varepsilon > 0$ and take $\delta = \frac{\varepsilon}{2}$. If $0 < |x - 1| < \delta$, then
+> $|(2x + 1) - 3| = 2|x - 1| < 2\delta = \varepsilon$.
+
+Every linear limit goes the same way: for $f(x) = mx + b$ with $m \neq 0$, $|f(x) - f(a)| = |m|\,|x - a|$,
+so $\delta = \frac{\varepsilon}{|m|}$ (<StepLink step="linear">the second step</StepLink>).
+
+## Bounding the extra factor
+
+For $\lim_{x \to 1} x^2 = 1$ the scratch work gives
+
+$$
+|x^2 - 1| = |x - 1|\,|x + 1|,
+$$
+
+and $|x + 1|$ changes with $x$, so it cannot be divided out. The fix is to bound it. Decide first
+that $\delta \le 1$. Then $|x - 1| < 1$ gives $0 < x < 2$, so $|x + 1| < 3$, and
+
+$$
+|x^2 - 1| < 3|x - 1|,
+$$
+
+which is less than $\varepsilon$ when $|x - 1| < \frac{\varepsilon}{3}$. Both conditions must
+hold, so take the smaller:
+
+> Let $\varepsilon > 0$ and take $\delta = \min\left(1, \frac{\varepsilon}{3}\right)$. If
+> $0 < |x - 1| < \delta$, then $|x - 1| < 1$, so $|x + 1| < 3$, and
+> $|x^2 - 1| = |x - 1|\,|x + 1| < \frac{\varepsilon}{3} \cdot 3 = \varepsilon$.
+
+The $1$ in the minimum is not decoration. <StepLink step="restriction">The fourth step</StepLink>
+drops it: for $\varepsilon = 6$ the window $\frac{\varepsilon}{3} = 2$ reaches $x = 3$, where
+$x^2 = 9$ leaves the band. The number $1$ is a free choice; any fixed bound works, with a matching
+constant ($\delta \le 2$ gives $|x + 1| < 5$ and $\delta = \min(2, \frac{\varepsilon}{5})$).
+
+For $\lim_{x \to a} x^2 = a^2$ in general, $\delta \le 1$ gives $|x + a| \le |x - a| + 2|a| < 2|a| + 1$,
+so $\delta = \min\left(1, \frac{\varepsilon}{2|a| + 1}\right)$.
+
+## Proving a limit law
+
+The definition also proves the <Term id="limit-laws">limit laws</Term>, which were taken on trust
+so far. The sum law: suppose $f \to L$ and $g \to M$ as $x \to a$. The key tool is the triangle
+inequality, $|u + v| \le |u| + |v|$.
+
+> Let $\varepsilon > 0$. Since $f \to L$, there is $\delta_f > 0$ with $|f(x) - L| < \frac{\varepsilon}{2}$
+> whenever $0 < |x - a| < \delta_f$; likewise $\delta_g$ for $g$ and $M$. Take
+> $\delta = \min(\delta_f, \delta_g)$. If $0 < |x - a| < \delta$, both hold, and
+> $|(f(x) + g(x)) - (L + M)| \le |f(x) - L| + |g(x) - M| < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon$.
+
+Splitting $\varepsilon$ in two is allowed because the hypotheses hold for every tolerance, half of
+$\varepsilon$ included (<StepLink step="sum-law">the fifth step</StepLink>). The product and
+quotient laws use the same idea with more bookkeeping.
+
+## Proving that a limit does not exist
+
+The negation of the definition: there is an $\varepsilon > 0$ such that every $\delta > 0$ has some
+$x$ with $0 < |x - a| < \delta$ and $|f(x) - L| \ge \varepsilon$. To show there is no limit at all,
+it must hold for every $L$.
+
+> Let $f(x) = -1$ for $x < 0$ and $1$ for $x \ge 0$, and suppose $\lim_{x \to 0} f(x) = L$. Take
+> $\varepsilon = 1$ and any $\delta > 0$. The inputs $x_1 = -\frac{\delta}{2}$ and $x_2 = \frac{\delta}{2}$
+> are in the window, and $2 = |f(x_2) - f(x_1)| \le |f(x_2) - L| + |L - f(x_1)|$. So one of the two
+> distances is at least $1 = \varepsilon$, and no $\delta$ works. There is no limit.
+
+In general, a jump of size $J$ is beaten by any $\varepsilon \le \frac{J}{2}$
+(<StepLink step="no-limit">the last step</StepLink>).
+
+## A pattern for proofs
+
+1. Write $|f(x) - L|$ and factor out $|x - a|$.
+2. Bound what is left by a constant $C$, after restricting $\delta$ if needed.
+3. Take $\delta = \min\left(\text{restriction}, \frac{\varepsilon}{C}\right)$.
+4. Write the proof forward, from $0 < |x - a| < \delta$ to $|f(x) - L| < \varepsilon$.
+
+At infinity the same steps give an $N$ in place of a $\delta$: for $\lim_{x \to \infty} \frac{1}{x} = 0$,
+$\left|\frac{1}{x}\right| < \varepsilon$ when $x > \frac{1}{\varepsilon}$, so $N = \frac{1}{\varepsilon}$.

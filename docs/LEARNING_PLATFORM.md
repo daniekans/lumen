@@ -436,8 +436,7 @@ order.
 3. Pre-calculus: Polynomial and rational functions (refresher, built, in review)
 4. Pre-calculus: Exponential and logarithmic functions (refresher, built, in review)
 5. Outline the Calculus courses (done, approved 2026-10-17)
-6. Calculus 1: Limits (batches 1 and 2 built 2026-10-17 and 2026-10-18, in review; batch 3 next,
-   see the Limits unit plan)
+6. Calculus 1: Limits (built: batches 1 to 3 on 2026-10-17 and 2026-10-18, in review)
 7. Outline Linear Algebra (for review), then Linear Algebra: Vectors and linear combinations
 8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)
 9. Pre-calculus: Trigonometry (refresher)
@@ -706,8 +705,10 @@ $\frac{\Delta y}{\Delta x} \to \frac{dy}{dx}$. Numerical limits live in `src/lib
 near the point (or far out) and compare with the stored answer.
 
 Skills: `reading-limits`, `one-sided-limits`, `limits-at-infinity`, `evaluating-limits` (batch 1);
-`standard-limits`, `continuity`, `growth-rates` (batch 2); batch 3 adds one for the limit
-definition. Bisection and `lnGamma` live in `src/lib/math/limits.ts` (tested).
+`standard-limits`, `continuity`, `growth-rates` (batch 2); `limit-definition` (batch 3).
+Bisection, `lnGamma`, `largestDelta` (the best $\delta$ for an $\varepsilon$, by sampling and
+bisection) and `thresholdN` (its $\varepsilon$-$N$ version) live in `src/lib/math/limits.ts`
+(tested). The kit's `Band` draws the $\varepsilon$ band and the $\delta$ window across the view.
 
 | #   | Item                            | Kind       | Skills                               | Content                                                                                                                                                                   | Status |
 | --- | ------------------------------- | ---------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
@@ -719,10 +720,10 @@ definition. Bisection and `lnGamma` live in `src/lib/math/limits.ts` (tested).
 | 6   | continuity                      | explore    | continuity                           | Three conditions; removable, jump, infinite, oscillating; piecewise constant $c$; IVT on $x^3 - x - 1$; bisection with a zooming view                                     | review |
 | 7   | practice-continuity-and-squeeze | practice   | continuity, standard-limits          | Piecewise constant, classify (piecewise, rational), squeeze bounds, sine, $e^u - 1$, $(1 + \frac{a}{x})^{bx}$, IVT root interval                                          | review |
 | 8   | growth-rates                    | lesson     | growth-rates                         | Semi-log scale (`powerOfTen` axis labels); $x^p$ against $2^x$; $\ln x$; $x!$ via `lnGamma`; a dominant-term ratio; big-O with $C$                                        | review |
-| 9   | epsilon-delta                   | explore    |                                      | Batch 3                                                                                                                                                                   | todo   |
-| 10  | epsilon-delta-proofs            | lesson     |                                      | Batch 3                                                                                                                                                                   | todo   |
-| 11  | practice-limit-definition       | practice   |                                      | Batch 3                                                                                                                                                                   | todo   |
-| 12  | checkpoint                      | checkpoint |                                      | Batch 3: all generators plus a self-graded proof                                                                                                                          | todo   |
+| 9   | epsilon-delta                   | explore    | limit-definition                     | $\frac{x^2}{4} + 1$ with $f(2) = 3$: band, window, the game, nearer side, a jump beats every $L$, $\varepsilon$-$N$ on $2 + \frac{6 \sin x}{x}$                           | review |
+| 10  | epsilon-delta-proofs            | lesson     | limit-definition                     | Scratch work then proof; $2x + 1$; $x^2$ with $\min(1, \frac{\varepsilon}{3})$ and why; the sum law with $\frac{\varepsilon}{2}$; no limit at a jump                      | review |
+| 11  | practice-limit-definition       | practice   | limit-definition, growth-rates       | Best $\delta$ (line, parabola), the min rule, $N$ at infinity, growth ratios, big-O constant, proofs (linear, quadratic)                                                  | review |
+| 12  | checkpoint                      | checkpoint | all                                  | 11 generators across the unit plus a self-graded proof (constant multiple law)                                                                                            | review |
 
 Notes for the next batches: stages keep a uniform scale, so a view that zooms far out (limits at
 infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decimals only (no

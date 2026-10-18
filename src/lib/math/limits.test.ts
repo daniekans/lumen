@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { approachInputs, bisection, limit, lnGamma, oneSidedLimit } from '.'
+import {
+  approachInputs,
+  bisection,
+  largestDelta,
+  limit,
+  lnGamma,
+  oneSidedLimit,
+  thresholdN,
+} from '.'
 
 describe('limits', () => {
   it('approaches from each side', () => {
@@ -57,5 +65,31 @@ describe('limits', () => {
     }
     expect(lnGamma(0.5)).toBeCloseTo(Math.log(Math.sqrt(Math.PI)), 12)
     expect(lnGamma(1001) / Math.LN10).toBeCloseTo(2567.6046, 3)
+  })
+
+  it('finds the largest delta for an epsilon', () => {
+    // Linear: |3x + 1 - 7| < eps exactly when |x - 2| < eps / 3.
+    expect(largestDelta((x) => 3 * x + 1, 2, 7, 0.6).delta).toBeCloseTo(0.2, 9)
+    // x^2 near 3 with eps = 0.61: the right side reaches 9.61 at 3.1, the left side is farther.
+    const sq = largestDelta((x) => x * x, 3, 9, 0.61)
+    expect(sq.right).toBeCloseTo(0.1, 9)
+    expect(sq.left).toBeCloseTo(3 - Math.sqrt(8.39), 9)
+    expect(sq.delta).toBeCloseTo(0.1, 9)
+    // The value at a plays no part.
+    const hole = (x: number) => (x === 1 ? 50 : 2 * x)
+    expect(largestDelta(hole, 1, 2, 0.5).delta).toBeCloseTo(0.25, 9)
+    // Capped when every sampled x works, and 0 at a jump.
+    expect(largestDelta(() => 1, 0, 1, 0.1, 2).delta).toBe(2)
+    const jump = (x: number) => (x < 0 ? 0 : 1)
+    expect(largestDelta(jump, 0, 0.5, 0.4).delta).toBe(0)
+  })
+
+  it('finds the threshold N at infinity', () => {
+    expect(thresholdN((x) => 2 + 3 / x, 2, 0.1, 100)).toBeCloseTo(30, 8)
+    // An oscillation: the last x where |sin x / x| reaches eps decides.
+    const N = thresholdN((x) => Math.sin(x) / x, 0, 0.05, 100)
+    expect(Math.abs(Math.sin(N) / N)).toBeCloseTo(0.05, 8)
+    for (let x = N + 0.01; x < 100; x += 0.01) expect(Math.abs(Math.sin(x) / x)).toBeLessThan(0.05)
+    expect(thresholdN(() => 1, 1, 0.1, 10)).toBe(0)
   })
 })

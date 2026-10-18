@@ -16,6 +16,10 @@ export const unit = defineUnit({
     },
     { id: 'continuity', title: 'Check continuity, classify discontinuities and apply the IVT' },
     { id: 'growth-rates', title: 'Compare growth rates at infinity and use big-O' },
+    {
+      id: 'limit-definition',
+      title: 'Find delta for epsilon (and N at infinity) and write epsilon-delta proofs',
+    },
   ],
   terms: [
     {
@@ -131,6 +135,22 @@ export const unit = defineUnit({
       summary:
         '$|f(x)| \\le C\\,|g(x)|$ for some constant $C$ and all large enough $x$. It keeps the order of growth and drops constant factors and lower terms.',
       introducedIn: 'growth-rates',
+    },
+    {
+      id: 'epsilon-delta',
+      title: 'Epsilon-delta definition',
+      tex: '\\forall \\varepsilon > 0\\ \\exists \\delta > 0:\\ 0 < |x - a| < \\delta \\Rightarrow |f(x) - L| < \\varepsilon',
+      summary:
+        '$\\lim_{x \\to a} f(x) = L$ means: for every tolerance $\\varepsilon > 0$ there is a $\\delta > 0$ such that every $x$ with $0 < |x - a| < \\delta$ gives $|f(x) - L| < \\varepsilon$.',
+      introducedIn: 'epsilon-delta',
+    },
+    {
+      id: 'epsilon-n',
+      title: 'Epsilon-N definition',
+      tex: '\\forall \\varepsilon > 0\\ \\exists N:\\ x > N \\Rightarrow |f(x) - L| < \\varepsilon',
+      summary:
+        '$\\lim_{x \\to \\infty} f(x) = L$ means: for every $\\varepsilon > 0$ there is an $N$ such that every $x > N$ gives $|f(x) - L| < \\varepsilon$. The same idea with a threshold in place of a window.',
+      introducedIn: 'epsilon-delta',
     },
   ],
 })

@@ -1,0 +1,256 @@
+import { defineProblems, tex, type Rng } from '@/lib/practice'
+
+const { poly } = tex
+
+/** The limit as TeX: \lim_{x \to 2}. */
+const lim = (a: string | number) => `\\lim_{x \\to ${a}}`
+
+/** A decimal without float noise: 0.30000000000000004 prints as 0.3. */
+const dec = (v: number) => +v.toFixed(6)
+
+/** |x - a| as TeX, written |x + 2| for a = -2 and |x| for a = 0. */
+const dist = (a: number) => `|${poly([1, -a])}|`
+
+const nonzero = (rng: Rng, lo: number, hi: number) => {
+  let v = 0
+  while (v === 0) v = rng.int(lo, hi)
+  return v
+}
+
+/** Classes of functions by growth at infinity, slowest first. */
+export const GROWTH = ['log', 'power', 'exp'] as const
+export type Growth = (typeof GROWTH)[number]
+
+/** A member of a growth class: its TeX and its parameter. */
+const growthTerm = (rng: Rng, cls: Growth): { tex: string; param: number } => {
+  if (cls === 'log') {
+    const k = rng.pick([1, 2, 3])
+    return { tex: k === 1 ? '\\ln x' : `(\\ln x)^{${k}}`, param: k }
+  }
+  if (cls === 'power') {
+    const p = rng.pick([0.5, 1, 2, 3, 10])
+    return { tex: p === 0.5 ? '\\sqrt{x}' : p === 1 ? 'x' : `x^{${p}}`, param: p }
+  }
+  const b = rng.pick([1.1, 2, Math.E, 3])
+  return { tex: b === Math.E ? 'e^{x}' : `${b}^{x}`, param: b }
+}
+
+export const GROWTH_OPTIONS = ['$0$', '$\\infty$', '$1$', 'It does not exist'] as const
+
+export const problems = defineProblems([
+  {
+    id: 'delta-linear',
+    title: 'Delta for a line',
+    skills: ['limit-definition'],
+    difficulty: 1,
+    generate: (rng) => {
+      const m = nonzero(rng, -5, 5)
+      const b = rng.int(-6, 6)
+      const a = rng.int(-3, 4)
+      const L = m * a + b
+      const delta = rng.pick([0.01, 0.02, 0.05, 0.1, 0.2])
+      const eps = dec(Math.abs(m) * delta)
+      return {
+        prompt: `$${lim(a)} (${poly([m, b])}) = ${L}$. For $\\varepsilon = ${eps}$, what is the largest $\\delta$ such that $0 < ${dist(a)} < \\delta$ gives $\\lvert ${poly([m, b - L])} \\rvert < \\varepsilon$?`,
+        answer: { kind: 'number', value: delta },
+        hints: [`Factor $${Math.abs(m)}$ out of $\\lvert ${poly([m, b - L])} \\rvert$.`],
+        solution: [
+          `$\\lvert ${poly([m, b - L])} \\rvert = ${Math.abs(m)}\\,${dist(a)}$.`,
+          `That is less than $${eps}$ exactly when $${dist(a)} < \\frac{${eps}}{${Math.abs(m)}} = ${delta}$, so $\\delta = ${delta}$.`,
+        ],
+        data: { m, b, a, eps },
+      }
+    },
+  },
+  {
+    id: 'delta-quadratic',
+    title: 'Delta for a parabola',
+    skills: ['limit-definition'],
+    difficulty: 2,
+    generate: (rng) => {
+      const a = rng.pick([-4, -3, -2, -1, 1, 2, 3, 4])
+      const A = Math.abs(a)
+      // Keeps a^2 - eps positive, so the far side has an edge too.
+      const d = rng.pick(A === 1 ? [0.1, 0.2] : [0.1, 0.2, 0.5])
+      const eps = dec((A + d) ** 2 - A * A)
+      const side = a > 0 ? 'right' : 'left'
+      const edge = a > 0 ? dec(a + d) : dec(a - d)
+      return {
+        prompt: `$${lim(a)} x^2 = ${a * a}$. For $\\varepsilon = ${eps}$, find the largest $\\delta$ such that every $x$ with $0 < ${dist(a)} < \\delta$ has $|x^2 - ${a * a}| < \\varepsilon$.`,
+        answer: { kind: 'number', value: d },
+        hints: [
+          `Find where $x^2$ reaches $${a * a} + ${eps}$ and $${a * a} - ${eps}$ near $${a}$.`,
+          'The parabola is steeper on the side away from $0$, so that side is nearer.',
+        ],
+        solution: [
+          `$x^2 = ${dec(a * a + eps)}$ at $x = ${edge}$, a distance $${d}$ from $${a}$ on the ${side}.`,
+          `$x^2 = ${dec(a * a - eps)}$ at $x = ${a > 0 ? '' : '-'}\\sqrt{${dec(a * a - eps)}} \\approx ${(Math.sign(a) * Math.sqrt(a * a - eps)).toFixed(3)}$, farther away on the other side.`,
+          `The window must fit the nearer side: $\\delta = ${d}$.`,
+        ],
+        data: { a, eps },
+      }
+    },
+  },
+  {
+    id: 'delta-min-rule',
+    title: 'The minimum rule',
+    skills: ['limit-definition'],
+    difficulty: 2,
+    generate: (rng) => {
+      const a = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])
+      const C = 2 * Math.abs(a) + 1
+      const large = rng.int(0, 3) === 0
+      const eps = large ? C * rng.pick([2, 3]) : dec(C * rng.pick([0.01, 0.02, 0.05, 0.1]))
+      const delta = Math.min(1, dec(eps / C))
+      return {
+        prompt: `A proof that $${lim(a)} x^2 = ${a * a}$ restricts $\\delta \\le 1$, so that $|${poly([1, a])}| < 2|a| + 1 = C$ (here $a = ${a}$), and takes $\\delta = \\min\\left(1, \\frac{\\varepsilon}{C}\\right)$. What $\\delta$ does $\\varepsilon = ${eps}$ get?`,
+        answer: { kind: 'number', value: delta },
+        hints: [
+          `$C = 2 \\cdot ${Math.abs(a)} + 1 = ${C}$.`,
+          'Compare $\\frac{\\varepsilon}{C}$ with $1$.',
+        ],
+        solution: [
+          `$|x^2 - ${a * a}| = ${dist(a)}\\,|${poly([1, a])}|$, and with $${dist(a)} < 1$, $|${poly([1, a])}| < ${C}$.`,
+          `$\\frac{\\varepsilon}{C} = \\frac{${eps}}{${C}} = ${dec(eps / C)}$, so $\\delta = \\min(1, ${dec(eps / C)}) = ${delta}$.`,
+        ],
+        data: { a, eps },
+      }
+    },
+  },
+  {
+    id: 'epsilon-n',
+    title: 'N for a limit at infinity',
+    skills: ['limit-definition', 'limits-at-infinity'],
+    difficulty: 1,
+    generate: (rng) => {
+      const c = rng.int(-4, 4)
+      const b = rng.int(1, 9)
+      const eps = rng.pick([0.5, 0.2, 0.1, 0.05, 0.01])
+      const N = dec(b / eps)
+      const f = `\\frac{${poly([c, b])}}{x}`
+      return {
+        prompt: `$${lim('\\infty')} ${f} = ${c}$. For $\\varepsilon = ${eps}$, find the smallest $N$ such that every $x > N$ has $\\left|${f} - ${c < 0 ? `(${c})` : c}\\right| < \\varepsilon$.`,
+        answer: { kind: 'number', value: N },
+        hints: [`Split the fraction: $${f} = ${c} + \\frac{${b}}{x}$.`],
+        solution: [
+          `$\\left|${f} - ${c < 0 ? `(${c})` : c}\\right| = \\frac{${b}}{x}$ for $x > 0$.`,
+          `$\\frac{${b}}{x} < ${eps}$ exactly when $x > \\frac{${b}}{${eps}} = ${N}$, so $N = ${N}$.`,
+        ],
+        data: { c, b, eps },
+      }
+    },
+  },
+  {
+    id: 'growth-ratio',
+    title: 'Compare growth rates',
+    skills: ['growth-rates'],
+    difficulty: 1,
+    generate: (rng) => {
+      const [i, j] = rng.pick([
+        [0, 1],
+        [0, 2],
+        [1, 2],
+      ] as const)
+      const swap = rng.bool()
+      const [top, bottom] = swap ? [GROWTH[j], GROWTH[i]] : [GROWTH[i], GROWTH[j]]
+      const t = growthTerm(rng, top)
+      const u = growthTerm(rng, bottom)
+      const slower = !swap
+      return {
+        prompt: `Find $${lim('\\infty')} \\frac{${t.tex}}{${u.tex}}$.`,
+        answer: { kind: 'choice', options: [...GROWTH_OPTIONS], correct: slower ? 0 : 1 },
+        hints: ['At infinity, $\\ln x \\ll x^p \\ll b^x$ for any $p > 0$ and $b > 1$.'],
+        solution: [
+          `$${t.tex}$ is ${top === 'log' ? 'logarithmic' : top === 'power' ? 'a power' : 'exponential'} and $${u.tex}$ is ${bottom === 'log' ? 'logarithmic' : bottom === 'power' ? 'a power' : 'exponential'}.`,
+          slower
+            ? 'The bottom grows faster, so the ratio tends to $0$, however the constants compare for small $x$.'
+            : 'The top grows faster, so the ratio grows without bound: the limit is $\\infty$.',
+        ],
+        data: { top: GROWTH.indexOf(top), bottom: GROWTH.indexOf(bottom), t: t.param, u: u.param },
+      }
+    },
+  },
+  {
+    id: 'big-o-constant',
+    title: 'A big-O constant',
+    skills: ['growth-rates'],
+    difficulty: 2,
+    generate: (rng) => {
+      const p = rng.int(1, 5)
+      const q = rng.int(0, 9)
+      const r = q === 0 ? rng.int(1, 9) : rng.int(0, 9)
+      const x0 = rng.pick([1, 2, 4, 5, 10])
+      const C = dec(p + q / x0 + r / (x0 * x0))
+      const f = poly([p, q, r])
+      const ratio = `${p}${q ? ` + \\frac{${q}}{x}` : ''}${r ? ` + \\frac{${r}}{x^2}` : ''}`
+      return {
+        prompt: `$${f} = O(x^2)$. Find the smallest $C$ such that $${f} \\le C x^2$ for every $x \\ge ${x0}$.`,
+        answer: { kind: 'number', value: C },
+        hints: [
+          `Divide by $x^2$: $C$ must be at least $${ratio}$ for every $x \\ge ${x0}$.`,
+          'That ratio decreases as $x$ grows, so its largest value is at the left end.',
+        ],
+        solution: [
+          `$\\frac{${f}}{x^2} = ${ratio}$, which decreases for $x > 0$.`,
+          `Its largest value on $x \\ge ${x0}$ is at $x = ${x0}$: $C = ${p}${q ? ` + \\frac{${q}}{${x0}}` : ''}${r ? ` + \\frac{${r}}{${x0 * x0}}` : ''} = ${C}$.`,
+        ],
+        data: { p, q, r, x0 },
+      }
+    },
+  },
+  {
+    id: 'proof-linear',
+    title: 'Prove a linear limit',
+    skills: ['limit-definition'],
+    difficulty: 2,
+    generate: (rng) => {
+      const m = rng.pick([-5, -4, -3, -2, 2, 3, 4, 5])
+      const b = rng.int(-6, 6)
+      const a = rng.int(-3, 4)
+      const L = m * a + b
+      const xa = poly([1, -a])
+      const M = Math.abs(m)
+      return {
+        prompt: `Prove from the definition that $${lim(a)} (${poly([m, b])}) = ${L}$.`,
+        answer: { kind: 'self' },
+        hints: [
+          `Scratch work: simplify $\\lvert ${poly([m, b])} - ${L < 0 ? `(${L})` : L} \\rvert$ to a multiple of $|${xa}|$.`,
+        ],
+        solution: [
+          `Scratch work: $\\lvert ${poly([m, b])} - ${L < 0 ? `(${L})` : L} \\rvert = \\lvert ${poly([m, -m * a])} \\rvert = ${M}\\,|${xa}|$, which is less than $\\varepsilon$ when $|${xa}| < \\frac{\\varepsilon}{${M}}$.`,
+          `Proof: let $\\varepsilon > 0$ and take $\\delta = \\frac{\\varepsilon}{${M}}$.`,
+          `If $0 < |${xa}| < \\delta$, then $\\lvert ${poly([m, b])} - ${L < 0 ? `(${L})` : L} \\rvert = ${M}\\,|${xa}| < ${M}\\delta = \\varepsilon$.`,
+          `So for every $\\varepsilon > 0$ there is a $\\delta > 0$ that works, and the limit is $${L}$.`,
+        ],
+        data: { m, b, a },
+      }
+    },
+  },
+  {
+    id: 'proof-quadratic',
+    title: 'Prove a quadratic limit',
+    skills: ['limit-definition'],
+    difficulty: 3,
+    generate: (rng) => {
+      const a = rng.pick([-3, -2, 2, 3])
+      const C = 2 * Math.abs(a) + 1
+      const xa = poly([1, -a])
+      const xpa = poly([1, a])
+      return {
+        prompt: `Prove from the definition that $${lim(a)} x^2 = ${a * a}$.`,
+        answer: { kind: 'self' },
+        hints: [
+          `Factor: $|x^2 - ${a * a}| = |${xa}|\\,|${xpa}|$.`,
+          `Restrict $\\delta \\le 1$ and bound $|${xpa}|$ on $|${xa}| < 1$.`,
+        ],
+        solution: [
+          `Scratch work: $|x^2 - ${a * a}| = |${xa}|\\,|${xpa}|$. If $|${xa}| < 1$, then $x$ is between $${a - 1}$ and $${a + 1}$, so $|${xpa}| < ${C}$.`,
+          `Proof: let $\\varepsilon > 0$ and take $\\delta = \\min\\left(1, \\frac{\\varepsilon}{${C}}\\right)$.`,
+          `If $0 < |${xa}| < \\delta$, then $|${xa}| < 1$, so $|${xpa}| < ${C}$, and $|x^2 - ${a * a}| = |${xa}|\\,|${xpa}| < \\frac{\\varepsilon}{${C}} \\cdot ${C} = \\varepsilon$.`,
+          `So the limit is $${a * a}$.`,
+        ],
+        data: { a },
+      }
+    },
+  },
+])

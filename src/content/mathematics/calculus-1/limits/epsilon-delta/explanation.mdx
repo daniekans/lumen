@@ -1,0 +1,64 @@
+Every item so far read a <Term id="limit">limit</Term> as "$f(x)$ gets close to $L$ as $x$ gets
+close to $a$". That is enough to compute limits, but not to prove anything about them: how close,
+and close enough for what? The epsilon-delta definition answers both with two numbers.
+
+## Tolerance and window
+
+Measure closeness with distances. The output is within $\varepsilon$ of $L$ when
+$|f(x) - L| < \varepsilon$, the band in <StepLink step="band">the first step</StepLink>. The input
+is within $\delta$ of $a$, but not equal to it, when $0 < |x - a| < \delta$, the window
+in <StepLink step="window">the second step</StepLink>. The left inequality, $0 < |x - a|$, is what
+keeps $f(a)$ out of it, as in every limit so far.
+
+## The definition
+
+$$
+\lim_{x \to a} f(x) = L \iff \text{for every } \varepsilon > 0 \text{ there is a } \delta > 0 \text{ such that } 0 < |x - a| < \delta \implies |f(x) - L| < \varepsilon.
+$$
+
+Read it as <StepLink step="game">a game</StepLink>. A challenger names any tolerance
+$\varepsilon$, as small as they like. You answer with a window $\delta$. You win the round if every
+$x$ in the window has its output in the band. The limit is $L$ when you can win every round. This
+is the <Term id="epsilon-delta">epsilon-delta definition</Term>, due to Cauchy and Weierstrass.
+
+Three things follow from the wording:
+
+- $\delta$ depends on $\varepsilon$. Smaller tolerances usually need smaller windows, so a proof
+  gives $\delta$ as a formula in $\varepsilon$.
+- One working $\delta$ is enough. If $\delta$ works, so does every smaller one, so a proof may
+  use a $\delta$ smaller than the best.
+- The window is symmetric. When the graph is steeper on one side, that side sets the limit on
+  $\delta$ (<StepLink step="sides">the nearer side decides</StepLink>).
+
+For $f(x) = \frac{x^2}{4} + 1$ near $a = 2$, the output reaches $2 + \varepsilon$ at
+$x = 2\sqrt{1 + \varepsilon}$, so the best window is
+
+$$
+\delta = 2\sqrt{1 + \varepsilon} - 2,
+$$
+
+which is $0.449$ for $\varepsilon = 0.5$. Any positive $\varepsilon$ gives a positive $\delta$,
+so the limit is $2$, whatever $f(2)$ is.
+
+## Losing the game
+
+A limit fails to exist when some $\varepsilon$ beats every $\delta$. At the jump
+in <StepLink step="jump">the fifth step</StepLink>, values near $1$ on the left and near $2.5$ on the
+right sit in every window. For both to be within $\varepsilon$ of one $L$, the gap $1.5$ must be
+less than $2\varepsilon$. So $\varepsilon = 0.75$ defeats every candidate $L$, and the limit does
+not exist. This is how the definition proves a negative: name one $\varepsilon$ for which no
+$\delta$ works.
+
+## At infinity
+
+For $x \to \infty$ there is no point to be near, so the window becomes a threshold:
+
+$$
+\lim_{x \to \infty} f(x) = L \iff \text{for every } \varepsilon > 0 \text{ there is an } N \text{ such that } x > N \implies |f(x) - L| < \varepsilon.
+$$
+
+This is the <Term id="epsilon-n">epsilon-N definition</Term>.
+In <StepLink step="infinity">the last step</StepLink>, $|f(x) - 2| = \frac{6|\sin x|}{x} \le \frac{6}{x}$,
+so $N = \frac{6}{\varepsilon}$ always works, even if the smallest $N$ is a little less. Bounding the
+difference by something simpler and solving for the threshold is the same move a proof makes
+with $\delta$, which is the subject of the next item.

@@ -100,3 +100,56 @@ export const lnGamma = (x: number): number => {
   const t = z + 7.5
   return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(s)
 }
+
+/** Halves [lo, hi] 60 times, keeping lo where `ok` holds and hi where it fails. */
+const boundary = (ok: (t: number) => boolean, lo: number, hi: number) => {
+  for (let k = 0; k < 60; k++) {
+    const m = (lo + hi) / 2
+    if (ok(m)) lo = m
+    else hi = m
+  }
+  return lo
+}
+
+/**
+ * The largest δ (capped at `max`) such that |f(x) - L| < ε for every x with 0 < |x - a| < δ,
+ * found by sampling outward from a on each side and bisecting at the first failure. Returns 0
+ * when no δ works (a jump, or the wrong L). Each side's δ is returned too: the answer is the
+ * smaller one. Sampling can miss a spike narrower than max / samples, so it suits exercises only.
+ */
+export const largestDelta = (
+  f: Fn,
+  a: number,
+  L: number,
+  eps: number,
+  max = 1,
+  samples = 2000,
+): { delta: number; left: number; right: number } => {
+  const side = (s: 1 | -1) => {
+    const ok = (d: number) => Math.abs(f(a + s * d) - L) < eps
+    let prev = 0
+    for (let i = 1; i <= samples; i++) {
+      const d = (max * i) / samples
+      if (!ok(d)) return boundary(ok, prev, d)
+      prev = d
+    }
+    return max
+  }
+  const [left, right] = [side(-1), side(1)]
+  return { delta: Math.min(left, right), left, right }
+}
+
+/**
+ * The smallest N ≥ 0 such that |f(x) - L| < ε for every x with N < x ≤ max, found by sampling
+ * down from max and bisecting at the first failure. The epsilon-N version of `largestDelta`.
+ */
+export const thresholdN = (f: Fn, L: number, eps: number, max: number, samples = 4000) => {
+  const ok = (x: number) => Math.abs(f(x) - L) < eps
+  let prev = max
+  for (let i = samples - 1; i >= 0; i--) {
+    const x = (max * i) / samples
+    if (!ok(x)) return max - boundary((t) => ok(max - t), max - prev, max - x)
+    prev = x
+  }
+  return 0
+}
