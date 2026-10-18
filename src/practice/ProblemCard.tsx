@@ -71,7 +71,7 @@ export function ProblemCard({
       </div>
 
       <div className={styles.prompt}>
-        <RichText>{problem.prompt}</RichText>
+        <RichText displayStyle>{problem.prompt}</RichText>
       </div>
 
       <div className={styles.answerRow}>

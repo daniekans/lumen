@@ -169,7 +169,7 @@ export function CheckpointSheet({
                 )}
               </div>
               <div className={styles.prompt}>
-                <RichText>{e.problem.prompt}</RichText>
+                <RichText displayStyle>{e.problem.prompt}</RichText>
               </div>
               <div className={styles.noPrint}>
                 <AnswerField

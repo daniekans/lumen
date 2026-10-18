@@ -40,7 +40,7 @@ export function StepCheckView({ check, solved, onAnswer, onClear }: StepCheckVie
   return (
     <div className={styles.check}>
       <span className={styles.prompt}>
-        <RichText>{check.prompt}</RichText>
+        <RichText displayStyle>{check.prompt}</RichText>
       </span>
       {check.kind === 'choice' ? (
         <ChoiceOptions

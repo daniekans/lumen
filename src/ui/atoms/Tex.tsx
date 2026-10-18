@@ -1,5 +1,6 @@
 import katex from 'katex'
 import { memo } from 'react'
+import { texMacros } from '@/lib/texMacros'
 import styles from './Tex.module.css'
 
 interface TexProps {
@@ -10,16 +11,32 @@ interface TexProps {
 
 /** Renders a TeX string with KaTeX. Memoized because KaTeX parsing is not free. */
 export const Tex = memo(function Tex({ children, display = false, className }: TexProps) {
-  const html = katex.renderToString(children, { displayMode: display, throwOnError: false })
+  const html = katex.renderToString(children, {
+    displayMode: display,
+    throwOnError: false,
+    macros: texMacros(),
+  })
   return <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
 })
+
+/** TeX, not copy. */
+const DISPLAY_STYLE = '\\displaystyle ' // i18n-ignore
 
 /**
  * Renders plain text where segments wrapped in $...$ (inline) or $$...$$ (display) are TeX, and
  * segments wrapped in backticks are code (HTML, so long SQL wraps like text). The single wrapper keeps text and math
  * flowing as one line of text, even inside flex containers.
+ *
+ * `displayStyle` sets inline math at full size (fractions, limits) while it stays in the line.
+ * Problem statements use it, where the math is the subject rather than part of a sentence.
  */
-export function RichText({ children }: { children: string }) {
+export function RichText({
+  children,
+  displayStyle = false,
+}: {
+  children: string
+  displayStyle?: boolean
+}) {
   const parts = children.split(/(\$\$[^$]+\$\$|\$[^$]+\$|`[^`]+`)/g)
   return (
     <span>
@@ -29,7 +46,7 @@ export function RichText({ children }: { children: string }) {
             {p.slice(2, -2)}
           </Tex>
         ) : p.startsWith('$') && p.endsWith('$') && p.length > 1 ? (
-          <Tex key={i}>{p.slice(1, -1)}</Tex>
+          <Tex key={i}>{(displayStyle ? DISPLAY_STYLE : '') + p.slice(1, -1)}</Tex>
         ) : p.startsWith('`') && p.endsWith('`') && p.length > 2 ? (
           <code key={i} className={styles.code}>
             {p.slice(1, -1)}
