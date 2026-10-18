@@ -199,11 +199,21 @@ prerequisites shown on unit pages, never gates.
    Taylor series), parametric and polar.
 6. Multivariable Calculus and Optimization (core): gradients, the chain rule in many variables,
    gradient descent, convexity, constrained optimization. These feed Machine Learning directly.
-7. Discrete Math (refresher, on demand): sets, logic, relations, graphs, as other units need them.
+7. Discrete Math (core, decided 2026-10-17): sets, logic, relations, and graph theory in depth
+   (DAGs, lineage, graph neural networks later).
+8. Differential Equations (core, after Linear Algebra and Multivariable): second-order equations,
+   systems through eigenvalues, phase portraits, Fourier and Laplace. First-order equations are in
+   Calculus 2.
+9. Topology (later, after Multivariable): $\varepsilon$-$\delta$ generalized to open sets.
 
-Only Pre-calculus has unit-level plans so far. The Calculus courses above are headlines; outline
-them (units, items at headline level, threads, where the legacy items go) before building their
-first unit.
+The Calculus courses are outlined below (Calculus outline, approved on 2026-10-17). Each unit
+gets a full unit plan, like the pre-calculus ones, when its first batch is built.
+
+**Outline a course before its first unit.** Every course gets an outline like the Calculus one
+(units with items at headline level, threads, legacy items, wish list topics) before its first
+new unit is built, and Daniel reviews it. The suggested order of units lists these outline steps
+explicitly, so the next session picks them up without being asked. When that list gets within
+three steps of its end, the session that finishes a step extends it.
 
 ### Depth from Calculus on
 
@@ -221,6 +231,10 @@ one level further. Threads so far:
   version. Each item that uses the notation says what it means at that level.
 - **Limits.** From intuition to the techniques for evaluating them (algebra, squeeze, standard
   limits, L'Hôpital, series) and to the epsilon-delta definition, so limit problems become routine.
+- **Linear approximation** (approved 2026-10-17). The tangent line as the best linear fit; differentials;
+  L'Hôpital and Newton's method as uses of it; Taylor polynomials as better fits; the tangent plane,
+  the gradient and the Jacobian as the best linear map; Newton's method and gradient descent in
+  many variables. This is the thread that leads into Machine Learning.
 
 **Legacy items.** The first seven visualizations (`derivative-as-limit`, `riemann-sums`,
 `matrix-transformations`, `complex-multiplication`, `forward-pass`, `backpropagation`,
@@ -228,6 +242,149 @@ one level further. Threads so far:
 checkpoint) were built before any course plan. When
 their unit is built, fit them into it: keep the visuals mostly as they are, and revise the
 explanation, labels, titles, steps, order and placement where the plan needs it.
+
+### Calculus outline
+
+Approved by Daniel on 2026-10-17, depth included. Units with items at headline level; slugs, skills and
+exact content are settled in each unit plan. Kinds: E explore, L lesson, P practice, C checkpoint.
+Thread marks: **Lz** Leibniz notation, **Lim** limits, **Lin** linear approximation.
+
+#### Calculus 1
+
+Units stay as the existing folders: Limits, Derivatives, Applications of derivatives, Integrals.
+Trigonometry (refresher) comes before Derivatives, as in the suggested order.
+
+**1. Limits** (12 items)
+
+| #   | Item                            | Kind | Content                                                                                                     | Threads |
+| --- | ------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | approaching-a-value             | E    | Zoom in on $x \to a$ from both sides; a hole where $f(a)$ differs; $\Delta x$ and $\Delta y$ shrink         | Lim, Lz |
+| 2   | one-sided-and-infinite          | E    | Left and right limits, jumps, vertical asymptotes, limits at infinity (rational functions revisited)        | Lim     |
+| 3   | limit-laws                      | L    | Laws, direct substitution, factor and cancel, rationalize, common denominators                              | Lim     |
+| 4   | practice-evaluating-limits      | P    | Algebraic limits, one-sided limits, limits at infinity                                                      |         |
+| 5   | squeeze-and-standard-limits     | E    | Squeeze theorem; $\frac{\sin x}{x}$ by areas on the unit circle; $\frac{e^h - 1}{h}$; $(1 + \frac{1}{n})^n$ | Lim     |
+| 6   | continuity                      | E    | Three conditions, kinds of discontinuity, the intermediate value theorem by bisection                       |         |
+| 7   | practice-continuity-and-squeeze | P    | Continuity conditions, piecewise parameters, standard limits, IVT root intervals                            |         |
+| 8   | growth-rates                    | L    | $\ln x \ll x^p \ll b^x \ll x!$ at infinity, dominant terms, a first look at big-O                           | Lim     |
+| 9   | epsilon-delta                   | E    | The game: choose $\varepsilon$, find $\delta$ (backlog item); $\varepsilon$-$N$ at infinity                 | Lim     |
+| 10  | epsilon-delta-proofs            | L    | Writing proofs for linear and quadratic functions and for a limit law                                       | Lim     |
+| 11  | practice-limit-definition       | P    | $\delta$ for a given $\varepsilon$, growth comparisons, self-graded proofs                                  |         |
+| 12  | checkpoint                      | C    | All of the above plus a proof                                                                               |         |
+
+**2. Derivatives** (13 items; legacy items 1, 2 and 13)
+
+| #   | Item                          | Kind | Content                                                                                                    | Threads |
+| --- | ----------------------------- | ---- | ---------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | derivative-as-limit (legacy)  | L    | Revised: $\frac{dy}{dx}$ as the limit of $\frac{\Delta y}{\Delta x}$, tangent as the limit of secants      | Lz, Lim |
+| 2   | difference-quotients (legacy) | P    | Kept; revised to match item 1                                                                              |         |
+| 3   | derivative-function           | E    | $f'$ drawn point by point; where it fails (corner, cusp, vertical tangent); $\frac{d}{dx}$ as an operator  | Lz      |
+| 4   | power-and-sum-rules           | E    | $(x + h)^n$ expanded; $x^2$ as a growing square, $x^3$ as a growing cube; linearity                        |         |
+| 5   | product-and-quotient-rules    | E    | Product rule as a growing rectangle (backlog item); quotient rule from it                                  |         |
+| 6   | practice-basic-rules          | P    | Power, sum, product, quotient                                                                              |         |
+| 7   | exp-log-and-trig-derivatives  | E    | $e^x$ is its own slope; $\sin' = \cos$ on the unit circle; $\ln$ via the inverse                           |         |
+| 8   | chain-rule                    | E    | Composed stretching of number lines (backlog item); why $\frac{dy}{du}\frac{du}{dx}$ looks like cancelling | Lz      |
+| 9   | practice-chain-rule           | P    | Chains with every rule so far                                                                              |         |
+| 10  | implicit-and-inverse          | L    | Implicit curves, slope of an inverse as the reciprocal, $\arcsin$, logarithmic differentiation             | Lz      |
+| 11  | related-rates                 | L    | Linked quantities differentiated in $t$                                                                    | Lz      |
+| 12  | practice-implicit-and-related | P    | Implicit slopes, inverse derivatives, related rates                                                        |         |
+| 13  | checkpoint (legacy)           | C    | Rebuilt for the whole unit                                                                                 |         |
+
+**3. Applications of derivatives** (11 items)
+
+| #   | Item                         | Kind | Content                                                                                      | Threads  |
+| --- | ---------------------------- | ---- | -------------------------------------------------------------------------------------------- | -------- |
+| 1   | linear-approximation         | E    | Tangent as the best linear fit; $dy = f'(x)\,dx$ against $\Delta y$; error shrinks as $dx^2$ | Lz, Lin  |
+| 2   | extrema                      | E    | Critical points, first derivative test, extreme value theorem on a closed interval           |          |
+| 3   | mean-value-theorem           | E    | A secant slope matched by a tangent; Rolle; $f' = 0$ means constant                          |          |
+| 4   | concavity-and-sketching      | E    | $f''$, inflection points, reading $f$, $f'$, $f''$ together                                  |          |
+| 5   | practice-curve-analysis      | P    | Critical points, intervals, inflection, absolute extrema                                     |          |
+| 6   | optimization                 | L    | Modeling, then optimizing on an interval                                                     |          |
+| 7   | practice-optimization        | P    | Optimization problems with computed answers                                                  |          |
+| 8   | lhopital                     | E    | Ratio of two linear approximations near $a$; $0 \cdot \infty$, $1^\infty$, back to $e$       | Lim, Lin |
+| 9   | newtons-method               | E    | Iterating tangents to a root; fast convergence and failures                                  | Lin      |
+| 10  | practice-lhopital-and-newton | P    | Indeterminate forms, Newton steps                                                            |          |
+| 11  | checkpoint                   | C    | All of the above plus a proof (MVT consequence)                                              |          |
+
+**4. Integrals** (11 items; legacy item 1)
+
+| #   | Item                             | Kind | Content                                                                          | Threads |
+| --- | -------------------------------- | ---- | -------------------------------------------------------------------------------- | ------- |
+| 1   | riemann-sums (legacy)            | E    | Revised: sigma notation, $\sum f(x_i)\,\Delta x \to \int f(x)\,dx$               | Lz, Lim |
+| 2   | definite-integral                | L    | Signed area, properties, exact values from sum formulas                          |         |
+| 3   | accumulation-functions           | E    | $A(x) = \int_a^x f$ grows at rate $f(x)$: FTC part 1 (backlog item)              |         |
+| 4   | fundamental-theorem              | L    | Antiderivatives, FTC part 2, evaluation                                          |         |
+| 5   | practice-antiderivatives-and-ftc | P    | Basic antiderivatives, definite integrals, derivatives of accumulation functions |         |
+| 6   | substitution                     | E    | Change of variable as stretching the axis; $du = g'(x)\,dx$                      | Lz      |
+| 7   | practice-substitution            | P    | Indefinite and definite substitution                                             |         |
+| 8   | net-change-and-average-value     | L    | Displacement against distance, average value, mean value theorem for integrals   |         |
+| 9   | area-between-curves              | E    | Slices in $x$ or in $y$                                                          | Lz      |
+| 10  | practice-applying-integrals      | P    | Net change, average value, areas                                                 |         |
+| 11  | checkpoint                       | C    | All of the above plus a proof                                                    |         |
+
+#### Calculus 2
+
+Six units, about 60 items.
+
+1. **Integration techniques** (11): integration by parts (the product rule rectangle in reverse),
+   trigonometric integrals and substitutions, partial fractions (rational functions revisited),
+   numerical integration (trapezoid, Simpson, error bounds), improper integrals (Gabriel's horn).
+   Threads: Lz, Lim.
+2. **Applications of integration** (10): volumes by disks, washers and shells; arc length; surface
+   area; work; center of mass; probability densities (a bridge to Probability). Lz: every quantity
+   built as $\int (\text{piece})$ from a slice.
+3. **Differential equations** (10): slope fields, separable equations ($\frac{dy}{y} = k\,dx$ as a
+   legitimate use of differentials), growth, decay and logistic models, Euler's method against the
+   exact solution (backlog item), first-order linear equations with an integrating factor. Lz.
+4. **Sequences and series** (12): sequences and $\varepsilon$-$N$ limits, partial sums, geometric
+   series, convergence tests (integral, comparison, ratio, root, alternating), absolute and
+   conditional convergence (rearrangement). Lim.
+5. **Power and Taylor series** (11): Taylor polynomials converging to a function (backlog item), the
+   remainder, radius of convergence, operating on series term by term, limits through series, and
+   Euler's formula: $e^{ix}$ from the series and the spiral $\left(1 + \frac{i\pi}{n}\right)^n \to -1$.
+   Lim, Lin.
+6. **Parametric and polar** (8): parametric curves, $\frac{dy}{dx} = \frac{dy/dt}{dx/dt}$, arc length,
+   polar curves and their areas. Lz.
+
+#### Multivariable Calculus and Optimization
+
+Five units, about 55 items. Needs 3D stages (phase 5) and leans on Linear Algebra (vectors,
+matrices, eigenvalues) as a suggested prerequisite.
+
+1. **Curves and surfaces in space** (8): 3D coordinates, dot and cross product as a recap from
+   Linear Algebra, lines and planes, vector-valued functions (velocity, arc length, curvature).
+2. **Partial derivatives** (12): surfaces and level curves, limits along paths, partial
+   derivatives, tangent planes, the total differential $dz = f_x\,dx + f_y\,dy$, the chain rule
+   in many variables (`backpropagation` linked as its application), gradient and directional
+   derivatives, the Jacobian as the best linear map, implicit functions. Lz, Lin.
+3. **Optimization** (11): critical points, the Hessian and the second derivative test through
+   eigenvalues, convexity, gradient descent on a 2D loss surface with step size and momentum
+   (backlog item, reused by Machine Learning), Newton's method in $n$ dimensions, Lagrange
+   multipliers, least squares as an optimization. Lin.
+4. **Multiple integrals** (11): double integrals as iterated sums, order of integration, polar,
+   cylindrical and spherical coordinates, change of variables with $dA = |\det J|\,du\,dv$, the
+   Gaussian integral, mass and probability. Lz.
+5. **Vector calculus** (13): vector fields, line integrals (work and flux), conservative fields and
+   potentials, Green's theorem, curl and divergence, surface integrals, the Stokes and divergence
+   theorems, and differential forms with $\int_{\partial M} \omega = \int_M d\omega$ as the
+   Leibniz thread's end point. Lz.
+
+#### Legacy items and wish list placement
+
+- `derivative-as-limit`, `difference-quotients`, the derivatives checkpoint: Derivatives 1, 2, 13.
+  `riemann-sums`: Integrals 1. The others are outside Calculus: `matrix-transformations` (Linear
+  Algebra), `complex-multiplication` (Complex Numbers), `forward-pass`, `backpropagation`
+  (Machine Learning, with the multivariable chain rule linked), `rag-pipeline` (AI Engineering).
+- Euler's formula and the $(1 + \frac{i\pi}{n})^n$ spiral: Calculus 2, Power and Taylor series,
+  linked from Complex Numbers.
+- Limit techniques: the Limits thread (Limits 3, 5, 8 to 10; L'Hôpital; series).
+- Line and surface integrals, Multivariable Calculus: Multivariable, Vector calculus.
+- Differential equations: first-order in Calculus 2. A later Differential Equations course
+  (second-order, systems through eigenvalues, phase portraits, Fourier and Laplace) after Linear
+  Algebra and Multivariable.
+- Outside Calculus (approved; detail them when those courses are outlined): complex numbers as
+  plane maps (Complex Numbers), graph theory (Discrete Math, now core: DAGs, lineage, GNNs),
+  fractals (Complex Numbers iteration, with Koch-style lengths from geometric series), topology
+  (a later course after Multivariable, generalizing $\varepsilon$-$\delta$ to open sets).
 
 ### Topics Daniel asked for
 
@@ -278,16 +435,19 @@ order.
 2. DE: Storage and file formats (done)
 3. Pre-calculus: Polynomial and rational functions (refresher, built, in review)
 4. Pre-calculus: Exponential and logarithmic functions (refresher, built, in review)
-5. Calculus 1: Limits
-6. Linear Algebra: Vectors and linear combinations
-7. DE: Partitioning, bucketing and hashing
-8. Pre-calculus: Trigonometry (refresher)
-9. Calculus 1: Derivatives
-10. Linear Algebra: Linear maps and matrices
-11. DE: Distributed processing
+5. Outline the Calculus courses (done, approved 2026-10-17)
+6. Calculus 1: Limits
+7. Outline Linear Algebra (for review), then Linear Algebra: Vectors and linear combinations
+8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)
+9. Pre-calculus: Trigonometry (refresher)
+10. Calculus 1: Derivatives
+11. Linear Algebra: Linear maps and matrices
+12. DE: Distributed processing
+13. Outline Probability and Statistics (for review), then its first unit
 
 After that, keep rotating: Calculus 1, Linear Algebra, Probability, one DE unit every two or three
-math units, and Machine Learning once its prerequisites exist.
+math units, and Machine Learning once its prerequisites exist (outline it first). Extend this
+list with concrete steps, outline steps included, before it runs out.
 
 ## Phases and tracker
 

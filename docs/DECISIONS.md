@@ -82,6 +82,13 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   `complex-multiplication`) predate the course plans (2026-10-17). When their unit is built, review
   them against the unit plan: keep the visuals mostly intact (Daniel likes them), and revise
   explanations, labels, titles, steps and placement as needed.
+- Calculus outline approved (2026-10-17): Calculus 1 at about 47 items, Calculus 2 and
+  Multivariable as outlined in `LEARNING_PLATFORM.md`. A third thread, linear approximation, runs
+  from the tangent line to gradient descent. New courses: Differential Equations (after Linear
+  Algebra and Multivariable), Discrete Math promoted to core (graph theory), Topology later.
+- Every course is outlined (and reviewed by Daniel) before its first unit is built (2026-10-17).
+  Daniel starts sessions with "continue" and expects Claude to bring up outline steps itself, so
+  they are listed in the suggested order of units, which is extended before it runs out.
 - Daniel keeps a wish list of topics for later (Euler's formula, topology, fractals and more). It
   lives in `LEARNING_PLATFORM.md` (Topics Daniel asked for); place each item in a unit when its
   course is outlined.
