@@ -105,7 +105,11 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Saving tokens matters as much as batching: a new phase or batch should be startable from a fresh
   session using only the repo docs. Every final answer that ends a piece of work suggests a short
   prompt for continuing in a clean session (not needed for questions or small adjustments that
-  belong to the current conversation).
+  belong to the current conversation). The default prompt is the generic one: "Continue Lumen:
+  take the next step in "Suggested order of units" (docs/LEARNING_PLATFORM.md)." A specific
+  prompt replaces it only when the next session needs something from Daniel that the docs cannot
+  hold, such as his review notes (`<notes>` as a placeholder) or the answer to an open question.
+  Everything else goes into the docs, not into the prompt.
 - After a finished batch or a set of adjustments, commit, push and deploy without asking. Ask first
   only when a choice is not straightforward and Daniel's judgment would matter.
 
