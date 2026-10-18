@@ -7,7 +7,7 @@ import type { StrokeStyle } from './Path'
 
 interface FunctionPlotProps extends StrokeStyle {
   f: Fn
-  /** Restrict the x range. Defaults to the visible range. */
+  /** Restrict the x range, clipped to the visible range. Use Infinity for an open end. */
   domain?: readonly [number, number]
   samples?: number
   /** x values where the curve must not be joined, such as vertical asymptotes. */
@@ -26,9 +26,11 @@ export function FunctionPlot({
   dash,
 }: FunctionPlotProps) {
   const c = useCoords()
-  const [a, b] = domain ?? c.view.x
+  const a = Math.max(domain?.[0] ?? -Infinity, c.view.x[0])
+  const b = Math.min(domain?.[1] ?? Infinity, c.view.x[1])
   const breakKey = breaks?.join(',') ?? ''
   const d = useMemo(() => {
+    if (a >= b) return ''
     const cuts = breakKey ? breakKey.split(',').map(Number) : []
     const pts: [number, number][] = []
     for (let k = 0; k <= samples; k++) {

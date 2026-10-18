@@ -197,7 +197,7 @@ export default function Logarithms() {
 
         {id === 'what-power' && (
           <>
-            <FunctionPlot f={log} domain={[0.005, X_MAX + 20]} color={vc.teal} />
+            <FunctionPlot f={log} domain={[1e-6, Infinity]} color={vc.teal} />
             <Segment from={[px, 0]} to={P} color={vc.yellow} width={2} dash="5 5" />
             <Point at={[1, 0]} color={vc.teal} r={4} />
             <MathLabel at={[1, 0]} tex="(1, 0)" color={vc.teal} anchor="se" offset={8} />
@@ -214,7 +214,7 @@ export default function Logarithms() {
 
         {id === 'product-rule' && (
           <>
-            <FunctionPlot f={log} domain={[0.005, X_MAX + 20]} color={vc.blue} />
+            <FunctionPlot f={log} domain={[1e-6, Infinity]} color={vc.blue} />
             <Segment from={[u, 0]} to={[u, log(u)]} color={vc.teal} width={3} />
             <Segment from={[v, 0]} to={[v, log(v)]} color={vc.yellow} width={3} />
             <Segment from={[w, 0]} to={[w, log(u)]} color={vc.teal} width={3} />
@@ -250,12 +250,12 @@ export default function Logarithms() {
           <>
             <FunctionPlot
               f={Math.log}
-              domain={[0.005, X_MAX + 20]}
+              domain={[1e-6, Infinity]}
               color={vc.muted}
               width={1.75}
               dash="5 6"
             />
-            <FunctionPlot f={log} domain={[0.005, X_MAX + 20]} color={vc.teal} />
+            <FunctionPlot f={log} domain={[1e-6, Infinity]} color={vc.teal} />
             <MathLabel at={[5, Math.log(5)]} tex="\ln x" color={vc.muted} anchor="n" offset={10} />
           </>
         )}
