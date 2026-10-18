@@ -1,0 +1,82 @@
+Spans are lines and planes through the origin. Most lines and planes miss the origin, and they
+are described the same way, with a starting point added: one direction for a line, two for a
+plane. A plane also has a single equation, written with the dot product.
+
+## Lines
+
+The <Term id="parametric-line">line</Term> through the point $\mathbf{p}$ with
+direction <C c="blue">$\mathbf{v} \ne \mathbf{0}$</C> is the set of points
+
+$$
+\mathbf{x} = \mathbf{p} + t\mathbf{v}, \qquad t \in \mathbb{R}.
+$$
+
+Each value of the parameter $t$ gives <StepLink step="line">one point</StepLink>: $t = 0$ is
+$\mathbf{p}$, $t = 1$ is one step of $\mathbf{v}$ further. To test whether a point is on the
+line, solve for $t$ with one component and check the others. For the line
+$(2, -1, 0) + t(-1, 2, 1)$ and the point $(0, 3, 2)$, the first component gives $2 - t = 0$, so
+$t = 2$, and the other two agree: $-1 + 4 = 3$, $0 + 2 = 2$.
+
+With $\mathbf{p} = \mathbf{0}$ the line is the <Term id="span">span</Term> of $\mathbf{v}$. Any
+other line is that span <StepLink step="shifted-span">moved by</StepLink> $\mathbf{p}$. The
+description is not unique: any point of the line can be the starting point, and any nonzero
+multiple of $\mathbf{v}$ can be the direction.
+
+## Planes
+
+With two directions that are not parallel, <C c="blue">$\mathbf{v}$</C>
+and <C c="yellow">$\mathbf{w}$</C>,
+
+$$
+\mathbf{x} = \mathbf{p} + s\mathbf{v} + t\mathbf{w}, \qquad s, t \in \mathbb{R},
+$$
+
+is the plane through $\mathbf{p}$ along them: their span, moved by $\mathbf{p}$. The example
+is $(2, 0, 2) + s(2, -1, 0) + t(0, 1, -1)$, whose parameters $s$ and
+$t$ <StepLink step="plane">reach</StepLink> every point of the plane.
+
+## The normal form
+
+A vector $\mathbf{n} \ne \mathbf{0}$ that is <Term id="orthogonal">orthogonal</Term> to both
+directions is a <Term id="normal-vector">normal vector</Term> of the plane. Here
+$\mathbf{n} = (1, 2, 2)$: it has dot product $2 - 2 = 0$ with $(2, -1, 0)$ and with $(0, 1, -1)$.
+Then $\mathbf{n}$ is orthogonal to every combination $s\mathbf{v} + t\mathbf{w}$, since
+$\mathbf{n} \cdot (s\mathbf{v} + t\mathbf{w}) = s\,(\mathbf{n} \cdot \mathbf{v}) + t\,(\mathbf{n} \cdot \mathbf{w}) = 0$.
+Those combinations are exactly the arrows $\mathbf{x} - \mathbf{p}$ from $\mathbf{p}$ to points of
+the plane, so every point $\mathbf{x}$ of the plane satisfies
+
+$$
+\mathbf{n} \cdot (\mathbf{x} - \mathbf{p}) = 0.
+$$
+
+The converse holds as well: the vectors orthogonal to $\mathbf{n}$ form exactly the plane
+spanned by $\mathbf{v}$ and $\mathbf{w}$, so a point that satisfies the equation is on the
+plane. <StepLink step="normal">Drag</StepLink> $\mathbf{x}$ to see the dot product stay $0$.
+
+## One equation
+
+Writing $\mathbf{x} = (x, y, z)$ and expanding the dot product turns the normal form into a linear
+equation:
+
+$$
+n_1 x + n_2 y + n_3 z = d, \qquad d = \mathbf{n} \cdot \mathbf{p}.
+$$
+
+For the example, $d = 1 \cdot 2 + 2 \cdot 0 + 2 \cdot 2 = 6$, and the plane is
+$x + 2y + 2z = 6$. The coefficients are the normal, read straight from
+the <StepLink step="equation">equation</StepLink>: the plane $3x - y + z = 4$ has normal $(3, -1, 1)$.
+To go back from the equation to a parametric form, find one point that satisfies it and two
+directions orthogonal to $\mathbf{n}$ that are not parallel.
+
+In the plane $\mathbb{R}^2$ the same equation $n_1 x + n_2 y = d$ is a line, with $\mathbf{n}$
+perpendicular to it. In space one equation gives a plane, so a line in space needs either the
+parametric form or two equations (two planes that meet in it).
+
+## Planes through the origin
+
+The plane $x + 2y + 2z = d$ contains $\mathbf{0}$ exactly when $d = 0$. Changing
+$d$ <StepLink step="through-origin">slides the plane</StepLink> along $\mathbf{n}$ without turning it,
+and at $d = 0$ it is the span of $\mathbf{v}$ and $\mathbf{w}$. So the spans of two independent
+vectors in space are the planes $n_1 x + n_2 y + n_3 z = 0$, and the spans of one nonzero vector are
+the lines through the origin. Solution sets of equations with right side $0$ return in the unit
+Systems and inverses as null spaces.

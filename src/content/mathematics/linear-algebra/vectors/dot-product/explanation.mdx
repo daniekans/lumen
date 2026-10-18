@@ -1,0 +1,133 @@
+Two vectors can point the same way, opposite ways, or anywhere in between. The dot product
+measures this with one number, computed from the components alone, and it is where lengths and
+angles come from in every dimension.
+
+## Multiply and add
+
+The <Term id="dot-product">dot product</Term> of two vectors with $n$ components is
+
+$$
+\mathbf{v} \cdot \mathbf{w} = v_1 w_1 + v_2 w_2 + \cdots + v_n w_n.
+$$
+
+For <C c="blue">$\mathbf{v} = (3, 1)$</C> and <C c="yellow">$\mathbf{w} = (1, 2)$</C>
+it is $3 \cdot 1 + 1 \cdot 2 = 5$. The result is a number (a scalar), not a vector. From the
+definition, for any vectors and any number $c$:
+
+$$
+\mathbf{v} \cdot \mathbf{w} = \mathbf{w} \cdot \mathbf{v}, \qquad
+\mathbf{u} \cdot (\mathbf{v} + \mathbf{w}) = \mathbf{u} \cdot \mathbf{v} + \mathbf{u} \cdot \mathbf{w}, \qquad
+(c\mathbf{v}) \cdot \mathbf{w} = c\,(\mathbf{v} \cdot \mathbf{w}),
+$$
+
+and a vector dotted with itself is the sum of its squared components, its
+squared <Term id="vector-length">length</Term>:
+
+$$
+\mathbf{v} \cdot \mathbf{v} = \lVert \mathbf{v} \rVert^2.
+$$
+
+## Shadow times length
+
+In the plane and in space the same number has a picture. Drop a perpendicular from the tip of
+$\mathbf{w}$ to the line through $\mathbf{v}$. The point where it lands marks
+the <C c="teal">shadow</C> of $\mathbf{w}$ on that line, and its signed length (negative when it
+points away from $\mathbf{v}$) is the <Term id="scalar-projection">scalar projection</Term> of
+$\mathbf{w}$ on $\mathbf{v}$. <StepLink step="projection">Then</StepLink>
+
+$$
+\mathbf{v} \cdot \mathbf{w} = \lVert \mathbf{v} \rVert \times (\text{shadow of } \mathbf{w}).
+$$
+
+The shadow itself, as a vector, is $\frac{\mathbf{v} \cdot \mathbf{w}}{\mathbf{v} \cdot \mathbf{v}}\,\mathbf{v}$:
+the multiple of $\mathbf{v}$ with that signed length. Projections return in the unit
+Orthogonality, where they become the core of least squares.
+
+## The angle
+
+With $\theta$ the angle between the two arrows ($0^\circ \le \theta \le 180^\circ$), the shadow of
+$\mathbf{w}$ is $\lVert \mathbf{w} \rVert \cos\theta$, so the shadow formula reads
+
+$$
+\mathbf{v} \cdot \mathbf{w} = \lVert \mathbf{v} \rVert \, \lVert \mathbf{w} \rVert \cos\theta.
+$$
+
+Why the component formula and this one agree: the arrows $\mathbf{v}$, $\mathbf{w}$ and
+$\mathbf{w} - \mathbf{v}$ form a triangle, and the law of cosines (the Pythagorean theorem with a
+correction for angles other than $90^\circ$) says
+
+$$
+\lVert \mathbf{w} - \mathbf{v} \rVert^2 = \lVert \mathbf{v} \rVert^2 + \lVert \mathbf{w} \rVert^2 - 2\lVert \mathbf{v} \rVert \, \lVert \mathbf{w} \rVert \cos\theta.
+$$
+
+Expanding the left side with the rules above gives
+$(\mathbf{w} - \mathbf{v}) \cdot (\mathbf{w} - \mathbf{v}) = \lVert \mathbf{w} \rVert^2 - 2\,\mathbf{v} \cdot \mathbf{w} + \lVert \mathbf{v} \rVert^2$.
+Comparing the two leaves $\mathbf{v} \cdot \mathbf{w} = \lVert \mathbf{v} \rVert \lVert \mathbf{w} \rVert \cos\theta$.
+The sign of the dot product is the sign of $\cos\theta$: positive
+for angles <StepLink step="angle">below</StepLink> $90^\circ$, negative above.
+
+## Orthogonal vectors
+
+At $90^\circ$ the cosine is $0$. Vectors with $\mathbf{v} \cdot \mathbf{w} = 0$ are
+called <Term id="orthogonal">orthogonal</Term>; for nonzero vectors in the plane or in space this
+means <StepLink step="orthogonal">perpendicular</StepLink>. The test needs no angle:
+$(3, 1) \cdot (-1, 3) = -3 + 3 = 0$. The zero vector is orthogonal to every vector.
+
+## Lengths bound the dot product
+
+Since $\lvert \cos\theta \rvert \le 1$, in the plane and in space
+
+$$
+\lvert \mathbf{v} \cdot \mathbf{w} \rvert \le \lVert \mathbf{v} \rVert \, \lVert \mathbf{w} \rVert.
+$$
+
+This is the <Term id="cauchy-schwarz">Cauchy-Schwarz inequality</Term>, and it holds in every
+$\mathbb{R}^n$, where there is no picture to read an angle from. A proof that uses only the rules
+of the dot product: if $\mathbf{w} = \mathbf{0}$ both sides are $0$. Otherwise, for every number
+$t$,
+
+$$
+0 \le \lVert \mathbf{v} - t\mathbf{w} \rVert^2 = \lVert \mathbf{v} \rVert^2 - 2t\,(\mathbf{v} \cdot \mathbf{w}) + t^2 \lVert \mathbf{w} \rVert^2.
+$$
+
+Choosing $t = \frac{\mathbf{v} \cdot \mathbf{w}}{\lVert \mathbf{w} \rVert^2}$ gives
+$0 \le \lVert \mathbf{v} \rVert^2 - \frac{(\mathbf{v} \cdot \mathbf{w})^2}{\lVert \mathbf{w} \rVert^2}$,
+which rearranges to $(\mathbf{v} \cdot \mathbf{w})^2 \le \lVert \mathbf{v} \rVert^2 \lVert \mathbf{w} \rVert^2$.
+Equality needs $\mathbf{v} - t\mathbf{w} = \mathbf{0}$, so it
+holds <StepLink step="bound">exactly when</StepLink> one vector is a multiple of the other.
+
+Cauchy-Schwarz gives angles in $\mathbb{R}^n$. For nonzero vectors the ratio
+$\frac{\mathbf{v} \cdot \mathbf{w}}{\lVert \mathbf{v} \rVert \lVert \mathbf{w} \rVert}$ lies
+between $-1$ and $1$, so it is the cosine of exactly one angle between $0^\circ$ and $180^\circ$.
+That angle is the definition of the angle between vectors in $\mathbb{R}^n$, and in the plane and
+space it agrees with the one measured on the arrows.
+
+It also proves the <Term id="triangle-inequality">triangle inequality</Term> from vector algebra
+in every $\mathbb{R}^n$:
+
+$$
+\lVert \mathbf{v} + \mathbf{w} \rVert^2 = \lVert \mathbf{v} \rVert^2 + 2\,\mathbf{v} \cdot \mathbf{w} + \lVert \mathbf{w} \rVert^2
+\le \lVert \mathbf{v} \rVert^2 + 2\lVert \mathbf{v} \rVert \lVert \mathbf{w} \rVert + \lVert \mathbf{w} \rVert^2
+= \left(\lVert \mathbf{v} \rVert + \lVert \mathbf{w} \rVert\right)^2.
+$$
+
+The middle step uses Cauchy-Schwarz, and taking square roots finishes the proof.
+Equality needs $\mathbf{v} \cdot \mathbf{w} = \lVert \mathbf{v} \rVert \lVert \mathbf{w} \rVert$,
+which happens exactly when one vector is a nonnegative multiple of the other.
+
+## Cosine similarity
+
+Text, images and users are often compared as feature vectors: counts of words, pixel values, or
+learned embeddings with hundreds of components. Dividing the dot product by both lengths leaves
+the cosine of the angle,
+
+$$
+\cos\theta = \frac{\mathbf{q} \cdot \mathbf{d}}{\lVert \mathbf{q} \rVert \, \lVert \mathbf{d} \rVert},
+$$
+
+the <Term id="cosine-similarity">cosine similarity</Term>. It is $1$ for vectors pointing the same
+way, $0$ for orthogonal ones, and it ignores length. In
+the <StepLink step="similarity">example</StepLink>, a long and a short sports article have counts
+$(8, 2)$ and $(3, 1)$ of the words "match" and "election". Their dot product is $26$ and their
+lengths are $\sqrt{68}$ and $\sqrt{10}$, so the similarity is $\frac{26}{\sqrt{680}} \approx 0.997$:
+the same topic, at different lengths. Search over embeddings ranks documents this way.

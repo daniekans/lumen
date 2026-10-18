@@ -1,0 +1,83 @@
+A few vectors and every way of scaling and adding them: which points of space can be reached?
+The answer is a line, a plane or all of space, and which one depends on whether some vector
+repeats what the others already reach.
+
+## Span
+
+The <Term id="span">span</Term> of vectors $\mathbf{v}_1, \ldots, \mathbf{v}_k$ is the set of all
+their <Term id="linear-combination">linear combinations</Term>:
+
+$$
+\operatorname{span}\{\mathbf{v}_1, \ldots, \mathbf{v}_k\} = \{\, c_1\mathbf{v}_1 + \cdots + c_k\mathbf{v}_k \;:\; c_1, \ldots, c_k \in \mathbb{R} \,\}.
+$$
+
+Taking every weight $0$ shows that a span always contains $\mathbf{0}$, so it passes through the
+origin. In space:
+
+- One nonzero vector <C c="blue">$\mathbf{v}$</C> spans the
+  <StepLink step="one">line</StepLink> through the origin along it: its multiples $a\mathbf{v}$.
+- Two vectors that are not parallel, <C c="blue">$\mathbf{v} = (1, 2, 0)$</C>
+  and <C c="yellow">$\mathbf{w} = (-1, 0, 2)$</C>, span a
+  <StepLink step="two">plane</StepLink> through the origin. Whole-number weights draw a grid on it,
+  as they did in the plane.
+
+## A vector that adds nothing
+
+Take <C c="fg">$\mathbf{u} = \mathbf{v} + \mathbf{w} = (0, 2, 2)$</C>. It
+lies <StepLink step="in-plane">in the plane</StepLink> of $\mathbf{v}$ and $\mathbf{w}$, and any
+combination of all three is already a combination of the first two:
+
+$$
+a\mathbf{v} + b\mathbf{w} + c\mathbf{u} = (a + c)\mathbf{v} + (b + c)\mathbf{w}.
+$$
+
+So $\operatorname{span}\{\mathbf{v}, \mathbf{w}, \mathbf{u}\}$ is still the plane. Whether a
+vector is in a span is a question about weights. For $(0, 2, 2)$, matching components in
+$a(1, 2, 0) + b(-1, 0, 2) = (0, 2, 2)$ gives
+
+$$
+a - b = 0, \qquad 2a = 2, \qquad 2b = 2,
+$$
+
+solved by $a = b = 1$. For $(2, -1, 2)$ the last two equations force $a = -\frac{1}{2}$ and
+$b = 1$, and then $a - b = -\frac{3}{2} \ne 2$: there are no weights, and the vector is off the
+plane. Three equations in two unknowns usually have no solution, which is why most vectors of
+space are outside a given plane.
+
+## Dependence and independence
+
+Vectors $\mathbf{v}_1, \ldots, \mathbf{v}_k$ are <Term id="linear-dependence">linearly dependent</Term>
+when some combination with weights not all zero gives the zero vector:
+
+$$
+c_1\mathbf{v}_1 + \cdots + c_k\mathbf{v}_k = \mathbf{0}, \quad \text{not all } c_i = 0.
+$$
+
+Otherwise they are <Term id="linear-independence">linearly independent</Term>: only
+$c_1 = \cdots = c_k = 0$ gives $\mathbf{0}$. In the example the combination
+$\mathbf{v} + \mathbf{w} - \mathbf{u}$ is $\mathbf{0}$, and the three arrows <StepLink step="redundant">close a loop</StepLink> tip to tail.
+
+Dependence means exactly that one vector is a combination of the others. If $c_j \ne 0$ in a
+combination equal to $\mathbf{0}$, divide by $c_j$ and solve for $\mathbf{v}_j$; it is a
+combination of the rest, and removing it leaves the span unchanged. Conversely, if
+$\mathbf{v}_j = \sum_{i \ne j} a_i\mathbf{v}_i$, moving $\mathbf{v}_j$ to the other side gives a
+combination equal to $\mathbf{0}$ whose weight on $\mathbf{v}_j$ is $-1$. Two special cases:
+
+- Two vectors are dependent exactly when one is a multiple of the other (they are parallel, or
+  one is $\mathbf{0}$).
+- Any set that contains $\mathbf{0}$ is dependent, since $1 \cdot \mathbf{0} = \mathbf{0}$.
+
+## Three vectors in space
+
+Lift $\mathbf{u}$ off the plane, to <C c="fg">$(2, -1, 2)$</C>. Each value of $c$ gives a copy of
+the plane moved by $c\mathbf{u}$, and these copies <StepLink step="space">fill space</StepLink>,
+so the span is all of $\mathbb{R}^3$. Now no loop closes: three vectors of space are independent
+exactly when they do not lie in one plane through the origin.
+
+Independence also makes the weights unique. If two combinations give the same vector,
+$\sum a_i\mathbf{v}_i = \sum b_i\mathbf{v}_i$, then $\sum (a_i - b_i)\mathbf{v}_i = \mathbf{0}$, and
+independence forces $a_i = b_i$ for every $i$. Independent vectors that span a space form a
+basis, and their unique weights are coordinates (Basis and coordinates, later in this unit). A fourth vector in space is
+always a combination of three independent ones, so four vectors of $\mathbb{R}^3$ are always
+dependent; the unit Vector spaces and change of basis proves the general fact, that more than $n$
+vectors in $\mathbb{R}^n$ are dependent.
