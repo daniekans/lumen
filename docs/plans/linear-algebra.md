@@ -5,8 +5,9 @@ Outline, threads and unit plans for Linear Algebra. Part of
 
 ## Status
 
-Outline drafted on 2026-10-18, **awaiting Daniel's review**. No unit is built until it is
-approved. Open questions for the review are at the end of the outline.
+Outline approved by Daniel on 2026-10-18, as drafted: eight units, the dot product in unit 1
+(revisited as duality in unit 7), and 3D from Vectors 6 on. The review decisions are at the end
+of the outline. Units are built in order; the Vectors unit plan is below.
 
 ## Depth and threads
 
@@ -144,6 +145,28 @@ low-rank structure in ML (embeddings, low-rank adapters). B, ML.
 - Graph theory: adjacency matrices and PageRank in Eigen, linked to Discrete Math.
 - Fourier series: functions as vectors in Vector spaces; orthogonal functions in Orthogonality.
 
+### Review decisions (2026-10-18)
+
+1. **Scope.** Eight units, about 90 items, as drafted. Units 5 and 7 keep their size.
+2. **Dot product in unit 1.** It is introduced in Vectors 5 as projection length times length,
+   with angles and cosine similarity, and Orthogonality extends it (a $1 \times n$ matrix,
+   duality). Nothing said in unit 1 is taken back later; unit 7 only adds a second view. This
+   follows Daniel's rule for every course: introduce an idea correctly and expand it later, never
+   simplify it in a way a later item has to correct.
+3. **3D early.** 3D first appears at Vectors 6 (span in space). Phase 5 starts right before that
+   item, as the next step after the unit's first batch.
+
+### Wish list and backlog placement
+
+- Backlog items: span of two vectors (Vectors 2, 6), matrix multiplication as composition (Linear
+  maps 6), eigenvectors (Eigen 1), change of basis (Vector spaces), dot product as projection
+  (Vectors 5, Orthogonality), SVD (SVD 1).
+- Complex numbers as plane maps: a complex number $a + bi$ acts as the matrix
+  $\begin{bmatrix} a & -b \\ b & a \end{bmatrix}$; linked from Eigen (complex eigenvalues). The
+  full topic stays in Complex Numbers.
+- Graph theory: adjacency matrices and PageRank in Eigen, linked to Discrete Math.
+- Fourier series: functions as vectors in Vector spaces; orthogonal functions in Orthogonality.
+
 ### Open questions for the review
 
 1. **Eight units, about 90 items.** Is the scope right, or should units 5 (Vector spaces) and 7
@@ -152,3 +175,35 @@ low-rank structure in ML (embeddings, low-rank adapters). B, ML.
    duality in unit 7. The alternative (3Blue1Brown's order) introduces it only after maps.
 3. **Phase 5 timing.** 3D first appears at Vectors 6. The alternative is to keep units 1 and 2 in
    the plane and gather 3D items into a later batch.
+
+## Vectors and linear combinations unit plan
+
+Folder `src/content/mathematics/linear-algebra/vectors/`. Core unit, 11 items in three batches, as
+in the outline. The thread: a vector is an arrow and a list at once; adding and scaling give linear
+combinations; length, the dot product and span measure and describe them; a basis turns the
+weights into coordinates. Components are written $(3, 1)$ in text and as columns in display
+formulas. Colors: $\mathbf{v}$ blue, $\mathbf{w}$ yellow, sums and results teal.
+
+Skills: `vector-arithmetic`, `vector-length`, `linear-combinations` (batch 1); `dot-product`,
+`span-and-independence`, `lines-and-planes` (batch 2); `basis-coordinates` (batch 3).
+Practice answers use the `vector` answer kind (ordered components, typed as `(3, -1)` or a
+column), added for this unit. `src/lib/math/vector.ts` has n-dimensional helpers (`addN`, `dotN`,
+`normN`, `simplifySqrt`); `tex.vector` and `tex.root` write vectors and simplified roots.
+
+| #   | Item                           | Kind       | Skills                                               | Content                                                                                                                                                                                | Status  |
+| --- | ------------------------------ | ---------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | vectors                        | explore    | vector-arithmetic                                    | Arrow and components, the same vector from any tail, tip to tail, either order (parallelogram), scaling with $c$, $\mathbf{w} - \mathbf{v}$, rows of a table and their average         | review  |
+| 2   | linear-combinations            | explore    | linear-combinations                                  | $a\mathbf{v} + b\mathbf{w}$ with sliders, reach $\mathbf{u} = (3, 4)$ (drag the tip, weights by Cramer), the slanted grid of whole weights, $\mathbf{w}$ turning parallel: only a line | review  |
+| 3   | vector-algebra                 | lesson     | vector-arithmetic, vector-length                     | Componentwise rules, the eight rules (grouping as two routes), length by Pythagoras in $\mathbb{R}^n$, $\lVert c\mathbf{v} \rVert$, unit vectors, distance, triangle inequality        | review  |
+| 4   | practice-vector-arithmetic     | practice   | all three                                            | Combinations (2D, 3D), solve $c\mathbf{x} + \mathbf{v} = \mathbf{w}$, exact lengths, unit vectors (whole lengths), distances, a missing component, weights of a target                 | review  |
+| 5   | dot-product                    | explore    | dot-product                                          | Projection length times length; $\cos\theta$; orthogonality; cosine similarity of feature vectors; Cauchy-Schwarz and the triangle inequality in $\mathbb{R}^n$ (item 3 promises it)   | planned |
+| 6   | span-and-independence          | explore    | span-and-independence                                | First 3D item: span of one, two, three vectors (line, plane, space); a dependent vector adds nothing; a combination equal to $\mathbf{0}$                                              | planned |
+| 7   | lines-and-planes               | lesson     | lines-and-planes                                     | $\mathbf{p} + t\mathbf{v}$, $\mathbf{p} + s\mathbf{v} + t\mathbf{w}$, normal form $\mathbf{n} \cdot (\mathbf{x} - \mathbf{p}) = 0$, spans as planes through the origin (3D)            | planned |
+| 8   | practice-dot-and-span          | practice   | dot-product, span-and-independence, lines-and-planes | Dot products, angles, orthogonality, in the span or not, independence of 2 or 3 vectors, plane equations                                                                               | planned |
+| 9   | basis-and-coordinates          | explore    | basis-coordinates                                    | $\hat{\imath}, \hat{\jmath}$; another basis draws another grid (item 2's grid, now named) and gives the same arrow other coordinates                                                   | planned |
+| 10  | practice-basis-and-coordinates | practice   | basis-coordinates                                    | Coordinates in a given basis (2D, 3D), is it a basis                                                                                                                                   | planned |
+| 11  | checkpoint                     | checkpoint | all                                                  | All of the above plus a self-graded proof (adding a vector outside the span keeps a set independent)                                                                                   | planned |
+
+Batches: 1 is items 1 to 4 (2D only). Batch 2 is items 5 to 8 and needs phase 5 first (a 3D stage,
+SVG projection with an orbit camera, see `ROADMAP.md`); item 5 stays 2D and can be built while
+phase 5 is under way. Batch 3 is items 9 to 11.

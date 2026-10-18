@@ -105,6 +105,14 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Daniel keeps a wish list of topics for later (Euler's formula, topology, fractals and more). It
   lives in `LEARNING_PLATFORM.md` (Topics Daniel asked for); place each item in a unit when its
   course is outlined.
+- Introduce, then expand; never teach something that is later taken back (2026-10-18). Daniel
+  does not want a simplified first explanation that a later item reveals as wrong, even
+  temporarily. Introducing an idea early in a correct but partial form and adding views later is
+  welcome. Applies to every course: when an early item states a rule, it states it correctly
+  (with its conditions), and later items extend it.
+- Linear Algebra outline approved (2026-10-18), as drafted: eight units, about 90 items; the dot
+  product in Vectors (unit 1), extended as duality in Orthogonality; 3D from Vectors 6 on, so
+  phase 5 starts after the Vectors unit's first batch. Details in `plans/linear-algebra.md`.
 
 ## Engineering
 
