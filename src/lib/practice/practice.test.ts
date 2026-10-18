@@ -3,7 +3,7 @@ import { answerTex } from './answers'
 import { checkAnswer } from './check'
 import { autoDifficulty, nextGenerator, suggestStatus, type Attempt } from './session'
 import { createRng } from './rng'
-import { frac, num, paren, poly, signed, sum } from './tex'
+import { frac, num, paren, poly, root, signed, sum, vector } from './tex'
 import type { ProblemGenerator } from './problems'
 
 const tex = (s: string) => ({ tex: s })
@@ -55,6 +55,22 @@ describe('checkAnswer', () => {
     expect(checkAnswer(a, tex('2, 3')).verdict).toBe('incorrect')
   })
 
+  it('checks ordered vectors in several notations', () => {
+    const a = { kind: 'vector', values: [3, -0.5] } as const
+    for (const t of [
+      '3, -0.5',
+      '(3, -\\frac{1}{2})',
+      '\\left(3,-0.5\\right)',
+      '[3, -0.5]',
+      '\\begin{bmatrix}3\\\\-0.5\\end{bmatrix}',
+      '\\begin{pmatrix}3\\\\ -\\frac12\\end{pmatrix}',
+    ])
+      expect(checkAnswer(a, tex(t)).verdict, t).toBe('correct')
+    expect(checkAnswer(a, tex('(-0.5, 3)')).verdict).toBe('incorrect')
+    expect(checkAnswer(a, tex('(3)')).issue).toEqual({ kind: 'vector-length', expected: 2 })
+    expect(checkAnswer(a, tex('(3, x)')).issue).toEqual({ kind: 'list-format' })
+  })
+
   it('checks choices and self-graded answers', () => {
     expect(
       checkAnswer({ kind: 'choice', options: ['a', 'b'], correct: 1 }, { choice: 1 }).verdict,
@@ -73,6 +89,14 @@ describe('answerTex', () => {
 })
 
 describe('tex helpers', () => {
+  it('writes vectors and simplified square roots', () => {
+    expect(vector([1, -0.5, 3])).toBe('(1, -\\frac{1}{2}, 3)')
+    expect(root(12)).toBe('2\\sqrt{3}')
+    expect(root(7)).toBe('\\sqrt{7}')
+    expect(root(49)).toBe('7')
+    expect(root(0)).toBe('0')
+  })
+
   it('formats polynomials and sums without awkward signs', () => {
     expect(poly([2, -3, 1])).toBe('2x^{2} - 3x + 1')
     expect(poly([1, 0, -1])).toBe('x^{2} - 1')

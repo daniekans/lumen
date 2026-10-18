@@ -19,6 +19,12 @@ export type Answer =
       values: readonly number[]
       tolerance?: number
     }
+  | {
+      kind: 'vector'
+      /** Components in order, e.g. a vector written (3, -1) or as a column. */
+      values: readonly number[]
+      tolerance?: number
+    }
   | { kind: 'choice'; options: readonly string[]; correct: number }
   /** For proofs and long work: the learner compares with the solution and grades themselves. */
   | { kind: 'self' }
@@ -35,6 +41,7 @@ export type CheckIssue =
   | { kind: 'undefined-value' }
   | { kind: 'list-format' }
   | { kind: 'more-to-find'; remaining: number }
+  | { kind: 'vector-length'; expected: number }
   | { kind: 'unknown-variable'; allowed: readonly string[] }
   | { kind: 'no-answer' }
 
@@ -55,6 +62,8 @@ export const answerTex = (a: Answer): string | undefined => {
       return a.tex
     case 'list':
       return a.values.map(formatNumber).join(',\\ ')
+    case 'vector':
+      return `(${a.values.map(formatNumber).join(',\\ ')})`
     default:
       return undefined
   }

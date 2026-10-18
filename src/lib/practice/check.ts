@@ -70,6 +70,24 @@ const stripLhs = (tex: string) => tex.replace(/^\s*y\s*=/, '')
 
 const unreadable: CheckResult = { verdict: 'invalid', issue: { kind: 'unreadable' } }
 
+/**
+ * The components of a vector typed as (3, -1), [3, -1], 3, -1 or a column matrix, in order.
+ * Undefined entries stand for components that could not be read.
+ */
+export const vectorComponents = (tex: string): (number | undefined)[] => {
+  const s = tex
+    .trim()
+    .replace(/^\\begin\{[pb]?matrix\}([\s\S]*)\\end\{[pb]?matrix\}$/, '$1')
+    .replace(
+      /^(?:\\left)?(?:\(|\[|\\lbrack|\\lparen)([\s\S]*?)(?:\\right)?(?:\)|\]|\\rbrack|\\rparen)$/,
+      '$1',
+    )
+  return s
+    .split(/,|;|\\\\|&/)
+    .filter((part) => part.trim())
+    .map((part) => toNumber(parse(part)))
+}
+
 export const checkAnswer = (answer: Answer, response: Response): CheckResult => {
   switch (answer.kind) {
     case 'choice':
@@ -109,6 +127,22 @@ export const checkAnswer = (answer: Answer, response: Response): CheckResult => 
             verdict: 'incorrect',
             issue: { kind: 'more-to-find', remaining: remaining.length },
           }
+    }
+    case 'vector': {
+      if (!('tex' in response)) return unreadable
+      const items = vectorComponents(response.tex)
+      if (items.length === 0 || items.some((v) => v === undefined))
+        return { verdict: 'invalid', issue: { kind: 'list-format' } }
+      if (items.length !== answer.values.length)
+        return {
+          verdict: 'invalid',
+          issue: { kind: 'vector-length', expected: answer.values.length },
+        }
+      return {
+        verdict: items.every((v, i) => close(v!, answer.values[i]!, answer.tolerance))
+          ? 'correct'
+          : 'incorrect',
+      }
     }
     case 'expression': {
       if (!('tex' in response)) return unreadable

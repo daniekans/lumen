@@ -1,3 +1,5 @@
+import { simplifySqrt } from '../math/vector'
+
 /*
  * Helpers for writing TeX in problem generators, so prompts and solutions read naturally for any
  * generated coefficients (no "+ -3x", no "1x", no "0x^2").
@@ -60,6 +62,18 @@ export const num = (v: number, maxDen = 16) => {
     if (Math.abs(p / q - v) < 1e-9) return frac(p, q)
   }
   return String(+v.toFixed(2))
+}
+
+/** A vector as TeX in parentheses, each component through `num`: '(1, -\\frac{1}{2}, 3)'. */
+export const vector = (values: readonly number[], maxDen = 16) =>
+  `(${values.map((v) => num(v, maxDen)).join(', ')})`
+
+/** The square root of a whole number in simplest form: 12 -> '2\\sqrt{3}', 9 -> '3'. */
+export const root = (n: number) => {
+  const [outside, inside] = simplifySqrt(n)
+  if (inside === 0) return '0'
+  if (inside === 1) return String(outside)
+  return `${outside === 1 ? '' : outside}\\sqrt{${inside}}`
 }
 
 /** A number after a term: ' + 3', ' - \\frac{1}{2}', or '' for zero. */

@@ -79,7 +79,7 @@ Pure logic lives in `src/lib/practice` so it could also run on a server:
 
 - `problems.ts`: a `ProblemGenerator` turns a seeded `Rng` into a `Problem` (prompt, answer, hints,
   worked solution, and the generated parameters as `data` for tests).
-- `answers.ts` and `check.ts`: answer kinds (`number`, `expression`, `list`, `choice`, `self`) and the
+- `answers.ts` and `check.ts`: answer kinds (`number`, `expression`, `list` (unordered), `vector` (ordered components, typed as `(3, -1)` or a column), `choice`, `self`) and the
   checker. Expressions are equivalent when they agree at random sample points of their domain.
 - `texEval.ts`: a small parser and evaluator for the TeX that MathLive produces (fractions, roots,
   powers, implicit multiplication, functions, absolute values). It replaced Compute Engine, which

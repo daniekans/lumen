@@ -164,6 +164,8 @@ export const en = {
           return 'Write the numbers separated by commas.'
         case 'more-to-find':
           return `There ${plural(issue.remaining, { one: 'is', other: 'are' })} more to find.`
+        case 'vector-length':
+          return `The vector has ${n(issue.expected)} components. Write them in order, separated by commas.`
         case 'unknown-variable':
           return `Use only ${issue.allowed.join(', ') || 'numbers'} in your answer.`
         case 'no-answer':
@@ -174,6 +176,7 @@ export const en = {
       number: 'A number, like $\\frac{3}{4}$ or $\\sqrt{2}$',
       expression: 'An expression',
       list: 'Numbers separated by commas',
+      vector: 'Components in order, like $(3, -1)$',
     },
     selfGraded: 'Work this out on paper, then compare with the solution and grade yourself.',
     howDidItGo: 'How did it go?',
