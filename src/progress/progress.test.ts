@@ -173,3 +173,39 @@ describe('resetItem', () => {
     expect(data.skills['u#a']?.status).toBe('mastered')
   })
 })
+
+describe('migrate with moved content', () => {
+  const moves: Record<string, string> = { 'old-unit': 'area/course/unit', 'a/x': 'a/y' }
+  const rename = (id: string) => {
+    const prefix = Object.keys(moves).find((m) => id === m || id.startsWith(`${m}/`))
+    return prefix ? moves[prefix] + id.slice(prefix.length) : id
+  }
+
+  it('moves item and skill entries to their new ids', () => {
+    const data = migrate(
+      {
+        version: 1,
+        items: { 'old-unit/item': { visitedSteps: ['s'], correctChecks: [], manual: 'done' } },
+        skills: { 'old-unit#skill': { status: 'mastered', source: 'manual', updatedAt: 'x' } },
+      },
+      rename,
+    )
+    expect(data.items['area/course/unit/item']?.manual).toBe('done')
+    expect(data.items['old-unit/item']).toBeUndefined()
+    expect(data.skills['area/course/unit#skill']?.status).toBe('mastered')
+  })
+
+  it('keeps the newer entry when old and new ids both exist', () => {
+    const data = migrate(
+      {
+        version: 1,
+        items: {
+          'a/y': { visitedSteps: ['new'], correctChecks: [], lastVisitedAt: '2026-02-01' },
+          'a/x': { visitedSteps: ['old'], correctChecks: [], lastVisitedAt: '2026-01-01' },
+        },
+      },
+      rename,
+    )
+    expect(data.items['a/y']?.visitedSteps).toEqual(['new'])
+  })
+})

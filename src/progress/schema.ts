@@ -60,8 +60,14 @@ const strings = (v: unknown) => (Array.isArray(v) ? v.filter((x) => typeof x ===
 /**
  * Turns stored or imported JSON into valid current data. Unknown or malformed entries are dropped
  * instead of failing the whole load. Throws only when the input is not progress data at all.
+ *
+ * `rename` maps an item or unit id to where it lives now, so progress follows content that moved
+ * (see `currentId` in the catalog). When an old and a new id both have an entry, the newer wins.
  */
-export const migrate = (raw: unknown): ProgressData => {
+export const migrate = (
+  raw: unknown,
+  rename: (id: string) => string = (id) => id,
+): ProgressData => {
   if (raw === undefined || raw === null) return emptyProgress()
   if (!isRecord(raw) || typeof raw.version !== 'number') {
     throw new Error(msg.progress.importError.notProgress)
@@ -74,20 +80,27 @@ export const migrate = (raw: unknown): ProgressData => {
   if (isRecord(raw.skills))
     for (const [key, s] of Object.entries(raw.skills)) {
       if (!isRecord(s) || !SKILL_STATUSES.includes(s.status as never)) continue
-      data.skills[key] = {
+      const hash = key.lastIndexOf('#')
+      const target = hash < 0 ? key : `${rename(key.slice(0, hash))}${key.slice(hash)}`
+      const updatedAt = typeof s.updatedAt === 'string' ? s.updatedAt : new Date(0).toISOString()
+      if ((data.skills[target]?.updatedAt ?? '') > updatedAt) continue
+      data.skills[target] = {
         status: s.status as ProgressData['skills'][string]['status'],
         source: s.source === 'suggested' ? 'suggested' : 'manual',
-        updatedAt: typeof s.updatedAt === 'string' ? s.updatedAt : new Date(0).toISOString(),
+        updatedAt,
       }
     }
   if (isRecord(raw.items))
     for (const [id, it] of Object.entries(raw.items)) {
       if (!isRecord(it)) continue
-      data.items[id] = {
+      const target = rename(id)
+      const lastVisitedAt =
+        typeof it.lastVisitedAt === 'string' ? it.lastVisitedAt : new Date(0).toISOString()
+      if ((data.items[target]?.lastVisitedAt ?? '') > lastVisitedAt) continue
+      data.items[target] = {
         visitedSteps: strings(it.visitedSteps),
         correctChecks: strings(it.correctChecks),
-        lastVisitedAt:
-          typeof it.lastVisitedAt === 'string' ? it.lastVisitedAt : new Date(0).toISOString(),
+        lastVisitedAt,
         ...(it.manual === 'done' || it.manual === 'not-done' ? { manual: it.manual } : {}),
         ...(isRecord(it.practice) && num(it.practice.attempts) && num(it.practice.correct)
           ? { practice: { attempts: it.practice.attempts, correct: it.practice.correct } }

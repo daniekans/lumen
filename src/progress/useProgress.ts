@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { currentId } from '@/catalog/redirects'
 import type { Unit } from '@/catalog/types'
 import { emptyProgress, migrate } from './schema'
 import { createLocalStore, createMemoryStore, type ProgressStore } from './storage'
@@ -193,7 +194,7 @@ export const useProgress = create<ProgressState>()((set, get) => ({
     return JSON.stringify(data, null, 2)
   },
 
-  importJson: (json) => set({ data: migrate(JSON.parse(json)) }),
+  importJson: (json) => set({ data: migrate(JSON.parse(json), currentId) }),
 
   reset: () => set({ data: emptyProgress() }),
 }))
@@ -209,7 +210,7 @@ export const startProgressPersistence = (store: ProgressStore = safeLocalStore()
   started = true
   store
     .load()
-    .then((raw) => useProgress.setState({ data: migrate(raw), hydrated: true }))
+    .then((raw) => useProgress.setState({ data: migrate(raw, currentId), hydrated: true }))
     .catch((e: unknown) =>
       useProgress.setState({ hydrated: true, error: e instanceof Error ? e.message : String(e) }),
     )

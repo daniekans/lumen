@@ -17,3 +17,21 @@ export const redirects: Readonly<Record<string, string>> = {
     'mathematics/pre-calculus/polynomial-and-rational',
   'mathematics/pre-calculus/sequences-and-series': 'mathematics/pre-calculus',
 }
+
+/**
+ * Where an id lives now: follows redirects for the id itself or for the unit or course it sits
+ * in (a moved unit moves its items), through chains of moves. Unknown ids come back unchanged.
+ */
+export const currentId = (id: string): string => {
+  for (let hops = 0; hops < 10; hops++) {
+    const exact = redirects[id]
+    if (exact) {
+      id = exact
+      continue
+    }
+    const prefix = Object.keys(redirects).find((from) => id.startsWith(`${from}/`))
+    if (!prefix) return id
+    id = redirects[prefix] + id.slice(prefix.length)
+  }
+  return id
+}
