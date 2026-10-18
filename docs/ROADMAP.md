@@ -34,9 +34,11 @@ Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.m
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the next content unit in the suggested order (Calculus 1: Limits, a
-core unit of 8 to 10 items in batches). Polynomial and rational functions and Exponential and
-logarithmic functions were built on 2026-10-17 and await Daniel's review. Stages use `zoomable`, titled readout panels with
+**Suggested next session:** outline the Calculus courses in `LEARNING_PLATFORM.md` before building
+(units with items at headline level, the threads in "Depth from Calculus on", where the legacy
+items and the topics Daniel asked for go), get Daniel's review of the outline, then build Calculus
+1: Limits batch 1. Polynomial and rational functions and Exponential and logarithmic functions
+were built on 2026-10-17 and await Daniel's review. Stages use `zoomable`, titled readout panels with
 hints, and `useVizParam` where a view is worth linking.
 
 ### Phase 3: Explore page

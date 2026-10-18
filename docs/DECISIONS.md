@@ -55,7 +55,7 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Math track starts with pre-calculus. The first pilot unit is Pre-calculus / Functions, built end to
   end before scaling content. Algebra essentials comes right after.
 - Two unit depths (decided 2026-10-16): refresher units (about 5 items, one batch) for pre-calculus
-  and other prerequisites, core units (8 to 10 items) from Calculus 1 and the DE units on. Functions
+  and other prerequisites, core units (about 10 items or more, see below) from Calculus 1 and the DE units on. Functions
   and Algebra essentials keep their full depth; Algebra essentials batch 3 was trimmed to 3 items.
 - Pre-calculus has five units: Linear and quadratic merged into Polynomial and rational functions,
   and Sequences and series moved to Calculus 2.
@@ -69,6 +69,22 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   they fit best and arrive after their fundamentals. Not openers, not early side units.
 - Phase 2D (pilot content) closed on 2026-10-17 after Daniel reviewed its four units. New units
   continue as ongoing work in the suggested order, alongside the numbered phases.
+- Core unit size has no upper limit (2026-10-17, replacing "8 to 10 items"). Around 10 items is
+  typical, but the topic decides: a unit can have more. A cohesive larger unit is better than
+  splitting a topic into many small units.
+- From Calculus on, depth is comprehensive (2026-10-17). Pre-calculus was a refresher; from here
+  Daniel wants to master the fundamentals and use them as the base for intermediate and highly
+  advanced material, with a smooth curve. Ideas that span units are planned as threads, so each
+  unit takes them a level further. The first one: Leibniz notation ($dx$, $\frac{dy}{dx}$,
+  $\int f\,dx$, differentials), which Daniel wants to fully master across Calculus 1, 2 and
+  multivariable. Details in `LEARNING_PLATFORM.md` (Depth from Calculus on).
+- The first seven visualizations (for example `derivative-as-limit`, `riemann-sums`,
+  `complex-multiplication`) predate the course plans (2026-10-17). When their unit is built, review
+  them against the unit plan: keep the visuals mostly intact (Daniel likes them), and revise
+  explanations, labels, titles, steps and placement as needed.
+- Daniel keeps a wish list of topics for later (Euler's formula, topology, fractals and more). It
+  lives in `LEARNING_PLATFORM.md` (Topics Daniel asked for); place each item in a unit when its
+  course is outlined.
 
 ## Engineering
 

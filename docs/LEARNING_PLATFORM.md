@@ -171,10 +171,10 @@ Precalculus and Calculus, MIT 18.01, 18.06, 18.05) are the reference for what ea
 
 ### Unit depths
 
-| Depth     | Items                                                        | Batches | Used for                                   |
-| --------- | ------------------------------------------------------------ | ------- | ------------------------------------------ |
-| Refresher | About 5: two or three explorations, one practice, checkpoint | 1       | Pre-calculus and other prerequisites       |
-| Core      | 8 to 10: explorations, lessons, practice sets, checkpoint    | 2 or 3  | Everything from Calculus 1 and DE units on |
+| Depth     | Items                                                        | Batches   | Used for                                   |
+| --------- | ------------------------------------------------------------ | --------- | ------------------------------------------ |
+| Refresher | About 5: two or three explorations, one practice, checkpoint | 1         | Pre-calculus and other prerequisites       |
+| Core      | About 10, more when the topic needs it (no upper limit)      | 3 or more | Everything from Calculus 1 and DE units on |
 
 A refresher explores the ideas that later units lean on (and the ones easy to get wrong), and skips
 drill that "I already know this unit" would mark done anyway. Functions and Algebra essentials were
@@ -200,6 +200,51 @@ prerequisites shown on unit pages, never gates.
 6. Multivariable Calculus and Optimization (core): gradients, the chain rule in many variables,
    gradient descent, convexity, constrained optimization. These feed Machine Learning directly.
 7. Discrete Math (refresher, on demand): sets, logic, relations, graphs, as other units need them.
+
+Only Pre-calculus has unit-level plans so far. The Calculus courses above are headlines; outline
+them (units, items at headline level, threads, where the legacy items go) before building their
+first unit.
+
+### Depth from Calculus on
+
+Pre-calculus was a refresher. From Calculus 1 on, units are comprehensive: the fundamentals are
+mastered first and then carried to intermediate and advanced levels, so each unit builds on the
+last without jumps. Ideas that span several units are planned as threads, each unit taking them
+one level further. Threads so far:
+
+- **Leibniz notation.** $dx$ and $\frac{dy}{dx}$ first as a limit of $\frac{\Delta y}{\Delta x}$
+  and as the slope of the tangent; then differentials $dy = f'(x)\,dx$ as linear approximation; the
+  chain rule $\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$ and why it looks like cancelling;
+  $\int f(x)\,dx$ as a limit of sums $\sum f(x_i)\,\Delta x$; substitution as a change of
+  variable; separable differential equations; partial derivatives, total differentials and the
+  Jacobian in many variables; line and surface integrals; differential forms as the rigorous
+  version. Each item that uses the notation says what it means at that level.
+- **Limits.** From intuition to the techniques for evaluating them (algebra, squeeze, standard
+  limits, L'Hôpital, series) and to the epsilon-delta definition, so limit problems become routine.
+
+**Legacy items.** The first seven visualizations (`derivative-as-limit`, `riemann-sums`,
+`matrix-transformations`, `complex-multiplication`, `forward-pass`, `backpropagation`,
+`rag-pipeline`) and the items added around them (`difference-quotients`, the derivatives
+checkpoint) were built before any course plan. When
+their unit is built, fit them into it: keep the visuals mostly as they are, and revise the
+explanation, labels, titles, steps, order and placement where the plan needs it.
+
+### Topics Daniel asked for
+
+Not exhaustive, not in order, and not all in Calculus 1. Place each one in a unit when its course
+is outlined:
+
+- Euler's formula and $e^{i\pi} = -1$, with a triangle spiral built from
+  $\left(1 + \frac{i\pi}{n}\right)^n$ (as in a Mathologer video), tied to the limit definition of $e$
+- Mastering limit techniques (see the thread above)
+- Line and surface integrals
+- Multivariable Calculus
+- Differential equations
+- Linear Algebra (core track, already planned)
+- Complex numbers as plane transformations, in the spirit of Welch Labs' "Complex Numbers are Real"
+- Topology
+- Graph theory
+- Fractals
 
 **Data Engineering and Architecture** (core)
 
