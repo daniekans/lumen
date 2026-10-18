@@ -18,7 +18,7 @@ order.
 3. Pre-calculus: Polynomial and rational functions (done)
 4. Pre-calculus: Exponential and logarithmic functions (done)
 5. Outline the Calculus courses (done, approved 2026-10-17)
-6. Calculus 1: Limits (built: batches 1 to 3 on 2026-10-17 and 2026-10-18, in review)
+6. Calculus 1: Limits (done)
 7. Outline Linear Algebra (drafted 2026-10-18 in `plans/linear-algebra.md`, awaiting review),
    then Linear Algebra: Vectors and linear combinations
 8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)

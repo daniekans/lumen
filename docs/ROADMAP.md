@@ -38,7 +38,7 @@ of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 **Suggested next session:** apply Daniel's review of the Linear Algebra outline
 (`plans/linear-algebra.md`, open questions at its end), then write the unit plan for Vectors and
 linear combinations and build its first batch. Phase 5 (3D) starts before the first item that
-needs it. Limits (all 12 items) still awaits Daniel's review. Stages use `zoomable`, titled
+needs it. Stages use `zoomable`, titled
 readout panels with hints, and `useVizParam` where a view is worth linking.
 
 ### Phase 3: Explore page
