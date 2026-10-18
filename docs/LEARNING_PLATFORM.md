@@ -15,11 +15,12 @@ order.
 
 1. Algebra essentials, batch 3 (done)
 2. DE: Storage and file formats (done)
-3. Pre-calculus: Polynomial and rational functions (refresher, built, in review)
-4. Pre-calculus: Exponential and logarithmic functions (refresher, built, in review)
+3. Pre-calculus: Polynomial and rational functions (done)
+4. Pre-calculus: Exponential and logarithmic functions (done)
 5. Outline the Calculus courses (done, approved 2026-10-17)
 6. Calculus 1: Limits (built: batches 1 to 3 on 2026-10-17 and 2026-10-18, in review)
-7. Outline Linear Algebra (for review), then Linear Algebra: Vectors and linear combinations
+7. Outline Linear Algebra (drafted 2026-10-18 in `plans/linear-algebra.md`, awaiting review),
+   then Linear Algebra: Vectors and linear combinations
 8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)
 9. Pre-calculus: Trigonometry (refresher)
 10. Calculus 1: Derivatives
@@ -292,6 +293,8 @@ plan there (items, skills, status) when its first batch is built. Status values:
   rational functions, Exponential and logarithmic functions.
 - [plans/calculus.md](plans/calculus.md): depth and threads, the Calculus outline (Calculus 1, 2,
   Multivariable), and unit plans from Limits on.
+- [plans/linear-algebra.md](plans/linear-algebra.md): threads and the Linear Algebra outline
+  (awaiting review).
 - [plans/data-engineering.md](plans/data-engineering.md): Relational model and joins, Storage and
   file formats.
 

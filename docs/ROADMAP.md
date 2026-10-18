@@ -35,12 +35,11 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** take the next step of "Suggested order of units" in
-`LEARNING_PLATFORM.md`: outline Linear Algebra (units and items, as was done for Calculus) and
-get Daniel's review before building its first unit, Vectors and linear combinations. Limits
-(all 12 items, 2026-10-17 and 2026-10-18) awaits Daniel's review, as do Polynomial and rational
-functions and Exponential and logarithmic functions. Stages use `zoomable`, titled readout panels
-with hints, and `useVizParam` where a view is worth linking.
+**Suggested next session:** apply Daniel's review of the Linear Algebra outline
+(`plans/linear-algebra.md`, open questions at its end), then write the unit plan for Vectors and
+linear combinations and build its first batch. Phase 5 (3D) starts before the first item that
+needs it. Limits (all 12 items) still awaits Daniel's review. Stages use `zoomable`, titled
+readout panels with hints, and `useVizParam` where a view is worth linking.
 
 ### Phase 3: Explore page
 

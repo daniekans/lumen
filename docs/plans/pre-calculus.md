@@ -67,7 +67,8 @@ are repeating decimals show as fractions (`answerTex`), so generators can return
 ## Polynomial and rational functions unit plan
 
 Folder `src/content/mathematics/pre-calculus/polynomial-and-rational/`. The first refresher unit:
-three explorations, one practice set and a checkpoint, built in one batch. The thread: a polynomial
+three explorations, one practice set and a checkpoint, built in one batch. Reviewed and done
+(2026-10-18). The thread: a polynomial
 is read from its factors (zeros and multiplicities) and its leading term (the ends); a rational
 function is read from the factors of its denominator (holes and vertical asymptotes) and the degrees
 (the line it approaches). Polynomial arithmetic lives in `src/lib/math/polynomial.ts` (`polyEval`,
@@ -79,11 +80,11 @@ Skills: `lines`, `quadratics`, `end-behavior`, `zeros`, `asymptotes` (titles in 
 
 | #   | Item                             | Kind       | Skills              | Content                                                                                                          | Status |
 | --- | -------------------------------- | ---------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | lines-and-parabolas              | explore    | lines, quadratics   | Slope as rise over run with draggable $P$ and $Q$; vertex form; completing the square; zeros $h \pm \sqrt{-k/a}$ | review |
-| 2   | polynomial-graphs                | explore    | zeros, end-behavior | Draggable zeros, multiplicity sliders (cross or touch), leading term overlay, turning points at most $n - 1$     | review |
-| 3   | rational-functions               | explore    | asymptotes          | $\frac{1}{(x - c)^m}$ near a pole; horizontal by degrees; slant by long division; a whole graph with a hole      | review |
-| 4   | practice-polynomial-and-rational | practice   | all                 | Slope, line, vertex form, extreme value, end behavior, touching zero, least degree, asymptotes, hole             | review |
-| 5   | checkpoint                       | checkpoint | all                 | Nine practice generators plus a self-graded proof (vertex at $-\frac{b}{2a}$ and the discriminant)               | review |
+| 1   | lines-and-parabolas              | explore    | lines, quadratics   | Slope as rise over run with draggable $P$ and $Q$; vertex form; completing the square; zeros $h \pm \sqrt{-k/a}$ | done   |
+| 2   | polynomial-graphs                | explore    | zeros, end-behavior | Draggable zeros, multiplicity sliders (cross or touch), leading term overlay, turning points at most $n - 1$     | done   |
+| 3   | rational-functions               | explore    | asymptotes          | $\frac{1}{(x - c)^m}$ near a pole; horizontal by degrees; slant by long division; a whole graph with a hole      | done   |
+| 4   | practice-polynomial-and-rational | practice   | all                 | Slope, line, vertex form, extreme value, end behavior, touching zero, least degree, asymptotes, hole             | done   |
+| 5   | checkpoint                       | checkpoint | all                 | Nine practice generators plus a self-graded proof (vertex at $-\frac{b}{2a}$ and the discriminant)               | done   |
 
 Practice answers are verified from the prompt's own TeX (`evaluateTex` on numerator and denominator),
 so a prompt that disagrees with its answer fails the test.
@@ -91,7 +92,7 @@ so a prompt that disagrees with its answer fails the test.
 ## Exponential and logarithmic functions unit plan
 
 Folder `src/content/mathematics/pre-calculus/exponential-and-logarithmic/`. Refresher, one batch:
-two explorations, a lesson, one practice set and a checkpoint. The thread: an exponential
+two explorations, a lesson, one practice set and a checkpoint. Reviewed and done (2026-10-18). The thread: an exponential
 multiplies by the same factor over equal steps, $e$ is the base whose slope equals its height, and
 a logarithm finds the exponent, turning products into sums. Helpers live in
 `src/lib/math/exponential.ts` (`logBase`, `compoundFactor`, `timeToMultiply`, tested). The TeX
@@ -103,11 +104,11 @@ Skills: `exponential-models`, `natural-exponential`, `logarithms`, `exp-log-equa
 
 | #   | Item                                 | Kind       | Skills                                  | Content                                                                                                         | Status |
 | --- | ------------------------------------ | ---------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | exponential-growth                   | explore    | exponential-models                      | $\times b$ per step, growth or decay with the mirror $b^{-x}$, $a$ as $f(0)$, doubling distance, $2^x$ vs $x^2$ | review |
-| 2   | the-number-e                         | explore    | natural-exponential, exponential-models | Compounding staircase to $e$, slope $\ln b$ at $0$, tangent of $e^x$ with run $1$, $e^{rt}$ vs $(1 + r)^t$      | review |
-| 3   | logarithms                           | lesson     | logarithms, exp-log-equations           | Reflection of $b^x$, what power, product rule as stacked heights, change of base, solving $b^x = c$             | review |
-| 4   | practice-exponential-and-logarithmic | practice   | all                                     | Evaluate, expand, combine; model through two points; half-life; $Pe^{rt}$; doubling time; equations             | review |
-| 5   | checkpoint                           | checkpoint | all                                     | Nine practice generators plus a self-graded proof (product rule and change of base)                             | review |
+| 1   | exponential-growth                   | explore    | exponential-models                      | $\times b$ per step, growth or decay with the mirror $b^{-x}$, $a$ as $f(0)$, doubling distance, $2^x$ vs $x^2$ | done   |
+| 2   | the-number-e                         | explore    | natural-exponential, exponential-models | Compounding staircase to $e$, slope $\ln b$ at $0$, tangent of $e^x$ with run $1$, $e^{rt}$ vs $(1 + r)^t$      | done   |
+| 3   | logarithms                           | lesson     | logarithms, exp-log-equations           | Reflection of $b^x$, what power, product rule as stacked heights, change of base, solving $b^x = c$             | done   |
+| 4   | practice-exponential-and-logarithmic | practice   | all                                     | Evaluate, expand, combine; model through two points; half-life; $Pe^{rt}$; doubling time; equations             | done   |
+| 5   | checkpoint                           | checkpoint | all                                     | Nine practice generators plus a self-graded proof (product rule and change of base)                             | done   |
 
 Equation answers are verified by substituting the answer into the prompt's own equation TeX; the
 extraneous root of the logarithmic equation must make the left side undefined. Decimal answers
