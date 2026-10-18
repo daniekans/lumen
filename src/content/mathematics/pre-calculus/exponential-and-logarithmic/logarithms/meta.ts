@@ -25,7 +25,7 @@ export const meta = defineItem({
     },
     {
       id: 'what-power',
-      title: 'What power gives x?',
+      title: 'What power gives $x$?',
       caption:
         '$\\log_b x = y$ means $b^y = x$. Drag $P$ along the curve: $\\log_b b = 1$, $\\log_b 1 = 0$, and inputs between $0$ and $1$ have negative logarithms.',
       check: {
@@ -51,7 +51,7 @@ export const meta = defineItem({
     },
     {
       id: 'change-of-base',
-      title: 'Every logarithm is a scaled ln',
+      title: 'Every logarithm is a scaled $\\ln$',
       caption:
         'The natural logarithm $\\ln x = \\log_e x$ is dashed. Every other base is the same curve stretched vertically: $\\log_b x = \\frac{\\ln x}{\\ln b}$. Move $b$.',
       check: {

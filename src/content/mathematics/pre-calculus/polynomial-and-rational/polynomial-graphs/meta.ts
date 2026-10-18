@@ -30,7 +30,7 @@ export const meta = defineItem({
     },
     {
       id: 'turning-points',
-      title: 'At most n - 1 turning points',
+      title: 'At most $n - 1$ turning points',
       caption:
         'A polynomial of degree $n$ has at most $n$ zeros and at most $n - 1$ turning points. Between two neighboring zeros the graph must turn at least once.',
     },

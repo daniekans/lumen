@@ -219,7 +219,7 @@ export default function ApproachingAValue() {
             value={fill}
             onChange={setFill}
             options={[
-              { value: 'none', label: 'undefined' },
+              { value: 'none', label: '$f(1)$ undefined' },
               { value: 'other', label: '$f(1) = 5$' },
               { value: 'limit', label: '$f(1) = 3$' },
             ]}

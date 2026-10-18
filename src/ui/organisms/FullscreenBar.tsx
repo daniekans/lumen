@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { ChevronLeft, ChevronRight, Minimize } from 'lucide-react'
 import { msg } from '@/i18n'
 import surfaces from '@/styles/surfaces.module.css'
-import { IconButton } from '../atoms'
+import { IconButton, RichText } from '../atoms'
 import styles from './FullscreenBar.module.css'
 
 interface FullscreenBarProps {
@@ -30,7 +30,11 @@ export const FullscreenBar = ({ title, index, count, onStep, onExit }: Fullscree
         <span className={styles.count}>{msg.item.stepOf(index + 1, count)}</span>
       </>
     )}
-    {title && <span className={styles.title}>{title}</span>}
+    {title && (
+      <span className={styles.title}>
+        <RichText>{title}</RichText>
+      </span>
+    )}
     {count > 1 && (
       <IconButton
         label={msg.item.nextStep}

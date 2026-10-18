@@ -24,13 +24,13 @@ export const meta = defineItem({
     },
     {
       id: 'value-differs',
-      title: 'The value at a does not matter',
+      title: 'The value at $x = 1$ does not matter',
       caption:
-        'Fill the hole with any value, or leave it empty: the limit is still $3$. A limit is about the neighbors of $a$. When it equals $f(a)$, the function is continuous there.',
+        'Fill the hole at $x = 1$ with any value, or leave it undefined: the limit is still $3$. A limit only uses the neighbors of $1$. When it equals $f(1)$, as with $f(1) = 3$, the function is continuous there.',
     },
     {
       id: 'increments',
-      title: 'Increments Δx and Δy',
+      title: 'Increments $\\Delta x$ and $\\Delta y$',
       caption:
         'Write the step away from $1$ as $\\Delta x$ and the change in output as $\\Delta y = f(x) - 3$. Both shrink to $0$, but their ratio $\\frac{\\Delta y}{\\Delta x} = 3 + \\Delta x$ approaches $3$, the slope at the hole. Its limit will be written $\\frac{dy}{dx}$.',
     },

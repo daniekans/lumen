@@ -51,7 +51,7 @@ export function StepList({
             >
               <span className={styles.index}>{i + 1}</span>
               <span className={styles.title}>
-                {s.title}
+                <RichText>{s.title}</RichText>
                 {s.check && isSolved && (
                   <Check size={12} className={styles.solved} aria-label={msg.item.answered} />
                 )}

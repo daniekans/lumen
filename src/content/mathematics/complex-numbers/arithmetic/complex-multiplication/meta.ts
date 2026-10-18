@@ -22,7 +22,7 @@ export const meta = defineItem({
     },
     {
       id: 'scale',
-      title: 'Scale by |w|',
+      title: 'Scale by $|w|$',
       caption:
         'Then it stretches the arrow by the factor $|w|$. The result is $zw$, with $|zw| = |z|\\,|w|$ and $\\arg(zw) = \\arg z + \\arg w$.',
     },
