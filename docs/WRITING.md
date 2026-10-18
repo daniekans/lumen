@@ -18,6 +18,9 @@ explanations, UI labels, docs and code comments.
   person about the math.
 - Captions are one or two sentences. They describe what changes in that step.
 
+- Notation: write `\lim_{x \to a}`; the limit lands underneath on its own. Display math (`$$`)
+  for key formulas. See `DECISIONS.md` (Look and feel) for integrals and sums.
+
 `pnpm lint` runs `scripts/lint-prose.mjs`, which fails on em dashes and the phrases above. Extend the
 list in that script when a new pattern shows up.
 

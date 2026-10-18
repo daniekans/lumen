@@ -10,10 +10,14 @@ pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo 
 1. Read `docs/DECISIONS.md`: Daniel's preferences and the decisions already made. Do not reopen
    them without a reason.
 2. Read `docs/ROADMAP.md` ("Phases"): what is done, and what comes next.
-3. For the current phase, read its plan and tracker (`docs/LEARNING_PLATFORM.md` for phase 2).
+3. Read "Suggested order of units" at the top of `docs/LEARNING_PLATFORM.md`, then the plan file
+   of the course the next step belongs to (`docs/plans/<course>.md`). Read the rest of
+   `LEARNING_PLATFORM.md` (content model, practice engine, curriculum, wish list) only when the
+   task needs it, and `docs/HISTORY.md` almost never.
 4. Read `docs/ARCHITECTURE.md` before structural changes and `docs/ADDING_CONTENT.md` before writing
    content.
-5. When a task finishes, update the trackers (`docs/ROADMAP.md`, `docs/LEARNING_PLATFORM.md`) in the
+5. When a task finishes, update the trackers (the unit plan in `docs/plans/`, the suggested order,
+   and the "Suggested next session" in `docs/ROADMAP.md`) in the
    same commit series, so the next session sees the true state.
 
 Daniel prefers short sessions. Keep answers concise, work in focused steps, and leave the repository

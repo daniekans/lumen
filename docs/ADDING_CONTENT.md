@@ -99,5 +99,5 @@ start a list item with it (Prettier splits the paragraph).
 - [ ] Dragging and controls cancel running sequences where they conflict
 - [ ] Works with `prefers-reduced-motion`
 - [ ] `pnpm lint && pnpm typecheck && pnpm test`
-- [ ] Remove `status: 'draft'` and update the trackers (`docs/ROADMAP.md`, `docs/LEARNING_PLATFORM.md`)
+- [ ] Remove `status: 'draft'` and update the trackers (the unit plan in `docs/plans/`, `docs/ROADMAP.md`)
 - [ ] If the item moved, add a redirect in `src/catalog/redirects.ts`

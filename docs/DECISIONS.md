@@ -30,6 +30,12 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Explanation pane open by default; it can be resized and floated over the stage.
 - All floating panels share one glass style (translucent background and blur).
 - Home hero copy ("See the idea, then the formula.") approved, may change as the product evolves.
+- Math notation follows books (2026-10-18). `\lim` sets $x \to a$ underneath everywhere, inline
+  too, through one KaTeX macro shared by every renderer (`src/lib/texMacros.ts`); write
+  `\lim\nolimits` where the side form reads better. Problem and check prompts render inline math in
+  display style, so fractions and limits there are full size. Integrals keep their bounds at the
+  side ($\int_a^b$), as books do, and are full size in prompts. Sums and products: limits
+  underneath in display math and prompts, at the side in running text, as books do.
 
 ## Learning model
 
@@ -80,13 +86,13 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   advanced material, with a smooth curve. Ideas that span units are planned as threads, so each
   unit takes them a level further. The first one: Leibniz notation ($dx$, $\frac{dy}{dx}$,
   $\int f\,dx$, differentials), which Daniel wants to fully master across Calculus 1, 2 and
-  multivariable. Details in `LEARNING_PLATFORM.md` (Depth from Calculus on).
+  multivariable. Details in `plans/calculus.md` (Depth from Calculus on).
 - The first seven visualizations (for example `derivative-as-limit`, `riemann-sums`,
   `complex-multiplication`) predate the course plans (2026-10-17). When their unit is built, review
   them against the unit plan: keep the visuals mostly intact (Daniel likes them), and revise
   explanations, labels, titles, steps and placement as needed.
 - Calculus outline approved (2026-10-17): Calculus 1 at about 47 items, Calculus 2 and
-  Multivariable as outlined in `LEARNING_PLATFORM.md`. A third thread, linear approximation, runs
+  Multivariable as outlined in `plans/calculus.md`. A third thread, linear approximation, runs
   from the tangent line to gradient descent. New courses: Differential Equations (after Linear
   Algebra and Multivariable), Discrete Math promoted to core (graph theory), Topology later.
 - Every course is outlined (and reviewed by Daniel) before its first unit is built (2026-10-17).
@@ -158,6 +164,13 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   numbers show `a + bi`) or turn it off with `coords`.
 - Floating UI animates both ways (2026-10-17): tooltips, the term popover, menus and dialogs fade
   out as well as in; hints, solutions, answer feedback and expanded readout panels fade in.
+
+- Docs layout (2026-10-18): `LEARNING_PLATFORM.md` opens with the suggested order; course
+  outlines and unit plans live in `docs/plans/<course>.md`; finished trackers in `HISTORY.md`.
+  Sessions read only what the next step needs, so the start-up cost stays flat as content grows.
+  The scaling watchlist is in `ROADMAP.md` (Platform notes).
+- Progress follows moved content (2026-10-18): on load and import, item and skill ids go through
+  the redirects, so a move never loses progress.
 
 - Commits carry no Claude attribution (2026-10-17): no Co-Authored-By trailer, so Claude is not
   listed as a contributor on the public repo. History was rewritten once to remove the old
