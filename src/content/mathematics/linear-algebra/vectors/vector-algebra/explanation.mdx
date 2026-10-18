@@ -1,0 +1,100 @@
+The arrows give the meaning; the components give the arithmetic. This lesson checks that the two
+agree, lists the rules vectors obey, and adds the first measurement: length.
+
+## Component by component
+
+For <Term id="vector">vectors</Term> in $\mathbb{R}^n$ and a <Term id="scalar">scalar</Term> $c$,
+
+$$
+\mathbf{v} + \mathbf{w} = (v_1 + w_1, \ldots, v_n + w_n), \qquad
+c\mathbf{v} = (cv_1, \ldots, cv_n).
+$$
+
+In the plane this <StepLink step="componentwise">matches the arrows</StepLink>: walking tip to tail,
+the horizontal steps of <C c="blue">$\mathbf{v}$</C> and <C c="yellow">$\mathbf{w}$</C> stack along the
+$x$-axis and the vertical steps along the $y$-axis. Every computation splits into $n$ separate
+computations with ordinary numbers, one per component.
+
+## Eight rules
+
+Each component follows the rules of real numbers, so for all vectors $\mathbf{u}, \mathbf{v}, \mathbf{w}$
+and scalars $c, d$:
+
+| Rule                                                                              | Name                      |
+| --------------------------------------------------------------------------------- | ------------------------- |
+| $\mathbf{v} + \mathbf{w} = \mathbf{w} + \mathbf{v}$                               | addition is commutative   |
+| $(\mathbf{u} + \mathbf{v}) + \mathbf{w} = \mathbf{u} + (\mathbf{v} + \mathbf{w})$ | addition is associative   |
+| $\mathbf{v} + \mathbf{0} = \mathbf{v}$                                            | zero vector               |
+| $\mathbf{v} + (-\mathbf{v}) = \mathbf{0}$                                         | negatives                 |
+| $c(d\mathbf{v}) = (cd)\mathbf{v}$                                                 | scaling twice             |
+| $1\mathbf{v} = \mathbf{v}$                                                        | scaling by one            |
+| $c(\mathbf{v} + \mathbf{w}) = c\mathbf{v} + c\mathbf{w}$                          | distributive over vectors |
+| $(c + d)\mathbf{v} = c\mathbf{v} + d\mathbf{v}$                                   | distributive over scalars |
+
+These are the familiar moves of algebra (regroup, reorder, expand, collect terms), so equations
+with vectors are solved the way equations with numbers are. For example,
+$2\mathbf{x} + \mathbf{v} = \mathbf{w}$ gives $\mathbf{x} = \frac{1}{2}(\mathbf{w} - \mathbf{v})$.
+The list matters later: in the unit Vector spaces, anything that obeys these eight rules
+(polynomials, functions) counts as a vector, and everything proved from the rules applies to it.
+
+There is no rule for multiplying two vectors here. Products of vectors (the dot product, and in
+$\mathbb{R}^3$ the cross product) come later, and they behave differently from these operations.
+
+## Length
+
+The components of $\mathbf{v} = (v_1, v_2)$ are the legs of a right triangle whose hypotenuse is
+the arrow, so its <Term id="vector-length">length</Term> is
+
+$$
+\lVert \mathbf{v} \rVert = \sqrt{v_1^2 + v_2^2}.
+$$
+
+In $\mathbb{R}^3$ apply the theorem twice: $\sqrt{v_1^2 + v_2^2}$ is the diagonal of the base, and
+with $v_3$ as the height, $\lVert \mathbf{v} \rVert = \sqrt{v_1^2 + v_2^2 + v_3^2}$. In
+$\mathbb{R}^n$ the definition is the same pattern, $\sqrt{v_1^2 + \cdots + v_n^2}$. The double
+bars distinguish it from the absolute value of a number; the length is also called the norm.
+
+Length is never negative, and it is $0$ only for $\mathbf{0}$. <StepLink step="scaled-length">Scaling</StepLink>
+multiplies it by the absolute value of the factor:
+
+$$
+\lVert c\mathbf{v} \rVert = \sqrt{c^2 v_1^2 + \cdots + c^2 v_n^2} = \lvert c \rvert\,\lVert \mathbf{v} \rVert.
+$$
+
+## Unit vectors
+
+A vector of length $1$ is a <Term id="unit-vector">unit vector</Term>. For $\mathbf{v} \neq \mathbf{0}$,
+taking $c = \frac{1}{\lVert \mathbf{v} \rVert}$ above gives
+
+$$
+\hat{\mathbf{v}} = \frac{\mathbf{v}}{\lVert \mathbf{v} \rVert}, \qquad \lVert \hat{\mathbf{v}} \rVert = 1,
+$$
+
+the unit vector in the direction of $\mathbf{v}$. It keeps the direction and forgets the size.
+For $(3, -4)$, of length $5$, it is $(0.6, -0.8)$.
+
+## Distance
+
+The distance between the tips of $\mathbf{v}$ and $\mathbf{w}$ is
+the <Term id="vector-distance">length of the difference</Term>:
+
+$$
+d(\mathbf{v}, \mathbf{w}) = \lVert \mathbf{w} - \mathbf{v} \rVert = \sqrt{(w_1 - v_1)^2 + \cdots + (w_n - v_n)^2}.
+$$
+
+This is the distance formula of coordinate geometry, written once for every $n$. With data rows
+as vectors it measures how different two rows are, which is how a nearest-neighbor search
+compares them.
+
+## The triangle inequality
+
+Going along $\mathbf{v}$ and then $\mathbf{w}$ is never shorter than going straight to the end:
+
+$$
+\lVert \mathbf{v} + \mathbf{w} \rVert \le \lVert \mathbf{v} \rVert + \lVert \mathbf{w} \rVert.
+$$
+
+This is the <Term id="triangle-inequality">triangle inequality</Term>. Equality holds exactly when the
+triangle <StepLink step="triangle">collapses</StepLink>: one vector is a nonnegative multiple of the
+other. In the plane it is a fact about triangles; the dot product item proves it in every
+$\mathbb{R}^n$.

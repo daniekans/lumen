@@ -1,0 +1,66 @@
+Linear algebra is about quantities that need more than one number: a position in the plane, a
+velocity, a pixel's color, a row of a spreadsheet. A <Term id="vector">vector</Term> packs those
+numbers into one object, and the same object can be drawn as an arrow.
+
+## Arrows and lists
+
+The vector $\mathbf{v} = (3, 1)$ is the list of its components $3$ and $1$, and also the arrow
+that goes $3$ to the right and $1$ up. Drawn from the origin, it ends at the point $(3, 1)$. In
+print vectors are bold ($\mathbf{v}$); by hand they get an arrow ($\vec{v}$). They are often
+written as a column:
+
+$$
+\mathbf{v} = \begin{bmatrix} 3 \\ 1 \end{bmatrix}.
+$$
+
+An arrow has a length and a direction, nothing else. <StepLink step="same-vector">Moving it</StepLink>
+without turning or stretching it gives the same vector: what matters is tip minus tail.
+
+The set of all vectors with $n$ real components is <Term id="real-coordinate-space">$\mathbb{R}^n$</Term>.
+$\mathbb{R}^2$ is the plane and $\mathbb{R}^3$ is space. For $n \ge 4$ there is no picture, but
+the lists and their rules work exactly the same.
+
+## Addition
+
+Vectors add <C c="blue">tip</C> to <C c="yellow">tail</C>: walk along $\mathbf{v}$, then along
+$\mathbf{w}$. The horizontal steps add and the vertical steps add, so in components
+
+$$
+\begin{bmatrix} v_1 \\ v_2 \end{bmatrix} + \begin{bmatrix} w_1 \\ w_2 \end{bmatrix}
+= \begin{bmatrix} v_1 + w_1 \\ v_2 + w_2 \end{bmatrix}.
+$$
+
+Walking in the <StepLink step="order">other order</StepLink> traces the other two sides of a
+parallelogram and ends at the same place, so $\mathbf{v} + \mathbf{w} = \mathbf{w} + \mathbf{v}$.
+
+## Scaling
+
+A number $c$ is called a <Term id="scalar">scalar</Term> here, because it scales:
+
+$$
+c\begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} cv_1 \\ cv_2 \end{bmatrix}.
+$$
+
+The arrow $c\mathbf{v}$ lies on the line through $\mathbf{v}$, is $\lvert c \rvert$ times as long,
+and points the other way when $c < 0$. With $c = 0$ every component is $0$:
+the <Term id="zero-vector">zero vector</Term> $\mathbf{0}$, which has no direction.
+
+## Subtraction
+
+$\mathbf{w} - \mathbf{v}$ means $\mathbf{w} + (-1)\mathbf{v}$. As an arrow it
+goes <StepLink step="subtract">from the tip of $\mathbf{v}$ to the tip of $\mathbf{w}$</StepLink>,
+since adding it to $\mathbf{v}$ must give $\mathbf{w}$. It is the vector that answers "how do I
+get from here to there".
+
+## Data as vectors
+
+A table with numeric columns is a stack of vectors: each <StepLink step="table">row</StepLink> is
+one point in $\mathbb{R}^n$, with one component per column. Machine learning calls such a row a
+feature vector. Operations on rows are vector operations. The average row, for example, is
+
+$$
+\bar{\mathbf{r}} = \tfrac{1}{3}(\mathbf{r}_1 + \mathbf{r}_2 + \mathbf{r}_3) = \tfrac{1}{3}(15, 21) = (5, 7).
+$$
+
+Adding and scaling are the only two operations so far. Combining them is the subject of the next
+item, linear combinations.

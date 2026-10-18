@@ -1,0 +1,59 @@
+Adding and scaling are the two operations on vectors. Used together they give the central
+expression of linear algebra: which points can be reached by scaling a few fixed vectors and
+adding the results?
+
+## Linear combinations
+
+For vectors $\mathbf{v}$, $\mathbf{w}$ and numbers $a$, $b$, the vector
+
+$$
+a\mathbf{v} + b\mathbf{w}
+$$
+
+is a <Term id="linear-combination">linear combination</Term> of $\mathbf{v}$ and $\mathbf{w}$
+with weights $a$ and $b$. With more vectors it is $c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + \cdots + c_k\mathbf{v}_k$.
+In the picture, <C c="blue">$a\mathbf{v}$</C> and <C c="yellow">$b\mathbf{w}$</C> are placed tip to
+tail, and the <C c="teal">combination</C> is the arrow to the end. In components, with
+$\mathbf{v} = (2, 1)$ and $\mathbf{w} = (-1, 2)$:
+
+$$
+a\begin{bmatrix} 2 \\ 1 \end{bmatrix} + b\begin{bmatrix} -1 \\ 2 \end{bmatrix}
+= \begin{bmatrix} 2a - b \\ a + 2b \end{bmatrix}.
+$$
+
+## Finding the weights
+
+To <StepLink step="target">reach</StepLink> $\mathbf{u} = (3, 4)$, each component must match:
+
+$$
+\begin{aligned}
+2a - b &= 3, \\
+a + 2b &= 4.
+\end{aligned}
+$$
+
+Doubling the first equation and adding the second gives $5a = 10$, so $a = 2$ and $b = 1$. A
+question about vectors became two equations in two unknowns. Systems of equations come back in
+the unit Systems and inverses, where this observation is the starting point.
+
+## A grid of its own
+
+Whole-number weights mark a <StepLink step="grid">slanted grid</StepLink>: the lines where $a$ is
+fixed run along $\mathbf{w}$, and the lines where $b$ is fixed run along $\mathbf{v}$. When
+$\mathbf{v}$ and $\mathbf{w}$ are not parallel, every point of the plane has exactly one pair of
+weights, just as it has one pair of coordinates. The weights are coordinates measured with
+$\mathbf{v}$ and $\mathbf{w}$ instead of the usual unit steps; the item on bases makes this
+precise.
+
+## When the vectors are parallel
+
+If $\mathbf{w}$ is a multiple of $\mathbf{v}$, say $\mathbf{w} = -\frac{1}{2}\mathbf{v}$, then
+
+$$
+a\mathbf{v} + b\mathbf{w} = \left(a - \tfrac{b}{2}\right)\mathbf{v},
+$$
+
+a multiple of $\mathbf{v}$ for every choice of weights. The
+combinations <StepLink step="parallel">fill only a line</StepLink>, points off it are out of reach, and each
+point on it is reached by infinitely many pairs $(a, b)$. Whether a set of vectors reaches a whole
+plane, a line or all of space is the question of span, which the unit takes up again in 3D.
