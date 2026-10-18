@@ -1,5 +1,6 @@
 import katex from 'katex'
 import { expect } from 'vitest'
+import { texMacros } from '../texMacros'
 import { answerTex } from './answers'
 import { checkAnswer } from './check'
 import type { Problem, ProblemGenerator } from './problems'
@@ -11,12 +12,17 @@ const EM_DASH = new RegExp(String.fromCharCode(0x2014))
 const texSegments = (text: string) =>
   [...text.matchAll(/\$\$([^$]+)\$\$|\$([^$]+)\$/g)].map((m) => m[1] ?? m[2]!)
 
+/** TeX already rendered without errors. Seeds repeat many strings, and rendering dominates the run. */
+const rendered = new Set<string>()
+
 const assertTex = (text: string, where: string) => {
   for (const tex of texSegments(text)) {
+    if (rendered.has(tex)) continue
     expect(
-      () => katex.renderToString(tex, { throwOnError: true }),
+      () => katex.renderToString(tex, { throwOnError: true, macros: texMacros() }),
       `${where}: ${tex}`,
     ).not.toThrow()
+    rendered.add(tex)
   }
   expect(text, `${where} contains an em dash`).not.toMatch(EM_DASH)
 }
@@ -51,7 +57,7 @@ export const testProblemSet = (
       } else if (a.kind !== 'self') {
         const tex = answerTex(a)!
         expect(
-          () => katex.renderToString(tex, { throwOnError: true }),
+          () => katex.renderToString(tex, { throwOnError: true, macros: texMacros() }),
           `${where} answer`,
         ).not.toThrow()
         expect(checkAnswer(a, { tex }).verdict, `${where} rejects its own answer ${tex}`).toBe(

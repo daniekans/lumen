@@ -7,6 +7,6 @@ describe('limits checkpoint problems', () => {
     // The practice generators are verified independently in their own sets.
     expect(problems).toHaveLength(12)
     expect(problems.every(Boolean)).toBe(true)
-    testProblemSet(problems)
+    testProblemSet(problems, undefined, 20)
   })
 })

@@ -5,6 +5,6 @@ import { problems } from './problems'
 describe('relational model checkpoint problems', () => {
   it('generate valid problems', () => {
     // The practice generators are verified independently in their own sets.
-    testProblemSet(problems)
+    testProblemSet(problems, undefined, 20)
   })
 })
