@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { clamp, fmt, type Vec2 } from '@/lib/math'
+import { clamp, fmt, fmtShort, type Vec2 } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
 import { Tex } from '@/ui/atoms'
 import { LabeledSlider, Readout, ReadoutPanel, SegmentedControl } from '@/ui/molecules'
@@ -39,6 +39,8 @@ const baseCodec: ParamCodec<Base> = {
 
 const MAX_ANGLE = 1.1
 const MAX_N = 50
+/** Where the opening animation of the compound step stops. */
+const MAX_RUN = 20
 
 const DOMAINS = {
   squeeze: { x: [-1.3, 1.3], y: [-1, 1] },
@@ -66,8 +68,13 @@ export default function SqueezeAndStandardLimits() {
     areas: () => tween(1.0, 0.5, setAngle),
     'sin-over-x': () => tween(0.15, -1.5, setS),
     exponential: () => tween(1, 0.02, setH),
-    // n moves in whole steps, so the tween drives a continuous value that the points round.
-    compound: () => tween(1, 20, setN, 3),
+    // n glides through real values (evenly in log n, so t = 1/n moves evenly); whole-number points
+    // appear as it passes them.
+    compound: () =>
+      void seq.run(async ({ tween }) => {
+        await tween(0, Math.log10(MAX_RUN), { duration: 3, onUpdate: (u) => setN(10 ** u) })
+        setN(MAX_RUN)
+      }),
   })
 
   const d = 10 ** s
@@ -83,8 +90,8 @@ export default function SqueezeAndStandardLimits() {
   const slope = (b ** h - 1) / h
   const hSafe = Math.abs(h) < 1e-9 ? 1e-9 : h
 
-  const whole = Math.max(1, Math.round(n))
-  const value = (1 + 1 / whole) ** whole
+  const whole = Math.max(1, Math.floor(n + 1e-9))
+  const value = (1 + 1 / n) ** n
 
   const [ca, sa, ta] = [Math.cos(angle), Math.sin(angle), Math.tan(angle)]
 
@@ -163,8 +170,8 @@ export default function SqueezeAndStandardLimits() {
             )}
             {id === 'compound' && (
               <ReadoutPanel title="Toward e">
-                <Readout label="$n$" value={String(whole)} color={vc.yellow} />
-                <Readout label="$t = \frac{1}{n}$" value={fmt(1 / whole, 4)} color={vc.yellow} />
+                <Readout label="$n$" value={fmtShort(n, 1)} color={vc.yellow} />
+                <Readout label="$t = \frac{1}{n}$" value={fmt(1 / n, 4)} color={vc.yellow} />
                 <Readout label="$(1 + \frac{1}{n})^n$" value={fmt(value, 6)} color={vc.blue} />
                 <Readout
                   label="$e - $ value"
@@ -357,11 +364,12 @@ export default function SqueezeAndStandardLimits() {
               <Point
                 key={k}
                 at={[1 / k, (1 + 1 / k) ** k]}
-                color={k === whole ? vc.yellow : vc.blue}
-                r={k === whole ? 5 : 3}
+                color={vc.blue}
+                r={3}
                 coords={(p) => `n = ${k}: ${fmt(p[1], 5)}`}
               />
             ))}
+            <Point at={[1 / n, value]} color={vc.yellow} r={5} coords={false} />
             <Point at={[0, Math.E]} color={vc.blue} hollow coords={false} />
             <MathLabel at={[1.2, Math.E]} tex="y = e" anchor="ne" offset={6} color={vc.teal} />
           </>
@@ -429,7 +437,7 @@ export default function SqueezeAndStandardLimits() {
         {id === 'compound' && (
           <LabeledSlider
             label="$n$"
-            value={whole}
+            value={n}
             onChange={(v) => {
               stop()
               setN(v)
