@@ -300,6 +300,18 @@ class Parser {
     }
     if (cmd === 'vert' || cmd === 'lvert') return this.abs('vert')
     if (cmd in CONSTANTS) return { t: 'num', v: CONSTANTS[cmd]! }
+    if (cmd === 'log' && this.peek() === '_') {
+      // \log_b x = ln x / ln b.
+      this.i++
+      const base = this.group()
+      const arg = this.functionArgument()
+      return {
+        t: 'bin',
+        op: '/',
+        a: { t: 'fn', name: 'ln', a: arg },
+        b: { t: 'fn', name: 'ln', a: base },
+      }
+    }
     if (cmd in FUNCTIONS) {
       // \sin^2 x means (\sin x)^2.
       let power: Node | undefined

@@ -50,6 +50,10 @@ describe('texEval', () => {
     expect(ev('\\sin^2 x+\\cos^2 x', { x: 0.7 })).toBeCloseTo(1)
     expect(ev('\\ln e')).toBeCloseTo(1)
     expect(ev('\\log 100')).toBeCloseTo(2)
+    expect(ev('\\log_2 8')).toBeCloseTo(3)
+    expect(ev('\\log_{3}(x+1)', { x: 8 })).toBeCloseTo(2)
+    expect(ev('\\log_{10} 1000')).toBeCloseTo(3)
+    expect(ev('2\\log_4 x', { x: 2 })).toBeCloseTo(1)
     expect(ev('\\operatorname{sinh}(0)')).toBe(0)
   })
 
