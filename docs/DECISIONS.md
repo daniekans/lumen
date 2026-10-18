@@ -33,8 +33,12 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Math notation follows books (2026-10-18). `\lim` sets $x \to a$ underneath everywhere, inline
   too, through one KaTeX macro shared by every renderer (`src/lib/texMacros.ts`); write
   `\lim\nolimits` where the side form reads better. Problem and check prompts render inline math in
-  display style, so fractions and limits there are full size. Integrals keep their bounds at the
-  side ($\int_a^b$), as books do, and are full size in prompts. Sums and products: limits
+  display style, so fractions and limits there are full size. Integrals use TeX's default, as
+  English-language books do: in display math and prompts a tall sign with the bounds at its
+  top-right and bottom-right tips; in running text a small sign with the bounds beside it. Bounds
+  centered fully above and below (`\int\limits`, common in Russian books) are not used. Daniel
+  confirmed this on 2026-10-18 after an earlier note ("bounds at the side") read as the cramped
+  inline form. Sums and products: limits
   underneath in display math and prompts, at the side in running text, as books do.
 
 ## Learning model
