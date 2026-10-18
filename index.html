@@ -9,7 +9,7 @@
     <script>
       try {
         const t = JSON.parse(localStorage.getItem('lumen:ui') || '{}')?.state?.theme
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+        if (t === 'light' || t === 'dark' || t === 'paper') document.documentElement.dataset.theme = t
       } catch {}
     </script>
   </head>

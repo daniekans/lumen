@@ -24,6 +24,9 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 
 - Clean, minimal, smooth, in the spirit of 3Blue1Brown, Welch Labs, Mathologer. Approved as built.
 - Dark theme by default, light theme available. Palette and motion speed approved as they are.
+- A third theme, Paper (2026-10-18): a warm light theme for long reading (cream background,
+  brown-gray ink, darker visualization hues, yellow as amber). The theme button and `t` cycle dark,
+  light, paper. Stop at three themes: each one is a palette to check on every visualization.
 - Explanation pane open by default; it can be resized and floated over the stage.
 - All floating panels share one glass style (translucent background and blur).
 - Home hero copy ("See the idea, then the formula.") approved, may change as the product evolves.

@@ -1,6 +1,6 @@
 // Dev helper: screenshots routes in both themes. Usage: node scripts/shoot.mjs <outDir> [route...]
 // Set STEPS=1 to also click through every narrative step and capture each one.
-// Set THEMES=dark to limit themes.
+// Set THEMES=dark to limit themes, or THEMES=paper for the paper theme.
 import { chromium } from '@playwright/test'
 
 const [outDir = 'e2e/screenshots', ...routes] = process.argv.slice(2)

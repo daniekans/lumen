@@ -1,7 +1,11 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-export type Theme = 'dark' | 'light'
+export type Theme = 'dark' | 'light' | 'paper'
+
+/** The theme button and the t key cycle through the themes in this order. */
+export const THEMES: readonly Theme[] = ['dark', 'light', 'paper']
+export const nextTheme = (t: Theme): Theme => THEMES[(THEMES.indexOf(t) + 1) % THEMES.length]!
 export type AsideMode = 'docked' | 'floating'
 
 export const ASIDE_WIDTH = { min: 320, default: 400, max: 760 } as const
@@ -62,7 +66,7 @@ export const useUi = create<UiState>()(
       paletteOpen: false,
       settingsOpen: false,
       sidebarArea: 'mathematics',
-      toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
+      toggleTheme: () => set((s) => ({ theme: nextTheme(s.theme) })),
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       toggleAside: () => set((s) => ({ asideOpen: !s.asideOpen })),
       toggleAsideMode: () =>

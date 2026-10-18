@@ -86,6 +86,7 @@ export const en = {
     collapse: (title: string) => `Collapse ${title}`,
     lightTheme: 'Light theme',
     darkTheme: 'Dark theme',
+    paperTheme: 'Paper theme',
     breadcrumb: 'Breadcrumb',
     vizControls: 'Visualization controls',
     progressRing: (fraction: number) => formatPercent(fraction),

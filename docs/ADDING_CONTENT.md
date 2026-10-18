@@ -90,7 +90,8 @@ start a list item with it (Prettier splits the paragraph).
 ## 5. Check
 
 - [ ] At most three hues, all from `vc`
-- [ ] Every step looks right in both themes (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`)
+- [ ] Every step looks right in dark and light (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`),
+      and in paper (`THEMES=paper`) once per batch
 - [ ] Check answers are correct (compute them, do not trust memory)
 - [ ] Practice and checkpoint items: `problems.test.ts` verifies every generator independently
 - [ ] New terms declared in `unit.ts`; terms from other items linked with `<Term>`
