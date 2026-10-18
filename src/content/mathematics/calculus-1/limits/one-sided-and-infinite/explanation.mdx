@@ -1,0 +1,73 @@
+A <Term id="limit">limit</Term> asks for one value that $f(x)$ approaches from both sides. Three
+things can get in the way: the two sides approach different values, the values grow without bound,
+or the question is about $x$ growing without bound instead of approaching a number.
+
+## One-sided limits
+
+Restrict $x$ to one side of $a$ and the <Term id="one-sided-limit">one-sided limits</Term> are
+
+$$
+\lim_{x \to a^-} f(x) \quad \text{(from the left, } x < a\text{)}, \qquad \lim_{x \to a^+} f(x) \quad \text{(from the right, } x > a\text{)}.
+$$
+
+The two-sided limit exists exactly when both one-sided limits exist and are equal:
+
+$$
+\lim_{x \to a} f(x) = L \iff \lim_{x \to a^-} f(x) = L = \lim_{x \to a^+} f(x).
+$$
+
+In <StepLink step="one-sided">the first step</StepLink> the function is $x + 1$ left of $1$ and
+$(2 + k) - (x - 1)$ from $1$ on. The left limit is $2$ and the right limit is $2 + k$, so for
+$k \neq 0$ the graph jumps and $\lim_{x \to 1} f(x)$ does not exist, even though $f(1) = 2 + k$ is
+defined. Piecewise functions, step functions and $\frac{|x|}{x}$ at $0$ all behave this way.
+
+## Infinite limits
+
+Near $x = 2$, $\frac{1}{x - 2}$ divides $1$ by a tiny number. Left of $2$ the denominator is
+negative, right of $2$ positive:
+
+$$
+\lim_{x \to 2^-} \frac{1}{x - 2} = -\infty, \qquad \lim_{x \to 2^+} \frac{1}{x - 2} = \infty.
+$$
+
+These are <Term id="infinite-limit">infinite limits</Term>. Writing $\infty$ does not make the limit
+a number; it records that the values grow without bound, with a sign. The line $x = 2$ is a
+vertical <Term id="asymptote">asymptote</Term>. With a square, $\frac{1}{(x - 2)^2}$, both sides are positive
+and $\lim_{x \to 2} \frac{1}{(x - 2)^2} = \infty$. The sign test is the whole technique: a nonzero
+number over something tending to $0$ gives $\pm\infty$, and the signs on each side decide which.
+
+## Limits at infinity
+
+A <Term id="limit-at-infinity">limit at infinity</Term> lets $x$ grow without bound:
+
+$$
+\lim_{x \to \infty} \frac{2x^2 - 3x}{x^2 + 1} = 2.
+$$
+
+The values settle toward the <Term id="horizontal-asymptote">horizontal asymptote</Term> $y = 2$
+($f(1000) \approx 1.997$), and so they do as $x \to -\infty$. A graph may cross a horizontal
+asymptote; this one does at $x = -\frac{2}{3}$. The asymptote is about
+the <Term id="end-behavior">end behavior</Term> only.
+
+## Dominant terms
+
+To find a limit at infinity of a rational function, divide the top and the bottom by the highest
+power of $x$ in the denominator:
+
+$$
+\frac{2x^2 - 3x}{x^2 + 1} = \frac{2 - \frac{3}{x}}{1 + \frac{1}{x^2}} \to \frac{2 - 0}{1 + 0} = 2.
+$$
+
+Every term with $x$ in a denominator fades, so only the leading terms count:
+
+| Degrees    | Example                     | Limit at $\pm\infty$ |
+| ---------- | --------------------------- | -------------------- |
+| top lower  | $\frac{3x + 1}{x^2 + 1}$    | $0$                  |
+| equal      | $\frac{2x^2 - 3x}{x^2 + 1}$ | $2$, the ratio       |
+| top higher | $\frac{x^3 + x}{x^2 + 4}$   | $\pm\infty$          |
+
+The same idea works with roots: $\sqrt{4x^2 + 1}$ behaves like $\sqrt{4x^2} = 2|x|$, which is
+$2x$ for $x > 0$ and $-2x$ for $x < 0$, so the two infinities can give different limits. The
+Growth rates lesson extends dominant terms to logarithms, powers and exponentials.
+
+Next: the limit laws, and the algebra that evaluates limits when substitution gives $\frac{0}{0}$.

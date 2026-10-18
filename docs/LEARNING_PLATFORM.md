@@ -436,7 +436,8 @@ order.
 3. Pre-calculus: Polynomial and rational functions (refresher, built, in review)
 4. Pre-calculus: Exponential and logarithmic functions (refresher, built, in review)
 5. Outline the Calculus courses (done, approved 2026-10-17)
-6. Calculus 1: Limits
+6. Calculus 1: Limits (batch 1 built 2026-10-17, in review; batches 2 and 3 next, see the Limits
+   unit plan)
 7. Outline Linear Algebra (for review), then Linear Algebra: Vectors and linear combinations
 8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)
 9. Pre-calculus: Trigonometry (refresher)
@@ -688,6 +689,45 @@ Skills: `exponential-models`, `natural-exponential`, `logarithms`, `exp-log-equa
 Equation answers are verified by substituting the answer into the prompt's own equation TeX; the
 extraneous root of the logarithmic equation must make the left side undefined. Decimal answers
 ("two decimal places") use a tolerance of $0.006$.
+
+### Ongoing units
+
+Units built after 2D closed, in the suggested order. Each gets its plan here when its first batch
+is built.
+
+#### Limits unit plan
+
+Folder `src/content/mathematics/calculus-1/limits/`. Core unit, 12 items in three batches, as in
+the Calculus outline. The thread: a limit is about the neighbors of $a$, never $a$ itself; the
+laws and three pieces of algebra evaluate it; continuity, growth rates and $\varepsilon$-$\delta$
+make it precise. Item 1 starts the Leibniz thread with $\Delta x$, $\Delta y$ and a first
+$\frac{\Delta y}{\Delta x} \to \frac{dy}{dx}$. Numerical limits live in `src/lib/math/limits.ts`
+(`approachInputs`, `oneSidedLimit`, `limit`, tested): practice tests evaluate each prompt's own TeX
+near the point (or far out) and compare with the stored answer.
+
+Skills: `reading-limits`, `one-sided-limits`, `limits-at-infinity`, `evaluating-limits` (batch 1);
+batches 2 and 3 add skills for squeeze and standard limits, continuity and the IVT, growth rates,
+and the limit definition.
+
+| #   | Item                            | Kind       | Skills                               | Content                                                                                                                                   | Status |
+| --- | ------------------------------- | ---------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | approaching-a-value             | explore    | reading-limits                       | $\frac{x^3 - 1}{x - 1}$ near its hole from both sides, zoom, $f(1)$ undefined or different, $\frac{\Delta y}{\Delta x} = 3 + \Delta x$    | review |
+| 2   | one-sided-and-infinite          | explore    | one-sided-limits, limits-at-infinity | A jump with slider $k$, $\frac{1}{(x - 2)^m}$, $\frac{2x^2 - 3x}{x^2 + 1}$ far out, dominant terms in three degree cases                  | review |
+| 3   | limit-laws                      | lesson     | evaluating-limits                    | $f + g$, $fg$, $\frac{f}{g}$ near $1$; substitution; factor, rationalize ($\frac{x - 4}{\sqrt{x} - 2}$), combine fractions; $\frac{k}{0}$ | review |
+| 4   | practice-evaluating-limits      | practice   | all four                             | Substitution, factor, rationalize, combine fractions, piecewise one-sided, does it exist, infinite limits, at infinity, roots at infinity | review |
+| 5   | squeeze-and-standard-limits     | explore    |                                      | Batch 2: as in the outline                                                                                                                | todo   |
+| 6   | continuity                      | explore    |                                      | Batch 2                                                                                                                                   | todo   |
+| 7   | practice-continuity-and-squeeze | practice   |                                      | Batch 2                                                                                                                                   | todo   |
+| 8   | growth-rates                    | lesson     |                                      | Batch 2                                                                                                                                   | todo   |
+| 9   | epsilon-delta                   | explore    |                                      | Batch 3                                                                                                                                   | todo   |
+| 10  | epsilon-delta-proofs            | lesson     |                                      | Batch 3                                                                                                                                   | todo   |
+| 11  | practice-limit-definition       | practice   |                                      | Batch 3                                                                                                                                   | todo   |
+| 12  | checkpoint                      | checkpoint |                                      | Batch 3: all generators plus a self-graded proof                                                                                          | todo   |
+
+Notes for the next batches: stages keep a uniform scale, so a view that zooms far out (limits at
+infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decimals only (no
+fractions), so their answers are chosen to be short decimals. Infinite limits in practice are
+multiple choice ($\infty$, $-\infty$, $0$, does not exist).
 
 ## Risks
 

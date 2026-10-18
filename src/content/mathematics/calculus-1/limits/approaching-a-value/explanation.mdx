@@ -1,0 +1,62 @@
+Calculus asks what happens to a quantity as something else gets arbitrarily close to a value: a
+secant as its second point slides into the first, a sum as its pieces get thinner. Plugging the value
+in often gives nothing usable, such as $\frac{0}{0}$. The <Term id="limit">limit</Term> answers the
+question by looking at nearby inputs instead.
+
+## Closing in on a point
+
+Take
+
+$$
+f(x) = \frac{x^3 - 1}{x - 1}.
+$$
+
+At $x = 1$ it gives $\frac{0}{0}$, so $f(1)$ is undefined and the graph has a <Term id="hole">hole</Term>
+there. Near $1$ the values are perfectly good:
+
+| $x$    | $0.9$  | $0.99$   | $0.999$    | $1.001$    | $1.01$   | $1.1$  |
+| ------ | ------ | -------- | ---------- | ---------- | -------- | ------ |
+| $f(x)$ | $2.71$ | $2.9701$ | $2.997001$ | $3.003001$ | $3.0301$ | $3.31$ |
+
+From both sides the outputs close in on $3$. We write
+
+$$
+\lim_{x \to 1} \frac{x^3 - 1}{x - 1} = 3,
+$$
+
+read "the limit of $f(x)$ as $x$ approaches $1$ is $3$". In general $\lim_{x \to a} f(x) = L$ means
+that $f(x)$ is as close to $L$ as you like for every $x \neq a$ close enough to $a$, on both sides.
+The unit makes "as close as you like" precise later, with $\varepsilon$ and $\delta$.
+
+Here the reason is algebra: $x^3 - 1 = (x - 1)(x^2 + x + 1)$, so for $x \neq 1$ the function is
+$x^2 + x + 1$, which is $3$ at $x = 1$. The <StepLink step="zoom">zoomed view</StepLink> shows the
+same thing geometrically: near the hole the curve is almost a straight line through $(1, 3)$.
+
+## The value at a is not part of it
+
+The definition only uses $x \neq a$. So the limit is the same whether $f(1)$ is undefined, equal
+to $5$, or equal to $3$, as <StepLink step="value-differs">the third step</StepLink> shows. Only
+in the last case does the value match the limit; the function is then called continuous at $1$,
+the subject of a later item.
+
+## Increments
+
+Name the step away from $a$ and the change it causes:
+
+$$
+\Delta x = x - 1, \qquad \Delta y = f(x) - 3.
+$$
+
+These are <Term id="increment">increments</Term> ($\Delta$ is a capital delta, for "difference").
+As $\Delta x \to 0$, $\Delta y \to 0$ as well; that is what $\lim_{x \to 1} f(x) = 3$ says. Their
+ratio does not vanish:
+
+$$
+\frac{\Delta y}{\Delta x} = \frac{(1 + \Delta x)^2 + (1 + \Delta x) + 1 - 3}{\Delta x} = 3 + \Delta x \to 3.
+$$
+
+It is the slope from the hole to $P$, and its limit is the slope of the curve at $x = 1$. Leibniz
+wrote that limit as $\frac{dy}{dx}$: $dx$ and $dy$ are what the increments become in the limit.
+The Derivatives unit defines it properly.
+
+Next: limits that differ from the two sides, and limits that are infinite or taken at infinity.

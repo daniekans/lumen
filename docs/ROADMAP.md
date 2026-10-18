@@ -35,11 +35,12 @@ Storage and file formats). Content units continue after it as ongoing work, in t
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** take the next step of "Suggested order of units" in
-`LEARNING_PLATFORM.md`: build Calculus 1: Limits batch 1 (write its unit plan from the Calculus
-outline first). Outline steps in that list (Linear Algebra next) come up on their own; do them
-when reached and get Daniel's review. Polynomial and rational functions and Exponential and
-logarithmic functions were built on 2026-10-17 and await Daniel's review. Stages use `zoomable`,
-titled readout panels with hints, and `useVizParam` where a view is worth linking.
+`LEARNING_PLATFORM.md`: build Calculus 1: Limits batch 2 (items 5 to 8 of the Limits unit plan,
+under "Ongoing units"). Batch 1 (items 1 to 4) was built on 2026-10-17 and awaits Daniel's review,
+as do Polynomial and rational functions and Exponential and logarithmic functions. Outline steps
+in that list (Linear Algebra next) come up on their own; do them when reached and get Daniel's
+review. Stages use `zoomable`, titled readout panels with hints, and `useVizParam` where a view is
+worth linking.
 
 ### Phase 3: Explore page
 

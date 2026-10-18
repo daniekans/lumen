@@ -1,0 +1,89 @@
+Tables and graphs suggest a <Term id="limit">limit</Term>; they do not compute it exactly. The limit
+laws do, for most functions met in practice, and three pieces of algebra handle the cases where
+plugging in fails.
+
+## The laws
+
+Suppose $\lim_{x \to a} f(x) = L$ and $\lim_{x \to a} g(x) = M$ both exist. Then
+the <Term id="limit-laws">limit laws</Term> say
+
+$$
+\begin{aligned}
+\lim (f \pm g) &= L \pm M, & \lim (cf) &= cL, \\
+\lim (f g) &= L M, & \lim \frac{f}{g} &= \frac{L}{M} \quad \text{if } M \neq 0,
+\end{aligned}
+$$
+
+and $\lim f^n = L^n$, $\lim \sqrt[n]{f} = \sqrt[n]{L}$ (for even $n$, with $L > 0$). The two basic
+limits are $\lim_{x \to a} c = c$ and $\lim_{x \to a} x = a$. Each law holds because when $f$ and
+$g$ are close to $L$ and $M$, their combination is close to the combination of $L$ and $M$; the
+epsilon-delta item proves one of them. The hypothesis matters: if the limits of $f$ and $g$ do not
+exist, the laws say nothing.
+
+## Direct substitution
+
+Every polynomial is built from $c$ and $x$ with sums and products, so the laws give
+
+$$
+\lim_{x \to a} p(x) = p(a).
+$$
+
+The quotient law extends this to a rational function wherever its denominator is not $0$, and the
+root law to roots where they are defined. This is <Term id="direct-substitution">direct substitution</Term>,
+and it is always the first move:
+
+$$
+\lim_{x \to 2} (x^3 - 3x + 1) = 8 - 6 + 1 = 3.
+$$
+
+## When substitution gives 0/0
+
+$\frac{0}{0}$ is an <Term id="indeterminate-form">indeterminate form</Term>: top and bottom both
+vanish, and the result depends on how fast each one does. It signals a common factor $x - a$ hiding
+in both. Remove it, then substitute. Removing it is allowed because the limit never uses $x = a$
+itself (see <Term id="hole">holes</Term>).
+
+**Factor and cancel.** For polynomials, factor top and bottom:
+
+$$
+\lim_{x \to 3} \frac{x^2 - 9}{x - 3} = \lim_{x \to 3} \frac{(x - 3)(x + 3)}{x - 3} = \lim_{x \to 3} (x + 3) = 6.
+$$
+
+**Rationalize.** With a difference involving a square root, here $\sqrt{x} - 2$, multiply top and bottom by the
+conjugate, as in <Term id="rationalizing">rationalizing a denominator</Term>:
+
+$$
+\frac{x - 4}{\sqrt{x} - 2} \cdot \frac{\sqrt{x} + 2}{\sqrt{x} + 2} = \frac{(x - 4)(\sqrt{x} + 2)}{x - 4} = \sqrt{x} + 2 \to 4 \quad (x \to 4).
+$$
+
+**Combine fractions.** With fractions inside a fraction, use a common denominator:
+
+$$
+\frac{\frac{1}{x} - \frac{1}{2}}{x - 2} = \frac{\frac{2 - x}{2x}}{x - 2} = -\frac{1}{2x} \to -\frac{1}{4}.
+$$
+
+This last shape is not arbitrary. It is $\frac{g(x) - g(2)}{x - 2}$ for $g(x) = \frac{1}{x}$, the
+slope of a secant, so its limit is the slope of $\frac{1}{x}$ at $2$. Most of the $\frac{0}{0}$
+limits in this unit are slopes in disguise, which is why the derivative needs exactly these
+techniques.
+
+## When substitution gives a nonzero number over 0
+
+$\frac{2}{0}$ is not indeterminate. The top stays near $2$ while the bottom shrinks, so the values
+blow up: an <Term id="infinite-limit">infinite limit</Term>. Check the sign on each side:
+
+$$
+\lim_{x \to 1^-} \frac{x + 1}{x - 1} = -\infty, \qquad \lim_{x \to 1^+} \frac{x + 1}{x - 1} = \infty,
+$$
+
+so the two-sided limit does not exist. A squared denominator has the same sign on both sides, and
+the limit is $\infty$ or $-\infty$.
+
+## The routine
+
+1. Substitute. A number is the answer.
+2. $\frac{k}{0}$ with $k \neq 0$: an infinite limit; check the signs on each side.
+3. $\frac{0}{0}$: factor, rationalize or combine fractions, cancel $x - a$, and substitute again.
+
+Limits that resist all three, such as $\frac{\sin x}{x}$ at $0$, need the squeeze theorem, the
+subject of a later item.
