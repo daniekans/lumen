@@ -114,6 +114,15 @@ export default function LinesAndParabolas() {
   // Standard form x² + bx + c and its vertex.
   const h2 = -s.b / 2
   const k2 = s.c - (s.b * s.b) / 4
+
+  // Readouts round to the steps the controls use (halves for the vertex, whole numbers for b), so
+  // the text does not flicker through decimals while a transition animates the curve.
+  const vs = { a: v.a, h: half(v.h), k: half(v.k) }
+  const ratioShown = -vs.k / vs.a
+  const dShown = Math.sqrt(Math.max(ratioShown, 0))
+  const bs = Math.round(s.b)
+  const h2s = -bs / 2
+  const k2s = s.c - (bs * bs) / 4
   const standard = (x: number) => x * x + s.b * x + s.c
 
   const parabolaStep = id === 'vertex' || id === 'zeros'
@@ -155,17 +164,17 @@ export default function LinesAndParabolas() {
             )}
             {parabolaStep && (
               <ReadoutPanel title={id === 'vertex' ? 'Parabola' : 'Zeros'}>
-                <Readout label="rule" value={<Tex>{`y = ${vertexTex(v.a, v.h, v.k)}`}</Tex>} />
+                <Readout label="rule" value={<Tex>{`y = ${vertexTex(vs.a, vs.h, vs.k)}`}</Tex>} />
                 <Readout
                   label="vertex"
-                  value={<Tex>{`(${num(v.h)}, ${num(v.k)})`}</Tex>}
+                  value={<Tex>{`(${num(vs.h)}, ${num(vs.k)})`}</Tex>}
                   color={vc.yellow}
                   hint="The lowest point if $a > 0$, the highest if $a < 0$."
                 />
                 {id === 'vertex' && (
                   <Readout
                     label="axis"
-                    value={<Tex>{`x = ${num(v.h)}`}</Tex>}
+                    value={<Tex>{`x = ${num(vs.h)}`}</Tex>}
                     color={vc.teal}
                     hint="The vertical line through the vertex. The parabola is symmetric about it."
                   />
@@ -174,18 +183,18 @@ export default function LinesAndParabolas() {
                   <>
                     <Readout
                       label="$-k / a$"
-                      value={<Tex>{num(ratio)}</Tex>}
+                      value={<Tex>{num(ratioShown)}</Tex>}
                       hint="The square $(x - h)^2$ must equal this. A square is never negative, so a negative value means no zeros."
                     />
                     <Readout
                       label="zeros"
                       value={
                         <Tex>
-                          {zeros.length === 0
+                          {ratioShown < 0
                             ? '\\text{none}'
-                            : zeros.length === 1
-                              ? num(v.h)
-                              : `${num(v.h)} \\pm ${fmt(d)}`}
+                            : ratioShown === 0
+                              ? num(vs.h)
+                              : `${num(vs.h)} \\pm ${fmt(dShown)}`}
                         </Tex>
                       }
                       color={vc.teal}
@@ -198,16 +207,16 @@ export default function LinesAndParabolas() {
               <ReadoutPanel title="Completing the square">
                 <Readout
                   label="standard"
-                  value={<Tex>{`y = x^2${bTerm(s.b)}${signed(s.c)}`}</Tex>}
+                  value={<Tex>{`y = x^2${bTerm(bs)}${signed(s.c)}`}</Tex>}
                 />
                 <Readout
                   label="vertex form"
-                  value={<Tex>{`y = ${vertexTex(1, h2, k2)}`}</Tex>}
+                  value={<Tex>{`y = ${vertexTex(1, h2s, k2s)}`}</Tex>}
                   hint="Half of $b$ goes inside the square; its square, $\frac{b^2}{4}$, is subtracted to keep the value."
                 />
                 <Readout
                   label="vertex"
-                  value={<Tex>{`(${num(h2)}, ${num(k2)})`}</Tex>}
+                  value={<Tex>{`(${num(h2s)}, ${num(k2s)})`}</Tex>}
                   color={vc.yellow}
                   hint="$\left(-\frac{b}{2}, c - \frac{b^2}{4}\right)$: where the arrow moves the vertex of $x^2$."
                 />
