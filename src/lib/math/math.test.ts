@@ -18,6 +18,7 @@ import {
   riemannPieces,
   riemannSum,
   secantSlope,
+  spanDimension3,
 } from '.'
 
 describe('calculus', () => {
@@ -103,5 +104,40 @@ describe('cubicBezier', () => {
     const e = cubicBezier(0.65, 0, 0.35, 1)
     expect(e(0.5)).toBeCloseTo(0.5, 5)
     expect(e(0.25) + e(0.75)).toBeCloseTo(1, 5)
+  })
+})
+
+describe('spanDimension3', () => {
+  it('counts the dimension of the span', () => {
+    expect(spanDimension3([])).toBe(0)
+    expect(spanDimension3([[0, 0, 0]])).toBe(0)
+    expect(
+      spanDimension3([
+        [1, 2, 0],
+        [-2, -4, 0],
+      ]),
+    ).toBe(1)
+    expect(
+      spanDimension3([
+        [1, 2, 0],
+        [-1, 0, 2],
+        [0, 2, 2],
+      ]),
+    ).toBe(2)
+    expect(
+      spanDimension3([
+        [1, 2, 0],
+        [-1, 0, 2],
+        [1, 1, 3],
+      ]),
+    ).toBe(3)
+    expect(
+      spanDimension3([
+        [0, 0, 0],
+        [1, 0, 0],
+        [0, 1, 0],
+        [1, 1, 0],
+      ]),
+    ).toBe(2)
   })
 })

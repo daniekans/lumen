@@ -1,0 +1,10 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.orbiting {
+  cursor: grabbing;
+}
