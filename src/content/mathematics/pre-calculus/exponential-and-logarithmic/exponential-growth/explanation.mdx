@@ -1,0 +1,54 @@
+A linear function adds the same amount over every step of $1$. An <Term id="exponential-function">exponential function</Term> multiplies by the same factor instead. Populations, compound interest,
+radioactive decay and the $2^n$ values that $n$ bits can store all change this way.
+
+## Equal steps, equal factors
+
+$$
+f(x) = a \cdot b^x, \qquad a \neq 0,\ b > 0,\ b \neq 1.
+$$
+
+The <Term id="exponent">exponent laws</Term> give the defining property:
+
+$$
+f(x + 1) = a \cdot b^{x + 1} = b \cdot f(x).
+$$
+
+So $b$ is the <Term id="growth-factor">growth factor</Term> per step of $1$, and $a = f(0)$ is the
+starting value. Going left divides by $b$, which is why $b^{-1} = \frac{1}{b}$ and why the graph
+approaches the $x$-axis without reaching it: the range of $b^x$ is $(0, \infty)$.
+
+## Growth or decay
+
+- $b > 1$: growth. A rate of $5\%$ per year is $b = 1.05$.
+- $0 < b < 1$: decay. Losing $20\%$ per year is $b = 0.8$.
+
+Since $\left(\frac{1}{b}\right)^x = b^{-x}$, a decay curve is a growth curve reflected across the
+$y$-axis, as the dashed curve in <StepLink step="base">the second step</StepLink> shows.
+
+## Doubling time and half-life
+
+If $b^d = 2$, then for every $x$
+
+$$
+f(x + d) = a \cdot b^x \cdot b^d = 2 f(x).
+$$
+
+The <Term id="doubling-time">doubling time</Term> $d$ is the same from every starting point. For
+decay the same reasoning with $b^d = \frac{1}{2}$ gives the <Term id="half-life">half-life</Term>.
+A half-life $h$ gives the model
+
+$$
+A(t) = A_0 \left(\tfrac{1}{2}\right)^{t / h},
+$$
+
+so after $3$ half-lives $\frac{1}{8}$ of $A_0$ is left. Finding $d$ from $b$ means solving
+$b^d = 2$ for an exponent, which is what logarithms do.
+
+## Faster than any power
+
+Compare $2^x$ with $x^2$. Moving from $x$ to $x + 1$ multiplies $2^x$ by $2$, but multiplies
+$x^2$ by $\left(1 + \frac{1}{x}\right)^2$, which tends to $1$. Once that factor drops below $2$
+(for $x$ above about $2.41$) the exponential gains on the power at every step, and it passes it for good at
+$x = 4$. The same happens for $x^{10}$ or any power, only later.
+
+Next: the base that makes growth rates simplest, $e$.

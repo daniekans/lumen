@@ -1,0 +1,67 @@
+An exponential raises $b$ to the power $x$. The reverse question, which power of $b$ gives $x$, is
+answered by the <Term id="logarithm">logarithm</Term>. It turns
+multiplication into addition, which is why it shows up wherever quantities span many orders of
+magnitude: decibels, pH, the $\lceil \log_2 d \rceil$ bits of <Term id="bit-packing">bit packing</Term>, and the depth of a balanced tree.
+
+## The inverse of an exponential
+
+For $b > 0$, $b \neq 1$,
+
+$$
+\log_b x = y \iff b^y = x.
+$$
+
+$b^x$ is one-to-one with range $(0, \infty)$, so it has an <Term id="inverse-function">inverse function</Term>, and its graph is the reflection across $y = x$. So $\log_b x$
+is defined only for $x > 0$, passes through $(1, 0)$ and $(b, 1)$, and has the $y$-axis as a
+vertical asymptote. Undoing in both orders:
+
+$$
+\log_b (b^x) = x, \qquad b^{\log_b x} = x.
+$$
+
+Base $e$ gets its own name, the <Term id="natural-logarithm">natural logarithm</Term> $\ln x$, and
+base $10$ is often written $\log x$.
+
+## The laws
+
+Each law is an <Term id="exponent">exponent law</Term> read backward. With $m = \log_b u$ and
+$n = \log_b v$, $uv = b^m b^n = b^{m + n}$, so the <Term id="logarithm-laws">logarithm laws</Term> are
+
+$$
+\begin{aligned}
+\log_b (uv) &= \log_b u + \log_b v, \\
+\log_b \frac{u}{v} &= \log_b u - \log_b v, \\
+\log_b (u^k) &= k \log_b u.
+\end{aligned}
+$$
+
+There is no rule for $\log_b (u + v)$. And $\log_b u \cdot \log_b v$ is not $\log_b (uv)$:
+for $b = 10$, $u = v = 10$ it gives $1$, while $\log_{10} 100 = 2$.
+
+## Change of base
+
+Write $x = b^y$ and take $\ln$ of both sides: $\ln x = y \ln b$. So
+
+$$
+\log_b x = \frac{\ln x}{\ln b}.
+$$
+
+This is the <Term id="change-of-base">change of base</Term> formula. Every logarithm is the natural
+logarithm scaled by the constant $\frac{1}{\ln b}$, which is why the curves in <StepLink step="change-of-base">the fourth step</StepLink> all cross the axis at $1$. Calculators
+need only $\ln$.
+
+## Solving for an exponent
+
+To solve $a \cdot b^x = c$, isolate the power and take a logarithm:
+
+$$
+b^x = \frac{c}{a} \quad\Longrightarrow\quad x = \log_b \frac{c}{a} = \frac{\ln (c / a)}{\ln b}.
+$$
+
+There is a solution only if $\frac{c}{a} > 0$. For example, $5 \cdot 1.08^t = 20$ gives
+$t = \frac{\ln 4}{\ln 1.08} \approx 18.01$.
+
+A logarithmic equation goes the other way: rewrite $\log_b (\ldots) = k$ as $\ldots = b^k$. Laws
+used along the way can widen the domain, so check every candidate in the original equation. In
+$\log_2 x + \log_2 (x - 2) = 3$, combining gives $x(x - 2) = 8$, with roots $4$ and $-2$. Only $4$
+works: $\log_2 (-2)$ is not defined, so $-2$ is an <Term id="extraneous-solution">extraneous solution</Term>.

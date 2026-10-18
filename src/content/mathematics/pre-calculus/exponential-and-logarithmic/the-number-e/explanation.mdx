@@ -1,0 +1,53 @@
+Any base $b > 0$ makes an <Term id="exponential-function">exponential function</Term>, but one base
+appears whenever growth is continuous, and it makes the calculus of exponentials simplest. Two
+questions lead to it: how far does compounding more often go, and which exponential has slope $1$
+where it crosses the $y$-axis?
+
+## Compounding
+
+One unit at a yearly rate of $100\%$, compounded $n$ times a year, is multiplied by
+$1 + \frac{1}{n}$ in each of the $n$ periods:
+
+| $n$                              | $1$ | $4$     | $12$    | $365$   |
+| -------------------------------- | --- | ------- | ------- | ------- |
+| $\left(1 + \frac{1}{n}\right)^n$ | $2$ | $2.441$ | $2.613$ | $2.715$ |
+
+The values increase but stay bounded, and their limit is the <Term id="euler-number">number $e$</Term>:
+
+$$
+e = \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n \approx 2.71828.
+$$
+
+## The slope at zero
+
+Every $b^x$ passes through $(0, 1)$. Its slope there is the limit of $\frac{b^h - 1}{h}$ as $h$
+shrinks: about $0.693$ for $b = 2$ and $1.099$ for $b = 3$. The base whose slope is exactly $1$ is
+$e$, as <StepLink step="slope-at-zero">the second step</StepLink> shows. The two definitions agree,
+which the <Term id="derivative">derivative</Term> makes precise in Calculus 1.
+
+## Slope equals height
+
+Near any point $x$,
+
+$$
+e^{x + h} = e^x \cdot e^h,
+$$
+
+so the curve near $x$ is the curve near $0$ stretched vertically by $e^x$, and so is its slope:
+$1 \cdot e^x$. The slope of $e^x$ equals its height everywhere. Geometrically, the tangent at
+$(x, e^x)$ meets the $x$-axis at $x - 1$: its run is $1$ and its rise is the height. No other
+base has this property, which is why $e^x$ is called the natural exponential.
+
+## Continuous growth
+
+Compounding a rate $r$ in $n$ periods a year gives $\left(1 + \frac{r}{n}\right)^{nt}$ after $t$
+years, and as $n \to \infty$ this tends to $e^{rt}$. So <Term id="continuous-compounding">continuous growth</Term> at rate $r$ is
+
+$$
+A(t) = P e^{rt}.
+$$
+
+A negative $r$ is continuous decay. The model doubles when $e^{rd} = 2$, at $d = \frac{\ln 2}{r}$,
+about $\frac{0.693}{r}$: at $r = 7\%$ a year, about $10$ years.
+
+Next: the inverse of the exponential, which finds the exponent.
