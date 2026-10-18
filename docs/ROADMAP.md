@@ -34,9 +34,9 @@ Phase 2 details and its task tracker: [LEARNING_PLATFORM.md](LEARNING_PLATFORM.m
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the next content unit in the suggested order (Pre-calculus: Exponential
-and logarithmic functions, a refresher of about five items). Polynomial and rational functions was
-built on 2026-10-17 and awaits Daniel's review. Stages use `zoomable`, titled readout panels with
+**Suggested next session:** the next content unit in the suggested order (Calculus 1: Limits, a
+core unit of 8 to 10 items in batches). Polynomial and rational functions and Exponential and
+logarithmic functions were built on 2026-10-17 and await Daniel's review. Stages use `zoomable`, titled readout panels with
 hints, and `useVizParam` where a view is worth linking.
 
 ### Phase 3: Explore page
@@ -227,6 +227,11 @@ Items in the content tree, by path under `src/content`. The full curriculum plan
 | mathematics/pre-calculus/polynomial-and-rational/rational-functions                                | explore    | review | Vertical, horizontal and slant asymptotes; a whole graph read          |
 | mathematics/pre-calculus/polynomial-and-rational/practice-polynomial-and-rational                  | practice   | review | Eleven generators, verified from the prompt TeX                        |
 | mathematics/pre-calculus/polynomial-and-rational/checkpoint                                        | checkpoint | review | Nine practice generators plus a proof (vertex and discriminant)        |
+| mathematics/pre-calculus/exponential-and-logarithmic/exponential-growth                            | explore    | review | Factor per step, base and mirror, doubling distance, $2^x$ vs $x^2$    |
+| mathematics/pre-calculus/exponential-and-logarithmic/the-number-e                                  | explore    | review | Compounding staircase, slope at zero, tangent run of 1, $e^{rt}$       |
+| mathematics/pre-calculus/exponential-and-logarithmic/logarithms                                    | lesson     | review | Reflection, product rule as stacked heights, change of base; 5 checks  |
+| mathematics/pre-calculus/exponential-and-logarithmic/practice-exponential-and-logarithmic          | practice   | review | Eleven generators; equations verified by substituting into prompt TeX  |
+| mathematics/pre-calculus/exponential-and-logarithmic/checkpoint                                    | checkpoint | review | Nine practice generators plus a proof (product rule, change of base)   |
 | mathematics/pre-calculus/functions/function-as-mapping                                             | explore    | done   | Mapping folds into a graph; vertical line test                         |
 | mathematics/pre-calculus/functions/domain-and-range                                                | explore    | done   | Shadows on both axes (`AxisInterval` in the kit)                       |
 | mathematics/pre-calculus/functions/reading-graphs                                                  | lesson     | done   | Four checks on one cubic                                               |

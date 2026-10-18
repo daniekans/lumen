@@ -232,7 +232,7 @@ order.
 1. Algebra essentials, batch 3 (done)
 2. DE: Storage and file formats (done)
 3. Pre-calculus: Polynomial and rational functions (refresher, built, in review)
-4. Pre-calculus: Exponential and logarithmic functions (refresher)
+4. Pre-calculus: Exponential and logarithmic functions (refresher, built, in review)
 5. Calculus 1: Limits
 6. Linear Algebra: Vectors and linear combinations
 7. DE: Partitioning, bucketing and hashing
@@ -300,6 +300,7 @@ The first unit is built end to end to validate the whole loop before scaling con
 | Pre-calculus / Algebra essentials                                          | done   |
 | Data Engineering / Storage and file formats (core depth)                   | done   |
 | Pre-calculus / Polynomial and rational functions (refresher)               | review |
+| Pre-calculus / Exponential and logarithmic functions (refresher)           | review |
 
 #### Functions unit plan
 
@@ -457,6 +458,31 @@ Skills: `lines`, `quadratics`, `end-behavior`, `zeros`, `asymptotes` (titles in 
 
 Practice answers are verified from the prompt's own TeX (`evaluateTex` on numerator and denominator),
 so a prompt that disagrees with its answer fails the test.
+
+#### Exponential and logarithmic functions unit plan
+
+Folder `src/content/mathematics/pre-calculus/exponential-and-logarithmic/`. Refresher, one batch:
+two explorations, a lesson, one practice set and a checkpoint. The thread: an exponential
+multiplies by the same factor over equal steps, $e$ is the base whose slope equals its height, and
+a logarithm finds the exponent, turning products into sums. Helpers live in
+`src/lib/math/exponential.ts` (`logBase`, `compoundFactor`, `timeToMultiply`, tested). The TeX
+evaluator reads `\log_b x` (as $\ln x / \ln b$), so learners can type exact answers such as
+$\log_2 10$ or $\frac{\ln 5}{2}$.
+
+Skills: `exponential-models`, `natural-exponential`, `logarithms`, `exp-log-equations` (titles in
+`unit.ts`).
+
+| #   | Item                                 | Kind       | Skills                                  | Content                                                                                                         | Status |
+| --- | ------------------------------------ | ---------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | exponential-growth                   | explore    | exponential-models                      | $\times b$ per step, growth or decay with the mirror $b^{-x}$, $a$ as $f(0)$, doubling distance, $2^x$ vs $x^2$ | review |
+| 2   | the-number-e                         | explore    | natural-exponential, exponential-models | Compounding staircase to $e$, slope $\ln b$ at $0$, tangent of $e^x$ with run $1$, $e^{rt}$ vs $(1 + r)^t$      | review |
+| 3   | logarithms                           | lesson     | logarithms, exp-log-equations           | Reflection of $b^x$, what power, product rule as stacked heights, change of base, solving $b^x = c$             | review |
+| 4   | practice-exponential-and-logarithmic | practice   | all                                     | Evaluate, expand, combine; model through two points; half-life; $Pe^{rt}$; doubling time; equations             | review |
+| 5   | checkpoint                           | checkpoint | all                                     | Nine practice generators plus a self-graded proof (product rule and change of base)                             | review |
+
+Equation answers are verified by substituting the answer into the prompt's own equation TeX; the
+extraneous root of the logarithmic equation must make the left side undefined. Decimal answers
+("two decimal places") use a tolerance of $0.006$.
 
 ## Risks
 
