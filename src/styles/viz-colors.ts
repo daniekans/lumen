@@ -1,6 +1,6 @@
 /**
  * Visualization palette as CSS variable references, so every visual follows the active theme.
- * Use at most three hues in a single visualization (see docs/DESIGN.md).
+ * Every hue in a visualization should carry a meaning; see docs/DESIGN.md (Palette rules).
  */
 export const vc = {
   fg: 'var(--viz-fg)',

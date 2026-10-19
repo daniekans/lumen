@@ -57,7 +57,7 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 - Progress is read and written only through `useProgress` (`@/progress`), persisted via the
   `ProgressStore` interface. Learning is on demand: no spaced repetition, due queues or streaks, and
   every status is settable by the learner in both directions.
-- Colors come from `vc` / `role` (`src/styles/viz-colors.ts`); at most three hues per visualization.
+- Colors come from `vc` / `role` (`src/styles/viz-colors.ts`); each hue carries a meaning; two or three is usual, more when it makes the picture clearer (`docs/DESIGN.md`).
   Floating panels combine `surfaces.glass` in TSX.
 - Animation: `useSequence`, `useAnimatedValue` (both on the kit's own rAF `tween`) or CSS transitions.
   Tweens set continuous values; snap only values the learner sets (drags, sliders). Rounding inside

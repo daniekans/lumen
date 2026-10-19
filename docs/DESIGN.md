@@ -25,7 +25,11 @@ Fonts: Inter for UI, JetBrains Mono for numbers and code, KaTeX for math.
 
 Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a component.
 
-- At most three hues in one visualization, plus `vc.fg` and neutrals.
+- Color is for meaning, not decoration: each hue in a visualization names one kind of object,
+  and everything else stays neutral (`vc.fg`, muted text, grid). Two or three hues is the usual
+  case and keeps the clean look. More are fine when the picture has more things to tell apart
+  (several vectors, series or categories) and the extra hue makes it clearer, as long as each
+  one still means something and the stage stays calm. Ask of every hue what it tells the learner.
 - Keep meanings stable across the project:
 
 | Meaning                                                                 | Color        |
@@ -36,6 +40,7 @@ Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a co
 | Negative values, errors, flipped orientation                            | red          |
 | First basis direction, positive in pairs with red                       | green        |
 | Positive and negative weights                                           | blue and red |
+| SQL keywords (`SqlLabel`); literals orange or the item's filter color   | purple       |
 
 - Explanation text uses `<C c="...">` to color a term the same way as in the visual.
 

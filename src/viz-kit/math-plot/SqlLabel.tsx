@@ -6,7 +6,7 @@ import { useCoords } from '../stage'
 interface SqlLabelProps {
   at: Vec2
   children: string
-  /** Color of string and number literals; the item's filter color reads well here. */
+  /** Color of string and number literals: orange, or the item's own filter color. */
   literalColor?: string
   /** Font size in pixels. */
   size?: number
@@ -15,13 +15,13 @@ interface SqlLabelProps {
 }
 
 /**
- * A line of SQL in monospace with quiet highlighting that adds no hue of its own: keywords and
- * punctuation muted, names in the foreground, literals in `literalColor`.
+ * A line of SQL in monospace with light highlighting: keywords in purple, names in the
+ * foreground, operators and punctuation muted, literals in `literalColor`.
  */
 export function SqlLabel({
   at,
   children,
-  literalColor = vc.fg,
+  literalColor = vc.orange,
   size = 13,
   align = 'start',
   opacity = 1,
@@ -29,7 +29,7 @@ export function SqlLabel({
   const c = useCoords()
   const [x, y] = c.toPx(at)
   const fill: Record<SqlTokenKind, string> = {
-    keyword: vc.muted,
+    keyword: vc.purple,
     other: vc.muted,
     identifier: vc.fg,
     string: literalColor,

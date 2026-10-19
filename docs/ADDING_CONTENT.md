@@ -72,7 +72,7 @@ useStepEffect({
 - Step handlers can run again from the Replay button, so each one sets the state it starts from
   (as handlers already do when a step is revisited).
 - A line of SQL on a stage uses `<SqlLabel>` (pass `literalColor` when filter values have a
-  color in the item); other monospace text stays a `TextLabel`.
+  color in the item; the default is orange); other monospace text stays a `TextLabel`.
 - Math goes in `src/lib` with a test.
 - If a piece could serve another item, add it to `src/viz-kit` (and export it from the folder's
   `index.ts`) instead of keeping it local.
@@ -105,7 +105,7 @@ start a list item with it (Prettier splits the paragraph).
 
 ## 5. Check
 
-- [ ] At most three hues, all from `vc`
+- [ ] Every hue from `vc` and with a meaning (see `DESIGN.md`, Palette rules)
 - [ ] Every step looks right in dark and light (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`),
       and in paper (`THEMES=paper`) once per batch
 - [ ] Check answers are correct (compute them, do not trust memory)

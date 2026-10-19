@@ -204,9 +204,12 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   narrow band at its edges. Hovering a plane in the drawing only lights its readout row; the
   full highlight comes from hovering that row.
 - SQL in visualizations is highlighted with `SqlLabel` (2026-10-19, Daniel asked for simple,
-  cheap highlighting): a small in-house tokenizer (`src/lib/sql.ts`), no library. It adds no hue:
-  keywords and punctuation muted and bold, names in the foreground, literals in a color the item
-  already uses (its filter color) or the foreground.
+  cheap highlighting): a small in-house tokenizer (`src/lib/sql.ts`), no library. Keywords
+  purple and bold, names in the foreground, operators muted, literals orange or the item's
+  filter color. Daniel asked for the keywords to stand out more than a muted first version.
+- Hues per visualization (2026-10-19): three was a guideline, not a limit. Daniel is fine with
+  four or more when they make a visualization clearer or prettier, within the same clean,
+  minimal look. What matters is that each color means something. Rule in `DESIGN.md`.
 - Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
   later units need them, in the same look and feel as the current visualizations.
 
