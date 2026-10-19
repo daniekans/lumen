@@ -35,11 +35,11 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Vectors and linear combinations batch 2 (items 5 to 8: dot product,
-span and independence, lines and planes, practice) awaits Daniel's review, and so does the 3D
-stage it introduced (phase 5). Then batch 3 (items 9 to 11: basis and coordinates, its practice,
-the unit checkpoint) in `plans/linear-algebra.md`. Stages use `zoomable`, titled readout panels
-with hints, and `useVizParam` where a view is worth linking; 3D items use `Stage3D`.
+**Suggested next session:** Vectors and linear combinations batch 3 (items 9 to 11: basis and
+coordinates, its practice, the unit checkpoint) in `plans/linear-algebra.md`. Batch 2 and the 3D
+stage were approved, and the 3D polish is done (phase 5 below). Stages use `zoomable`, titled
+readout panels with hints, and `useVizParam` where a view is worth linking; 3D items use
+`Stage3D` with hover keys bound to the readouts (`ADDING_CONTENT.md`).
 
 ### Phase 3: Explore page
 
@@ -59,9 +59,29 @@ KaTeX labels and point hover work as in 2D. A step can drive the camera (`camera
 `onCameraChange` make it controlled). Drawing order is tree order; translucent planes keep it
 readable. First used by Vectors items 6 and 7.
 
-Later, if needed: depth sorting of primitives (painter's ordering) for scenes where order matters,
-pinch to zoom on touch screens, a perspective option, and react-three-fiber only for shaded
-surfaces that SVG cannot draw well.
+Polish (2026-10-18, after Daniel's review): depth cueing (far parts fade, which also removes the
+illusion that the far edge of a plane is wider), lines, axes and planes that fade into the
+distance, hover highlight linked to the readouts (`useHighlight`, `hoverKey`), a slow idle sway
+(on by default, a button switches it off and the choice is remembered), orbit momentum, a views
+menu (home, above, front, side, plus item views such as "along the plane"), arrow keys and +/-
+on a focused stage, arrows that grow in (2D too), one-shot pulses (`Pulse`, `Pulse3D`), and a
+"playing" mark with a Replay button in the steps header for every item.
+
+Next for 3D, in order of priority:
+
+1. **Surfaces** $z = f(x, y)$ for Multivariable Calculus and later courses (Daniel's top
+   priority; same look as the rest). Plan: an SVG `Surface3D` drawn as a wireframe of grid
+   curves plus translucent quads sorted back to front (painter's ordering), shaded by depth and
+   optionally by height with one hue; contour lines on the floor; a point and its tangent plane.
+   Move to WebGL (three.js) only if the SVG version is too slow or cannot shade well enough, and
+   then keep the same palette, strokes and labels.
+2. Depth sorting of lines and vectors against planes (the part of a vector behind a plane
+   drawn dimmer).
+3. Pinch to zoom on touch screens (with the mobile layout).
+4. The camera in the URL, opt-in like other parameters.
+5. Hover keys on the 2D primitives (`Vector`, `Segment`, `Path`), so 2D items can link shapes
+   and readouts too.
+6. A slight perspective option, only if depth cueing turns out not to be enough.
 
 ### Phase 6: Code lessons (idea, not planned yet)
 

@@ -155,9 +155,23 @@ written inside SVG content.
 `elevation`, `zoom`, with $z$ up) and renders a plain `Stage` whose domain is the screen plane;
 `useProjection()` maps a point of space to that plane orthographically (`camera.ts`, tested), and
 each 3D primitive projects its points and draws with the 2D primitives. Dragging the background
-orbits, so 3D stages do not pan; the wheel and buttons zoom. `Point3D` drags on a given plane
-(`dragPlane`) or parallel to the screen. Pass `camera` and `onCameraChange` to drive the camera
-from steps. Shapes are drawn in tree order, without depth sorting.
+orbits (with momentum), so 3D stages do not pan; the wheel and buttons zoom, and a focused stage
+takes arrow keys (it marks them handled, so the page does not change step). A slow sway runs
+while idle (`sway={false}` stops it for a step that needs an exact view; the learner's on/off
+choice is in `stage3d/preferences.ts`). The views menu lists home, above, front, side and the
+item's `views`. `Point3D` drags on a given plane (`dragPlane`) or parallel to the screen. Pass
+`camera` and `onCameraChange` to drive the camera from steps.
+
+Depth: `projection.cue(p)` fades far points (`DEPTH_CUE`). Lines carry it as a gradient along
+the stroke, and `Line3D` and the axes also fade at their ends. `Plane3D` fades toward its edges
+and toward the back with two SVG masks whose gradients are drawn in the plane's own coordinates
+and mapped to the screen with `gradientTransform` (exact, since the projection is affine). Shapes
+are drawn in tree order, without depth sorting.
+
+Linked hover: `useHighlight()` in the item gives a `Highlight`; pass it to the stage
+(`highlight`), give shapes a `hoverKey`, and spread `hl.bind(key)` on the matching `Readout`.
+Hovering either side lights both and dims the other keyed shapes (`useEmphasis`, `stage/highlight.ts`).
+The 3D primitives take hover keys; the 2D ones do not yet.
 
 Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the
 same Stage container and read the same coordinates. Audio would be a service in `viz-kit` with a hook,
@@ -175,6 +189,12 @@ still used for UI transitions.
 - **Eased targets**: `useAnimatedValue(target)` for numbers and number arrays.
 - **Discrete style changes** (fills, widths, colors): set the new value and let the CSS transitions
   declared in the kit interpolate. This is how the neural network fades activations.
+- **Playback in the page**: every `useSequence` run reports to the runtime's `activity`
+  (`runtime/context.ts`). The steps header (and the fullscreen bar) shows bars while a run plays
+  and a Replay button after the step's animation ran; Replay calls the step's `useStepEffect`
+  handler again, so handlers must set up their own starting state.
+- **Arrival and events**: `Vector` grows from its tail when it mounts (`grow={false}` to skip).
+  `Pulse` and `Pulse3D` play one expanding ring when their `when` turns true.
 - **Continuous loops**: `useAnimationFrame` from motion, writing to the DOM through refs when the
   loop runs constantly (see `LissajousMark`).
 

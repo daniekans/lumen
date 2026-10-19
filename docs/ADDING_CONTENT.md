@@ -61,6 +61,15 @@ useStepEffect({
   (points as `Vec3` from `@/lib/math`). Draw back to front in tree order and keep planes
   translucent. Check the home view: a direction pointing at the viewer looks short, and a right
   angle with it looks wrong, so pick vectors (or a `home` camera) that read well.
+  - Link shapes and readouts: `const hl = useHighlight()`, `highlight={hl}` on the stage,
+    `hoverKey="v"` on the vector, its label and its point, and `{...hl.bind('v')}` on its readout.
+  - `Plane3D` fades to nothing at its nearest edge: choose `size` so every point the step shows
+    on the plane lies well inside (a point near the rim looks off the plane).
+  - A step that needs an exact view (edge on, from above) passes `sway={false}` and drives the
+    camera; offer such views to the learner too with `views` (`edgeOnCamera(normal, azimuth)`).
+  - `Pulse3D` (or `Pulse` in 2D) marks a moment: `when={uInPlane}`, `when={dot === 0}`.
+- Step handlers can run again from the Replay button, so each one sets the state it starts from
+  (as handlers already do when a step is revisited).
 - Math goes in `src/lib` with a test.
 - If a piece could serve another item, add it to `src/viz-kit` (and export it from the folder's
   `index.ts`) instead of keeping it local.

@@ -40,7 +40,8 @@ Vectors 6, the first 3D item.
 **Legacy item.** `matrix-transformations` (folder `linear-transformations/`) becomes item 2 of
 Linear maps and matrices. Keep the visual (including `MatrixView`, which may move to `ui`), and
 revise text, steps and its two skills to fit the unit. The determinant part moves to Determinants.
-The folder `linear-transformations/` is renamed to `linear-maps/` (with a redirect).
+The folder `linear-transformations/` is renamed to `linear-maps/` (with a redirect). The item has its own
+Replay button in the dock, which the page's Replay (steps header) now covers; drop it then.
 
 ## Linear Algebra outline
 
@@ -196,17 +197,20 @@ column), added for this unit. `src/lib/math/vector.ts` has n-dimensional helpers
 | 2   | linear-combinations            | explore    | linear-combinations                                  | $a\mathbf{v} + b\mathbf{w}$ with sliders, reach $\mathbf{u} = (3, 4)$ (drag the tip, weights by Cramer), the slanted grid of whole weights, $\mathbf{w}$ turning parallel: only a line | done    |
 | 3   | vector-algebra                 | lesson     | vector-arithmetic, vector-length                     | Componentwise rules, the eight rules (grouping as two routes), length by Pythagoras in $\mathbb{R}^n$, $\lVert c\mathbf{v} \rVert$, unit vectors, distance, triangle inequality        | done    |
 | 4   | practice-vector-arithmetic     | practice   | all three                                            | Combinations (2D, 3D), solve $c\mathbf{x} + \mathbf{v} = \mathbf{w}$, exact lengths, unit vectors (whole lengths), distances, a missing component, weights of a target                 | done    |
-| 5   | dot-product                    | explore    | dot-product                                          | Projection length times length; $\cos\theta$; orthogonality; cosine similarity of feature vectors; Cauchy-Schwarz and the triangle inequality in $\mathbb{R}^n$ (item 3 promises it)   | review  |
-| 6   | span-and-independence          | explore    | span-and-independence                                | First 3D item: span of one, two, three vectors (line, plane, space); a dependent vector adds nothing; a combination equal to $\mathbf{0}$                                              | review  |
-| 7   | lines-and-planes               | lesson     | lines-and-planes                                     | $\mathbf{p} + t\mathbf{v}$, $\mathbf{p} + s\mathbf{v} + t\mathbf{w}$, normal form $\mathbf{n} \cdot (\mathbf{x} - \mathbf{p}) = 0$, spans as planes through the origin (3D)            | review  |
-| 8   | practice-dot-and-span          | practice   | dot-product, span-and-independence, lines-and-planes | Dot products, angles, orthogonality, in the span or not, independence of 2 or 3 vectors, plane equations                                                                               | review  |
+| 5   | dot-product                    | explore    | dot-product                                          | Projection length times length; $\cos\theta$; orthogonality; cosine similarity of feature vectors; Cauchy-Schwarz and the triangle inequality in $\mathbb{R}^n$ (item 3 promises it)   | done    |
+| 6   | span-and-independence          | explore    | span-and-independence                                | First 3D item: span of one, two, three vectors (line, plane, space); a dependent vector adds nothing; a combination equal to $\mathbf{0}$                                              | done    |
+| 7   | lines-and-planes               | lesson     | lines-and-planes                                     | $\mathbf{p} + t\mathbf{v}$, $\mathbf{p} + s\mathbf{v} + t\mathbf{w}$, normal form $\mathbf{n} \cdot (\mathbf{x} - \mathbf{p}) = 0$, spans as planes through the origin (3D)            | done    |
+| 8   | practice-dot-and-span          | practice   | dot-product, span-and-independence, lines-and-planes | Dot products, angles, orthogonality, in the span or not, independence of 2 or 3 vectors, plane equations                                                                               | done    |
 | 9   | basis-and-coordinates          | explore    | basis-coordinates                                    | $\hat{\imath}, \hat{\jmath}$; another basis draws another grid (item 2's grid, now named) and gives the same arrow other coordinates                                                   | planned |
 | 10  | practice-basis-and-coordinates | practice   | basis-coordinates                                    | Coordinates in a given basis (2D, 3D), is it a basis                                                                                                                                   | planned |
 | 11  | checkpoint                     | checkpoint | all                                                  | All of the above plus a self-graded proof (adding a vector outside the span keeps a set independent)                                                                                   | planned |
 
 Batches: 1 is items 1 to 4 (2D only), approved by Daniel on 2026-10-18. Batch 2 is items 5 to 8,
-built on 2026-10-18 together with phase 5 (`Stage3D`, see `ARCHITECTURE.md`, Drawing); it awaits
-Daniel's review. Item 5 is 2D; items 6 and 7 are the first 3D items. Batch 3 is items 9 to 11.
+built on 2026-10-18 together with phase 5 (`Stage3D`, see `ARCHITECTURE.md`, Drawing), approved
+by Daniel on 2026-10-18; the 3D polish that followed his review (depth cue, fades, hover links,
+sway, views, pulses) is applied to items 6 and 7. Item 5 is 2D; items 6 and 7 are the first 3D
+items. Batch 3 is items 9 to 11 and comes next: item 9 can show a basis of space with `Stage3D`
+as well as the plane.
 
 Batch 2 notes: span uses $\mathbf{v} = (1, 2, 0)$, $\mathbf{w} = (-1, 0, 2)$ and a third vector
 $\mathbf{u}$ in white (the neutral `vc.fg`, so the item keeps three hues); its in-plane step turns

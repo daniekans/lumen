@@ -193,6 +193,14 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   Orthographic, so parallel lines stay parallel and equal steps stay equal, which matters for
   linear algebra. The camera keeps the learner's orbit across steps; a step that moves the camera
   returns it home when the next step starts. three.js only if a shaded surface needs it.
+- 3D polish (2026-10-18): Daniel noticed the far edge of a plane looks wider than the near one.
+  It is the illusion of orthographic drawings (the eye expects far things to shrink), so the fix
+  keeps the projection and adds depth cues: far parts fade, and the stage sways slowly while
+  idle. The sway starts on (Daniel's choice); a button switches it off and the choice is
+  remembered. Hover highlight links shapes and readouts. Pulses mark single events, never loop.
+  Every item shows when its step is playing and offers Replay.
+- Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
+  later units need them, in the same look and feel as the current visualizations.
 
 ## Future direction (record, do not build yet)
 
