@@ -199,6 +199,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   idle. The sway starts on (Daniel's choice); a button switches it off and the choice is
   remembered. Hover highlight links shapes and readouts. Pulses mark single events, never loop.
   Every item shows when its step is playing and offers Replay.
+- Planes (2026-10-18, Daniel's second review): the radial fade made planes look like a glow or
+  a vignette, so a plane is again a parallelogram patch with its grid, fading only over a
+  narrow band at its edges. Hovering a plane in the drawing only lights its readout row; the
+  full highlight comes from hovering that row.
 - Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
   later units need them, in the same look and feel as the current visualizations.
 

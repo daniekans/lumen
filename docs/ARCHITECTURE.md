@@ -163,14 +163,17 @@ item's `views`. `Point3D` drags on a given plane (`dragPlane`) or parallel to th
 `camera` and `onCameraChange` to drive the camera from steps.
 
 Depth: `projection.cue(p)` fades far points (`DEPTH_CUE`). Lines carry it as a gradient along
-the stroke, and `Line3D` and the axes also fade at their ends. `Plane3D` fades toward its edges
-and toward the back with two SVG masks whose gradients are drawn in the plane's own coordinates
-and mapped to the screen with `gradientTransform` (exact, since the projection is affine). Shapes
-are drawn in tree order, without depth sorting.
+the stroke, and `Line3D` and the axes also fade at their ends. `Plane3D` keeps its
+parallelogram shape (the grid of weights) and fades over a narrow band at its edges (`fade`, 15%
+of each side; the floor grid uses 40%) and toward the back, with SVG masks whose gradients are
+drawn in the patch's own coordinates and mapped to the screen with `gradientTransform` (exact,
+since the projection is affine). Shapes are drawn in tree order, without depth sorting.
 
 Linked hover: `useHighlight()` in the item gives a `Highlight`; pass it to the stage
 (`highlight`), give shapes a `hoverKey`, and spread `hl.bind(key)` on the matching `Readout`.
-Hovering either side lights both and dims the other keyed shapes (`useEmphasis`, `stage/highlight.ts`).
+Hovering either side lights both and dims the other keyed shapes, except that hovering a plane
+in the drawing only lights its readout row (`hint`), since planes are crossed all the time while
+orbiting; its row highlights it fully (`useEmphasis`, `stage/highlight.ts`).
 The 3D primitives take hover keys; the 2D ones do not yet.
 
 Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the
