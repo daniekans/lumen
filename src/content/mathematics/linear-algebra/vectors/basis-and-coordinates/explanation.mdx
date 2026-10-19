@@ -1,0 +1,96 @@
+The components of a vector look like a property of the arrow, but they are a description of it:
+the weights that rebuild it from two fixed vectors. Choose other fixed vectors and the same arrow
+gets other numbers.
+
+## Components are weights
+
+Every vector of the plane is a <Term id="linear-combination">linear combination</Term> of the
+vectors <C c="blue">$\hat{\imath} = (1, 0)$</C> and <C c="yellow">$\hat{\jmath} = (0, 1)$</C>,
+with its components as the weights:
+
+$$
+\begin{bmatrix} 3 \\ 4 \end{bmatrix} = 3\begin{bmatrix} 1 \\ 0 \end{bmatrix} + 4\begin{bmatrix} 0 \\ 1 \end{bmatrix} = 3\hat{\imath} + 4\hat{\jmath}.
+$$
+
+The pair $\hat{\imath}, \hat{\jmath}$ is the <Term id="standard-basis">standard basis</Term> of
+$\mathbb{R}^2$, and the usual grid is its grid of whole-number weights,
+as the <StepLink step="standard">first step</StepLink> shows. In $\mathbb{R}^3$ the standard basis
+is $\hat{\imath}, \hat{\jmath}, \hat{k}$, and in $\mathbb{R}^n$ it is
+$\mathbf{e}_1, \ldots, \mathbf{e}_n$, where $\mathbf{e}_i$ has a $1$ in place $i$ and $0$ elsewhere.
+
+## Basis
+
+A <Term id="basis">basis</Term> of $\mathbb{R}^n$ is a list of vectors
+$\mathcal{B} = (\mathbf{b}_1, \ldots, \mathbf{b}_k)$ that
+
+- spans $\mathbb{R}^n$: every vector is some combination of them, and
+- is linearly <Term id="linear-independence">independent</Term>: only the combination with every
+  weight $0$ gives $\mathbf{0}$.
+
+The first condition says every vector has weights; the second says it has only one set of them,
+as Span and independence showed: two combinations that give the same vector differ by a
+combination equal to $\mathbf{0}$, so their weights agree. The standard basis is one basis among
+many. Every basis of $\mathbb{R}^n$ has exactly $n$ vectors; the unit Vector spaces and change of
+basis proves it.
+
+## Coordinates
+
+If $\mathcal{B}$ is a basis and $\mathbf{x} = c_1\mathbf{b}_1 + \cdots + c_n\mathbf{b}_n$, the
+weights are the <Term id="coordinates">coordinates</Term> of $\mathbf{x}$ in $\mathcal{B}$:
+
+$$
+[\mathbf{x}]_{\mathcal{B}} = (c_1, \ldots, c_n).
+$$
+
+The components of $\mathbf{x}$ are its coordinates in the standard basis. Take
+the vectors <C c="blue">$\mathbf{b}_1 = (2, 1)$</C> and <C c="yellow">$\mathbf{b}_2 = (-1, 2)$</C>
+of Linear combinations: the slanted grid of that item is the grid of
+this <StepLink step="new-basis">basis</StepLink>. To find the coordinates
+of <C c="teal">$\mathbf{x} = (3, 4)$</C>, match components:
+
+$$
+c_1\begin{bmatrix} 2 \\ 1 \end{bmatrix} + c_2\begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 3 \\ 4 \end{bmatrix}
+\quad\Longrightarrow\quad
+\begin{aligned} 2c_1 - c_2 &= 3, \\ c_1 + 2c_2 &= 4. \end{aligned}
+$$
+
+Doubling the first equation and adding the second gives $5c_1 = 10$, so $c_1 = 2$ and
+$c_2 = 1$: $[\mathbf{x}]_{\mathcal{B}} = (2, 1)$. Going the other way is only a combination:
+$2(2, 1) + 1(-1, 2) = (3, 4)$.
+
+Coordinates belong to the basis, not to the arrow. When $\mathbf{b}_2$ turns to $(1, 3)$ in
+the <StepLink step="move-basis">next step</StepLink>, the same $\mathbf{x}$ becomes
+$\mathbf{b}_1 + \mathbf{b}_2$, with coordinates $(1, 1)$. Saying "the vector $(3, 4)$" quietly
+means "in the standard basis".
+
+## When vectors are not a basis
+
+If $\mathbf{b}_2$ is <StepLink step="not-a-basis">parallel</StepLink> to $\mathbf{b}_1$, both
+conditions fail at once. The two span only a line, so a vector off the line has no coordinates;
+and they are dependent, so a vector on the line has infinitely many. In the plane the test is short:
+two vectors form a basis of $\mathbb{R}^2$ exactly when neither is a multiple of the other. Three
+or more vectors in the plane are always dependent, and one vector cannot span it.
+
+## A basis of space
+
+In $\mathbb{R}^3$ a basis has three vectors that do not lie in one plane through the origin, for
+example $\mathbf{b}_1 = (2, -1, 0)$, $\mathbf{b}_2 = (0, 1, 1)$, $\mathbf{b}_3 = (-1, 0, 1)$. The
+coordinates of $\mathbf{x} = (-3, 2, 2)$ solve three equations:
+
+$$
+\begin{aligned}
+2c_1 - c_3 &= -3, \\
+-c_1 + c_2 &= 2, \\
+c_2 + c_3 &= 2.
+\end{aligned}
+$$
+
+The second gives $c_2 = 2 + c_1$, then the third gives $c_3 = 2 - c_2 = -c_1$, and the first
+becomes $3c_1 = -3$. So $c_1 = -1$, $c_2 = 1$, $c_3 = 1$, and
+$[\mathbf{x}]_{\mathcal{B}} = (-1, 1, 1)$, drawn tip to tail in
+the <StepLink step="space">last step</StepLink>.
+
+Solving for coordinates is solving a linear system. The unit Systems and inverses turns it into a
+routine; the unit Vector spaces and change of basis builds the matrix that converts coordinates
+from one basis to another, and later units choose the basis that makes a problem simple, which is
+the idea behind eigenvectors and principal component analysis.

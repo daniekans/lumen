@@ -33,3 +33,13 @@ export const toRows = (m: Mat2): [[number, number], [number, number]] => [
   [m.i[0], m.j[0]],
   [m.i[1], m.j[1]],
 ]
+
+/**
+ * The coordinates of v in the basis given by the columns of m: the weights with
+ * a m.i + b m.j = v (Cramer's rule). Null when the columns are not a basis (|det| at most `tol`).
+ */
+export const basisCoords = (m: Mat2, v: Vec2, tol = 1e-9): Vec2 | null => {
+  const d = det(m)
+  if (Math.abs(d) <= tol) return null
+  return [(v[0] * m.j[1] - m.j[0] * v[1]) / d, (m.i[0] * v[1] - v[0] * m.i[1]) / d]
+}

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   apply,
+  basisCoords,
+  basisCoords3,
   cubicBezier,
   cAbs,
   cArg,
@@ -139,5 +141,34 @@ describe('spanDimension3', () => {
         [1, 1, 0],
       ]),
     ).toBe(2)
+  })
+})
+
+describe('basis coordinates', () => {
+  it('finds the weights that rebuild the vector', () => {
+    const m = { i: [2, 1], j: [-1, 2] } as const
+    const c = basisCoords(m, [3, 4])!
+    expect(c[0]).toBeCloseTo(2, 12)
+    expect(c[1]).toBeCloseTo(1, 12)
+    expect(basisCoords({ i: [2, 1], j: [-4, -2] }, [3, 4])).toBeNull()
+  })
+  it('solves in space, and rejects a dependent set', () => {
+    const b = [
+      [1, 1, 0],
+      [0, 1, 1],
+      [1, 0, 1],
+    ] as const
+    const c = basisCoords3(b, [3, 3, 2])!
+    ;[2, 1, 1].forEach((x, k) => expect(c[k]).toBeCloseTo(x, 12))
+    expect(
+      basisCoords3(
+        [
+          [1, 2, 0],
+          [-1, 0, 2],
+          [0, 2, 2],
+        ],
+        [1, 1, 1],
+      ),
+    ).toBeNull()
   })
 })

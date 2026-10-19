@@ -42,3 +42,20 @@ export const spanDimension3 = (vs: readonly Vec3[], tol = 1e-9): 0 | 1 | 2 | 3 =
   if (!n) return 1
   return nonzero.some((v) => Math.abs(dot3(n, v)) > tol * length3(n)) ? 3 : 2
 }
+
+/** The determinant of the matrix with columns a, b, c: the signed volume a · (b × c). */
+export const det3 = (a: Vec3, b: Vec3, c: Vec3) => dot3(a, cross3(b, c))
+
+/**
+ * The coordinates of x in the basis b1, b2, b3: the weights with c1 b1 + c2 b2 + c3 b3 = x
+ * (Cramer's rule). Null when the three vectors are not a basis (|det| at most `tol`).
+ */
+export const basisCoords3 = (
+  [b1, b2, b3]: readonly [Vec3, Vec3, Vec3],
+  x: Vec3,
+  tol = 1e-9,
+): Vec3 | null => {
+  const d = det3(b1, b2, b3)
+  if (Math.abs(d) <= tol) return null
+  return [det3(x, b2, b3) / d, det3(b1, x, b3) / d, det3(b1, b2, x) / d]
+}

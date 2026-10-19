@@ -27,6 +27,10 @@ export const unit = defineUnit({
       id: 'lines-and-planes',
       title: 'Write lines and planes in parametric and normal form',
     },
+    {
+      id: 'basis-coordinates',
+      title: 'Decide whether vectors form a basis and find coordinates in it',
+    },
   ],
   terms: [
     {
@@ -171,6 +175,30 @@ export const unit = defineUnit({
       summary:
         'A nonzero vector orthogonal to every direction in a plane. The plane through $\\mathbf{p}$ with normal $\\mathbf{n}$ is $n_1 x + n_2 y + n_3 z = \\mathbf{n} \\cdot \\mathbf{p}$.',
       introducedIn: 'lines-and-planes',
+    },
+    {
+      id: 'basis',
+      title: 'Basis',
+      tex: '\\mathcal{B} = (\\mathbf{b}_1, \\ldots, \\mathbf{b}_n)',
+      summary:
+        'A list of linearly independent vectors that spans the space. Every vector is then exactly one combination of them. Every basis of $\\mathbb{R}^n$ has $n$ vectors.',
+      introducedIn: 'basis-and-coordinates',
+    },
+    {
+      id: 'standard-basis',
+      title: 'Standard basis',
+      tex: '\\hat{\\imath},\\ \\hat{\\jmath},\\ \\hat{k}',
+      summary:
+        'The basis of unit vectors along the axes: $\\hat{\\imath} = (1, 0)$, $\\hat{\\jmath} = (0, 1)$ in the plane, and $\\mathbf{e}_1, \\ldots, \\mathbf{e}_n$ in $\\mathbb{R}^n$. The components of a vector are its coordinates in this basis.',
+      introducedIn: 'basis-and-coordinates',
+    },
+    {
+      id: 'coordinates',
+      title: 'Coordinates in a basis',
+      tex: '[\\mathbf{x}]_{\\mathcal{B}} = (c_1, \\ldots, c_n)',
+      summary:
+        'The weights with $c_1\\mathbf{b}_1 + \\cdots + c_n\\mathbf{b}_n = \\mathbf{x}$. They exist and are unique because $\\mathcal{B}$ is a basis, and they change when the basis changes.',
+      introducedIn: 'basis-and-coordinates',
     },
   ],
 })
