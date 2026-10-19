@@ -12,6 +12,7 @@ import {
   useStepEffect,
   useVizStep,
   VizControls,
+  SqlLabel,
 } from '@/viz-kit'
 
 const COLUMNS = ['id', 'day', 'city', 'total']
@@ -279,9 +280,13 @@ export default function RowVsColumnar() {
           </Overlay>
         }
       >
-        <TextLabel at={[TABLE[0], 96]} align="start" size={13} mono color={vc.fg}>
-          {query[step] ?? (layout ? `${layout} layout` : 'sales')}
-        </TextLabel>
+        {query[step] ? (
+          <SqlLabel at={[TABLE[0], 96]}>{query[step]}</SqlLabel>
+        ) : (
+          <TextLabel at={[TABLE[0], 96]} align="start" size={13} mono color={vc.fg}>
+            {layout ? `${layout} layout` : 'sales'}
+          </TextLabel>
+        )}
 
         {/* The table, which stays in place while its values are copied to pages. */}
         {COLUMNS.map((name, j) => (

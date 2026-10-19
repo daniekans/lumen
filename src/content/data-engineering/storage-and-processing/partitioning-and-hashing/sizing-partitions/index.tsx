@@ -4,6 +4,7 @@ import { Readout, ReadoutPanel } from '@/ui/molecules'
 import {
   MathLabel,
   Overlay,
+  SqlLabel,
   Stage,
   TextLabel,
   useAnimatedValue,
@@ -46,7 +47,7 @@ interface Layout {
   size: number
   sizeText?: string
   files: number
-  query?: string
+  query: string
   /** Bytes the query reads, and the region it reads as day and row fractions. */
   read?: number
   region?: { day0: number; days: number; row0: number; rows: number }
@@ -56,7 +57,16 @@ const day = (where = '') => `WHERE day = '2026-04-14'${where}`
 const wholeDay = { day0: QUERY_DAY, days: 1, row0: 0, rows: 1 }
 
 const LAYOUTS: Record<StepId, Layout> = {
-  area: { across: 'none', down: 'none', partitions: 1, size: TABLE, files: TABLE / TARGET },
+  area: {
+    across: 'none',
+    down: 'none',
+    partitions: 1,
+    size: TABLE,
+    files: TABLE / TARGET,
+    query: day(),
+    read: TABLE,
+    region: { day0: 0, days: DAYS, row0: 0, rows: 1 },
+  },
   'by-day': {
     across: 'day',
     down: 'none',
@@ -186,7 +196,7 @@ function SizeLine({ size }: { size: number }) {
   const [sx] = c.toPx([logX(size), LINE_Y])
   return (
     <g>
-      <line x1={x0} y1={y} x2={x1} y2={y} style={{ stroke: vc.gridStrong }} strokeWidth={1.25} />
+      <line x1={x0} y1={y} x2={x1} y2={y} style={{ stroke: vc.axis }} strokeWidth={2} />
       {powers.map((p) => {
         const [px] = c.toPx([logX(10 ** p), LINE_Y])
         const major = p % 3 === 0
@@ -197,8 +207,8 @@ function SizeLine({ size }: { size: number }) {
             y1={y - (major ? 6 : 3) * u}
             x2={px}
             y2={y + (major ? 6 : 3) * u}
-            style={{ stroke: vc.gridStrong }}
-            strokeWidth={1}
+            style={{ stroke: vc.axis }}
+            strokeWidth={1.5}
           />
         )
       })}
@@ -251,9 +261,7 @@ export default function HowFineToPartition() {
         </Overlay>
       }
     >
-      <TextLabel at={[RX, 70]} align="start" size={13} mono color={vc.fg}>
-        {L.query ? `SELECT ... FROM events ${L.query}` : 'events: 365 days of 2 GB'}
-      </TextLabel>
+      <SqlLabel at={[RX, 70]}>{`SELECT ... FROM events ${L.query}`}</SqlLabel>
 
       <Rect x={RX} y={RY} w={RW} h={RH} fill="var(--bg-elevated)" stroke={vc.gridStrong} />
       <Lines
@@ -278,7 +286,7 @@ export default function HowFineToPartition() {
           y={RY + L.region.row0 * RH}
           w={(L.region.days / DAYS) * RW}
           h={L.region.rows * RH}
-          fill={alpha(vc.blue, 0.55)}
+          fill={alpha(vc.blue, 0.45)}
           stroke={vc.blue}
         />
       )}

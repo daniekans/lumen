@@ -13,6 +13,7 @@ import {
   useVizStep,
   VizControls,
   type PairState,
+  SqlLabel,
 } from '@/viz-kit'
 import {
   COL_W,
@@ -124,16 +125,9 @@ export default function OuterJoins() {
         />
 
         {sql[kind].map((line, k) => (
-          <TextLabel
-            key={k}
-            at={[CUSTOMERS.x, SQL_Y - 10 + k * 20]}
-            align="start"
-            size={13}
-            mono
-            color={vc.fg}
-          >
+          <SqlLabel key={k} at={[CUSTOMERS.x, SQL_Y - 10 + k * 20]}>
             {line ?? ''}
-          </TextLabel>
+          </SqlLabel>
         ))}
 
         <RelationTable

@@ -119,7 +119,9 @@ describe('buildCatalog', () => {
 
     it('resolves terms and records uses in reading order', () => {
       const c = buildCatalog(
-        withTerms({ termUses: { 'math/calc/limits/b': ['limit'], 'math/calc/limits/a': ['limit'] } }),
+        withTerms({
+          termUses: { 'math/calc/limits/b': ['limit'], 'math/calc/limits/a': ['limit'] },
+        }),
       )
       expect(c.terms.map((t) => t.id)).toEqual(['epsilon', 'limit'])
       expect(c.termsById.get('limit')).toMatchObject({

@@ -14,6 +14,7 @@ import {
   useVizStep,
   VizControls,
   type PairState,
+  SqlLabel,
 } from '@/viz-kit'
 import {
   COL_W,
@@ -149,11 +150,11 @@ export default function JoinsAsProducts() {
             </TextLabel>
           ))}
 
-        <TextLabel at={[CUSTOMERS.x, SQL_Y]} align="start" size={13} mono color={vc.fg}>
+        <SqlLabel at={[CUSTOMERS.x, SQL_Y]}>
           {id === 'product'
             ? 'customers c CROSS JOIN orders o'
             : `customers c JOIN orders o ON ${sql}`}
-        </TextLabel>
+        </SqlLabel>
 
         <g style={{ opacity: showResult ? 1 : 0, transition: 'opacity var(--dur-slow)' }}>
           {listed ? (

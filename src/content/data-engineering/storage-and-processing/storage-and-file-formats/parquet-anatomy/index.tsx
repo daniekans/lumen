@@ -13,6 +13,7 @@ import {
   useStepEffect,
   useVizStep,
   VizControls,
+  SqlLabel,
 } from '@/viz-kit'
 
 const COLUMNS = ['day', 'city', 'amount'] as const
@@ -255,9 +256,15 @@ export default function ParquetAnatomy() {
           </Overlay>
         }
       >
-        <TextLabel at={[X0, 62]} align="start" size={13} mono color={vc.fg}>
-          {query}
-        </TextLabel>
+        {querying ? (
+          <SqlLabel at={[X0, 62]} literalColor={vc.yellow}>
+            {query}
+          </SqlLabel>
+        ) : (
+          <TextLabel at={[X0, 62]} align="start" size={13} mono color={vc.fg}>
+            {query}
+          </TextLabel>
+        )}
 
         {COLUMNS.map((name, j) => (
           <TextLabel key={name} at={[colX(j) + CW / 2, Y0 - 12]} size={11} mono>

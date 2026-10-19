@@ -24,7 +24,10 @@ export const scanContent = (contentDir: string): Record<string, string[]> => {
   const files = readdirSync(contentDir, { recursive: true, encoding: 'utf8' })
   for (const rel of files.filter((f) => f.endsWith(`${sep}${EXPLANATION}`)).sort()) {
     const ids = scanTermIds(readFileSync(join(contentDir, rel), 'utf8'))
-    const dir = rel.slice(0, -EXPLANATION.length - 1).split(sep).join('/')
+    const dir = rel
+      .slice(0, -EXPLANATION.length - 1)
+      .split(sep)
+      .join('/')
     if (ids.length > 0) uses[dir] = ids
   }
   return uses

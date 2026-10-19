@@ -11,6 +11,7 @@ import {
   useStepEffect,
   useVizStep,
   VizControls,
+  SqlLabel,
 } from '@/viz-kit'
 
 /** Days 1 to 4 with 7, 5, 6 and 6 rows, and every (day, city) pair present. */
@@ -318,9 +319,15 @@ export default function PartitioningByKey() {
           </Overlay>
         }
       >
-        <TextLabel at={[60, 56]} align="start" size={13} mono color={vc.fg}>
-          {query}
-        </TextLabel>
+        {filter ? (
+          <SqlLabel at={[60, 56]} literalColor={vc.yellow}>
+            {query}
+          </SqlLabel>
+        ) : (
+          <TextLabel at={[60, 56]} align="start" size={13} mono color={vc.fg}>
+            {query}
+          </TextLabel>
+        )}
 
         {COLUMNS.map((name, j) => (
           <TextLabel

@@ -14,7 +14,7 @@ export const meta = defineItem({
       id: 'area',
       title: 'A year of events',
       caption:
-        'An events table gains $2$ GB a day: $365 \\cdot 2 = 730$ GB a year. Draw it as a rectangle with the days across. Writers aim for files of about $T = 1$ GB, shown on the size line below.',
+        'An events table gains $2$ GB a day: $365 \\cdot 2 = 730$ GB a year. Draw it as a rectangle with the days across. Unpartitioned, it is one part, so a query for one day reads all $730$ GB. Writers aim for files of about $T = 1$ GB, shown on the size line below.',
       check: {
         kind: 'number',
         prompt: 'With files of at most $1$ GB, how many files does the table need at least?',
