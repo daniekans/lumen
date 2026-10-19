@@ -17,6 +17,7 @@ import { LabeledSlider, Readout, ReadoutPanel } from '@/ui/molecules'
 import {
   Axes3D,
   defaultCamera,
+  edgeOnCamera,
   Grid3D,
   Line3D,
   MathLabel3D,
@@ -24,7 +25,9 @@ import {
   Overlay,
   Plane3D,
   Point3D,
+  Pulse3D,
   Stage3D,
+  useHighlight,
   useSequence,
   useStepEffect,
   useVizParam,
@@ -65,14 +68,7 @@ const snapU = (p: Vec3): Vec3 => {
   return Math.abs(off) < PLANE_SNAP ? sub3(s, scale3(N, off / length3(N))) : s
 }
 
-/** A camera at the same azimuth that sees the plane with normal `n` edge on. */
-const edgeOn = (c: Camera, n: Vec3): Camera => {
-  const ca = Math.cos(c.azimuth)
-  const sa = Math.sin(c.azimuth)
-  // The view direction (cos e cos a, cos e sin a, sin e) is perpendicular to n.
-  return { ...c, elevation: Math.atan(-(n[0] * ca + n[1] * sa) / n[2]) }
-}
-const EDGE_CAMERA = edgeOn({ ...defaultCamera, azimuth: 1.33 }, N)
+const EDGE_CAMERA = edgeOnCamera(N, 1.33)
 
 const lerpCamera = (from: Camera, to: Camera, t: number): Camera => ({
   azimuth: from.azimuth + (to.azimuth - from.azimuth) * t,
@@ -90,6 +86,7 @@ export default function SpanAndIndependence() {
   const [up, setUp] = useVizParam('u', fromVec(id === 'space' ? U_OUT : U_IN), xyz)
   const [camera, setCamera] = useState<Camera>(defaultCamera)
   const seq = useSequence()
+  const hl = useHighlight()
   const { a, b, c } = weights
   const u = toVec(up)
   // True while the camera is where a step's script put it, so the next step brings it home.
@@ -199,13 +196,21 @@ export default function SpanAndIndependence() {
         radius={4.2}
         camera={camera}
         onCameraChange={orbit}
+        // The edge-on view must stay exact while it shows u lying in the plane.
+        sway={id !== 'in-plane'}
+        views={[{ label: 'Along the plane', camera: EDGE_CAMERA }]}
+        highlight={hl}
         ariaLabel="Vectors in space and the line, plane or space they span"
         overlay={
           <Overlay corner="top-left">
             <ReadoutPanel title="Span">
-              <Readout label="$\mathbf{v}$" value={comps(V)} color={V_COLOR} />
-              {!one && <Readout label="$\mathbf{w}$" value={comps(W)} color={W_COLOR} />}
-              {withU && <Readout label="$\mathbf{u}$" value={comps(u)} color={U_COLOR} />}
+              <Readout label="$\mathbf{v}$" value={comps(V)} color={V_COLOR} {...hl.bind('v')} />
+              {!one && (
+                <Readout label="$\mathbf{w}$" value={comps(W)} color={W_COLOR} {...hl.bind('w')} />
+              )}
+              {withU && (
+                <Readout label="$\mathbf{u}$" value={comps(u)} color={U_COLOR} {...hl.bind('u')} />
+              )}
               {id !== 'redundant' && (
                 <Readout
                   label={
@@ -217,6 +222,7 @@ export default function SpanAndIndependence() {
                   }
                   value={comps(tip)}
                   color={SPAN_COLOR}
+                  {...hl.bind('combo')}
                 />
               )}
               {id === 'redundant' && (
@@ -239,6 +245,7 @@ export default function SpanAndIndependence() {
                 value={SPAN_NAMES[dim]}
                 color={SPAN_COLOR}
                 hint="Everything the combinations reach."
+                {...hl.bind('span')}
               />
             </ReadoutPanel>
           </Overlay>
@@ -247,21 +254,22 @@ export default function SpanAndIndependence() {
         <Grid3D extent={4} />
         <Axes3D extent={4} />
 
-        {one && <Line3D direction={V} reach={9} color={SPAN_COLOR} width={2} opacity={0.6} />}
+        {one && <Line3D direction={V} color={SPAN_COLOR} width={2} opacity={0.7} hoverKey="span" />}
         {!one && (
           <Plane3D
             basis={[V, W]}
-            size={1.5}
+            size={2}
             color={SPAN_COLOR}
-            fillOpacity={0.12}
-            gridOpacity={0.35}
+            fillOpacity={0.14}
+            gridOpacity={0.4}
+            hoverKey="span"
           />
         )}
         {id === 'space' && Math.abs(c) > 0.02 && (
           <Plane3D
             point={scale3(u, c)}
             basis={[V, W]}
-            size={1.5}
+            size={2}
             color={SPAN_COLOR}
             fillOpacity={0.06}
             gridOpacity={0.15}
@@ -275,39 +283,58 @@ export default function SpanAndIndependence() {
             {withC && Math.abs(c) > 0.02 && (
               <Vector3D from={avbw} to={tip} color={U_COLOR} width={2} opacity={0.5} />
             )}
-            <Vector3D to={tip} color={SPAN_COLOR} width={3} />
+            <Vector3D to={tip} color={SPAN_COLOR} width={3} hoverKey="combo" />
           </>
         )}
 
         {id === 'redundant' ? (
           <>
-            <Vector3D to={V} color={V_COLOR} />
-            <Vector3D from={V} to={add3(V, W)} color={W_COLOR} />
-            <Vector3D from={u} to={[0, 0, 0]} color={U_COLOR} />
-            <MathLabel3D at={scale3(V, 0.5)} tex="\mathbf{v}" color={V_COLOR} anchor="se" />
-            <MathLabel3D at={add3(V, scale3(W, 0.5))} tex="\mathbf{w}" color={W_COLOR} anchor="e" />
-            <MathLabel3D at={scale3(u, 0.5)} tex="-\mathbf{u}" color={U_COLOR} anchor="nw" />
+            <Vector3D to={V} color={V_COLOR} hoverKey="v" />
+            <Vector3D from={V} to={add3(V, W)} color={W_COLOR} hoverKey="w" />
+            <Vector3D from={u} to={[0, 0, 0]} color={U_COLOR} hoverKey="u" />
+            <MathLabel3D
+              at={scale3(V, 0.5)}
+              tex="\mathbf{v}"
+              color={V_COLOR}
+              hoverKey="v"
+              anchor="se"
+            />
+            <MathLabel3D
+              at={add3(V, scale3(W, 0.5))}
+              tex="\mathbf{w}"
+              color={W_COLOR}
+              hoverKey="w"
+              anchor="e"
+            />
+            <MathLabel3D
+              at={scale3(u, 0.5)}
+              tex="-\mathbf{u}"
+              color={U_COLOR}
+              hoverKey="u"
+              anchor="nw"
+            />
           </>
         ) : (
           <>
-            <Vector3D to={V} color={V_COLOR} />
-            <MathLabel3D at={V} tex="\mathbf{v}" color={V_COLOR} anchor="se" />
+            <Vector3D to={V} color={V_COLOR} hoverKey="v" />
+            <MathLabel3D at={V} tex="\mathbf{v}" color={V_COLOR} hoverKey="v" anchor="se" />
             {!one && (
               <>
-                <Vector3D to={W} color={W_COLOR} />
-                <MathLabel3D at={W} tex="\mathbf{w}" color={W_COLOR} anchor="nw" />
+                <Vector3D to={W} color={W_COLOR} hoverKey="w" />
+                <MathLabel3D at={W} tex="\mathbf{w}" color={W_COLOR} hoverKey="w" anchor="nw" />
               </>
             )}
             {withU && (
               <>
-                <Vector3D to={u} color={U_COLOR} />
-                <Point3D at={u} color={U_COLOR} onDrag={dragU} label="Tip of u" />
-                <MathLabel3D at={u} tex="\mathbf{u}" color={U_COLOR} anchor="ne" />
+                <Vector3D to={u} color={U_COLOR} hoverKey="u" />
+                <Point3D at={u} color={U_COLOR} onDrag={dragU} label="Tip of u" hoverKey="u" />
+                <Pulse3D at={u} when={uInPlane} color={SPAN_COLOR} />
+                <MathLabel3D at={u} tex="\mathbf{u}" color={U_COLOR} hoverKey="u" anchor="ne" />
               </>
             )}
           </>
         )}
-        {id !== 'redundant' && <Point3D at={tip} color={SPAN_COLOR} r={4} />}
+        {id !== 'redundant' && <Point3D at={tip} color={SPAN_COLOR} r={4} hoverKey="combo" />}
       </Stage3D>
 
       <VizControls>

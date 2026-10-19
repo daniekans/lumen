@@ -9,6 +9,7 @@ import {
   numbersCodec,
   Overlay,
   Point,
+  Pulse,
   Segment,
   Stage,
   TransformedGrid,
@@ -166,6 +167,7 @@ export default function LinearCombinations() {
           <>
             <Point at={U} color={vc.fg} hollow r={6} coords={false} />
             <MathLabel at={U} tex="\mathbf{u}" anchor="ne" offset={10} />
+            <Pulse at={U} when={onTarget} color={SUM_COLOR} />
           </>
         )}
 

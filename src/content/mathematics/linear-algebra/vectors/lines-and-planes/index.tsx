@@ -13,6 +13,7 @@ import { vc } from '@/styles/viz-colors'
 import { LabeledSlider, Readout, ReadoutPanel } from '@/ui/molecules'
 import {
   Axes3D,
+  edgeOnCamera,
   Grid3D,
   Line3D,
   MathLabel3D,
@@ -21,7 +22,9 @@ import {
   Plane3D,
   Point3D,
   Path3D,
+  Pulse3D,
   Stage3D,
+  useHighlight,
   useSequence,
   useStepEffect,
   useVizParam,
@@ -69,6 +72,7 @@ export default function LinesAndPlanes() {
   // How far the line's base point has moved toward the origin (0: at p, 1: at the origin).
   const [toOrigin, setToOrigin] = useVizParam<number>('o', 0)
   const seq = useSequence()
+  const hl = useHighlight()
   const { s, t, d } = params
   const x = toVec(xp)
 
@@ -141,31 +145,40 @@ export default function LinesAndPlanes() {
     <>
       <Stage3D
         radius={4.6}
+        views={lineStep ? [] : [{ label: 'Along the plane', camera: edgeOnCamera(N, 1.2) }]}
+        highlight={hl}
         ariaLabel="A line and a plane in space, given by a point and directions or by a normal vector"
         overlay={
           <Overlay corner="top-left">
             {lineStep && (
               <ReadoutPanel title="Line">
                 <Readout label="$\mathbf{p}$" value={comps(base)} />
-                <Readout label="$\mathbf{v}$" value={comps(LINE_V)} color={V_COLOR} />
+                <Readout
+                  label="$\mathbf{v}$"
+                  value={comps(LINE_V)}
+                  color={V_COLOR}
+                  {...hl.bind('v')}
+                />
                 <Readout label="$t$" value={num(t)} />
                 <Readout
                   label="$\mathbf{p} + t\mathbf{v}$"
                   value={comps(linePoint)}
                   color={SET_COLOR}
+                  {...hl.bind('point')}
                 />
               </ReadoutPanel>
             )}
             {(id === 'plane' || id === 'through-origin') && (
               <ReadoutPanel title="Plane">
                 <Readout label="$\mathbf{p}$" value={comps(planeBase)} />
-                <Readout label="$\mathbf{v}$" value={comps(V)} color={V_COLOR} />
-                <Readout label="$\mathbf{w}$" value={comps(W)} color={W_COLOR} />
+                <Readout label="$\mathbf{v}$" value={comps(V)} color={V_COLOR} {...hl.bind('v')} />
+                <Readout label="$\mathbf{w}$" value={comps(W)} color={W_COLOR} {...hl.bind('w')} />
                 {id === 'plane' && (
                   <Readout
                     label="$\mathbf{p} + s\mathbf{v} + t\mathbf{w}$"
                     value={comps(planePoint)}
                     color={SET_COLOR}
+                    {...hl.bind('point')}
                   />
                 )}
                 {id === 'through-origin' && (
@@ -182,8 +195,13 @@ export default function LinesAndPlanes() {
             )}
             {showX && (
               <ReadoutPanel title="Normal form">
-                <Readout label="$\mathbf{n}$" value={comps(N)} />
-                <Readout label="$\mathbf{x}$" value={comps(x)} color={SET_COLOR} />
+                <Readout label="$\mathbf{n}$" value={comps(N)} {...hl.bind('n')} />
+                <Readout
+                  label="$\mathbf{x}$"
+                  value={comps(x)}
+                  color={SET_COLOR}
+                  {...hl.bind('x')}
+                />
                 <Readout label="$\mathbf{x} - \mathbf{p}$" value={comps(xRel)} />
                 <Readout
                   label="$\mathbf{n} \cdot (\mathbf{x} - \mathbf{p})$"
@@ -211,13 +229,27 @@ export default function LinesAndPlanes() {
             {toOrigin > 0.01 && (
               <Line3D direction={LINE_V} color={SET_COLOR} width={1.5} opacity={0.3} dash="4 6" />
             )}
-            <Line3D through={base} direction={LINE_V} color={SET_COLOR} width={2} opacity={0.7} />
-            <Vector3D from={base} to={add3(base, LINE_V)} color={V_COLOR} />
-            <MathLabel3D at={add3(base, LINE_V)} tex="\mathbf{v}" color={V_COLOR} anchor="se" />
+            <Line3D
+              through={base}
+              direction={LINE_V}
+              color={SET_COLOR}
+              width={2}
+              opacity={0.8}
+              hoverKey="set"
+            />
+            <Vector3D from={base} to={add3(base, LINE_V)} color={V_COLOR} hoverKey="v" />
+            <MathLabel3D
+              at={add3(base, LINE_V)}
+              tex="\mathbf{v}"
+              color={V_COLOR}
+              hoverKey="v"
+              anchor="se"
+            />
             {toOrigin > 0.01 && <Vector3D to={base} color={vc.fg} width={2} opacity={0.6} />}
             <Point3D at={base} color={vc.fg} />
             <MathLabel3D at={base} tex="\mathbf{p}" anchor="nw" />
-            <Point3D at={linePoint} color={SET_COLOR} />
+            <Point3D at={linePoint} color={SET_COLOR} hoverKey="point" />
+            <Pulse3D at={[0, 0, 0]} when={toOrigin > 0.999} color={SET_COLOR} />
           </>
         )}
 
@@ -226,7 +258,7 @@ export default function LinesAndPlanes() {
             {id === 'through-origin' && (
               <Plane3D
                 basis={[V, W]}
-                size={2}
+                size={3.5}
                 color={SET_COLOR}
                 fillOpacity={0.04}
                 gridOpacity={0}
@@ -236,19 +268,38 @@ export default function LinesAndPlanes() {
             <Plane3D
               point={planeBase}
               basis={[V, W]}
-              size={2}
+              size={3.5}
               color={SET_COLOR}
-              fillOpacity={0.12}
-              gridOpacity={0.3}
+              fillOpacity={0.14}
+              gridOpacity={0.35}
+              hoverKey="set"
             />
-            <Vector3D from={planeBase} to={add3(planeBase, V)} color={V_COLOR} />
-            <Vector3D from={planeBase} to={add3(planeBase, W)} color={W_COLOR} />
-            <MathLabel3D at={add3(planeBase, V)} tex="\mathbf{v}" color={V_COLOR} anchor="se" />
-            <MathLabel3D at={add3(planeBase, W)} tex="\mathbf{w}" color={W_COLOR} anchor="sw" />
+            <Vector3D from={planeBase} to={add3(planeBase, V)} color={V_COLOR} hoverKey="v" />
+            <Vector3D from={planeBase} to={add3(planeBase, W)} color={W_COLOR} hoverKey="w" />
+            <MathLabel3D
+              at={add3(planeBase, V)}
+              tex="\mathbf{v}"
+              color={V_COLOR}
+              hoverKey="v"
+              anchor="se"
+            />
+            <MathLabel3D
+              at={add3(planeBase, W)}
+              tex="\mathbf{w}"
+              color={W_COLOR}
+              hoverKey="w"
+              anchor="sw"
+            />
             {(showX || id === 'through-origin') && (
               <>
-                <Vector3D from={planeBase} to={add3(planeBase, N)} color={vc.fg} width={2.5} />
-                <MathLabel3D at={add3(planeBase, N)} tex="\mathbf{n}" anchor="ne" />
+                <Vector3D
+                  from={planeBase}
+                  to={add3(planeBase, N)}
+                  color={vc.fg}
+                  width={2.5}
+                  hoverKey="n"
+                />
+                <MathLabel3D at={add3(planeBase, N)} tex="\mathbf{n}" anchor="ne" hoverKey="n" />
               </>
             )}
             {showX && (
@@ -266,18 +317,29 @@ export default function LinesAndPlanes() {
                   width={1.5}
                   opacity={length3(xRel) > 0.3 ? 0.8 : 0}
                 />
-                <Vector3D from={P} to={x} color={SET_COLOR} width={2.5} />
+                <Vector3D from={P} to={x} color={SET_COLOR} width={2.5} hoverKey="x" />
                 <Point3D
                   at={x}
                   color={SET_COLOR}
                   onDrag={dragX}
                   dragPlane={{ normal: N, point: P }}
                   label="Point x on the plane"
+                  hoverKey="x"
                 />
-                <MathLabel3D at={x} tex="\mathbf{x}" color={SET_COLOR} anchor="e" offset={12} />
+                <MathLabel3D
+                  at={x}
+                  tex="\mathbf{x}"
+                  color={SET_COLOR}
+                  hoverKey="x"
+                  anchor="e"
+                  offset={12}
+                />
               </>
             )}
-            {id === 'plane' && <Point3D at={planePoint} color={SET_COLOR} />}
+            {id === 'plane' && <Point3D at={planePoint} color={SET_COLOR} hoverKey="point" />}
+            {id === 'through-origin' && (
+              <Pulse3D at={[0, 0, 0]} when={Math.abs(d) < 1e-6} color={SET_COLOR} />
+            )}
             <Point3D at={planeBase} color={vc.fg} />
             <MathLabel3D at={planeBase} tex="\mathbf{p}" anchor="nw" offset={10} />
           </>

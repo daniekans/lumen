@@ -21,6 +21,7 @@ import {
   Overlay,
   Path,
   Point,
+  Pulse,
   Segment,
   Stage,
   TextLabel,
@@ -292,6 +293,7 @@ export default function DotProduct() {
           )}
           <Vector to={v} color={V_COLOR} />
           <Vector to={w} color={W_COLOR} />
+          {showAngle && <Pulse at={[0, 0]} when={isOrthogonal} />}
           <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
           <Point at={w} color={W_COLOR} onDrag={dragW} label="Tip of w" />
           <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="ne" offset={10} />
