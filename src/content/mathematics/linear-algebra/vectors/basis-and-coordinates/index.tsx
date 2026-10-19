@@ -7,6 +7,7 @@ import {
   fmtPoint3,
   identity,
   lerpMat,
+  sameMat,
   scale,
   scale3,
   type Mat2,
@@ -33,6 +34,8 @@ import {
   useHighlight,
   useSequence,
   useStepEffect,
+  useStepStart,
+  type StepRun,
   useVizParam,
   useVizStep,
   Vector,
@@ -93,21 +96,23 @@ export default function BasisAndCoordinates() {
   const x3: Vec3 = [x3Param.x, x3Param.y, x3Param.z]
   const setBasis = (next: Mat2) => setBasisParam(fromMat(next))
 
-  const tweenBasis = (to: Mat2, duration = 1.6) => {
-    const from = m
+  const basisStart = useStepStart(m)
+  const tweenBasis = (run: StepRun, to: Mat2, duration = 1.6) => {
+    const from = basisStart(run)
+    if (sameMat(from, to)) return setBasis(to)
     return seq.run(({ tween }) =>
       tween(0, 1, { duration, onUpdate: (t) => setBasis(lerpMat(from, to, t)) }),
     )
   }
 
   useStepEffect({
-    standard: () => {
+    standard: (run) => {
       setXParam({ x: X[0], y: X[1] })
-      void tweenBasis(identity, 1.2)
+      void tweenBasis(run, identity, 1.2)
     },
-    'new-basis': () => {
+    'new-basis': (run) => {
       setXParam({ x: X[0], y: X[1] })
-      void tweenBasis(BASIS, 2)
+      void tweenBasis(run, BASIS, 2)
     },
     'move-basis': () =>
       void seq.run(async ({ tween, wait }) => {

@@ -28,8 +28,10 @@ export const useVizStep = () => {
  * Runs the handler registered for a step whenever that step becomes active, including on mount.
  * Handlers usually set state or start an animation sequence that brings the visual to that beat.
  * When the page opened with parameters from the URL, the opening step's handler is skipped.
+ * The replay button runs the handler again with `replay: true`. A handler that animates from the
+ * current state must then first set the state the step starts from, or the replay shows nothing.
  */
-export const useStepEffect = (handlers: Partial<Record<string, () => void>>) => {
+export const useStepEffect = (handlers: Partial<Record<string, (run: StepRun) => void>>) => {
   const { id } = useVizStep()
   const { urlParams, activity } = useVizRuntime()
   const { replays } = useActivity(activity)
@@ -46,8 +48,27 @@ export const useStepEffect = (handlers: Partial<Record<string, () => void>>) => 
     lastReplays.current = replays
     if (id !== opening.current) left.current = true
     if (!replay && !left.current && urlParams.found()) return
-    ref.current[id]?.()
+    ref.current[id]?.({ replay })
   }, [id, urlParams, replays])
+}
+
+/** How a step handler was triggered. */
+export interface StepRun {
+  /** True when the learner pressed replay; false when the step became active. */
+  replay: boolean
+}
+
+/**
+ * The state a step's animation starts from. Call it in the step handler with the current state:
+ * when the step becomes active it records and returns that state; on a replay it returns the state
+ * recorded last time, so the replay starts where the original animation started.
+ */
+export function useStepStart<T>(current: T) {
+  const saved = useRef(current)
+  return (run: StepRun): T => {
+    if (!run.replay) saved.current = current
+    return saved.current
+  }
 }
 
 /** The activity snapshot, re-rendering when it changes. */

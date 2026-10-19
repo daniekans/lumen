@@ -7,6 +7,7 @@ import {
   fmt,
   identity,
   lerpMat,
+  sameMat,
   mat2,
   rotation,
   scale,
@@ -27,6 +28,8 @@ import {
   useAnimatedValue,
   useSequence,
   useStepEffect,
+  useStepStart,
+  type StepRun,
   Vector,
   VizControls,
 } from '@/viz-kit'
@@ -76,8 +79,11 @@ export default function MatrixTransformations() {
   const vOpacity = useAnimatedValue(showV ? 1 : 0, { duration: 0.5 })
   const squareOpacity = useAnimatedValue(showSquare ? 1 : 0, { duration: 0.5 })
 
-  const animateTo = (target: Mat2, duration = 1.4) => {
-    const from = m
+  const start = useStepStart(m)
+  /** Animates to `target`; in a step handler, pass `run` so a replay starts where the step began. */
+  const animateTo = (target: Mat2, duration = 1.4, run?: StepRun) => {
+    const from = run ? start(run) : m
+    if (run && sameMat(from, target)) return setM(target)
     return seq.run(({ tween }) =>
       tween(0, 1, { duration, onUpdate: (t) => setM(lerpMat(from, target, t)) }),
     )
@@ -104,34 +110,34 @@ export default function MatrixTransformations() {
   }
 
   useStepEffect({
-    basis: () => {
+    basis: (run) => {
       setPreset('custom')
       setShowV(true)
       setShowSquare(false)
-      animateTo(identity, 1)
+      animateTo(identity, 1, run)
     },
-    columns: () => {
+    columns: (run) => {
       setPreset('custom')
       setShowV(true)
       setShowSquare(false)
-      animateTo(mat2(1.5, -0.5, 0.5, 1))
+      animateTo(mat2(1.5, -0.5, 0.5, 1), undefined, run)
     },
-    grid: () => {
+    grid: (run) => {
       setPreset('shear')
       setShowV(false)
       setShowSquare(false)
-      animateTo(presets.shear)
+      animateTo(presets.shear, undefined, run)
     },
-    area: () => {
+    area: (run) => {
       setPreset('custom')
       setShowV(false)
       setShowSquare(true)
-      animateTo(mat2(2, 0.5, 0.5, 1.5))
+      animateTo(mat2(2, 0.5, 0.5, 1.5), undefined, run)
     },
-    sign: () => {
+    sign: (run) => {
       setShowV(false)
       setShowSquare(true)
-      const from = m
+      const from = start(run)
       const flipped = mat2(0.5, 1, 1, 0.5)
       seq.run(async ({ tween, wait }) => {
         setPreset('custom')

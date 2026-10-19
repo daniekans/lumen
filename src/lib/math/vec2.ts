@@ -14,6 +14,10 @@ export const fromPolar = (r: number, theta: number): Vec2 => [
   r * Math.cos(theta),
   r * Math.sin(theta),
 ]
+/** Whether two vectors are equal up to a small tolerance. */
+export const sameVec = (a: Vec2, b: Vec2, eps = 1e-9) =>
+  Math.abs(a[0] - b[0]) < eps && Math.abs(a[1] - b[1]) < eps
+
 export const lerpVec = (a: Vec2, b: Vec2, t: number): Vec2 => [
   a[0] + (b[0] - a[0]) * t,
   a[1] + (b[1] - a[1]) * t,

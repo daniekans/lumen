@@ -30,6 +30,7 @@ import {
   useHighlight,
   useSequence,
   useStepEffect,
+  useStepStart,
   useVizParam,
   useVizStep,
   Vector3D,
@@ -92,18 +93,23 @@ export default function SpanAndIndependence() {
   // True while the camera is where a step's script put it, so the next step brings it home.
   const scripted = useRef(false)
 
-  const cameraTo = (to: Camera, duration: number, { tween }: SequenceContext) => {
-    const from = camera
+  const cameraTo = (
+    to: Camera,
+    duration: number,
+    { tween }: SequenceContext,
+    from: Camera = camera,
+  ) => {
     scripted.current = true
     return tween(0, 1, { duration, onUpdate: (t) => setCamera(lerpCamera(from, to, t)) })
   }
   /** Returns a scripted camera to the home view; a view the learner chose stays. */
-  const cameraHome = async (ctx: SequenceContext) => {
+  const cameraHome = async (ctx: SequenceContext, from: Camera = camera) => {
     if (!scripted.current) return
-    await cameraTo(defaultCamera, 0.8, ctx)
+    await cameraTo(defaultCamera, 0.8, ctx, from)
     scripted.current = false
   }
 
+  const start = useStepStart({ camera, u })
   useStepEffect({
     one: () =>
       void seq.run(async (ctx) => {
@@ -143,16 +149,21 @@ export default function SpanAndIndependence() {
         })
         scripted.current = false
       }),
-    redundant: () =>
-      void seq.run(async (ctx) => {
-        setUp(fromVec(U_IN))
-        await cameraHome(ctx)
-      }),
-    space: () =>
+    redundant: (run) => {
+      setUp(fromVec(U_IN))
+      // A replay puts the camera back where the step found it, so the return home plays again.
+      const from = start(run).camera
+      if (run.replay && from !== camera) {
+        setCamera(from)
+        scripted.current = true
+      }
+      if (scripted.current) void seq.run((ctx) => cameraHome(ctx, from))
+    },
+    space: (run) =>
       void seq.run(async (ctx) => {
         const { tween, wait } = ctx
         await cameraHome(ctx)
-        const from = u
+        const from = start(run).u
         setWeights({ a: 0, b: 0, c: 0 })
         await tween(0, 1, {
           duration: 1.4,

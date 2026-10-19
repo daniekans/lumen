@@ -19,6 +19,8 @@ import {
   zoomedStep,
   riemannPieces,
   riemannSum,
+  sameMat,
+  sameVec,
   secantSlope,
   spanDimension3,
 } from '.'
@@ -48,6 +50,14 @@ describe('mat2', () => {
     expect(apply(m, [1, 0])).toEqual([1, 3])
     expect(apply(m, [0, 1])).toEqual([2, 4])
     expect(det(m)).toBe(-2)
+  })
+  it('compares vectors with a tolerance', () => {
+    expect(sameVec([1, 2], [1, 2 + 1e-12])).toBe(true)
+    expect(sameVec([1, 2], [1.1, 2])).toBe(false)
+  })
+  it('compares matrices with a tolerance', () => {
+    expect(sameMat(mat2(1, 2, 3, 4), mat2(1, 2, 3, 4 + 1e-12))).toBe(true)
+    expect(sameMat(mat2(1, 2, 3, 4), mat2(1, 2, 3, 4.1))).toBe(false)
   })
 })
 

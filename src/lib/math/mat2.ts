@@ -26,6 +26,12 @@ export const lerpMat = (a: Mat2, b: Mat2, t: number): Mat2 => ({
   j: [a.j[0] + (b.j[0] - a.j[0]) * t, a.j[1] + (b.j[1] - a.j[1]) * t],
 })
 
+/** Whether two matrices are equal up to a small tolerance. */
+export const sameMat = (a: Mat2, b: Mat2, eps = 1e-9) =>
+  [a.i[0] - b.i[0], a.i[1] - b.i[1], a.j[0] - b.j[0], a.j[1] - b.j[1]].every(
+    (d) => Math.abs(d) < eps,
+  )
+
 export const rotation = (theta: number): Mat2 =>
   mat2(Math.cos(theta), -Math.sin(theta), Math.sin(theta), Math.cos(theta))
 

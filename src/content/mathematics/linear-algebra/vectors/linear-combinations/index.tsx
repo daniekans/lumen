@@ -15,6 +15,8 @@ import {
   TransformedGrid,
   useSequence,
   useStepEffect,
+  useStepStart,
+  type StepRun,
   useVizParam,
   useVizStep,
   Vector,
@@ -52,8 +54,10 @@ export default function LinearCombinations() {
   const tip = add(av, scale(w, b))
   const parallel = Math.abs(det(m)) < 1e-6
 
-  const tweenWeights = (to: { a: number; b: number }, duration = 1.4) => {
-    const from = weights
+  const start = useStepStart({ weights, par })
+  const tweenWeights = (run: StepRun, to: { a: number; b: number }, duration = 1.4) => {
+    const from = start(run).weights
+    if (from.a === to.a && from.b === to.b) return setWeights(to)
     return seq.run(({ tween }) =>
       tween(0, 1, {
         duration,
@@ -62,8 +66,8 @@ export default function LinearCombinations() {
       }),
     )
   }
-  const unpar = () => {
-    const from = par
+  const unpar = (run: StepRun) => {
+    const from = start(run).par
     return seq.run(({ tween }) => tween(from, 0, { duration: 0.8, onUpdate: setPar }))
   }
 
@@ -77,13 +81,13 @@ export default function LinearCombinations() {
         })
         await wait(0.3)
       }),
-    target: () => {
+    target: (run) => {
       setPar(0)
-      void tweenWeights({ a: 2, b: 1 })
+      void tweenWeights(run, { a: 2, b: 1 })
     },
-    grid: () => {
-      if (par > 0) void unpar()
-      else void tweenWeights({ a: -1, b: 1.5 })
+    grid: (run) => {
+      if (start(run).par > 0) void unpar(run)
+      else void tweenWeights(run, { a: -1, b: 1.5 })
     },
     parallel: () =>
       void seq.run(async ({ tween, wait }) => {

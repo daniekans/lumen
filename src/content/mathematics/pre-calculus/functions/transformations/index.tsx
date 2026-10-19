@@ -12,6 +12,8 @@ import {
   useSequence,
   numbersCodec,
   useStepEffect,
+  useStepStart,
+  type StepRun,
   useVizParam,
   type ParamCodec,
   Vector,
@@ -109,9 +111,13 @@ export default function Transformations() {
   const base: Base = bases[baseId]
 
   /** Animates all four parameters together toward `to`. */
-  const go = (to: Partial<Params>, duration = 1.4) => {
-    const from = p
+  const start = useStepStart(p)
+  const go = (run: StepRun, to: Partial<Params>, duration = 1.4) => {
+    const from = start(run)
     const target = { ...identity, ...to }
+    if ((['a', 'b', 'h', 'k'] as const).every((key) => from[key] === target[key])) {
+      return setP(target)
+    }
     return seq.run(({ tween }) =>
       tween(0, 1, {
         duration,
@@ -127,22 +133,22 @@ export default function Transformations() {
   }
 
   useStepEffect({
-    'vertical-shift': () => {
+    'vertical-shift': (run) => {
       setBaseId('square')
-      go({ k: 2 })
+      go(run, { k: 2 })
     },
-    'horizontal-shift': () => {
+    'horizontal-shift': (run) => {
       setBaseId('square')
-      go({ h: 2 })
+      go(run, { h: 2 })
     },
-    'vertical-stretch': () => {
+    'vertical-stretch': (run) => {
       setBaseId('square')
-      go({ a: 2 })
+      go(run, { a: 2 })
     },
-    reflect: () => {
+    reflect: (run) => {
       setBaseId('root')
       void seq.run(async ({ tween, wait }) => {
-        const from = p
+        const from = start(run)
         await tween(0, 1, {
           duration: 1.2,
           onUpdate: (s) =>
@@ -158,13 +164,13 @@ export default function Transformations() {
         await tween(1, -1, { duration: 1.4, onUpdate: (b) => setP((q) => ({ ...q, b })) })
       })
     },
-    'horizontal-stretch': () => {
+    'horizontal-stretch': (run) => {
       setBaseId('root')
-      go({ b: 2 })
+      go(run, { b: 2 })
     },
-    combine: () => {
+    combine: (run) => {
       setBaseId('square')
-      go({ a: -0.5, b: 1, h: 1, k: 3 }, 1.8)
+      go(run, { a: -0.5, b: 1, h: 1, k: 3 }, 1.8)
     },
   })
 

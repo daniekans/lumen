@@ -7,6 +7,7 @@ import {
   fromPolar,
   length,
   lerpVec,
+  sameVec,
   scale,
   type Vec2,
 } from '@/lib/math'
@@ -27,6 +28,8 @@ import {
   TextLabel,
   useSequence,
   useStepEffect,
+  useStepStart,
+  type StepRun,
   useVizParam,
   useVizStep,
   Vector,
@@ -73,9 +76,11 @@ export default function DotProduct() {
   const w = toVec(wp)
   const q = toVec(qp)
 
-  /** Moves w to `to` along a straight path. */
-  const moveW = (to: Vec2, duration = 1.4) => {
-    const from = w
+  const wStart = useStepStart(w)
+  /** Moves w to `to` along a straight path, from where it was when the step began. */
+  const moveW = (run: StepRun, to: Vec2, duration = 1.4) => {
+    const from = wStart(run)
+    if (sameVec(from, to)) return setWp(fromVec(to))
     return seq.run(({ tween }) =>
       tween(0, 1, { duration, onUpdate: (t) => setWp(fromVec(lerpVec(from, to, t))) }),
     )
@@ -83,9 +88,9 @@ export default function DotProduct() {
 
   useStepEffect({
     components: () => seq.cancel(),
-    projection: () =>
+    projection: (run) =>
       void seq.run(async ({ tween, wait }) => {
-        const from = w
+        const from = wStart(run)
         const to: Vec2 = [-2, 2]
         await wait(0.6)
         await tween(0, 1, { duration: 2, onUpdate: (t) => setWp(fromVec(lerpVec(from, to, t))) })
@@ -105,14 +110,14 @@ export default function DotProduct() {
           onUpdate: (t) => setWp(fromVec(fromPolar(r, a0 + t))),
         })
       }),
-    orthogonal: () => {
+    orthogonal: (run) => {
       setVp({ x: 3, y: 1 })
-      void moveW([-1, 3])
+      void moveW(run, [-1, 3])
     },
-    bound: () =>
+    bound: (run) =>
       void seq.run(async ({ tween, wait }) => {
         setVp({ x: 3, y: 1 })
-        const from = w
+        const from = wStart(run)
         const to: Vec2 = [0, 2]
         await tween(0, 1, { duration: 1.2, onUpdate: (t) => setWp(fromVec(lerpVec(from, to, t))) })
         await wait(0.4)

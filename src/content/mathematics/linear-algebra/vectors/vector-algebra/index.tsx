@@ -5,6 +5,7 @@ import {
   fmtShort,
   length,
   lerpVec,
+  sameVec,
   normalize,
   scale,
   sub,
@@ -24,6 +25,8 @@ import {
   Stage,
   useSequence,
   useStepEffect,
+  useStepStart,
+  type StepRun,
   useVizParam,
   useVizStep,
   Vector,
@@ -57,9 +60,14 @@ export default function VectorAlgebra() {
   const [c, setC] = useVizParam<number>('c', 1.5)
   const seq = useSequence()
 
-  const tweenVecs = (toV: Vec2, toW: Vec2, duration = 1.2) => {
-    const fromV = v
-    const fromW = w
+  const start = useStepStart({ v, w })
+  const tweenVecs = (run: StepRun, toV: Vec2, toW: Vec2, duration = 1.2) => {
+    const { v: fromV, w: fromW } = start(run)
+    if (sameVec(fromV, toV) && sameVec(fromW, toW)) {
+      setV(toV)
+      setW(toW)
+      return
+    }
     return seq.run(({ tween }) =>
       tween(0, 1, {
         duration,
@@ -72,24 +80,23 @@ export default function VectorAlgebra() {
   }
 
   useStepEffect({
-    componentwise: () => void tweenVecs([2, 1], [1.5, 2]),
+    componentwise: (run) => void tweenVecs(run, [2, 1], [1.5, 2]),
     rules: () => seq.cancel(),
-    length: () => void tweenVecs([3, 2], w),
-    'scaled-length': () =>
+    length: (run) => void tweenVecs(run, [3, 2], start(run).w),
+    'scaled-length': (run) =>
       void seq.run(async ({ tween, wait }) => {
-        const from = v
+        const from = start(run).v
         await tween(0, 1, { duration: 0.8, onUpdate: (t) => setV(lerpVec(from, [2, 1], t)) })
         await tween(1, 2, { duration: 1.2, onUpdate: setC })
         await wait(0.3)
         await tween(2, -1.5, { duration: 1.6, onUpdate: setC })
       }),
     // (1.2, -1.6) has length 2 and the direction of (3, -4) from the check.
-    'unit-vector': () => void tweenVecs([1.2, -1.6], w),
-    distance: () => void tweenVecs([1, 0.5], [4, 3.5]),
-    triangle: () =>
+    'unit-vector': (run) => void tweenVecs(run, [1.2, -1.6], start(run).w),
+    distance: (run) => void tweenVecs(run, [1, 0.5], [4, 3.5]),
+    triangle: (run) =>
       void seq.run(async ({ tween, wait }) => {
-        const fromV = v
-        const fromW = w
+        const { v: fromV, w: fromW } = start(run)
         await tween(0, 1, {
           duration: 1.2,
           onUpdate: (t) => {
