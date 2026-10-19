@@ -1,14 +1,12 @@
 import { useId, type ReactNode } from 'react'
 import {
   add3,
-  cross3,
   dot3,
   fmtPoint3,
   length3,
   lerp3,
   normalize3,
   scale3,
-  sub3,
   type Vec2,
   type Vec3,
 } from '@/lib/math'
@@ -242,89 +240,116 @@ export function Path3D({
   )
 }
 
-/** Unit vectors spanning the same plane as u and v, perpendicular to each other (Gram-Schmidt). */
-const orthonormal = (u: Vec3, v: Vec3): [Vec3, Vec3] => {
-  const e1 = normalize3(u)
-  return [e1, normalize3(sub3(v, scale3(e1, dot3(v, e1))))]
-}
+/** Share of each side of a plane patch over which it fades out, by default. */
+const EDGE_FADE = 0.15
 
 /**
- * Masks that fade a plane patch: toward its edges (a soft disc, so the patch reads as part of an
- * endless plane) and toward the back (the depth cue). Both gradients are drawn in the plane's own
- * coordinates and carried to the screen by `gradientTransform`, which is exact because the
- * projection is affine. Returns null when the plane is seen edge on.
+ * Masks that fade a plane patch p + s u + t v, with |s| and |t| up to `size`:
+ * over the outer `edge` share of each side (so the patch reads as part of an endless plane, with
+ * its shape kept), and toward the back (the depth cue). The gradients are drawn in the patch's own
+ * coordinates (s, t) and carried to the screen by `gradientTransform`, which is exact because
+ * the projection is affine. Returns null when the plane is seen edge on.
  */
-function usePlaneMasks(center: Vec3, frame: readonly [Vec3, Vec3], fadeRadius: number) {
+function usePlaneMasks(center: Vec3, u: Vec3, v: Vec3, size: number, edge: number) {
   const { cue, frame: screen } = useProjection()
   const c = useCoords()
   const px = usePixels()
-  const edgeId = useSvgId()
+  const sId = useSvgId()
+  const tId = useSvgId()
   const depthId = useSvgId()
-  const [e1, e2] = frame
   const p0 = px(center)
-  const a = px(add3(center, e1))
-  const b = px(add3(center, e2))
+  const a = px(add3(center, u))
+  const b = px(add3(center, v))
   const ax = a[0] - p0[0]
   const ay = a[1] - p0[1]
   const bx = b[0] - p0[0]
   const by = b[1] - p0[1]
   if (Math.abs(ax * by - ay * bx) < 1) return null
   const transform = `matrix(${ax} ${ay} ${bx} ${by} ${p0[0]} ${p0[1]})`
-  // Depth changes along this direction of the plane.
-  const gx = dot3(e1, screen.toward)
-  const gy = dot3(e2, screen.toward)
+  // Depth is linear on the patch: its lines of equal depth are perpendicular to (gx, gy) in (s, t).
+  const gx = dot3(u, screen.toward)
+  const gy = dot3(v, screen.toward)
   const g = Math.hypot(gx, gy)
-  const dir: Vec2 = g < 1e-6 ? [1, 0] : [gx / g, gy / g]
-  const at = (s: number) => add3(center, add3(scale3(e1, s * dir[0]), scale3(e2, s * dir[1])))
+  const dir: Vec2 = g < 1e-9 ? [1, 0] : [gx / g, gy / g]
+  const reach = size * Math.SQRT2
+  const at = (k: number) => add3(center, add3(scale3(u, k * dir[0]), scale3(v, k * dir[1])))
   const box = { x: 0, y: 0, width: c.width, height: c.height }
+  const edgeStops = (
+    <>
+      <stop offset={0} stopColor="black" />
+      <stop offset={edge} stopColor="white" />
+      <stop offset={1 - edge} stopColor="white" />
+      <stop offset={1} stopColor="black" />
+    </>
+  )
+  const mask = (id: string) => (
+    <mask id={id} maskUnits="userSpaceOnUse" {...box}>
+      <rect {...box} fill={`url(#${id}g)`} />
+    </mask>
+  )
   const defs: ReactNode = (
     <defs>
-      <radialGradient
-        id={`${edgeId}g`}
+      <linearGradient
+        id={`${sId}g`}
         gradientUnits="userSpaceOnUse"
-        cx={0}
-        cy={0}
-        r={fadeRadius}
+        x1={-size}
+        y1={0}
+        x2={size}
+        y2={0}
         gradientTransform={transform}
       >
-        <stop offset={0} stopColor="white" />
-        <stop offset={0.6} stopColor="white" />
-        <stop offset={1} stopColor="black" />
-      </radialGradient>
-      <mask id={edgeId} maskUnits="userSpaceOnUse" {...box}>
-        <rect {...box} fill={`url(#${edgeId}g)`} />
-      </mask>
+        {edgeStops}
+      </linearGradient>
+      {mask(sId)}
+      <linearGradient
+        id={`${tId}g`}
+        gradientUnits="userSpaceOnUse"
+        x1={0}
+        y1={-size}
+        x2={0}
+        y2={size}
+        gradientTransform={transform}
+      >
+        {edgeStops}
+      </linearGradient>
+      {mask(tId)}
       <linearGradient
         id={`${depthId}g`}
         gradientUnits="userSpaceOnUse"
-        x1={-fadeRadius * dir[0]}
-        y1={-fadeRadius * dir[1]}
-        x2={fadeRadius * dir[0]}
-        y2={fadeRadius * dir[1]}
+        x1={-reach * dir[0]}
+        y1={-reach * dir[1]}
+        x2={reach * dir[0]}
+        y2={reach * dir[1]}
         gradientTransform={transform}
       >
-        {[0, 0.25, 0.5, 0.75, 1].map((t) => (
-          <stop
-            key={t}
-            offset={t}
-            stopColor="white"
-            stopOpacity={cue(at(-fadeRadius + 2 * fadeRadius * t))}
-          />
+        {[0, 0.25, 0.5, 0.75, 1].map((k) => (
+          <stop key={k} offset={k} stopColor="white" stopOpacity={cue(at(reach * (2 * k - 1)))} />
         ))}
       </linearGradient>
-      <mask id={depthId} maskUnits="userSpaceOnUse" {...box}>
-        <rect {...box} fill={`url(#${depthId}g)`} />
-      </mask>
+      {mask(depthId)}
     </defs>
   )
-  return { defs, edge: `url(#${edgeId})`, depth: `url(#${depthId})` }
+  return {
+    defs,
+    wrap: (body: ReactNode) => (
+      <g mask={`url(#${sId})`}>
+        <g mask={`url(#${tId})`}>
+          <g mask={`url(#${depthId})`}>{body}</g>
+        </g>
+      </g>
+    ),
+  }
 }
 
 /**
  * A patch of the plane through `point` with normal `normal`, `size` units from the center to each
  * side, with grid lines every `step` units. Pass `basis` to align the patch and its grid with two
  * directions of the plane (they need not be perpendicular); then `size` and `step` count weights
- * of those directions. The patch fades toward its edges and toward the back unless `fade` is false.
+ * of those directions. The patch keeps its shape and fades over the outer `fade` share of each
+ * side (0 for hard edges), and toward the back.
+ *
+ * Hovering the patch only lights its readout row: planes are crossed all the time while orbiting.
+ * Hovering that row highlights the plane.
  */
 export function Plane3D({
   point = ORIGIN,
@@ -336,7 +361,7 @@ export function Plane3D({
   fillOpacity = 0.1,
   gridOpacity = 0.25,
   opacity = 1,
-  fade = true,
+  fade = EDGE_FADE,
   hoverKey,
 }: {
   point?: Vec3
@@ -349,7 +374,7 @@ export function Plane3D({
   /** 0 hides the grid lines. */
   gridOpacity?: number
   opacity?: number
-  fade?: boolean
+  fade?: number
   hoverKey?: string
 }) {
   const { project } = useProjection()
@@ -358,27 +383,24 @@ export function Plane3D({
       [1, 0, 0],
       [0, 1, 0],
     ]
-  const { emphasis, hover, opacity: dim } = useEmphasis(hoverKey)
-  // The fade reaches zero at the patch's nearest edge: size times the distance between the
-  // lines s = ±1 (|u × v| / |v|) or t = ±1 (|u × v| / |u|), whichever is smaller.
-  const area = length3(cross3(u, v))
-  const fadeRadius = size * Math.min(area / (length3(v) || 1), area / (length3(u) || 1))
-  const masks = usePlaneMasks(point, orthonormal(u, v), fadeRadius)
+  const { emphasis, hover, opacity: dim } = useEmphasis(hoverKey, { quiet: true })
+  const masks = usePlaneMasks(point, u, v, size, Math.max(fade, 1e-3))
   const at = (s: number, t: number) => project(add3(point, add3(scale3(u, s), scale3(v, t))))
   const corners: Vec2[] = [at(-size, -size), at(size, -size), at(size, size), at(-size, size)]
   const n = Math.floor(size / step + 1e-9)
   const ks = Array.from({ length: 2 * n + 1 }, (_, i) => (i - n) * step)
   const on = emphasis === 'on'
-  const grid = on ? Math.min(1, gridOpacity * 1.6) : gridOpacity
+  const grid = on ? Math.min(1, gridOpacity * 1.4) : gridOpacity
+  const soft = fade > 0 && masks
   const body = (
     <>
       <Path
         points={corners}
         closed
         color={color}
-        width={fade && masks ? 0 : 1}
-        opacity={fade && masks ? 1 : 0.35}
-        fill={alpha(color, on ? Math.min(1, fillOpacity * 1.8) : fillOpacity)}
+        width={soft ? 0 : 1}
+        opacity={soft ? 1 : 0.35}
+        fill={alpha(color, on ? Math.min(1, fillOpacity * 1.5) : fillOpacity)}
       />
       {gridOpacity > 0 &&
         ks.map((k) => (
@@ -392,13 +414,7 @@ export function Plane3D({
   return (
     <g style={{ opacity: opacity * dim }}>
       {masks?.defs}
-      {fade && masks ? (
-        <g mask={masks.edge} pointerEvents="none">
-          <g mask={masks.depth}>{body}</g>
-        </g>
-      ) : (
-        <g pointerEvents="none">{body}</g>
-      )}
+      <g pointerEvents="none">{soft ? masks.wrap(body) : body}</g>
       {hover && (
         <Path
           points={corners}
@@ -426,6 +442,7 @@ export function Grid3D({ extent = 4, step = 1 }: { extent?: number; step?: numbe
       color={vc.fg}
       fillOpacity={0}
       gridOpacity={0.16}
+      fade={0.4}
     />
   )
 }
