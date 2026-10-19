@@ -37,12 +37,23 @@ Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a co
 | The main object (a function, a vector being studied)                                  | blue         |
 | A derived or comparison object (a secant, an approximation, a gradient)               | yellow       |
 | The "true" or limiting object (tangent, exact area, product)                          | teal         |
-| Negative values, errors, flipped orientation                                          | red          |
-| First basis direction, positive in pairs with red                                     | green        |
+| Negative values, errors, failures (a $\delta$ that fails, an extraneous root)         | red          |
+| First basis direction; positive in pairs with red (sign charts)                       | green        |
+| A normal vector (orthogonal to a line or plane)                                       | orange       |
 | Positive and negative weights                                                         | blue and red |
 | SQL keywords (`SqlLabel`); functions teal; literals orange or the item's filter color | purple       |
 
 - Explanation text uses `<C c="...">` to color a term the same way as in the visual.
+- A hue keeps one meaning in every step of an item. If an object is yellow in one step, it is
+  yellow in the next; a new object never takes a hue already used for something else there.
+- A readout takes the color of the object it measures on the stage. A readout of something not
+  drawn, or of a total over objects of different hues, stays neutral.
+- Context (a curve kept for comparison, a reference line like $y = x$) is `vc.muted`, not a faded
+  copy of the main hue, so it never reads as the object being studied.
+- Highlighting a new structure in one step (a footer, a folder) does not justify a hue that
+  means something else in the item; use `gridStrong` or a hue only in that step.
+- Data engineering: blue is the data a query reads or needs, yellow the filter value and its
+  matches. (`row-vs-columnar` and `scan-cost` predate this rule and draw the pages read in yellow.)
 
 ## Layout
 

@@ -35,11 +35,9 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** a color review of the existing visualizations (Daniel asked for it
-on 2026-10-19, after the hue rule in `DESIGN.md` changed from "at most three" to "each hue
-carries a meaning"): find the ones where a fourth hue would make distinct objects easier to tell
-apart, propose the changes, apply the approved ones, and push together with the unpushed SQL
-highlighting commit. Then: DE: Partitioning, bucketing and hashing, batch 2 (items 4 to 7 in
+**Suggested next session:** the color review is done (2026-10-19: 21 changes across calculus,
+pre-calculus, linear algebra and data engineering; the rules that came out of it are in
+`DESIGN.md`, Palette rules). Next: DE: Partitioning, bucketing and hashing, batch 2 (items 4 to 7 in
 `plans/data-engineering.md`: hash partitioning, skew, bucketed joins, their practice). Batch 1
 (items 1 to 3) was built on 2026-10-19; if Daniel brings review notes, apply them first. Logic
 goes in `src/lib/partitioning` with tests. Stages use `zoomable` when they have axes, titled
