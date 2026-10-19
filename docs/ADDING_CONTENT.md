@@ -33,6 +33,21 @@ useStepEffect({
 })
 ```
 
+The Replay button runs the handler again with `{ replay: true }`. A handler that animates from the
+current state (from wherever `h` is now to a target) shows nothing on replay, because the state is
+already at the target. Take the start from `useStepStart` instead: it records the state when the
+step becomes active and returns that same state on a replay.
+
+```tsx
+const start = useStepStart(h)
+useStepEffect({
+  secant: (run) => animateH(start(run), 2),
+})
+```
+
+If the start already equals the target, set the target without running a sequence, so no Replay
+button appears for a step that does not move.
+
 ## 3. Build from the kit
 
 ```tsx

@@ -195,7 +195,8 @@ still used for UI transitions.
 - **Playback in the page**: every `useSequence` run reports to the runtime's `activity`
   (`runtime/context.ts`). The steps header (and the fullscreen bar) shows bars while a run plays
   and a Replay button after the step's animation ran; Replay calls the step's `useStepEffect`
-  handler again, so handlers must set up their own starting state.
+  handler again with `{ replay: true }`, so handlers must set up their own starting state; a
+  handler that tweens from the current state takes its start from `useStepStart`.
 - **Arrival and events**: `Vector` grows from its tail when it mounts (`grow={false}` to skip).
   `Pulse` and `Pulse3D` play one expanding ring when their `when` turns true.
 - **Continuous loops**: `useAnimationFrame` from motion, writing to the DOM through refs when the
