@@ -10,7 +10,7 @@ describe('tokenizeSql', () => {
   it('tells keywords, identifiers and literals apart', () => {
     expect(kinds("SELECT SUM(amount) FROM sales WHERE day = 2 AND city = 'OSL'")).toEqual([
       'keyword:SELECT',
-      'keyword:SUM',
+      'function:SUM',
       'other:(',
       'identifier:amount',
       'other:)',
@@ -40,6 +40,25 @@ describe('tokenizeSql', () => {
       'identifier:y',
       'keyword:IS',
       'keyword:NULL',
+    ])
+  })
+
+  it('marks a name before a parenthesis as a function, but not a keyword', () => {
+    expect(kinds("WHERE year(day) IN ('PT') AND COUNT (x)")).toEqual([
+      'keyword:WHERE',
+      'function:year',
+      'other:(',
+      'identifier:day',
+      'other:)',
+      'keyword:IN',
+      'other:(',
+      "string:'PT'",
+      'other:)',
+      'keyword:AND',
+      'identifier:COUNT',
+      'other:(',
+      'identifier:x',
+      'other:)',
     ])
   })
 

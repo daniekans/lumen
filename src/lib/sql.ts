@@ -1,10 +1,11 @@
 /*
  * A small SQL tokenizer for highlighting the one-line queries in visualizations. It knows
- * keywords, string and number literals, identifiers and the rest (operators, punctuation,
- * spaces); it does not parse. Joining the tokens' text gives back the input.
+ * keywords, function names (a name followed by an opening parenthesis), string and number
+ * literals, identifiers and the rest (operators, punctuation, spaces); it does not parse.
+ * Joining the tokens' text gives back the input.
  */
 
-export type SqlTokenKind = 'keyword' | 'string' | 'number' | 'identifier' | 'other'
+export type SqlTokenKind = 'keyword' | 'function' | 'string' | 'number' | 'identifier' | 'other'
 
 export interface SqlToken {
   kind: SqlTokenKind
@@ -43,12 +44,6 @@ const KEYWORDS = new Set([
   'SELECT',
   'VALUES',
   'WHERE',
-  // Aggregates read as part of the language in short queries.
-  'AVG',
-  'COUNT',
-  'MAX',
-  'MIN',
-  'SUM',
 ])
 
 const TOKEN = /'(?:[^']|'')*'?|\d+(?:\.\d+)?(?![\w])|[A-Za-z_][\w.]*|\s+|./gy
@@ -65,7 +60,9 @@ export const tokenizeSql = (sql: string): SqlToken[] => {
         : /^[A-Za-z_]/.test(text)
           ? KEYWORDS.has(text.toUpperCase())
             ? 'keyword'
-            : 'identifier'
+            : sql[TOKEN.lastIndex] === '('
+              ? 'function'
+              : 'identifier'
           : 'other'
     const last = tokens.at(-1)
     if (kind === 'other' && last?.kind === 'other') last.text += text

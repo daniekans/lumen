@@ -32,15 +32,15 @@ Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a co
   one still means something and the stage stays calm. Ask of every hue what it tells the learner.
 - Keep meanings stable across the project:
 
-| Meaning                                                                 | Color        |
-| ----------------------------------------------------------------------- | ------------ |
-| The main object (a function, a vector being studied)                    | blue         |
-| A derived or comparison object (a secant, an approximation, a gradient) | yellow       |
-| The "true" or limiting object (tangent, exact area, product)            | teal         |
-| Negative values, errors, flipped orientation                            | red          |
-| First basis direction, positive in pairs with red                       | green        |
-| Positive and negative weights                                           | blue and red |
-| SQL keywords (`SqlLabel`); literals orange or the item's filter color   | purple       |
+| Meaning                                                                               | Color        |
+| ------------------------------------------------------------------------------------- | ------------ |
+| The main object (a function, a vector being studied)                                  | blue         |
+| A derived or comparison object (a secant, an approximation, a gradient)               | yellow       |
+| The "true" or limiting object (tangent, exact area, product)                          | teal         |
+| Negative values, errors, flipped orientation                                          | red          |
+| First basis direction, positive in pairs with red                                     | green        |
+| Positive and negative weights                                                         | blue and red |
+| SQL keywords (`SqlLabel`); functions teal; literals orange or the item's filter color | purple       |
 
 - Explanation text uses `<C c="...">` to color a term the same way as in the visual.
 

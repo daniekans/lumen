@@ -15,8 +15,8 @@ interface SqlLabelProps {
 }
 
 /**
- * A line of SQL in monospace with light highlighting: keywords in purple, names in the
- * foreground, operators and punctuation muted, literals in `literalColor`.
+ * A line of SQL in monospace with light highlighting: keywords in purple, functions in teal,
+ * names in the foreground, operators and punctuation muted, literals in `literalColor`.
  */
 export function SqlLabel({
   at,
@@ -30,6 +30,7 @@ export function SqlLabel({
   const [x, y] = c.toPx(at)
   const fill: Record<SqlTokenKind, string> = {
     keyword: vc.purple,
+    function: vc.teal,
     other: vc.muted,
     identifier: vc.fg,
     string: literalColor,
