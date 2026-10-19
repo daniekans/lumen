@@ -1,6 +1,7 @@
 import { useReducedMotion } from 'motion/react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { duration as defaultDuration, ease as easings } from '@/styles/motion'
+import { VizRuntimeContext } from '../runtime/context'
 import { tween as rafTween, type EaseSpec } from './tween'
 
 class Cancelled extends Error {}
@@ -34,13 +35,25 @@ export const useSequence = () => {
   const token = useRef(0)
   const stops = useRef(new Set<() => void>())
   const [running, setRunning] = useState(false)
+  // Reports runs to the item page, which shows that an animation is playing.
+  const runtime = useContext(VizRuntimeContext)
+  const latest = useRef(runtime)
+  useLayoutEffect(() => {
+    latest.current = runtime
+  })
+  const ended = useRef<(() => void) | null>(null)
+  const end = useCallback(() => {
+    ended.current?.()
+    ended.current = null
+  }, [])
 
   const cancel = useCallback(() => {
     token.current++
     stops.current.forEach((stop) => stop())
     stops.current.clear()
+    end()
     setRunning(false)
-  }, [])
+  }, [end])
 
   useEffect(() => cancel, [cancel])
 
@@ -89,15 +102,20 @@ export const useSequence = () => {
           }),
       }
       setRunning(true)
+      const rt = latest.current
+      ended.current = rt ? rt.activity.start(rt.stepIndex) : null
       try {
         await script(ctx)
       } catch (e) {
         if (!(e instanceof Cancelled)) throw e
       } finally {
-        if (!isCancelled()) setRunning(false)
+        if (!isCancelled()) {
+          end()
+          setRunning(false)
+        }
       }
     },
-    [cancel, reduced],
+    [cancel, end, reduced],
   )
 
   return { run, cancel, running }

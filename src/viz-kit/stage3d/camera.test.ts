@@ -3,6 +3,9 @@ import { cross3, dot3, length3, type Vec3 } from '@/lib/math'
 import {
   CAMERA_LIMITS,
   createProjection,
+  DEPTH_CUE,
+  edgeOnCamera,
+  standardViews,
   defaultCamera,
   moveOnScreen,
   orbitBy,
@@ -98,5 +101,41 @@ describe('screen to plane', () => {
 
   it('gives up on a plane seen edge on', () => {
     expect(screenToPlane(p.frame, 1, 1, p.frame.right, [0, 0, 0])).toBeNull()
+  })
+})
+
+describe('depth cue', () => {
+  const p = createProjection(defaultCamera, 4)
+
+  it('is 1 at the front of the scene and fades toward the back', () => {
+    const t = p.frame.toward
+    const at = (d: number): Vec3 => [t[0] * d, t[1] * d, t[2] * d]
+    expect(p.cue(at(4))).toBeCloseTo(1, 9)
+    expect(p.cue(at(-4))).toBeCloseTo(1 - DEPTH_CUE, 9)
+    expect(p.cue(at(0))).toBeGreaterThan(p.cue(at(-1)))
+    expect(p.cue(at(10))).toBe(1)
+  })
+})
+
+describe('standard views', () => {
+  it('show the named axes to the right and up', () => {
+    const right = (c: { azimuth: number; elevation: number }, v: Vec3) =>
+      createProjection({ ...c, zoom: 1 }).project(v)
+    close(right(standardViews.front, [1, 0, 0]), [1, 0])
+    close(right(standardViews.front, [0, 0, 1]), [0, 1])
+    close(right(standardViews.side, [0, 1, 0]), [1, 0])
+    expect(right(standardViews.top, [1, 0, 0])[0]).toBeCloseTo(1, 9)
+    expect(right(standardViews.top, [0, 1, 0])[1]).toBeGreaterThan(0.99)
+  })
+})
+
+describe('edge-on camera', () => {
+  it.each([
+    [[4, -2, 2], 1.33],
+    [[1, 2, 2], 0.5],
+    [[1, 1, 0], 0.2],
+  ] as const)('looks along the plane with normal %j', (n, azimuth) => {
+    const { toward } = screenFrame(edgeOnCamera(n, azimuth))
+    expect(dot3(toward, n)).toBeCloseTo(0, 9)
   })
 })

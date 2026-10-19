@@ -2,7 +2,9 @@ import clsx from 'clsx'
 import { ChevronLeft, ChevronRight, Minimize } from 'lucide-react'
 import { msg } from '@/i18n'
 import surfaces from '@/styles/surfaces.module.css'
+import type { ComponentProps } from 'react'
 import { IconButton, RichText } from '../atoms'
+import { PlaybackButton } from '../molecules'
 import styles from './FullscreenBar.module.css'
 
 interface FullscreenBarProps {
@@ -11,10 +13,18 @@ interface FullscreenBarProps {
   count: number
   onStep: (index: number) => void
   onExit: () => void
+  playback?: ComponentProps<typeof PlaybackButton>
 }
 
 /** Step navigation and the exit button, shown over the stage in fullscreen mode. */
-export const FullscreenBar = ({ title, index, count, onStep, onExit }: FullscreenBarProps) => (
+export const FullscreenBar = ({
+  title,
+  index,
+  count,
+  onStep,
+  onExit,
+  playback,
+}: FullscreenBarProps) => (
   <div className={clsx(surfaces.glass, styles.bar)} data-print-hide>
     {count > 1 && (
       <>
@@ -46,6 +56,7 @@ export const FullscreenBar = ({ title, index, count, onStep, onExit }: Fullscree
         <ChevronRight size={15} />
       </IconButton>
     )}
+    {playback && <PlaybackButton {...playback} />}
     <span className={styles.divider} />
     <IconButton label={msg.item.exitFullscreen} shortcut="F" size="sm" onClick={onExit}>
       <Minimize size={15} />

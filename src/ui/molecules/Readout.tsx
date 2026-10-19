@@ -14,9 +14,13 @@ interface ReadoutProps {
   color?: string
   /** One line on what the value means, shown as a tooltip on the label. Plain text with $TeX$. */
   hint?: string
+  /** Lit because the matching shape is hovered (see `useHighlight` in the kit). */
+  highlighted?: boolean
+  /** Hovering the row lights up the matching shape. */
+  onHoverChange?: (on: boolean) => void
 }
 
-export function Readout({ label, value, color, hint }: ReadoutProps) {
+export function Readout({ label, value, color, hint, highlighted, onHoverChange }: ReadoutProps) {
   const text = (
     <span className={clsx(styles.label, hint && styles.hinted)} tabIndex={hint ? 0 : undefined}>
       {color && <span className={styles.swatch} style={{ background: color }} />}
@@ -24,7 +28,11 @@ export function Readout({ label, value, color, hint }: ReadoutProps) {
     </span>
   )
   return (
-    <div className={styles.row}>
+    <div
+      className={clsx(styles.row, highlighted && styles.highlighted)}
+      onPointerEnter={onHoverChange && (() => onHoverChange(true))}
+      onPointerLeave={onHoverChange && (() => onHoverChange(false))}
+    >
       {hint ? (
         <Tooltip content={<RichText>{hint}</RichText>} side="right">
           {text}

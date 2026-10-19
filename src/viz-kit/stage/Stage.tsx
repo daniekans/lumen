@@ -22,6 +22,7 @@ import {
   type Insets,
   type View,
 } from './coords'
+import { HighlightContext, type Highlight } from './highlight'
 import { createHoverRegistry } from './pointHover'
 import styles from './Stage.module.css'
 import { useStageView } from './useStageView'
@@ -44,6 +45,8 @@ interface StageProps {
    * axes; diagrams leave it off. Draggable points keep working, since they handle their own presses.
    */
   zoomable?: boolean
+  /** Linked hover between shapes with a `hoverKey` and readouts (`useHighlight`). */
+  highlight?: Highlight
 }
 
 /**
@@ -60,6 +63,7 @@ export function Stage({
   className,
   ariaLabel,
   zoomable = false,
+  highlight,
 }: StageProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ width: 0, height: 0 })
@@ -109,47 +113,49 @@ export function Stage({
       onPointerLeave={() => setHovered(null)}
     >
       <StageContext.Provider value={ctx}>
-        <svg
-          ref={setSvg}
-          className={clsx(styles.svg, zoomable && styles.zoomable, pan.panning && styles.panning)}
-          width={size.width}
-          height={size.height}
-          role="img"
-          aria-label={ariaLabel}
-          {...pan.handlers}
-        >
-          {ready && children}
-        </svg>
-        <div ref={setLabelLayer} className={styles.labels} />
-        {ready && overlay}
-        {ready && zoomable && (
-          <div className={clsx(surfaces.glass, styles.zoom)} data-print-hide>
-            <IconButton
-              label={msg.viz.zoomIn}
-              size="sm"
-              disabled={pan.view.zoom >= ZOOM_LIMITS.max}
-              onClick={pan.zoomIn}
-            >
-              <Plus size={14} />
-            </IconButton>
-            <IconButton
-              label={msg.viz.zoomOut}
-              size="sm"
-              disabled={pan.view.zoom <= ZOOM_LIMITS.min}
-              onClick={pan.zoomOut}
-            >
-              <Minus size={14} />
-            </IconButton>
-            <IconButton
-              label={msg.viz.resetView}
-              size="sm"
-              disabled={isIdentityView(pan.view)}
-              onClick={pan.reset}
-            >
-              <Scan size={14} />
-            </IconButton>
-          </div>
-        )}
+        <HighlightContext.Provider value={highlight ?? null}>
+          <svg
+            ref={setSvg}
+            className={clsx(styles.svg, zoomable && styles.zoomable, pan.panning && styles.panning)}
+            width={size.width}
+            height={size.height}
+            role="img"
+            aria-label={ariaLabel}
+            {...pan.handlers}
+          >
+            {ready && children}
+          </svg>
+          <div ref={setLabelLayer} className={styles.labels} />
+          {ready && overlay}
+          {ready && zoomable && (
+            <div className={clsx(surfaces.glass, styles.zoom)} data-print-hide>
+              <IconButton
+                label={msg.viz.zoomIn}
+                size="sm"
+                disabled={pan.view.zoom >= ZOOM_LIMITS.max}
+                onClick={pan.zoomIn}
+              >
+                <Plus size={14} />
+              </IconButton>
+              <IconButton
+                label={msg.viz.zoomOut}
+                size="sm"
+                disabled={pan.view.zoom <= ZOOM_LIMITS.min}
+                onClick={pan.zoomOut}
+              >
+                <Minus size={14} />
+              </IconButton>
+              <IconButton
+                label={msg.viz.resetView}
+                size="sm"
+                disabled={isIdentityView(pan.view)}
+                onClick={pan.reset}
+              >
+                <Scan size={14} />
+              </IconButton>
+            </div>
+          )}
+        </HighlightContext.Provider>
       </StageContext.Provider>
     </div>
   )

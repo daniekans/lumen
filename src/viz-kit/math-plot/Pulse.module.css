@@ -1,0 +1,29 @@
+.ring {
+  fill: none;
+  stroke-width: 2px;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 1s var(--ease-out) forwards;
+}
+
+.late {
+  animation-delay: 0.18s;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.15);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+  }
+}

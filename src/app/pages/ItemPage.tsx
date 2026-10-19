@@ -11,8 +11,10 @@ import { Breadcrumbs } from '@/ui/molecules'
 import { ControlDock, ExplanationPane, FullscreenBar, LissajousMark, TopBar } from '@/ui/organisms'
 import { VizLayout } from '@/ui/templates'
 import {
+  createActivity,
   createUrlParams,
   readQuery,
+  useActivity,
   VizRuntimeContext,
   writeQuery,
   type VizRuntimeValue,
@@ -36,6 +38,13 @@ export function ItemPage({ item }: { item: Item }) {
   )
   const [dock, setDock] = useState<HTMLDivElement | null>(null)
   const [urlParams] = useState(createUrlParams)
+  const [activity] = useState(createActivity)
+  const { running, playedStep } = useActivity(activity)
+  const playback = {
+    playing: running > 0,
+    canReplay: playedStep === stepIndex,
+    onReplay: activity.replay,
+  }
   const [stageArea, setStageArea] = useState<HTMLDivElement | null>(null)
   const fullscreen = useFullscreen(stageArea)
   const toggleFullscreen = fullscreen.toggle
@@ -64,6 +73,8 @@ export function ItemPage({ item }: { item: Item }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // A focused 3D stage uses the arrow keys to turn the view and marks them handled.
+      if (e.defaultPrevented) return
       if (isTyping(e) || e.metaKey || e.ctrlKey || e.altKey || useUi.getState().paletteOpen) return
       if (e.key === 'ArrowRight') setStepIndex((i) => Math.min(steps.length - 1, i + 1))
       else if (e.key === 'ArrowLeft') setStepIndex((i) => Math.max(0, i - 1))
@@ -74,8 +85,8 @@ export function ItemPage({ item }: { item: Item }) {
   }, [steps.length, toggleFullscreen])
 
   const runtime = useMemo<VizRuntimeValue>(
-    () => ({ steps, stepIndex, goToStep, dock, urlParams }),
-    [steps, stepIndex, goToStep, dock, urlParams],
+    () => ({ steps, stepIndex, goToStep, dock, urlParams, activity }),
+    [steps, stepIndex, goToStep, dock, urlParams, activity],
   )
 
   return (
@@ -144,13 +155,21 @@ export function ItemPage({ item }: { item: Item }) {
                     count={steps.length}
                     onStep={goToStep}
                     onExit={fullscreen.exit}
+                    playback={playback}
                   />
                 )}
               </>
             }
             stageRef={setStageArea}
             fullscreen={fullscreen.active}
-            aside={<ExplanationPane entry={item} stepIndex={stepIndex} onStep={goToStep} />}
+            aside={
+              <ExplanationPane
+                entry={item}
+                stepIndex={stepIndex}
+                onStep={goToStep}
+                playback={playback}
+              />
+            }
           />
         </PortalContainerContext>
       </VizRuntimeContext.Provider>

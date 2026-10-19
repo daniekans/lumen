@@ -126,6 +126,8 @@ export const en = {
     fullscreen: 'Fullscreen',
     exitFullscreen: 'Exit fullscreen',
     stepOf: (index: number, count: number) => `${n(index)} / ${n(count)}`,
+    animationPlaying: 'The step is playing. Click to start it again',
+    replayStep: 'Replay the step',
   },
 
   viz: {
@@ -133,6 +135,14 @@ export const en = {
     zoomOut: 'Zoom out',
     resetView: 'Reset view (or double-click the background)',
     expandPanel: 'Open larger',
+    views: 'Views',
+    viewHome: 'Home view',
+    viewTop: 'From above',
+    viewFront: 'From the front',
+    viewSide: 'From the side',
+    swayOn: 'Turn the view slowly while idle (on)',
+    swayOff: 'Turn the view slowly while idle (off)',
+    scene3d: 'Drag to turn the view; arrow keys turn it, + and - zoom',
   },
 
   skills: {

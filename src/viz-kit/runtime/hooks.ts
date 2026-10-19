@@ -1,5 +1,13 @@
-import { useContext, useEffect, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { useVizRuntime, VizRuntimeContext } from './context'
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type Dispatch,
+  type SetStateAction,
+} from 'react'
+import { useVizRuntime, VizRuntimeContext, type VizActivity } from './context'
 import { readQuery, writeQuery } from './query'
 
 /** The active narrative step, plus navigation helpers. */
@@ -23,20 +31,28 @@ export const useVizStep = () => {
  */
 export const useStepEffect = (handlers: Partial<Record<string, () => void>>) => {
   const { id } = useVizStep()
-  const { urlParams } = useVizRuntime()
+  const { urlParams, activity } = useVizRuntime()
+  const { replays } = useActivity(activity)
   const ref = useRef(handlers)
   const opening = useRef(id)
   const left = useRef(false)
+  const lastReplays = useRef(replays)
   useEffect(() => {
     ref.current = handlers
   })
   useEffect(() => {
     if (!id) return
+    const replay = replays !== lastReplays.current
+    lastReplays.current = replays
     if (id !== opening.current) left.current = true
-    if (!left.current && urlParams.found()) return
+    if (!replay && !left.current && urlParams.found()) return
     ref.current[id]?.()
-  }, [id, urlParams])
+  }, [id, urlParams, replays])
 }
+
+/** The activity snapshot, re-rendering when it changes. */
+export const useActivity = (activity: VizActivity) =>
+  useSyncExternalStore(activity.subscribe, activity.snapshot)
 
 /** How a parameter is written in the query string. `decode` returns undefined for bad input. */
 export interface ParamCodec<T> {

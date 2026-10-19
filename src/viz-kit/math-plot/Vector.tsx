@@ -1,5 +1,6 @@
 import type { Vec2 } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
+import { useGrowIn } from '../anim/useGrowIn'
 import { useCoords } from '../stage'
 
 interface VectorProps {
@@ -10,6 +11,8 @@ interface VectorProps {
   opacity?: number
   /** Arrowhead length in pixels. */
   head?: number
+  /** Grow from the tail when the arrow first appears. On by default. */
+  grow?: boolean
 }
 
 /** Arrow from `from` to `to`, with a filled head that shrinks for very short vectors. */
@@ -20,10 +23,14 @@ export function Vector({
   width = 3,
   opacity = 1,
   head = 13,
+  grow = true,
 }: VectorProps) {
   const c = useCoords()
+  const g = useGrowIn(grow)
   const [x1, y1] = c.toPx(from)
-  const [x2, y2] = c.toPx(to)
+  const [tx, ty] = c.toPx(to)
+  const x2 = x1 + (tx - x1) * g
+  const y2 = y1 + (ty - y1) * g
   const len = Math.hypot(x2 - x1, y2 - y1)
   if (len < 0.5) return null
   const h = Math.min(head, len * 0.5)

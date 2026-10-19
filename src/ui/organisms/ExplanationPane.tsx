@@ -2,14 +2,14 @@ import { MDXProvider } from '@mdx-js/react'
 import clsx from 'clsx'
 import { ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
 import { motion } from 'motion/react'
-import { Suspense, useState, type CSSProperties } from 'react'
+import { Suspense, useState, type ComponentProps, type CSSProperties } from 'react'
 import { ancestors, type Item } from '@/catalog'
 import { msg } from '@/i18n'
 import { isItemComplete, itemProgress, useProgress } from '@/progress'
 import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
 import { Badge, IconButton, ResizeHandle } from '../atoms'
-import { DoneToggle, StepList } from '../molecules'
+import { DoneToggle, PlaybackButton, StepList } from '../molecules'
 import { ErrorBoundary } from './ErrorBoundary'
 import styles from './ExplanationPane.module.css'
 import { mdxComponents } from './mdxComponents'
@@ -20,9 +20,11 @@ interface ExplanationPaneProps {
   entry: Item
   stepIndex: number
   onStep: (index: number) => void
+  /** Whether the step's animation is playing, and replaying it. */
+  playback?: ComponentProps<typeof PlaybackButton>
 }
 
-export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPaneProps) {
+export function ExplanationPane({ entry, stepIndex, onStep, playback }: ExplanationPaneProps) {
   const open = useUi((s) => s.asideOpen)
   const mode = useUi((s) => s.asideMode)
   const width = useUi((s) => s.asideWidth)
@@ -109,6 +111,7 @@ export function ExplanationPane({ entry, stepIndex, onStep }: ExplanationPanePro
             <div className={styles.stepsHead}>
               <span className={styles.label}>{msg.item.steps}</span>
               <span className={styles.stepNav}>
+                {playback && <PlaybackButton {...playback} />}
                 <IconButton
                   label={msg.item.previousStep}
                   shortcut="←"

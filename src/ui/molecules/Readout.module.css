@@ -12,8 +12,20 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-4);
+  /* Room for the highlight background without moving the text. */
+  margin: 0 calc(-1 * var(--space-2));
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
   font-size: var(--text-sm);
   color: var(--fg-muted);
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.highlighted {
+  background: var(--surface-active);
+  color: var(--fg);
 }
 
 .label {

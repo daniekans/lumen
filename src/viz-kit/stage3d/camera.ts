@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { dot3, length3, type Vec2, type Vec3 } from '@/lib/math'
+import { cross3, dot3, length3, normalize3, type Vec2, type Vec3 } from '@/lib/math'
 
 /**
  * An orbit camera looking at the origin, with $z$ up. `azimuth` turns around the $z$-axis and
@@ -61,26 +61,49 @@ export const screenFrame = ({ azimuth: a, elevation: e }: Camera): ScreenFrame =
 }
 
 /**
+ * How much the far side of a scene fades: a point at the back of the scene's radius is drawn at
+ * `1 - DEPTH_CUE` of its opacity. An orthographic picture has no shrinking with distance, so
+ * without this cue the eye reads a far edge as wider than a near one of the same length.
+ */
+export const DEPTH_CUE = 0.55
+
+/**
  * Orthographic projection: a point's screen position is its components along `right` and `up`,
  * in the same units as space, so parallel lines stay parallel and equal steps stay equal.
- * `depth` grows toward the viewer and orders what is drawn in front.
+ * `depth` grows toward the viewer, and `cue` turns it into an opacity factor (1 in front).
  */
 export interface Projection {
   camera: Camera
   frame: ScreenFrame
+  /** Radius of the scene around the origin, which sets the range of the depth cue. */
+  radius: number
   project: (p: Vec3) => Vec2
   depth: (p: Vec3) => number
+  cue: (p: Vec3) => number
 }
 
-export const createProjection = (camera: Camera): Projection => {
+export const createProjection = (camera: Camera, radius = 4): Projection => {
   const frame = screenFrame(camera)
+  const depth = (p: Vec3) => dot3(p, frame.toward)
   return {
     camera,
     frame,
+    radius,
     project: (p) => [dot3(p, frame.right), dot3(p, frame.up)],
-    depth: (p) => dot3(p, frame.toward),
+    depth,
+    cue: (p) => {
+      const back = Math.min(1, Math.max(0, (radius - depth(p)) / (2 * radius)))
+      return 1 - DEPTH_CUE * back
+    },
   }
 }
+
+/** Standard views, keeping the zoom: from above ($x$ right, $y$ up), the front ($x$ right, $z$ up) and the side ($y$ right, $z$ up). */
+export const standardViews = {
+  top: { azimuth: -Math.PI / 2, elevation: CAMERA_LIMITS.elevation },
+  front: { azimuth: -Math.PI / 2, elevation: 0 },
+  side: { azimuth: 0, elevation: 0 },
+} as const satisfies Record<string, Omit<Camera, 'zoom'>>
 
 /** The point that moved by (dx, dy) screen units from `p`, staying at the same depth. */
 export const moveOnScreen = (p: Vec3, frame: ScreenFrame, dx: number, dy: number): Vec3 => [
@@ -118,4 +141,30 @@ export const screenToPlane = (
     sx * frame.right[1] + sy * frame.up[1] + t * frame.toward[1],
     sx * frame.right[2] + sy * frame.up[2] + t * frame.toward[2],
   ]
+}
+
+/** Two unit vectors perpendicular to `normal` and to each other, spanning its plane. */
+export const planeBasis = (normal: Vec3): [Vec3, Vec3] => {
+  const n = normalize3(normal)
+  // Any vector not parallel to n starts the basis; pick the axis n is least aligned with.
+  const a: Vec3 =
+    Math.abs(n[0]) <= Math.abs(n[1]) && Math.abs(n[0]) <= Math.abs(n[2])
+      ? [1, 0, 0]
+      : Math.abs(n[1]) <= Math.abs(n[2])
+        ? [0, 1, 0]
+        : [0, 0, 1]
+  const e1 = normalize3(cross3(n, a))
+  return [e1, cross3(n, e1)]
+}
+
+/**
+ * A camera at `azimuth` that sees the plane with normal `n` edge on, so the plane shows as a line
+ * and vectors in it lie along that line. A vertical plane is seen from its own side instead.
+ */
+export const edgeOnCamera = (n: Vec3, azimuth: number, zoom = 1): Camera => {
+  if (Math.abs(n[2]) < 1e-9) return { azimuth: Math.atan2(-n[0], n[1]), elevation: 0, zoom }
+  const ca = Math.cos(azimuth)
+  const sa = Math.sin(azimuth)
+  // The view direction (cos e cos a, cos e sin a, sin e) is perpendicular to n.
+  return { azimuth, elevation: Math.atan(-(n[0] * ca + n[1] * sa) / n[2]), zoom }
 }
