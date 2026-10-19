@@ -258,7 +258,7 @@ export default function SpanAndIndependence() {
         {!one && (
           <Plane3D
             basis={[V, W]}
-            size={2}
+            size={1.5}
             color={SPAN_COLOR}
             fillOpacity={0.14}
             gridOpacity={0.4}
@@ -269,7 +269,7 @@ export default function SpanAndIndependence() {
           <Plane3D
             point={scale3(u, c)}
             basis={[V, W]}
-            size={2}
+            size={1.5}
             color={SPAN_COLOR}
             fillOpacity={0.06}
             gridOpacity={0.15}

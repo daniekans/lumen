@@ -46,8 +46,11 @@ const P: Vec3 = [2, 0, 2]
 const V: Vec3 = [2, -1, 0]
 const W: Vec3 = [0, 1, -1]
 const N: Vec3 = [1, 2, 2]
-/** Where x starts: p - v + 2w = (0, 3, 0), where the right angle with n reads well from the home view. */
-const X0 = add3(sub3(P, V), scale3(W, 2))
+/**
+ * Where x starts: p - v/2 + w = (1, 1.5, 1), close to p (inside the plane patch) and in a
+ * direction where the right angle with n reads well from the home view.
+ */
+const X0 = add3(sub3(P, scale3(V, 0.5)), W)
 const D0 = dot3(N, P)
 const N2 = dot3(N, N)
 
@@ -258,7 +261,7 @@ export default function LinesAndPlanes() {
             {id === 'through-origin' && (
               <Plane3D
                 basis={[V, W]}
-                size={3.5}
+                size={1.8}
                 color={SET_COLOR}
                 fillOpacity={0.04}
                 gridOpacity={0}
@@ -268,7 +271,7 @@ export default function LinesAndPlanes() {
             <Plane3D
               point={planeBase}
               basis={[V, W]}
-              size={3.5}
+              size={1.8}
               color={SET_COLOR}
               fillOpacity={0.14}
               gridOpacity={0.35}
@@ -376,8 +379,8 @@ export default function LinesAndPlanes() {
               label="$s$"
               value={s}
               onChange={setParam('s')}
-              min={-2}
-              max={2}
+              min={-1.5}
+              max={1.5}
               step={0.1}
               format={num}
               color={V_COLOR}
@@ -386,8 +389,8 @@ export default function LinesAndPlanes() {
               label="$t$"
               value={t}
               onChange={setParam('t')}
-              min={-2}
-              max={2}
+              min={-1.5}
+              max={1.5}
               step={0.1}
               format={num}
               color={W_COLOR}
