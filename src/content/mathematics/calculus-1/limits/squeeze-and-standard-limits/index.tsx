@@ -159,11 +159,12 @@ export default function SqueezeAndStandardLimits() {
                 <Readout
                   label="slope"
                   value={<Tex>{`\\frac{${bTex}^h - 1}{h} = ${fmt(slope, 4)}`}</Tex>}
-                  color={vc.teal}
+                  color={vc.yellow}
                 />
                 <Readout
                   label="limit"
                   value={<Tex>{`\\lim_{h \\to 0} \\frac{${bTex}^h - 1}{h} = ${ln}`}</Tex>}
+                  color={vc.teal}
                   hint="This limit is the slope of the tangent at $x = 0$. The Derivatives unit shows why it equals $\ln b$."
                 />
               </ReadoutPanel>
@@ -321,7 +322,15 @@ export default function SqueezeAndStandardLimits() {
         {id === 'exponential' && (
           <>
             <FunctionPlot f={exp} color={vc.blue} />
-            <Segment from={[0, 1]} to={[hSafe, b ** hSafe]} extend color={vc.teal} width={1.75} />
+            <Segment
+              from={[0, 1]}
+              to={[1, 1 + Math.log(b)]}
+              extend
+              color={vc.teal}
+              width={1.25}
+              opacity={0.5}
+            />
+            <Segment from={[0, 1]} to={[hSafe, b ** hSafe]} extend color={vc.yellow} width={1.75} />
             <Point at={[0, 1]} color={vc.blue} />
             <Point at={[hSafe, b ** hSafe]} color={vc.blue} r={4} />
             <Segment

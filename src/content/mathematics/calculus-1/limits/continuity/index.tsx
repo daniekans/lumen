@@ -245,7 +245,12 @@ export default function Continuity() {
             )}
             <FunctionPlot f={spec.f} breaks={spec.breaks} samples={spec.samples} color={vc.blue} />
             {spec.left !== undefined && spec.left !== spec.value && (
-              <Point at={[1, spec.left]} color={vc.blue} hollow coords={false} />
+              <Point
+                at={[1, spec.left]}
+                color={hasLimit ? vc.teal : vc.blue}
+                hollow
+                coords={false}
+              />
             )}
             {spec.right !== undefined && spec.right !== spec.left && spec.right !== spec.value && (
               <Point at={[1, spec.right]} color={vc.blue} hollow coords={false} />

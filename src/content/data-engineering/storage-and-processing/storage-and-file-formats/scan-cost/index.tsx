@@ -166,7 +166,7 @@ export default function ScanCost() {
               <>
                 <Readout label="columns" value={200} />
                 <Readout label="used" value={3} color={vc.blue} />
-                <Readout label="bytes read" value="1.5%" color={vc.yellow} />
+                <Readout label="bytes read" value="1.5%" color={vc.blue} />
               </>
             ) : layout ? (
               <>

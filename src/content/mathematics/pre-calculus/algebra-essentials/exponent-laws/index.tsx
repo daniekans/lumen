@@ -69,7 +69,7 @@ const layout = (mode: Mode, m: number, n: number, joined: boolean): Tile[] => {
       tiles.push({
         at: [c - (m - 1) / 2, (n - 1) / 2 - r],
         shown: r < n && c < m,
-        color: r % 2 === 0 ? vc.blue : vc.yellow,
+        color: vc.blue,
       })
     }
   }
@@ -233,7 +233,7 @@ export default function ExponentLaws() {
               key={r}
               at={[-(m - 1) / 2 - 0.75, (n - 1) / 2 - r]}
               tex={pow(m)}
-              color={r % 2 === 0 ? vc.blue : vc.yellow}
+              color={vc.blue}
               anchor="w"
             />
           ))}

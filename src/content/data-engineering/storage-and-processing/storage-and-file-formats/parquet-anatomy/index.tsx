@@ -343,7 +343,7 @@ export default function ParquetAnatomy() {
             at={[X0, stackBottom + 16]}
             size={[stackW, CH + 4]}
             opacity={1}
-            stroke={vc.yellow}
+            stroke={step === 'footer' ? vc.yellow : vc.gridStrong}
           />
           <TextLabel at={[X0 + stackW / 2, stackBottom + 16 + (CH + 4) / 2]} size={11} mono>
             footer

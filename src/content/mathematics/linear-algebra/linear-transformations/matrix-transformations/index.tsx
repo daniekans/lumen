@@ -204,11 +204,12 @@ export default function MatrixTransformations() {
           <g style={{ opacity: vOpacity }}>
             <Path points={[[0, 0], iPart]} color={I_COLOR} width={2} dash="5 6" opacity={0.8} />
             <Path points={[iPart, Av]} color={J_COLOR} width={2} dash="5 6" opacity={0.8} />
-            <Vector to={Av} color={vc.fg} width={2.5} />
+            <Vector to={Av} color={vc.blue} width={2.5} />
             <MathLabel
               at={Av}
               tex={isIdentity(m) ? '\\mathbf{v}' : 'A\\mathbf{v}'}
               anchor="ne"
+              color={vc.blue}
               opacity={vOpacity}
             />
           </g>
@@ -258,7 +259,7 @@ export default function MatrixTransformations() {
           label="Vector $\mathbf{v}$"
           checked={showV}
           onChange={setShowV}
-          color={vc.fg}
+          color={vc.blue}
         />
         <ToggleField
           label="Area"

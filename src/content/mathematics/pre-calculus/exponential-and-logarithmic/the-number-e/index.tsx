@@ -105,7 +105,7 @@ export default function TheNumberE() {
                   value={
                     <Tex>{`\\left(1 + \\tfrac{1}{${n}}\\right)^{${n}} \\approx ${fmt(year, 4)}`}</Tex>
                   }
-                  color={vc.teal}
+                  color={vc.yellow}
                 />
                 <Readout label="$e$" value={fmt(Math.E, 4)} color={vc.blue} />
               </ReadoutPanel>
@@ -175,8 +175,8 @@ export default function TheNumberE() {
               dash="4 6"
             />
             <FunctionPlot f={Math.exp} domain={[0, 1]} color={vc.blue} />
-            <Path points={staircase(n)} color={vc.teal} width={2} />
-            <Point at={[1, year]} color={vc.teal} />
+            <Path points={staircase(n)} color={vc.yellow} width={2} />
+            <Point at={[1, year]} color={vc.yellow} />
             <MathLabel at={[0.5, Math.E]} tex="e" color={vc.blue} anchor="n" offset={6} />
           </>
         )}

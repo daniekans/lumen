@@ -26,9 +26,9 @@ const SORTED = [...COLUMN].sort((a, b) => 'LORT'.indexOf(a) - 'LORT'.indexOf(b))
 
 const SIZES: [string, number, string][] = [
   ['text', 86, vc.gridStrong],
-  ['dictionary, 1 byte codes', 37, vc.blue],
-  ['dictionary, 2 bit codes', 25, vc.blue],
-  ['dictionary + entropy floor', 21 + 30.49 / 8, vc.yellow],
+  ['dictionary, 1 byte codes', 37, vc.yellow],
+  ['dictionary, 2 bit codes', 25, vc.yellow],
+  ['dictionary + entropy floor', 21 + 30.49 / 8, vc.teal],
 ]
 
 const BAR_X = 110
@@ -139,8 +139,8 @@ function DistributionView({ dist, step }: { dist: Distribution; step: string }) 
         <Rect
           at={[BAR_X + 130, 300]}
           size={[h * scale, 24]}
-          fill={alpha(vc.blue, 0.4)}
-          stroke={vc.blue}
+          fill={alpha(vc.teal, 0.4)}
+          stroke={vc.teal}
         />
         <TextLabel at={[BAR_X + 140 + h * scale, 312]} align="start" size={12} mono color={vc.fg}>
           {h.toFixed(2)}
@@ -342,19 +342,19 @@ export default function EntropyAndCompression() {
         ['distinct', dist.counts.length],
         ...(step === 'information'
           ? []
-          : [['$H$', entropy(dist.counts).toFixed(2), vc.blue] as [string, string, string]]),
+          : [['$H$', entropy(dist.counts).toFixed(2), vc.teal] as [string, string, string]]),
         ['bit packing', `${codeBits(dist.counts.length)} bits`],
       ]
     : step === 'order'
       ? [
           ['runs, in order', runLengths(COLUMN).length],
           ['runs, sorted', runLengths(SORTED).length, vc.yellow],
-          ['$H$', entropy([6, 4, 4, 2]).toFixed(2), vc.blue],
+          ['$H$', entropy([6, 4, 4, 2]).toFixed(2), vc.teal],
         ]
       : step === 'cardinality'
         ? [
             ['distinct', '$2^{20}$'],
-            ['$H$', '20 bits', vc.blue],
+            ['$H$', '20 bits', vc.teal],
           ]
         : [
             ['text', '86 B'],

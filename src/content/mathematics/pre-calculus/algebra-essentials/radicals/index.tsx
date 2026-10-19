@@ -192,16 +192,16 @@ export default function Radicals() {
           <Path
             points={square([s1, 0], s2)}
             closed
-            color={vc.yellow}
+            color={vc.blue}
             width={2}
-            fill={alpha(vc.yellow, 0.16)}
+            fill={alpha(vc.blue, 0.16)}
           />
           <Path points={square([0, 0], s3)} closed color={vc.teal} width={2} dash="6 6" />
         </g>
         {id === 'sum' && (
           <>
             {/* Between the dashed side and the right edge, so the dashed line never crosses it. */}
-            <MathLabel at={[(s3 + s1 + s2) / 2, s2 / 2]} tex={String(b)} color={vc.yellow} />
+            <MathLabel at={[(s3 + s1 + s2) / 2, s2 / 2]} tex={String(b)} color={vc.blue} />
             <MathLabel
               at={[(s1 + s2) / 2, 0]}
               tex={`\\sqrt{${a}} + \\sqrt{${b}} \\approx ${fmt(s1 + s2)}`}
@@ -292,7 +292,7 @@ export default function Radicals() {
               max={25}
               step={1}
               format={int}
-              color={vc.yellow}
+              color={vc.blue}
             />
           </>
         )}

@@ -147,7 +147,7 @@ export default function Inverses() {
                   <Readout
                     label="crossings at $y = c$"
                     value={crossings.length}
-                    color={vc.yellow}
+                    color={crossings.length > 1 ? vc.red : vc.yellow}
                   />
                 )}
               </ReadoutPanel>
@@ -162,12 +162,12 @@ export default function Inverses() {
           from={[0, 0]}
           to={[1, 1]}
           extend
-          color={vc.yellow}
+          color={vc.muted}
           width={1.5}
           dash="6 6"
           opacity={0.7}
         />
-        <MathLabel at={[-2.8, -2.8]} tex="y = x" color={vc.yellow} anchor="nw" />
+        <MathLabel at={[-2.8, -2.8]} tex="y = x" color={vc.muted} anchor="nw" />
 
         <Path points={graph} color={vc.blue} width={2.5} />
         {t > 0.001 && (
@@ -202,7 +202,7 @@ export default function Inverses() {
         <g style={{ opacity: lineOpacity }}>
           <Segment from={[0, c]} to={[1, c]} extend color={vc.yellow} width={1.25} dash="4 6" />
           {crossings.map((x) => (
-            <Point key={x} at={[x, c]} color={vc.yellow} r={5} />
+            <Point key={x} at={[x, c]} color={crossings.length > 1 ? vc.red : vc.yellow} r={5} />
           ))}
         </g>
         {testing && (

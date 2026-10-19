@@ -133,7 +133,7 @@ export default function EquationsAndInequalities() {
                   <Readout
                     label="$x = -1$"
                     value={<Tex>{'\\sqrt{1} = 1 \\neq -1'}</Tex>}
-                    color={vc.muted}
+                    color={vc.red}
                   />
                 </>
               )}
@@ -160,7 +160,7 @@ export default function EquationsAndInequalities() {
                   <Readout
                     label="product"
                     value={<Tex>{signTex(p)}</Tex>}
-                    color={Math.abs(p) < 1e-9 ? vc.muted : p > 0 ? vc.teal : vc.yellow}
+                    color={Math.abs(p) < 1e-9 ? vc.muted : p > 0 ? vc.green : vc.red}
                   />
                 </>
               )}
@@ -204,25 +204,25 @@ export default function EquationsAndInequalities() {
             <g style={{ opacity: 1 - squared }}>
               <FunctionPlot f={(t) => Math.sqrt(t + 2)} color={vc.blue} />
               <FunctionPlot f={(t) => t} color={vc.teal} />
-              <Segment from={[-1, 1]} to={[-1, -1]} color={vc.yellow} width={1.5} dash="4 5" />
-              <Point at={[-1, 1]} color={vc.yellow} hollow />
-              <Point at={[-1, -1]} color={vc.yellow} hollow />
+              <Segment from={[-1, 1]} to={[-1, -1]} color={vc.red} width={1.5} dash="4 5" />
+              <Point at={[-1, 1]} color={vc.red} hollow />
+              <Point at={[-1, -1]} color={vc.red} hollow />
             </g>
             <g style={{ opacity: squared }}>
               <FunctionPlot f={(t) => t + 2} color={vc.blue} />
               <FunctionPlot f={(t) => t * t} color={vc.teal} />
-              <Point at={[-1, 1]} color={vc.yellow} hollow />
+              <Point at={[-1, 1]} color={vc.red} hollow />
             </g>
             <Point at={[2, form === 'squared' ? 4 : 2]} color={vc.yellow} />
             <Point at={[2, 0]} color={vc.yellow} r={4} />
-            <Point at={[-1, 0]} color={vc.yellow} r={4} hollow />
+            <Point at={[-1, 0]} color={vc.red} r={4} hollow />
           </>
         )}
 
         {id === 'sign-chart' && (
           <>
-            <AxisInterval set={POSITIVE} axis="x" color={vc.teal} />
-            <AxisInterval set={NEGATIVE} axis="x" color={vc.yellow} />
+            <AxisInterval set={POSITIVE} axis="x" color={vc.green} />
+            <AxisInterval set={NEGATIVE} axis="x" color={vc.red} />
             <FunctionPlot f={cubic} color={vc.blue} />
             <Segment
               from={[x, 0]}
@@ -233,10 +233,10 @@ export default function EquationsAndInequalities() {
             />
             {p >= Y_MIN && p <= Y_MAX && <Point at={[x, p]} color={vc.blue} />}
             <Point at={[x, 0]} color={vc.blue} onDrag={([px]) => moveX(px)} label="x" />
-            <MathLabel at={[-0.5, 0]} tex="+" color={vc.teal} anchor="n" offset={14} />
-            <MathLabel at={[3.7, 0]} tex="+" color={vc.teal} anchor="n" offset={14} />
-            <MathLabel at={[-3.2, 0]} tex="-" color={vc.yellow} anchor="n" offset={14} />
-            <MathLabel at={[2, 0]} tex="-" color={vc.yellow} anchor="n" offset={14} />
+            <MathLabel at={[-0.5, 0]} tex="+" color={vc.green} anchor="n" offset={14} />
+            <MathLabel at={[3.7, 0]} tex="+" color={vc.green} anchor="n" offset={14} />
+            <MathLabel at={[-3.2, 0]} tex="-" color={vc.red} anchor="n" offset={14} />
+            <MathLabel at={[2, 0]} tex="-" color={vc.red} anchor="n" offset={14} />
           </>
         )}
 

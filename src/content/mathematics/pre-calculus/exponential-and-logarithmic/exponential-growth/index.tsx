@@ -110,7 +110,7 @@ export default function ExponentialGrowth() {
                 <Readout
                   label="$f(x + 1) / f(x)$"
                   value="2"
-                  color={vc.teal}
+                  color={vc.yellow}
                   hint="The growth factor: what one step of $1$ in $x$ multiplies the value by."
                 />
                 <Readout label="$f(-1)$" value={<Tex>{'\\frac{1}{2}'}</Tex>} />
@@ -192,13 +192,13 @@ export default function ExponentialGrowth() {
         {id === 'repeated-factor' &&
           STAIRS.filter((_, i) => i < shown).map((x, i) => (
             <g key={x}>
-              <Segment from={[x, 0]} to={[x, 2 ** x]} color={vc.teal} width={2} />
-              <Point at={[x, 2 ** x]} color={vc.teal} r={4.5} />
+              <Segment from={[x, 0]} to={[x, 2 ** x]} color={vc.blue} width={2} />
+              <Point at={[x, 2 ** x]} color={vc.blue} r={4.5} />
               {i > 0 && (
                 <MathLabel
                   at={[x - 0.5, 2 ** (x - 0.5)]}
                   tex="\times 2"
-                  color={vc.teal}
+                  color={vc.yellow}
                   anchor="nw"
                   offset={8}
                 />

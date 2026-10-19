@@ -146,6 +146,7 @@ export default function DotProduct() {
   const d = dot(v, w)
   // Signed length of the shadow of w on the line of v, and the shadow itself.
   const shadow = lv > 1e-9 ? d / lv : 0
+  const shadowColor = shadow < -1e-9 ? vc.red : SHADOW_COLOR
   const proj = lv > 1e-9 ? scale(v, d / (lv * lv)) : ([0, 0] as Vec2)
   // Signed angle from v to w, in (-pi, pi].
   const turn = Math.atan2(cross(v, w), d)
@@ -199,7 +200,7 @@ export default function DotProduct() {
                   <Readout
                     label="shadow"
                     value={num(shadow)}
-                    color={SHADOW_COLOR}
+                    color={shadowColor}
                     hint="Signed length of the shadow of $\mathbf{w}$ on the line of $\mathbf{v}$: negative when it points away from $\mathbf{v}$."
                   />
                   <Readout label="$\lVert \mathbf{v} \rVert$" value={num(lv)} color={V_COLOR} />
@@ -262,11 +263,11 @@ export default function DotProduct() {
             <>
               <Segment from={[0, 0]} to={v} extend color={vc.muted} width={1} dash="3 6" />
               <Segment from={w} to={proj} color={vc.muted} width={1.5} dash="4 5" />
-              <Vector to={proj} color={SHADOW_COLOR} width={5} opacity={0.75} />
+              <Vector to={proj} color={shadowColor} width={5} opacity={0.75} />
               <MathLabel
                 at={proj}
                 tex="\text{shadow}"
-                color={SHADOW_COLOR}
+                color={shadowColor}
                 anchor={shadow >= 0 ? 'se' : 'sw'}
                 offset={10}
                 size={13}

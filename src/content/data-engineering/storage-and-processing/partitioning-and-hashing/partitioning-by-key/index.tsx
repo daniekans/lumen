@@ -249,11 +249,9 @@ export default function PartitioningByKey() {
   }
 
   const folderStroke = (paths: readonly string[]) =>
-    step === 'small-files'
-      ? vc.yellow
-      : filter && settled && !paths.some((p) => readPaths.includes(p))
-        ? alpha(vc.gridStrong, 0.4)
-        : vc.gridStrong
+    filter && settled && !paths.some((p) => readPaths.includes(p))
+      ? alpha(vc.gridStrong, 0.4)
+      : vc.gridStrong
   const labelColor = (paths: readonly string[]) =>
     filter && settled && !paths.some((p) => readPaths.includes(p)) ? vc.subtle : vc.fg
 
@@ -277,7 +275,7 @@ export default function PartitioningByKey() {
     'two-levels': [],
     'small-files': [
       ['folders', BY_DAY_CITY.size],
-      ['rows per folder', `${N} / ${BY_DAY_CITY.size} = ${N / BY_DAY_CITY.size}`, vc.yellow],
+      ['rows per folder', `${N} / ${BY_DAY_CITY.size} = ${N / BY_DAY_CITY.size}`],
     ],
   }
   readouts.prune =

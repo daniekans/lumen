@@ -118,7 +118,7 @@ export default function Logarithms() {
             {id === 'what-power' && (
               <ReadoutPanel title="What power">
                 <Readout label="$x$" value={fmt(px)} />
-                <Readout label={`$\\log_{${dec(bs)}} x$`} value={fmt(P[1])} color={vc.teal} />
+                <Readout label={`$\\log_{${dec(bs)}} x$`} value={fmt(P[1])} color={vc.yellow} />
                 <Readout
                   label="check"
                   value={<Tex>{`${dec(bs)}^{${fmt(P[1])}} \\approx ${fmt(bs ** P[1])}`}</Tex>}

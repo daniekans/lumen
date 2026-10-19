@@ -238,7 +238,7 @@ export default function OneSidedAndInfinite() {
                 <Readout
                   label="limit"
                   value={<Tex>{`\\lim_{x \\to \\pm\\infty} f(x) = ${example.limit}`}</Tex>}
-                  color={vc.yellow}
+                  color={vc.teal}
                   hint={
                     degrees === 'higher'
                       ? 'The top keeps a term $x$, so the quotient grows like $x$: to $+\\infty$ on the right and $-\\infty$ on the left.'

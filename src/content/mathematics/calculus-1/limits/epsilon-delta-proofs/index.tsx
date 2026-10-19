@@ -158,6 +158,7 @@ export default function EpsilonDeltaProofs() {
               <Readout
                 label="window works"
                 value={works ? 'yes' : 'no'}
+                color={works ? undefined : vc.red}
                 hint={
                   jumpMode
                     ? 'The two distances add up to at least $2$, so they cannot both be less than $1$.'
@@ -228,7 +229,7 @@ export default function EpsilonDeltaProofs() {
           f={escaping(h, L, e)}
           breaks={jumpMode ? [0] : undefined}
           domain={[a - d, a + d]}
-          color={vc.fg}
+          color={vc.red}
           width={4}
           dash="2 4"
         />

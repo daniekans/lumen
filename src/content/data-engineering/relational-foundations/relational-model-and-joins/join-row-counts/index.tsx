@@ -143,7 +143,7 @@ export default function JoinRowCounts() {
             <Readout
               label={left ? 'left join rows' : 'join rows'}
               value={left ? leftSize : id === 'per-key' ? '?' : inner}
-              color={left ? vc.yellow : vc.blue}
+              color={left ? undefined : vc.blue}
             />
           </ReadoutPanel>
         </Overlay>

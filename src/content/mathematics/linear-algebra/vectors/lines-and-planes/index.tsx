@@ -35,6 +35,7 @@ import {
 
 const V_COLOR = vc.blue
 const W_COLOR = vc.yellow
+const N_COLOR = vc.orange
 const SET_COLOR = vc.teal
 
 /** The line of the first two steps: (2, -1, 0) + t(-1, 2, 1). */
@@ -198,7 +199,7 @@ export default function LinesAndPlanes() {
             )}
             {showX && (
               <ReadoutPanel title="Normal form">
-                <Readout label="$\mathbf{n}$" value={comps(N)} {...hl.bind('n')} />
+                <Readout label="$\mathbf{n}$" value={comps(N)} color={N_COLOR} {...hl.bind('n')} />
                 <Readout
                   label="$\mathbf{x}$"
                   value={comps(x)}
@@ -298,11 +299,17 @@ export default function LinesAndPlanes() {
                 <Vector3D
                   from={planeBase}
                   to={add3(planeBase, N)}
-                  color={vc.fg}
+                  color={N_COLOR}
                   width={2.5}
                   hoverKey="n"
                 />
-                <MathLabel3D at={add3(planeBase, N)} tex="\mathbf{n}" anchor="ne" hoverKey="n" />
+                <MathLabel3D
+                  at={add3(planeBase, N)}
+                  tex="\mathbf{n}"
+                  color={N_COLOR}
+                  anchor="ne"
+                  hoverKey="n"
+                />
               </>
             )}
             {showX && (

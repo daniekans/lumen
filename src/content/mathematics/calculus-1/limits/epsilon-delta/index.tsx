@@ -138,6 +138,7 @@ export default function EpsilonDelta() {
                 <Readout
                   label="all outputs in the band"
                   value={works ? 'yes' : 'no'}
+                  color={works ? undefined : vc.red}
                   hint="Checked for every $x$ with $0 < |x - 2| < \delta$."
                 />
                 <Readout
@@ -165,10 +166,15 @@ export default function EpsilonDelta() {
                 <Readout label="$L$" value={fmt(claim, 2)} color={vc.teal} />
                 <Readout label="$\varepsilon$" value={fmt(eps, 2)} color={vc.teal} />
                 <Readout label="$\delta$" value={fmt(delta, 3)} color={vc.yellow} />
-                <Readout label="this $\delta$ works" value={works ? 'yes' : 'no'} />
+                <Readout
+                  label="this $\delta$ works"
+                  value={works ? 'yes' : 'no'}
+                  color={works ? undefined : vc.red}
+                />
                 <Readout
                   label="some $\delta$ works"
                   value={jumpBest.delta > 0 ? 'yes' : 'no'}
+                  color={jumpBest.delta > 0 ? undefined : vc.red}
                   hint="Left values are near $1$, right values near $2.5$. Both fit in the band only if $\varepsilon > |L - 1|$ and $\varepsilon > |L - 2.5|$, which needs $\varepsilon > 0.75$."
                 />
               </ReadoutPanel>
@@ -244,7 +250,7 @@ export default function EpsilonDelta() {
                   f={escaping(onJump ? jump : curve, center, eps)}
                   breaks={onJump ? [A] : undefined}
                   domain={[A - shownDelta, A + shownDelta]}
-                  color={vc.fg}
+                  color={vc.red}
                   width={4}
                   dash="2 4"
                 />
@@ -283,7 +289,7 @@ export default function EpsilonDelta() {
             <FunctionPlot
               f={escaping(wiggle, L, eps)}
               samples={1200}
-              color={vc.fg}
+              color={vc.red}
               width={4}
               dash="2 4"
             />

@@ -176,7 +176,7 @@ export default function GrowthRates() {
                       : 'The ratio $\\frac{f(x)}{x^2}$ stays above $3$, so no $C \\le 3$ bounds it.'
                   }
                 />
-                <Readout label="limit of the ratio" value="$3$" color={vc.blue} />
+                <Readout label="limit of the ratio" value="$3$" color={vc.teal} />
               </ReadoutPanel>
             )}
           </Overlay>
@@ -214,7 +214,7 @@ export default function GrowthRates() {
 
         {id === 'logarithm' && (
           <>
-            <FunctionPlot f={L.exp2} color={vc.blue} opacity={0.35} />
+            <FunctionPlot f={L.exp2} color={vc.muted} opacity={0.5} />
             <FunctionPlot f={L.power(0.5)} domain={[1, Infinity]} color={vc.blue} />
             <FunctionPlot f={L.ln} color={vc.teal} />
             <MathLabel
@@ -230,7 +230,7 @@ export default function GrowthRates() {
 
         {id === 'factorial' && (
           <>
-            <FunctionPlot f={L.exp2} color={vc.blue} opacity={0.35} />
+            <FunctionPlot f={L.exp2} color={vc.muted} opacity={0.5} />
             <FunctionPlot f={L.exp10} color={vc.blue} />
             <FunctionPlot f={L.factorial} color={vc.teal} />
             <Point at={[25, 25]} color={vc.fg} r={4} coords={false} />
