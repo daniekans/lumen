@@ -210,7 +210,8 @@ Batches: 1 is items 1 to 4 (2D only), approved by Daniel on 2026-10-18. Batch 2 
 built on 2026-10-18 together with phase 5 (`Stage3D`, see `ARCHITECTURE.md`, Drawing), approved
 by Daniel on 2026-10-18; the 3D polish that followed his review (depth cue, fades, hover links,
 sway, views, pulses) is applied to items 6 and 7. Item 5 is 2D; items 6 and 7 are the first 3D
-items. Batch 3 is items 9 to 11, built on 2026-10-19; Daniel's review is pending.
+items. Batch 3 is items 9 to 11, built on 2026-10-19 and approved by Daniel
+on 2026-10-19 without changes.
 
 Batch 2 notes: span uses $\mathbf{v} = (1, 2, 0)$, $\mathbf{w} = (-1, 0, 2)$ and a third vector
 $\mathbf{u}$ in white (the neutral `vc.fg`, so the item keeps three hues); its in-plane step turns

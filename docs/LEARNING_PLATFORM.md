@@ -20,8 +20,9 @@ order.
 5. Outline the Calculus courses (done, approved 2026-10-17)
 6. Calculus 1: Limits (done)
 7. Outline Linear Algebra (done, approved 2026-10-18), then Linear Algebra: Vectors and linear
-   combinations (done; batch 3, items 9 to 11, built 2026-10-19, Daniel's review pending)
-8. DE: Partitioning, bucketing and hashing (check the DE unit table and outline the unit's items)
+   combinations (done, all batches approved 2026-10-19)
+8. DE: Partitioning, bucketing and hashing (outlined 2026-10-19; batch 1, items 1 to 3, built
+   2026-10-19, Daniel's review pending; then batches 2 and 3)
 9. Pre-calculus: Trigonometry (refresher)
 10. Calculus 1: Derivatives
 11. Linear Algebra: Linear maps and matrices
@@ -296,7 +297,7 @@ plan there (items, skills, status) when its first batch is built. Status values:
 - [plans/linear-algebra.md](plans/linear-algebra.md): threads and the Linear Algebra outline
   (awaiting review).
 - [plans/data-engineering.md](plans/data-engineering.md): Relational model and joins, Storage and
-  file formats.
+  file formats, Partitioning, bucketing and hashing.
 
 ## Risks
 
