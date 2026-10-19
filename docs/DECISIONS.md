@@ -203,6 +203,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   a vignette, so a plane is again a parallelogram patch with its grid, fading only over a
   narrow band at its edges. Hovering a plane in the drawing only lights its readout row; the
   full highlight comes from hovering that row.
+- SQL in visualizations is highlighted with `SqlLabel` (2026-10-19, Daniel asked for simple,
+  cheap highlighting): a small in-house tokenizer (`src/lib/sql.ts`), no library. It adds no hue:
+  keywords and punctuation muted and bold, names in the foreground, literals in a color the item
+  already uses (its filter color) or the foreground.
 - Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
   later units need them, in the same look and feel as the current visualizations.
 

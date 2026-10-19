@@ -71,6 +71,8 @@ useStepEffect({
   - `Pulse3D` (or `Pulse` in 2D) marks a moment: `when={uInPlane}`, `when={dot === 0}`.
 - Step handlers can run again from the Replay button, so each one sets the state it starts from
   (as handlers already do when a step is revisited).
+- A line of SQL on a stage uses `<SqlLabel>` (pass `literalColor` when filter values have a
+  color in the item); other monospace text stays a `TextLabel`.
 - Math goes in `src/lib` with a test.
 - If a piece could serve another item, add it to `src/viz-kit` (and export it from the folder's
   `index.ts`) instead of keeping it local.
