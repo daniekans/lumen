@@ -35,11 +35,11 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Vectors and linear combinations batch 3 (items 9 to 11: basis and
-coordinates, its practice, the unit checkpoint) in `plans/linear-algebra.md`. Batch 2 and the 3D
-stage were approved, and the 3D polish is done (phase 5 below). Stages use `zoomable`, titled
-readout panels with hints, and `useVizParam` where a view is worth linking; 3D items use
-`Stage3D` with hover keys bound to the readouts (`ADDING_CONTENT.md`).
+**Suggested next session:** DE: Partitioning, bucketing and hashing (step 8 of the suggested
+order): check the DE unit table in `plans/`, outline the unit's items, then build its first batch.
+The Vectors unit is complete (batch 3 built 2026-10-19; if Daniel brings review notes, apply them
+first). Stages use `zoomable`, titled readout panels with hints, and `useVizParam` where a view is
+worth linking; 3D items use `Stage3D` with hover keys bound to the readouts (`ADDING_CONTENT.md`).
 
 ### Phase 3: Explore page
 
