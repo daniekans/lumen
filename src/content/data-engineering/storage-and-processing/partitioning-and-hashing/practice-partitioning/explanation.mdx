@@ -1,0 +1,24 @@
+The problems use the layout of a partitioned table: one folder per combination of values of the <Term id="partition-column">partition columns</Term>, such as `day=…/country=…/`, and files of at most a <Term id="target-file-size">target size</Term> $T$ inside each folder.
+
+## Counting
+
+Columns with $d_1, \dots, d_k$ distinct values make at most $P = d_1 \cdots d_k$ partitions. A
+table of $B$ bytes spread evenly gives partitions of $S = B / P$ bytes, written as
+
+$$
+\left\lceil \frac{S}{T} \right\rceil \text{ files each, and at least one.}
+$$
+
+## Pruning
+
+A filter <Term id="partition-pruning">prunes</Term> when it can rule out a folder from its name alone: a condition on a partition
+column, at any level of the path, joined to the rest of the filter with AND. A condition on any
+other column, or one joined with OR to such a condition, reads every partition.
+
+After pruning, the data read is the number of partitions kept times their size.
+
+## Choosing a layout
+
+Keep $S \geq T$, that is $P \leq B / T$. Among the layouts that fit, the finest prunes the most.
+Columns that do not fit the budget are better used to sort the files, so that footer statistics
+skip row groups inside each partition.

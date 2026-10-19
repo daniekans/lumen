@@ -1,0 +1,42 @@
+The previous unit made a query cheaper by skipping pages and row groups inside a file. Partitioning
+works one level up: it decides which files a row goes into, so a query can skip whole files without
+opening them.
+
+## A partition of the rows
+
+Pick a column, say day. Every row goes to the folder of its value, and the folders <StepLink step="partition">split the table</StepLink>:
+
+$$
+\text{sales} = P_1 \cup P_2 \cup P_3 \cup P_4, \qquad P_d = \{\, r \in \text{sales} : \text{day}(r) = d \,\},
+$$
+
+with no row in two parts. This is a partition in the sense of sets: the parts are disjoint and
+together hold every row. Each $P_d$ is the preimage of one value under the <Term id="function">function</Term> $r \mapsto
+\text{day}(r)$, so any column defines a partition, one part per distinct value that occurs.
+
+On disk the parts are folders named after their value, the layout Hive introduced and that Spark,
+Trino, Delta Lake and Iceberg still read: `sales/day=1/`, `sales/day=2/`, and so on. Inside a folder
+every row has the same day, so <StepLink step="path">the files do not store that column</StepLink>;
+the reader takes it from the path.
+
+## Pruning
+
+A filter on the <Term id="partition-column">partition column</Term> is checked against folder names before any file is read. For
+`WHERE day = 2` the engine <StepLink step="prune">reads one folder of four</StepLink> and never
+lists the files in the others. This is partition pruning. <Term id="parquet-footer">Footer statistics</Term> also skip data, but
+only after the file's footer has been read; pruning needs nothing but the path.
+
+A filter on any other column gets no help: folder names say nothing about the city, so
+`WHERE city = 'OSL'` <StepLink step="other-column">reads every folder</StepLink>. Inside the files,
+Parquet statistics can still skip <Term id="row-group">row groups</Term>, as in the last unit.
+
+## More than one column
+
+Partitioning by day and then city nests the folders: `day=2/city=OSL/`. The parts are now the
+pairs of values that occur, up to $4 \cdot 3 = 12$. A filter on either column prunes: on day it
+keeps one subtree, on city it keeps <StepLink step="two-levels">one subfolder per day</StepLink>,
+and on both it keeps one folder.
+
+The cost is the number of parts. With $d_1$ and $d_2$ distinct values there can be $d_1 d_2$
+folders, and the rows are spread over all of them. Here that leaves <StepLink step="small-files">two rows per folder</StepLink>. Real tables have millions of rows, but
+the same product can grow faster than the data, which is what the next item measures.

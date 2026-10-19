@@ -1,0 +1,45 @@
+Partition <Term id="partition-pruning">pruning</Term> rewards fine partitions: the smaller the part a filter keeps, the less a query reads.
+Files push the other way. Every file has a fixed cost (a listing, an open, a <Term id="parquet-footer">footer</Term> read, an entry in the table's metadata), so a layout wants
+a modest number of large files. Writers aim for a <Term id="target-file-size">target size</Term> $T$, often a few hundred MB to
+$1$ GB.
+
+## Counting partitions
+
+A table partitioned by columns with $d_1, d_2, \dots, d_k$ distinct values has at most
+
+$$
+P = d_1 \cdot d_2 \cdots d_k
+$$
+
+partitions, one per combination that occurs. A table of $B$ bytes spread evenly over them gives
+partitions of $S = B / P$ bytes, each written as $\lceil S / T \rceil$ files. When $S < T$ every
+partition is still at least one file, so the number of files stops falling with the data and
+follows $P$ instead.
+
+## Too coarse, too fine
+
+The events table has $B = 730$ GB. By day, $P = 365$ and $S = 2$ GB, two full files per partition: <StepLink step="by-day">pruning to one day costs nothing extra</StepLink>. By month, the partitions
+are fine for files but <StepLink step="by-month">a day reads its whole month</StepLink>.
+
+By day and country, $P = 18\,250$ and $S = 40$ MB: the <StepLink step="day-country">file count grows $25$ times</StepLink>, and a query for a day now
+opens $50$ files. By day and user, $S$ falls to <StepLink step="by-user">about $200$ bytes</StepLink>. This is the <Term id="small-files">small files problem</Term>. It also
+appears without partitions, when a stream writes a few rows at a time, and it is fixed the same
+way: fewer, larger files, rewritten by a compaction job.
+
+## The budget
+
+For partitions of at least $T$,
+
+$$
+\frac{B}{P} \geq T \iff P \leq \frac{B}{T}.
+$$
+
+With $730$ GB and $T = 1$ GB the budget is <StepLink step="rule">$730$ partitions</StepLink>. The
+size line uses a log scale because these sizes span ten orders of magnitude, and on it the
+budget reads simply: the partition size must stay right of $T$.
+
+A practical rule follows. Partition by a column that most queries filter on and that has few
+values, usually a date. Columns with many values, or filtered less often, are not partition
+columns; sort or cluster the files by them, and footer statistics skip <Term id="row-group">row groups</Term> by those columns inside each partition. Data does not have
+to spread evenly either, and a skewed column makes some partitions huge and many tiny; skew
+comes back with hashing later in this unit.
