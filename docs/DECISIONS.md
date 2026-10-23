@@ -76,7 +76,8 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   suggested prerequisites only. Linear Algebra runs alongside or right after Calculus 1, since it
   does not need calculus and it unlocks Machine Learning.
 - `LEARNING_PLATFORM.md` (Curriculum, Suggested order of units) rotates across tracks so advanced
-  material arrives early. Daniel may pick any unit out of order.
+  material arrives early. Daniel may pick any unit out of order. (Narrowed on 2026-10-23: the
+  rotation is now Mathematics and Machine Learning only; see below.)
 - Content must be mathematically correct: answers are computed and tested, never written from memory.
 - Cross-area topics (sampling, consistent hashing, probabilistic data structures) stay in the area
   they fit best and arrive after their fundamentals. Not openers, not early side units.
@@ -113,6 +114,15 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Linear Algebra outline approved (2026-10-18), as drafted: eight units, about 90 items; the dot
   product in Vectors (unit 1), extended as duality in Orthogonality; 3D from Vectors 6 on, so
   phase 5 starts after the Vectors unit's first batch. Details in `plans/linear-algebra.md`.
+- Focus on Mathematics and Machine Learning (2026-10-23). The suggested order no longer rotates
+  Data Engineering units in; DE and Architecture continue only when Daniel asks. Their next steps
+  stay listed under "Data Engineering and Architecture (on request)" in `LEARNING_PLATFORM.md`.
+  When a session ends at a point where a DE step would be a good next step (for example after a
+  math unit that it builds on, or when DE has not been offered for a while), the closing answer
+  gives two prompts: the default one (math and ML) and an alternative that continues DE.
+- Wish list extended (2026-10-23) with neural networks in depth, architectures, deep learning,
+  CNNs, RNNs, transformers with all their math, and federated learning. They shape the Machine
+  Learning outline.
 
 ## Engineering
 
@@ -130,7 +140,9 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   take the next step in "Suggested order of units" (docs/LEARNING_PLATFORM.md)." A specific
   prompt replaces it only when the next session needs something from Daniel that the docs cannot
   hold, such as his review notes (`<notes>` as a placeholder) or the answer to an open question.
-  Everything else goes into the docs, not into the prompt.
+  Everything else goes into the docs, not into the prompt. When a Data Engineering step fits as
+  the next step, an alternative prompt follows the default one: "Continue Lumen: take the next
+  Data Engineering step in "Suggested order of units" (docs/LEARNING_PLATFORM.md)."
 - After a finished batch or a set of adjustments, commit, push and deploy without asking. Ask first
   only when a choice is not straightforward and Daniel's judgment would matter.
 

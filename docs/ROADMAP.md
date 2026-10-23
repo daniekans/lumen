@@ -35,12 +35,12 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** DE: Partitioning, bucketing and hashing, batch 3 (items 8 to 11 in
-`plans/data-engineering.md`: rehashing, consistent hashing, their practice, and the unit
-checkpoint). Batches 1 and 2 (items 1 to 7) were built on 2026-10-19 and 2026-10-23; if Daniel
-brings review notes, apply them first. Hashing logic is in `src/lib/partitioning/hashing.ts`
-(add the ring there, with tests); `Chip` in the kit draws keys. Stages use titled readout panels
-with hints, and `useVizParam` where a view is worth linking (`ADDING_CONTENT.md`).
+**Suggested next session:** Pre-calculus: Trigonometry (refresher), step 9 of "Suggested order
+of units" in `LEARNING_PLATFORM.md`. The focus is Mathematics and Machine Learning
+(2026-10-23); Data Engineering continues only on request. Its next step is DE: Partitioning,
+bucketing and hashing, batch 3 (items 8 to 11 in `plans/data-engineering.md`; batches 1 and 2
+approved 2026-10-23): hashing logic is in `src/lib/partitioning/hashing.ts` (add the ring there,
+with tests), and `Chip` in the kit draws keys.
 
 ### Phase 3: Explore page
 

@@ -1,8 +1,8 @@
 # Lumen: notes for Claude
 
 Lumen is Daniel's personal learning platform: interactive, 3Blue1Brown-style visualizations plus
-lessons, practice and checkpoints, starting with mathematics (pre-calculus onward), with Data
-Engineering, Machine Learning and AI Engineering alongside. React 19, Vite 8, TypeScript (strict),
+lessons, practice and checkpoints. The focus is mathematics (pre-calculus onward) and Machine
+Learning; Data Engineering and AI Engineering continue when Daniel asks. React 19, Vite 8, TypeScript (strict),
 pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo daniekans/lumen).
 
 ## Start here (every new session)

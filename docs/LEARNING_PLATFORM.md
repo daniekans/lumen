@@ -10,8 +10,10 @@ phase trackers are in [HISTORY.md](HISTORY.md).
 
 ## Suggested order of units
 
-A rotation across tracks, so the interesting material arrives early. Any unit can be picked out of
-order.
+The focus is Mathematics and Machine Learning (decided 2026-10-23). Data Engineering and
+Architecture continue only when Daniel asks; their next steps are listed separately below, and a
+session offers one as an alternative prompt when it fits (see `DECISIONS.md`, Content plan). Any
+unit can be picked out of order.
 
 1. Algebra essentials, batch 3 (done)
 2. DE: Storage and file formats (done)
@@ -21,18 +23,25 @@ order.
 6. Calculus 1: Limits (done)
 7. Outline Linear Algebra (done, approved 2026-10-18), then Linear Algebra: Vectors and linear
    combinations (done, all batches approved 2026-10-19)
-8. DE: Partitioning, bucketing and hashing (outlined 2026-10-19; batch 1, items 1 to 3, built
-   2026-10-19; batch 2, items 4 to 7, built 2026-10-23; Daniel's review of both pending; then
-   batch 3)
+8. DE: Partitioning, bucketing and hashing, batches 1 and 2 (done, approved 2026-10-23; batch 3
+   moved to the Data Engineering list below)
 9. Pre-calculus: Trigonometry (refresher)
 10. Calculus 1: Derivatives
 11. Linear Algebra: Linear maps and matrices
-12. DE: Distributed processing
-13. Outline Probability and Statistics (for review), then its first unit
+12. Outline Probability and Statistics (for review), then its first unit
+13. Calculus 1 and Linear Algebra, next units
 
-After that, keep rotating: Calculus 1, Linear Algebra, Probability, one DE unit every two or three
-math units, and Machine Learning once its prerequisites exist (outline it first). Extend this
+After that, keep alternating Calculus, Linear Algebra and Probability, and outline Machine Learning
+as soon as Linear Algebra and Probability have their first units, then build it. Extend this
 list with concrete steps, outline steps included, before it runs out.
+
+**Data Engineering and Architecture (on request).** Not part of the default order. When Daniel asks
+for it, or when a session offers it as the alternative prompt, take the first open step:
+
+1. DE: Partitioning, bucketing and hashing, batch 3 (items 8 to 11 in
+   `plans/data-engineering.md`: rehashing, consistent hashing, practice, checkpoint)
+2. DE: Distributed processing (outline its unit plan first)
+3. The rest of the DE track in its order (Curriculum, Tracks)
 
 ## Goals
 
@@ -42,8 +51,8 @@ list with concrete steps, outline steps included, before it runs out.
   feedback). Practice includes pen-and-paper work whose results are typed in and checked.
 - The focus is intermediate and advanced material. Fundamentals are refreshers: enough for a smooth
   curve, not full courses (see Curriculum, Unit depths).
-- Math starts from pre-calculus. Data Engineering and Architecture run as their own track alongside
-  the math instead of waiting until the end.
+- Math starts from pre-calculus. Mathematics and Machine Learning are the focus (2026-10-23); Data
+  Engineering and Architecture are their own track, continued when Daniel asks.
 
 Decisions already made:
 
@@ -261,6 +270,19 @@ is outlined:
 - Topology
 - Graph theory
 - Fractals
+
+Machine Learning and Deep Learning (added 2026-10-23), with all the math they involve:
+
+- Neural networks, comprehensively: neurons, layers, activations, losses, backpropagation as the
+  chain rule, initialization, optimizers, regularization
+- Neural network architectures and how to choose between them
+- Deep learning: depth, normalization, residual connections, training at scale
+- Convolutional neural networks (convolution, pooling, receptive fields)
+- Recurrent neural networks (unrolling, backpropagation through time, vanishing gradients, LSTM
+  and GRU)
+- Transformers and all their math: embeddings, attention as weighted averages, scaled dot-product
+  and softmax, multi-head attention, positional encodings, layer norm, residual streams
+- Federated learning (training across devices without pooling the data, federated averaging)
 
 **Data Engineering and Architecture** (core)
 
