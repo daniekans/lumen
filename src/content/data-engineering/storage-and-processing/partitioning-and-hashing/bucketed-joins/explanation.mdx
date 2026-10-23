@@ -1,0 +1,56 @@
+An <Term id="equijoin">equijoin</Term> pairs rows whose keys are equal. Before any matching, it has to decide which pairs to
+compare, and on a cluster, which machine compares them. Hashing both sides on the key answers both
+questions at once.
+
+## Pairs
+
+A table of $a$ rows joined with one of $b$ rows has $ab$ pairs, the <Term id="cross-join">cross join</Term>. Drawn as a grid, <StepLink step="pairs">every cell is a pair</StepLink>, and the join keeps the cells where the keys
+match. Here $16$ orders meet $8$ customers: $128$ cells, $16$ matches.
+
+## Bucket k meets bucket k
+
+Hash both tables with the same $h$ and the same $n$. If two keys are equal, their hashes are equal,
+so their buckets are equal:
+
+$$
+x = y \implies h(x) \bmod n = h(y) \bmod n.
+$$
+
+The converse does not hold (different keys share buckets), so a bucket still has to be joined,
+but every match lies in a pair of equal buckets. With the grid sorted by bucket, <StepLink step="hash-both">the matches sit in blocks on the diagonal</StepLink>, and the cells
+outside the blocks never need to be compared. With $a_k$ and $b_k$ rows in bucket $k$,
+
+$$
+\text{pairs compared} = \sum_{k=0}^{n-1} a_k b_k \;\leq\; ab.
+$$
+
+Here that is $4 \cdot 2 \cdot 4 = 32$ pairs instead of $128$ with $4$ buckets, and <StepLink step="more-buckets">$20$ with $8$</StepLink>. Each block is an independent join, so the
+blocks run as separate tasks; inside a task, the engine sorts and merges, or builds a hash table
+of the smaller side.
+
+## The shuffle, and how bucketing skips it
+
+On a cluster the rows of both tables start wherever they were stored. A distributed join first runs a <Term id="shuffle">shuffle</Term>: <StepLink step="shuffle">every row is sent to the worker of its bucket</StepLink>, which
+writes and reads all the data once over the network. For large tables the shuffle is often the
+most expensive part of the query.
+
+A <Term id="bucketing">bucketed table</Term> pays that cost once, when it is written. Spark and Hive write it with
+`CLUSTERED BY (customer_id) INTO 4 BUCKETS` (Spark's `bucketBy(4, "customer_id")`): each file
+holds one bucket, and its name carries the bucket number. When both sides of a join are <StepLink step="bucketed">bucketed on the join key with the same $n$</StepLink>, task $k$ reads
+the files of bucket $k$ of each table and nothing moves. Tables joined often on the same key, such as a fact
+table and a large dimension, are the usual case. Both tables must be written with the same hash: Spark's
+buckets and Hive's use different functions, so one cannot rely on the other's layout.
+
+## Different counts
+
+If the counts differ, a bucket of one table is no longer a bucket of the other. When one count
+divides the other there is still structure: with $8$ and $4$,
+
+$$
+h \bmod 4 = (h \bmod 8) \bmod 4,
+$$
+
+so <StepLink step="different-counts">buckets $k$ and $k + 4$ of the $8$</StepLink> together form
+bucket $k$ of the $4$. Spark can coalesce the larger side's buckets this way when the option is
+enabled; otherwise it shuffles one side to match. Counts with no common structure, such as $5$ and
+$8$, always need a shuffle.

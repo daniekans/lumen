@@ -22,7 +22,8 @@ order.
 7. Outline Linear Algebra (done, approved 2026-10-18), then Linear Algebra: Vectors and linear
    combinations (done, all batches approved 2026-10-19)
 8. DE: Partitioning, bucketing and hashing (outlined 2026-10-19; batch 1, items 1 to 3, built
-   2026-10-19, Daniel's review pending; then batches 2 and 3)
+   2026-10-19; batch 2, items 4 to 7, built 2026-10-23; Daniel's review of both pending; then
+   batch 3)
 9. Pre-calculus: Trigonometry (refresher)
 10. Calculus 1: Derivatives
 11. Linear Algebra: Linear maps and matrices

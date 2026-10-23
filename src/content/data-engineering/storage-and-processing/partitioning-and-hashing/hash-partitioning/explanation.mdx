@@ -1,0 +1,56 @@
+Partitioning by value gives one part per distinct value, which works for a date and fails for a
+customer id: millions of values, far over the <Term id="target-file-size">file size</Term> budget of the last lesson. <Term id="hash-partitioning">Hash
+partitioning</Term> fixes the number of parts first, $n$, and then sends every key to one of them.
+
+## Hash, then modulo
+
+A <Term id="hash-function">hash function</Term> $h$ maps a key to a number in a fixed range, here $32$ bits:
+
+$$
+h : \text{keys} \to \{0, 1, \dots, 2^{32} - 1\}.
+$$
+
+It is a <Term id="function">function</Term> in the strict sense: the same key always gives the same value. Beyond that it is
+built to scatter, so <StepLink step="hash">keys that differ by one</StepLink> get values that look
+unrelated. The values here come from Murmur3, the hash Spark uses (with seed $42$), read as an unsigned number.
+
+The bucket is the remainder of $h$ divided by $n$:
+
+$$
+\text{bucket}(k) = h(k) \bmod n \in \{0, 1, \dots, n - 1\}.
+$$
+
+The buckets <StepLink step="modulo">split the keys</StepLink> the same way the day folders split
+the rows: each key lands in exactly one, so they form a partition of the keys. With a good hash
+each key is equally likely to land in any bucket, so the buckets are even on average. Twelve keys
+in four buckets come out $2, 3, 2, 5$, not $3, 3, 3, 3$: how far the loads stray from even is the
+subject of the next item.
+
+## Same key, same bucket
+
+Since $h$ is a function, <StepLink step="same-key">every row of a key</StepLink> lands in the same
+bucket, whenever it is written. That is what makes hash partitioning useful: a group by customer, or
+a join on customer_id, finds all rows of a key in one bucket.
+
+The bucket also depends on $n$. Change $n$ from $4$ to $5$ and the remainders change, so <StepLink step="change-n">most keys move</StepLink>. The number of buckets is part of a table's
+layout, and changing it means rewriting the data. A later item counts how many keys move and how
+consistent hashing moves fewer.
+
+## Hash or range
+
+The other layout, <Term id="range-partitioning">range partitioning</Term>, cuts the key's sorted values into intervals: <StepLink step="range">$1001$ to $1003$, $1004$ to $1006$</StepLink>, and so on. It keeps neighbors
+together, which hashing destroys on purpose. Each layout wins a different case.
+
+| Workload                                     | Range                        | Hash             |
+| -------------------------------------------- | ---------------------------- | ---------------- |
+| `WHERE customer_id = 1005`                   | one part                     | one part         |
+| `WHERE customer_id BETWEEN 1007 AND 1009`    | the parts it spans           | up to every part |
+| New keys that keep growing (ids, timestamps) | all in the last              | spread over all  |
+| Even parts without knowing the keys          | no, bounds must fit the data | yes, on average  |
+
+A <StepLink step="range-query">range filter</StepLink> reads one part of the range layout and three
+of four buckets of the hash layout; with thousands of keys in the range it would read every
+bucket. Growing keys go the other way: every new customer lands in the last range, which takes all
+the writes, while the hash spreads them. Databases that split by range (HBase, Bigtable,
+CockroachDB) pick and move the bounds as data grows; engines that join and group large tables
+(Spark, Hive buckets) hash.

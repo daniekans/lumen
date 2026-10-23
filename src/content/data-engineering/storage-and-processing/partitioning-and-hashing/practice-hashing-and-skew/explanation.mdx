@@ -1,0 +1,29 @@
+The problems use the rules of <Term id="hash-partitioning">hash partitioning</Term>, <Term id="data-skew">skew</Term> and <Term id="bucketing">bucketing</Term>.
+
+## Buckets
+
+A key lands in bucket $h(k) \bmod n$, numbered $0$ to $n - 1$. For a long $h$, only its last digits
+matter when $n$ divides a power of ten: the last digit for $5$ and $10$, the last two for $4$, the
+last three for $8$.
+
+Hash partitioning scatters keys and spreads new ones evenly; range partitioning keeps neighbors
+together, so range filters read few parts. An equality filter reads one part in either.
+
+## Skew
+
+The load of a bucket is the sum of the rows of its keys, the mean load is $\frac{N}{n}$, and the
+skew ratio is
+
+$$
+r = \frac{\max_j L_j}{N / n}.
+$$
+
+A key with a share $p$ of the rows sets $r \geq pn$. Salting it with $S$ salts splits its rows into
+$S$ keys of $\frac{pN}{S}$ rows each, and a bucket that gets one holds that plus its share of the
+other rows.
+
+## Bucketed joins
+
+Tables bucketed on the join key with the same hash and $n$ join bucket $k$ with bucket $k$ only:
+$\sum a_k b_k$ pairs instead of $ab$. When one table has $m$ buckets and the other a multiple of
+$m$, bucket $j$ of the smaller count meets every bucket $k$ of the larger with $k \bmod m = j$.

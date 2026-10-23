@@ -57,5 +57,62 @@ export const unit = defineUnit({
         'The file size a writer aims for, often a few hundred MB to $1$ GB. A partition of $S$ bytes is written as about $\\lceil S / T \\rceil$ files.',
       introducedIn: 'sizing-partitions',
     },
+    {
+      id: 'hash-function',
+      title: 'Hash function',
+      tex: 'h',
+      summary:
+        'A function that maps a key to a number in a fixed range, such as $0$ to $2^{32} - 1$, the same number for the same key and unrelated numbers for neighboring keys. Murmur3 is common in data engines.',
+      introducedIn: 'hash-partitioning',
+    },
+    {
+      id: 'hash-partitioning',
+      title: 'Hash partitioning',
+      summary:
+        'Splitting rows into $n$ buckets by $h(k) \\bmod n$ of a key $k$. All rows of a key land in one bucket, and the buckets are even on average when there are many keys.',
+      introducedIn: 'hash-partitioning',
+    },
+    {
+      id: 'range-partitioning',
+      title: 'Range partitioning',
+      summary:
+        'Splitting rows by intervals of a sorted key, such as ids $1$ to $1000$, $1001$ to $2000$. Neighboring keys stay together, so range filters read few parts, but growing keys all land in the last range.',
+      introducedIn: 'hash-partitioning',
+    },
+    {
+      id: 'data-skew',
+      title: 'Skew',
+      summary:
+        'Uneven loads across partitions or tasks, measured by the skew ratio $\\max_j L_j / (N / n)$, the largest load over the mean. A stage takes about that many times longer than an even split.',
+      introducedIn: 'skew',
+    },
+    {
+      id: 'hot-key',
+      title: 'Hot key',
+      summary:
+        'A key with a large share $p$ of the rows. All its rows land in one bucket, so the skew ratio is at least $pn$ for any hash, and more buckets make it worse.',
+      introducedIn: 'skew',
+    },
+    {
+      id: 'salting',
+      title: 'Salting',
+      summary:
+        'Splitting a hot key into $S$ keys by pairing each row with a salt from $0$ to $S - 1$. Its rows spread over up to $S$ buckets; a join copies the other side of the key $S$ times.',
+      introducedIn: 'skew',
+    },
+    {
+      id: 'shuffle',
+      title: 'Shuffle',
+      summary:
+        'Moving rows between workers so that rows with the same key end up together, usually to the worker of $h(k) \\bmod n$. Joins and aggregations on unbucketed data need one, and it is often the most expensive step.',
+      introducedIn: 'bucketed-joins',
+    },
+    {
+      id: 'bucketing',
+      title: 'Bucketing (bucketed table)',
+      summary:
+        'Storing a table hash partitioned on a key into a fixed number of buckets, each in its own files. Tables bucketed alike on the join key join bucket $k$ with bucket $k$, with no shuffle.',
+      introducedIn: 'bucketed-joins',
+    },
   ],
 })

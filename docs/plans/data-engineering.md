@@ -96,10 +96,10 @@ without a shuffle), `consistent-hashing` (keys moved when nodes join or leave).
 | 1   | partitioning-by-key         | explore    | partitioning                   | 24 sales rows split into day folders (a set partition), the column moves into the path, pruning, a filter on city, day/city      | review |
 | 2   | sizing-partitions           | lesson     | partition-design, partitioning | 730 GB of events by day, month, day and country, day and user; partition size on a log scale against $T$; budget $P \leq B/T$    | review |
 | 3   | practice-partitioning       | practice   | partitioning, partition-design | Partition counts, file counts, MB read after pruning, whether a filter prunes, the finest layout that fits                       | review |
-| 4   | hash-partitioning           | explore    | hashing                        | A hash maps keys to large numbers, modulo $n$ picks a bucket; same key, same bucket; spread versus range partitioning            | todo   |
-| 5   | skew                        | lesson     | skew, hashing                  | Bucket load as a sum of key frequencies, mean $N/n$, the max-to-mean ratio, a hot key no hash can split, salting                 | todo   |
-| 6   | bucketed-joins              | explore    | bucketing                      | Two tables bucketed on the join key: bucket $k$ meets bucket $k$; pairs compared $\sum a_k b_k$ versus $ab$; $4$ and $8$ buckets | todo   |
-| 7   | practice-hashing-and-skew   | practice   | hashing, skew, bucketing       | Buckets of keys, bucket loads and skew ratios, salted keys, which buckets meet in a join                                         | todo   |
+| 4   | hash-partitioning           | explore    | hashing                        | A hash maps keys to large numbers, modulo $n$ picks a bucket; same key, same bucket; spread versus range partitioning            | review |
+| 5   | skew                        | lesson     | skew, hashing                  | Bucket load as a sum of key frequencies, mean $N/n$, the max-to-mean ratio, a hot key no hash can split, salting                 | review |
+| 6   | bucketed-joins              | explore    | bucketing                      | Two tables bucketed on the join key: bucket $k$ meets bucket $k$; pairs compared $\sum a_k b_k$ versus $ab$; $4$ and $8$ buckets | review |
+| 7   | practice-hashing-and-skew   | practice   | hashing, skew, bucketing       | Buckets of keys, bucket loads and skew ratios, salted keys, which buckets meet in a join                                         | review |
 | 8   | rehashing                   | explore    | consistent-hashing             | From $n$ to $n + 1$ buckets with modulo: a key stays only if $h \bmod n(n+1) < n$, so $\frac{n}{n+1}$ of the keys move           | todo   |
 | 9   | consistent-hashing          | explore    | consistent-hashing             | Nodes and keys on a ring, each key to the next node clockwise; a new node takes one arc; virtual nodes even the arcs out         | todo   |
 | 10  | practice-consistent-hashing | practice   | consistent-hashing, hashing    | Owner of a key on a ring, keys moved when a node joins or leaves, modulo versus ring                                             | todo   |
@@ -107,7 +107,7 @@ without a shuffle), `consistent-hashing` (keys moved when nodes join or leave).
 
 Batches: 1 = items 1 to 3 (partitioning by value), 2 = items 4 to 7 (hashing, skew, bucketing),
 3 = items 8 to 11 (consistent hashing and the checkpoint). Batch 1 was built on 2026-10-19 and
-awaits Daniel's review.
+batch 2 on 2026-10-23; both await Daniel's review.
 
 Batch 1 notes: the exploration's 24 rows (days 1 to 4 with $7, 5, 6, 6$ rows, every
 (day, city) pair present, $8$ rows in OSL) are inline in `partitioning-by-key/index.tsx`; folders
@@ -116,3 +116,15 @@ $2$ GB a day, $T = 1$ GB, $50$ countries and $10^7$ users, so the budget is $730
 `formatBytes` words sizes. New terms: `table-partition` (qualified, since `partition` will be
 wanted by Riemann sums), `partition-column`, `partition-pruning`, `small-files`,
 `target-file-size`.
+
+Batch 2 notes: hashes are Murmur3 x86 32-bit with Spark's seed $42$, read as unsigned
+(`src/lib/partitioning/hashing.ts`, tested against published vectors and Spark's `hash(1)`);
+buckets are `h mod n`, which matches Spark's `pmod` for powers of two. The exploration uses
+customer ids $1001$ to $1012$ (buckets $2, 3, 2, 5$ at $n = 4$; $10$ of $12$ move at $n = 5$) and
+six new ids $1013$ to $1018$ for range partitioning. The skew lesson uses $N = 10\,000$ rows,
+$n = 8$, and a hot key $9999$ with $3000$ rows; salts are `key#s`, and their collisions are shown
+as they fall ($S = 8$ gives $1.67$, $S = 4$ gives $1.37$). The bucketed join uses $16$ orders and
+$8$ customers ($32$ pairs at $n = 4$, $20$ at $n = 8$). `Chip` (a key or cell box) is in the
+kit for batch 3. New terms: `hash-function`, `hash-partitioning`, `range-partitioning`,
+`data-skew`, `hot-key`, `salting`, `shuffle`, `bucketing`. The shuffle is introduced here;
+Distributed processing should link it rather than define it again.

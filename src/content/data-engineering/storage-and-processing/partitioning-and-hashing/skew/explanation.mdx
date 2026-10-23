@@ -1,0 +1,63 @@
+A hash spreads keys evenly on average, but a job does not run on averages: each bucket is a task,
+and a stage ends when its slowest task ends. <Term id="data-skew">Skew</Term> measures how far the largest bucket is from the
+mean, and where it comes from.
+
+## Loads
+
+With frequencies $f(k)$ (rows per key), the load of bucket $j$ is the sum over its keys:
+
+$$
+L_j = \sum_{k \,:\, h(k) \bmod n \,=\, j} f(k), \qquad \sum_{j=0}^{n-1} L_j = N.
+$$
+
+The loads add up to the $N$ rows, so the mean load is $\frac{N}{n}$. The skew ratio compares the
+largest with it:
+
+$$
+r = \frac{\max_j L_j}{N / n} \geq 1.
+$$
+
+A stage on $n$ workers takes about $r$ times as long as a perfectly even split. With $40$ equal
+keys in $8$ buckets the <StepLink step="ratio">largest bucket holds $8$ keys</StepLink> where the
+mean is $5$, so $r = 1.6$.
+
+## Many keys even out
+
+A hash puts each key in a bucket independently, each bucket with probability $\frac{1}{n}$, so the
+number of the $K$ keys in a bucket varies around $\frac{K}{n}$ with standard deviation
+$\sqrt{\frac{K}{n}\left(1 - \frac{1}{n}\right)}$. Relative to the mean that is
+$\sqrt{(n - 1)/K}$, which shrinks as keys are added: $0.42$ for $40$ keys, <StepLink step="many-keys">$0.08$ for $1000$</StepLink>. With equal frequencies, many keys per
+bucket is all a hash needs.
+
+## A hot key
+
+Frequencies are rarely equal. Real keys follow heavy-tailed distributions: a reseller with
+thousands of orders, a null or default value, a bot with millions of clicks. A <Term id="hot-key">hot key</Term>, one with a share $p$
+of the rows, puts all $pN$ of them <StepLink step="hot-key">in one bucket</StepLink>, so
+
+$$
+r \geq \frac{pN}{N / n} = pn.
+$$
+
+The bound grows with $n$. <StepLink step="more-buckets">More buckets</StepLink> shrink every other
+task but not the hot one, so the stage gets no faster while the bound $pn$ doubles. No hash function
+helps either: $h$ is a function, and one key has one value.
+
+## Salting
+
+The fix, <Term id="salting">salting</Term>, changes the key. Give each row of the hot key a salt $s \in \{0, \dots, S - 1\}$ (at random,
+or in turn) and partition by the pair $(k, s)$. The hot key becomes $S$ keys of about
+$\frac{pN}{S}$ rows, and the bound becomes $\frac{pn}{S}$. The salted keys are hashed like any
+other, so two salts can share a bucket: <StepLink step="salting">with $S = 8$ here</StepLink> three
+land in bucket $0$ and $r = 1.67$, while $S = 4$ happens to give $1.37$ and $S = 24$ gives $1.17$.
+A salt count a few times $n$ makes collisions average out.
+
+Salting costs work elsewhere:
+
+- An aggregation runs twice: first per $(k, s)$, then the $S$ partial results per key.
+- A join must find every salt of a key, so the other table's rows for the hot key are copied $S$
+  times, one per salt.
+
+Salt only the keys that need it. Spark's adaptive execution does a version of this by itself: it
+spots a join partition far above the median and splits it into smaller tasks, copying the matching
+rows of the other side.
