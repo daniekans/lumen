@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { clamp, fmt, type Fn, type Interval } from '@/lib/math'
+import { clamp, fmt, tangentPiece, type Fn, type Interval } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
 import { Tex } from '@/ui/atoms'
 import { LabeledSlider, Readout, ReadoutPanel, SegmentedControl } from '@/ui/molecules'
@@ -91,15 +91,6 @@ const RISING: Interval[] = [
 ]
 const FALLING: Interval[] = [{ from: 1, to: 3 }]
 
-/** A short piece of the line through `p` with slope `m`, `half` units long on each side. */
-const tangentPiece = (p: readonly [number, number], m: number, half = 0.9) => {
-  const dx = half / Math.hypot(1, m)
-  return {
-    from: [p[0] - dx, p[1] - m * dx] as const,
-    to: [p[0] + dx, p[1] + m * dx] as const,
-  }
-}
-
 export default function DerivativeFunction() {
   const { id } = useVizStep()
   const [x, setX] = useState(0.2)
@@ -139,7 +130,7 @@ export default function DerivativeFunction() {
 
   const P = [x, f(x)] as const
   const m = df(x)
-  const piece = tangentPiece(P, m)
+  const piece = tangentPiece(P, m, 0.9)
 
   const g = id === 'corner' ? { f: corner, df: dCorner } : KINKS[kink]
   const O = [A, g.f(A)] as const

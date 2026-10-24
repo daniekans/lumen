@@ -13,6 +13,7 @@ import {
   fmtShort,
   det,
   integrate,
+  linePiece,
   mat2,
   niceStep,
   stepDigits,
@@ -23,6 +24,7 @@ import {
   sameVec,
   secantSlope,
   spanDimension3,
+  tangentPiece,
 } from '.'
 
 describe('calculus', () => {
@@ -41,6 +43,12 @@ describe('calculus', () => {
     expect(Math.abs(mid - exact)).toBeLessThan(1e-5)
     const trap = riemannSum(riemannPieces(f, 0, 1, 4, 'trapezoid'))
     expect(trap).toBeCloseTo(0.34375)
+  })
+  it('line pieces reach the same distance on both sides, vertical ones too', () => {
+    const t = tangentPiece([1, 2], 3, 1)
+    expect(Math.hypot(t.to[0] - 1, t.to[1] - 2)).toBeCloseTo(1)
+    expect((t.to[1] - t.from[1]) / (t.to[0] - t.from[0])).toBeCloseTo(3)
+    expect(linePiece([0, 0], [0, 2], 0.5)).toEqual({ from: [0, -0.5], to: [0, 0.5] })
   })
 })
 

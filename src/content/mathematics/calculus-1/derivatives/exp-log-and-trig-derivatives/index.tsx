@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { clamp, derivative, fmt, type Vec2 } from '@/lib/math'
+import { clamp, derivative, fmt, type Vec2, tangentPiece } from '@/lib/math'
 import { TAU } from '@/lib/math/trig'
 import { vc } from '@/styles/viz-colors'
 import { LabeledSlider, Readout, ReadoutPanel } from '@/ui/molecules'
@@ -39,12 +39,6 @@ const PI_TICKS: readonly [number, string][] = [
   [(3 * Math.PI) / 2, '\\frac{3\\pi}{2}'],
   [TAU, '2\\pi'],
 ]
-
-/** A short piece of the line through `p` with slope `m`. */
-const tangentPiece = (p: Vec2, m: number, half = 0.8) => {
-  const dx = half / Math.hypot(1, m)
-  return { from: [p[0] - dx, p[1] - m * dx] as Vec2, to: [p[0] + dx, p[1] + m * dx] as Vec2 }
-}
 
 export default function ExpLogAndTrigDerivatives() {
   const { id } = useVizStep()

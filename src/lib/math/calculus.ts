@@ -1,3 +1,5 @@
+import type { Vec2 } from './vec2'
+
 export type Fn = (x: number) => number
 
 /** Slope of the secant line through (x, f(x)) and (x + h, f(x + h)). */
@@ -47,3 +49,15 @@ export const integrate = (f: Fn, a: number, b: number, n = 2000) => {
   for (let k = 1; k < m; k++) s += f(a + k * h) * (k % 2 === 0 ? 2 : 4)
   return (s * h) / 3
 }
+
+/** A piece of the line through `p` in direction `d`, reaching `half` units to each side of `p`. */
+export const linePiece = (p: Vec2, d: Vec2, half = 0.8) => {
+  const s = half / Math.hypot(d[0], d[1])
+  return {
+    from: [p[0] - d[0] * s, p[1] - d[1] * s] as Vec2,
+    to: [p[0] + d[0] * s, p[1] + d[1] * s] as Vec2,
+  }
+}
+
+/** A piece of the line through `p` with slope `m`, `half` units long on each side. */
+export const tangentPiece = (p: Vec2, m: number, half = 0.8) => linePiece(p, [1, m], half)

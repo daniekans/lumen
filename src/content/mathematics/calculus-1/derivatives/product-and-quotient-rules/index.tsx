@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { clamp, fmt, type Vec2 } from '@/lib/math'
+import { clamp, fmt, type Vec2, tangentPiece } from '@/lib/math'
 import { alpha, vc } from '@/styles/viz-colors'
 import { Tex } from '@/ui/atoms'
 import { LabeledSlider, Readout, ReadoutPanel } from '@/ui/molecules'
@@ -41,12 +41,6 @@ const VIEWS = {
   quotient: [-0.7, 3.8, -0.7, 4.0],
   powers: [-3, 3, -4, 4],
 } as const
-
-/** A short piece of the line through `p` with slope `m`. */
-const tangentPiece = (p: Vec2, m: number, half = 0.8) => {
-  const dx = half / Math.hypot(1, m)
-  return { from: [p[0] - dx, p[1] - m * dx] as Vec2, to: [p[0] + dx, p[1] + m * dx] as Vec2 }
-}
 
 const rect = (x0: number, y0: number, x1: number, y1: number): Vec2[] => [
   [x0, y0],
