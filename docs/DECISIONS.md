@@ -123,6 +123,18 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Wish list extended (2026-10-23) with neural networks in depth, architectures, deep learning,
   CNNs, RNNs, transformers with all their math, and federated learning. They shape the Machine
   Learning outline.
+- Real-world scenarios where they add value (2026-10-24, the owner's review of Derivatives batch
+  3). The owner liked the ladder, cone and balloon of Related rates and wants visualizations,
+  practice and checkpoints to use real situations more often, when the situation adds meaning
+  (a rate with units, a physical reason, a link to data or ML), never as decoration. Each unit
+  plan says where its real scenarios are. Motion (position, velocity, acceleration) belongs in
+  Calculus 1 from the Derivatives unit on.
+- Leibniz notation includes the choice of variable (2026-10-24). The owner wants to master
+  differentiating "in $x$", "in $y$" or "in $t$" and to know why each is allowed: an equation
+  that holds for every value of a variable can be differentiated in that variable, and the chain
+  rule supplies a factor such as $\frac{dy}{dx}$ for every quantity that depends on it. Items
+  that differentiate an equation say which variable and why; $\frac{dx}{dy}$ and
+  $\frac{d^2y}{dx^2}$ are part of the thread.
 
 ## Engineering
 
@@ -230,6 +242,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   conversation; `shoot.mjs` crops to the stage by default and takes chosen steps (`STEPS=3,5`).
   This file stays one unified file: a split into rules and a log was tried and reverted the same
   day, since entries are read when added anyway and two files risk losing context.
+- Readout size (2026-10-24, the owner found long labels too small): every readout panel has a
+  zoom button beside its left edge (shown on hover, always on touch screens) that switches all
+  panels to a large size, with labels in a bigger font and their math in display style. The
+  choice is remembered per browser (`src/ui/molecules/readoutSize.ts`).
 - Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
   later units need them, in the same look and feel as the current visualizations.
 

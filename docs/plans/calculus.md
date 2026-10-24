@@ -16,7 +16,10 @@ one level further. Threads so far:
   $\int f(x)\,dx$ as a limit of sums $\sum f(x_i)\,\Delta x$; substitution as a change of
   variable; separable differential equations; partial derivatives, total differentials and the
   Jacobian in many variables; line and surface integrals; differential forms as the rigorous
-  version. Each item that uses the notation says what it means at that level.
+  version. Each item that uses the notation says what it means at that level. The choice of
+  variable is part of it (2026-10-24): differentiating an equation "in $x$", "in $y$" or "in $t$",
+  why that is allowed (the equation holds for every value of that variable), $\frac{dx}{dy}$ as
+  the reciprocal of $\frac{dy}{dx}$, and $\frac{d^2y}{dx^2}$ for higher derivatives.
 - **Limits.** From intuition to the techniques for evaluating them (algebra, squeeze, standard
   limits, L'Hôpital, series) and to the epsilon-delta definition, so limit problems become routine.
 - **Linear approximation** (approved 2026-10-17). The tangent line as the best linear fit; differentials;
@@ -230,7 +233,7 @@ batch 3 rebuilds it.
 
 Batch 1 built on 2026-10-24 and reviewed by the owner; its two fixes (the missing explanation,
 TeX in summaries) are done. Batch 2 built on 2026-10-24 and approved by the owner. Batch 3 built
-on 2026-10-24, awaiting the owner's review: item 10 adds rational exponents for $x < 0$ (odd
+and approved on 2026-10-24, with a revision to follow (below): item 10 adds rational exponents for $x < 0$ (odd
 denominators) by implicit differentiation, and the checkpoint imports generators from items 2, 6,
 9 and 12 and ends with a self-graded proof of the product rule. The power
 rule is proved in steps, never stated beyond what is proved: whole $n$ (item 4), negative
@@ -253,7 +256,42 @@ tangent segments, vertical ones included.
 | 7   | exp-log-and-trig-derivatives  | explore    | transcendental-derivatives                          | $e^x$ is its own slope, $b^x$ with $\ln b$; $\sin' = \cos$ on the unit circle; $\ln$ as the inverse of $e^x$; $x^r$ for real $r$                                      | done   |
 | 8   | chain-rule                    | explore    | chain-rule                                          | Composed stretching of number lines; $\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$ and why it looks like cancelling; the proof that handles $\Delta u = 0$             | done   |
 | 9   | practice-chain-rule           | practice   | chain-rule, transcendental-derivatives, basic-rules | Exponential, log and trig derivatives, fractional exponents, chains with every rule so far                                                                            | done   |
-| 10  | implicit-and-inverse          | lesson     | implicit-differentiation                            | Implicit curves, slope of an inverse as the reciprocal, $\arcsin$, $\arctan$, logarithmic differentiation, rational exponents                                         | review |
-| 11  | related-rates                 | lesson     | related-rates                                       | Linked quantities differentiated in $t$                                                                                                                               | review |
-| 12  | practice-implicit-and-related | practice   | implicit-differentiation, related-rates             | Implicit slopes, inverse derivatives, related rates                                                                                                                   | review |
-| 13  | checkpoint                    | checkpoint | all                                                 | Rebuilt for the whole unit, plus a self-graded proof                                                                                                                  | review |
+| 10  | implicit-and-inverse          | lesson     | implicit-differentiation                            | Implicit curves, slope of an inverse as the reciprocal, $\arcsin$, $\arctan$, logarithmic differentiation, rational exponents                                         | done   |
+| 11  | related-rates                 | lesson     | related-rates                                       | Linked quantities differentiated in $t$                                                                                                                               | done   |
+| 12  | practice-implicit-and-related | practice   | implicit-differentiation, related-rates             | Implicit slopes, inverse derivatives, related rates                                                                                                                   | done   |
+| 13  | checkpoint                    | checkpoint | all                                                 | Rebuilt for the whole unit, plus a self-graded proof                                                                                                                  | done   |
+
+### Revision after the batch 3 review (next)
+
+The owner approved batch 3's visualizations on 2026-10-24 and asked for more real-world
+scenarios where they add value, motion (position, velocity, time), and the choice of variable in
+Leibniz notation (see `DECISIONS.md`). The self-review found the same gaps: items 1 to 9 use no
+real situation, motion and higher derivatives appear nowhere in Calculus 1 before Integrals, and
+"differentiate in $y$" is never shown. Build these as one batch, then the unit is done:
+
+1. **New lesson `motion`** (order 5, after `power-and-sum-rules`; later items shift by one, ids
+   unchanged): position $s(t)$ of a moving object, average speed over a trip against the
+   speedometer reading as the limit; $v = \frac{ds}{dt}$ and $a = \frac{dv}{dt} = \frac{d^2s}{dt^2}$;
+   units as a reading of Leibniz notation (meters per second is "change in meters over change in
+   seconds"); speeding up or slowing down from the signs of $v$ and $a$; a ball thrown upward,
+   $s(t) = v_0t - 4.9t^2$. Introduces $f''$ and $\frac{d^2y}{dx^2}$ (Applications 4 extends them
+   to concavity). Practice: motion generators in `practice-basic-rules` (velocity and
+   acceleration at a time, when the object stops, highest point).
+2. **Item 1** (`derivative-as-limit`): one paragraph tying the average rate to average speed and
+   the derivative to the speedometer, pointing to `motion`.
+3. **Item 7** (`exp-log-and-trig-derivatives`): $\frac{dP}{dt} = kP$ as growth proportional to
+   size (population, continuous interest), the real reason $e^x$ matters.
+4. **Item 8** (`chain-rule`): rates that multiply with units, for example a hiker's temperature
+   $\frac{dT}{dt} = \frac{dT}{dh}\,\frac{dh}{dt}$ (degrees per meter times meters per minute), and
+   one paragraph on backpropagation as the chain rule through layers (links the ML thread and the
+   `backpropagation` visualization). A practice generator for the hiker type.
+5. **Item 10** (`implicit-and-inverse`): a step "differentiate in $y$": at the circle's vertical
+   tangents $\frac{dy}{dx}$ fails but $\frac{dx}{dy} = -\frac{y}{x}$ works; $\frac{dx}{dy} =
+   1/\frac{dy}{dx}$ where both exist, the inverse rule in Leibniz form. An explanation section on
+   which variable to differentiate in, and why. Practice: a "find $\frac{dx}{dy}$" generator.
+6. **Item 11** (`related-rates`): two more examples, a person walking away from a streetlight
+   (the shadow's tip moves faster than the person, by similar triangles) and two cars leaving a
+   crossing at right angles (both legs change). Captions say "differentiate in $t$" and point back
+   to item 10. Practice: shadow and two-cars generators; the checkpoint may swap `ladder` for one.
+
+Done on 2026-10-24 already: the readout size toggle (labels too small to read).
