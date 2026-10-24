@@ -12,7 +12,7 @@ phase trackers are in [HISTORY.md](HISTORY.md).
 
 The focus is Mathematics and Machine Learning (decided 2026-10-23). Data Engineering and
 Architecture continue only when Daniel asks; their next steps are listed separately below, and a
-session offers one as an alternative prompt when it fits (see `DECISIONS.md`, Content plan). Any
+session offers one as an alternative prompt when it fits (see `DECISIONS.md`, Content). Any
 unit can be picked out of order.
 
 1. Algebra essentials, batch 3 (done)
@@ -25,7 +25,7 @@ unit can be picked out of order.
    combinations (done, all batches approved 2026-10-19)
 8. DE: Partitioning, bucketing and hashing, batches 1 and 2 (done, approved 2026-10-23; batch 3
    moved to the Data Engineering list below)
-9. Pre-calculus: Trigonometry (refresher) (done 2026-10-24, waits for Daniel's review)
+9. Pre-calculus: Trigonometry (refresher) (done, approved 2026-10-24)
 10. Calculus 1: Derivatives
 11. Linear Algebra: Linear maps and matrices
 12. Outline Probability and Statistics (for review), then its first unit

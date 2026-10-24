@@ -34,7 +34,7 @@ pnpm dev          # http://localhost:5173
 
 ## Documentation
 
-- [Decisions](docs/DECISIONS.md): preferences and decisions so far, with reasons.
+- [Decisions](docs/DECISIONS.md): the rules in force; [log](docs/DECISIONS-LOG.md) with dates and reasons.
 - [Architecture](docs/ARCHITECTURE.md): how the app, the visualization kit and content fit together.
 - [Adding content](docs/ADDING_CONTENT.md): the workflow and the checklist.
 - [Design](docs/DESIGN.md): tokens, palette rules, motion rules.

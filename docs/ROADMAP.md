@@ -35,8 +35,7 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Daniel reviews Pre-calculus: Trigonometry (built 2026-10-24, all six
-items in `plans/pre-calculus.md`); then Calculus 1: Derivatives, step 10 of "Suggested order of
+**Suggested next session:** Calculus 1: Derivatives (Trigonometry approved 2026-10-24), step 10 of "Suggested order of
 units" in `LEARNING_PLATFORM.md`. Write its unit plan in `plans/calculus.md` from the outline
 first (it includes the legacy items `derivative-as-limit`, `difference-quotients` and the
 derivatives checkpoint; trigonometric derivatives can lean on the new trig unit and

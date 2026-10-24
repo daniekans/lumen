@@ -117,8 +117,9 @@ extraneous root of the logarithmic equation must make the left side undefined. D
 ## Trigonometry unit plan
 
 Folder `src/content/mathematics/pre-calculus/trigonometry/`. Refresher, one batch: three
-explorations, a lesson, one practice set and a checkpoint. Built on 2026-10-24; waits for
-Daniel's review. The thread: an angle is a distance
+explorations, a lesson, one practice set and a checkpoint. Built on 2026-10-24 and
+approved the same day, after a round of fixes (exact angles on the circle, stacked fractions,
+a live period step, stable keys). The thread: an angle is a distance
 walked on the unit circle, sine and cosine are the coordinates of where the walk ends, and every
 identity is a symmetry or a rotation of that circle. Later units lean on it: $\sin' = \cos$ on the
 unit circle (Derivatives), rotation matrices (Linear maps), $\cos\theta$ in the dot product, polar

@@ -130,7 +130,7 @@ start a list item with it (Prettier splits the paragraph).
       give duplicate keys, and React leaves the old shapes on the stage)
 - [ ] `node scripts/sweep-controls.mjs /<item path>` (moves every slider to both ends on every step)
       reports no console errors
-- [ ] Every step looks right in dark and light (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`),
+- [ ] Every step looks right in dark and light (`STEPS=all node scripts/shoot.mjs <dir> /<item path>`),
       and in paper (`THEMES=paper`) once per batch
 - [ ] Check answers are correct (compute them, do not trust memory)
 - [ ] Practice and checkpoint items: `problems.test.ts` verifies every generator independently

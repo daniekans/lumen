@@ -7,8 +7,8 @@ pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo 
 
 ## Start here (every new session)
 
-1. Read `docs/DECISIONS.md`: Daniel's preferences and the decisions already made. Do not reopen
-   them without a reason.
+1. Read `docs/DECISIONS.md`: the rules in force, short. Do not reopen them without a reason.
+   `docs/DECISIONS-LOG.md` has the dates and reasons; read it only when a reason matters.
 2. Read `docs/ROADMAP.md` ("Phases"): what is done, and what comes next.
 3. Read "Suggested order of units" at the top of `docs/LEARNING_PLATFORM.md`, then the plan file
    of the course the next step belongs to (`docs/plans/<course>.md`). Read the rest of
@@ -94,8 +94,9 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 1. `pnpm lint && pnpm typecheck && pnpm test`
 2. Look at it. Start a check server in the background with
    `node scripts/check-server.mjs <scratch dir>/vite-cache` (port 5199), then
-   `THEMES=dark STEPS=1 BASE_URL=http://localhost:5199 node scripts/shoot.mjs <outDir> /<item path>`
-   screenshots every step and prints console errors. The item path is the content path with no
+   `THEMES=dark STEPS=all BASE_URL=http://localhost:5199 node scripts/shoot.mjs <outDir> /<item path>`
+   screenshots every step (`STEPS=3,5` only those), cropped to the visualization, and prints
+   console errors. `FULL=1` captures the whole window when the explanation pane matters. The item path is the content path with no
    prefix (`/data-engineering/<course>/<unit>/<item>`). Iterate in one theme and view only the
    steps that changed; run both themes once at the end. For interaction checks, write a short
    Playwright script against the same server and delete it after. Stop the server by PID.
