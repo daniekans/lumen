@@ -429,6 +429,66 @@ export function Plane3D({
   )
 }
 
+const BOX_FACES: readonly { normal: Vec3; corners: readonly (readonly [0 | 1, 0 | 1, 0 | 1])[] }[] =
+  [0, 1, 2].flatMap((axis) =>
+    ([0, 1] as const).map((side) => {
+      const n: [number, number, number] = [0, 0, 0]
+      n[axis] = side ? 1 : -1
+      const normal: Vec3 = n
+      const [u, v] = [(axis + 1) % 3, (axis + 2) % 3]
+      const corner = (a: 0 | 1, b: 0 | 1) => {
+        const c: [0 | 1, 0 | 1, 0 | 1] = [0, 0, 0]
+        c[axis] = side
+        c[u] = a
+        c[v] = b
+        return c
+      }
+      return { normal, corners: [corner(0, 0), corner(1, 0), corner(1, 1), corner(0, 1)] }
+    }),
+  )
+
+/**
+ * A box with edges along the axes, from corner `min` to corner `max`, filled with a translucent
+ * tint. Faces turned away from the viewer are drawn first, so the near faces stay on top.
+ */
+export function Box3D({
+  min,
+  max,
+  color = vc.fg,
+  fillOpacity = 0.18,
+  opacity = 1,
+}: {
+  min: Vec3
+  max: Vec3
+  color?: string
+  fillOpacity?: number
+  opacity?: number
+}) {
+  const { frame } = useProjection()
+  const faces = [...BOX_FACES].sort(
+    (a, b) => dot3(a.normal, frame.toward) - dot3(b.normal, frame.toward),
+  )
+  return (
+    <g pointerEvents="none">
+      {faces.map(({ normal, corners }) => (
+        <Path3D
+          key={normal.join(',')}
+          points={corners.map((c): Vec3 => [
+            c[0] ? max[0] : min[0],
+            c[1] ? max[1] : min[1],
+            c[2] ? max[2] : min[2],
+          ])}
+          closed
+          color={color}
+          width={1}
+          opacity={opacity}
+          fill={alpha(color, fillOpacity)}
+        />
+      ))}
+    </g>
+  )
+}
+
 /** The grid of the floor plane z = 0, from -extent to extent, fading into the distance. */
 export function Grid3D({ extent = 4, step = 1 }: { extent?: number; step?: number }) {
   return (
