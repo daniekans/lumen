@@ -209,3 +209,42 @@ Notes for the next batches: stages keep a uniform scale, so a view that zooms fa
 infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decimals only (no
 fractions), so their answers are chosen to be short decimals. Infinite limits in practice are
 multiple choice ($\infty$, $-\infty$, $0$, does not exist).
+
+## Derivatives unit plan
+
+Folder `src/content/mathematics/calculus-1/derivatives/`. Core unit, 13 items in three batches, as
+in the Calculus outline. The thread: the derivative is the limit of secant slopes, so a curve
+looks straight when zoomed in at a differentiable point; the rules come from that limit and from
+pictures (a growing square, cube and rectangle, stretched number lines); implicit curves and
+related rates use the same rules on equations. Leibniz notation: item 1 writes $\frac{dy}{dx}$ for
+the limit of $\frac{\Delta y}{\Delta x}$ (one symbol, not yet a ratio; differentials come in
+Applications 1), item 3 adds $\frac{d}{dx}$ as an operator, item 8 explains why the chain rule
+looks like cancelling. Numerical derivatives (`derivative`, `secantSlope` in
+`src/lib/math/calculus.ts`) verify every practice answer.
+
+Skills: `secant-slope`, `definition` (kept from the legacy items), `derivative-graphs` (batch 1);
+`basic-rules`, `transcendental-derivatives`, `chain-rule` (batch 2); `implicit-differentiation`,
+`related-rates` (batch 3). Batches: 1 to 4 (two legacy items revised, the kit's `Box3D` for the
+growing cube), 5 to 9, 10 to 13. The legacy checkpoint keeps its six problems, ordered last, until
+batch 3 rebuilds it.
+
+Batch 1 built on 2026-10-24, waiting for the owner's review. Notes for the next batches:
+`MathLabel` anchors name the side the label goes to (`'e'` puts it right of the point). Stages
+that zoom by changing `domain` pass `zoomedStep(1, z)` to `Grid` and `Axes`. `Box3D` draws
+translucent boxes with the back faces first.
+
+| #   | Item                          | Kind       | Skills                                      | Content                                                                                                                                                               | Status  |
+| --- | ----------------------------- | ---------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | derivative-as-limit           | lesson     | secant-slope, definition                    | Revised: $\frac{\Delta y}{\Delta x}$ with $\Delta x = h$, the limit, the tangent line equation, zooming in until the curve is straight, $f'(x_0)$ and $\frac{dy}{dx}$ | done    |
+| 2   | difference-quotients          | practice   | secant-slope, definition, derivative-graphs | The six legacy generators, $\frac{k}{x}$ and $\sqrt{x}$ from the definition (combine fractions, rationalize), a slope that makes a piecewise function differentiable  | done    |
+| 3   | derivative-function           | explore    | derivative-graphs                           | $f'$ traced point by point; reading signs and zeros; corner of $\lvert x \rvert$, cusp of $x^{2/3}$, vertical tangent of $\sqrt[3]{x}$; $\frac{d}{dx}$ as an operator | done    |
+| 4   | power-and-sum-rules           | explore    | basic-rules                                 | $x^2$ as a growing square, $x^3$ as a growing cube (3D), $(x + h)^n$ expanded, $nx^{n-1}$ against the slopes of $x^n$, linearity                                      | done    |
+| 5   | product-and-quotient-rules    | explore    | basic-rules                                 | Product rule as a growing rectangle; quotient rule from it                                                                                                            | planned |
+| 6   | practice-basic-rules          | practice   | basic-rules                                 | Power (integer, negative, fractional), sum, product, quotient, tangent lines                                                                                          | planned |
+| 7   | exp-log-and-trig-derivatives  | explore    | transcendental-derivatives                  | $e^x$ is its own slope, $b^x$ with $\ln b$; $\sin' = \cos$ on the unit circle; $\ln$ as the inverse of $e^x$; $x^r$ for real $r$                                      | planned |
+| 8   | chain-rule                    | explore    | chain-rule                                  | Composed stretching of number lines; $\frac{dy}{dx} = \frac{dy}{du}\frac{du}{dx}$ and why it looks like cancelling                                                    | planned |
+| 9   | practice-chain-rule           | practice   | chain-rule, transcendental-derivatives      | Chains with every rule so far                                                                                                                                         | planned |
+| 10  | implicit-and-inverse          | lesson     | implicit-differentiation                    | Implicit curves, slope of an inverse as the reciprocal, $\arcsin$, $\arctan$, logarithmic differentiation, rational exponents                                         | planned |
+| 11  | related-rates                 | lesson     | related-rates                               | Linked quantities differentiated in $t$                                                                                                                               | planned |
+| 12  | practice-implicit-and-related | practice   | implicit-differentiation, related-rates     | Implicit slopes, inverse derivatives, related rates                                                                                                                   | planned |
+| 13  | checkpoint                    | checkpoint | all                                         | Rebuilt for the whole unit, plus a self-graded proof                                                                                                                  | planned |

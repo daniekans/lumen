@@ -35,13 +35,12 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Calculus 1: Derivatives (Trigonometry approved 2026-10-24), step 10 of "Suggested order of
-units" in `LEARNING_PLATFORM.md`. Write its unit plan in `plans/calculus.md` from the outline
-first (it includes the legacy items `derivative-as-limit`, `difference-quotients` and the
-derivatives checkpoint; trigonometric derivatives can lean on the new trig unit and
-`src/lib/math/trig.ts`). The focus is Mathematics and Machine Learning; Data Engineering
-continues only on request, and its next step is outlining the Distributed processing unit
-(partitioning batch 3 approved 2026-10-24).
+**Suggested next session:** Calculus 1: Derivatives, batch 2 (items 5 to 9 in the Derivatives
+unit plan, `plans/calculus.md`), after the owner reviews batch 1 (items 1 to 4: the revised
+`derivative-as-limit` and `difference-quotients`, `derivative-function`, `power-and-sum-rules`).
+Trigonometric derivatives can lean on `src/lib/math/trig.ts`. The focus is Mathematics and
+Machine Learning; Data Engineering continues only on request, and its next step is outlining the
+Distributed processing unit.
 
 ### Phase 3: Explore page
 
@@ -129,9 +128,7 @@ Items built before the course plans, outside any unit plan. Each is revised when
 
 | Path                                                                     | Kind       | Status | Notes                                                         |
 | ------------------------------------------------------------------------ | ---------- | ------ | ------------------------------------------------------------- |
-| mathematics/calculus-1/derivatives/derivative-as-limit                   | lesson     | done   | Two checks (concept, computed value)                          |
-| mathematics/calculus-1/derivatives/difference-quotients                  | practice   | done   | Six generators, verified by property tests                    |
-| mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems including a self-graded proof                    |
+| mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems; rebuilt in Derivatives batch 3                  |
 | mathematics/calculus-1/integrals/riemann-sums                            | explore    | done   | Empty space below the x-axis at some sizes                    |
 | mathematics/linear-algebra/linear-transformations/matrix-transformations | explore    | done   | Zoomable (`TransformedGrid`); `MatrixView` could move to `ui` |
 | mathematics/complex-numbers/arithmetic/complex-multiplication            | explore    | done   |                                                               |
