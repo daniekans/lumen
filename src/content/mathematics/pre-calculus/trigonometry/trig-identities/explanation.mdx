@@ -1,0 +1,64 @@
+There are many trigonometric identities, and few need memorizing: each one says something about the <Term id="unit-circle">unit circle</Term>. The circle gives one, its reflections give three, and rotating it gives the rest.
+
+## The circle
+
+The point $(\cos\theta, \sin\theta)$ lies on $x^2 + y^2 = 1$, which is the <StepLink step="pythagorean">Pythagorean identity</StepLink>:
+
+$$
+\sin^2\theta + \cos^2\theta = 1.
+$$
+
+It fixes one value from the other up to sign, and the quadrant decides the sign. Dividing by $\cos^2\theta$ gives a version for tangent, $\tan^2\theta + 1 = \frac{1}{\cos^2\theta}$, where $\cos\theta \neq 0$.
+
+## Reflections
+
+Three reflections of the circle move the point at $\theta$ to the point at another angle:
+
+$$
+\begin{aligned}
+\text{across the } x\text{-axis:} \quad & \cos(-\theta) = \cos\theta, && \sin(-\theta) = -\sin\theta \\
+\text{across the } y\text{-axis:} \quad & \cos(\pi - \theta) = -\cos\theta, && \sin(\pi - \theta) = \sin\theta \\
+\text{across } y = x\text{:} \quad & \cos\left(\tfrac{\pi}{2} - \theta\right) = \sin\theta, && \sin\left(\tfrac{\pi}{2} - \theta\right) = \cos\theta
+\end{aligned}
+$$
+
+The first one says that <StepLink step="negative">cosine is even and sine is odd</StepLink>, as their graphs show: cosine is symmetric about the $y$-axis, sine about the origin. The second gives the values in the second quadrant from the first, as in <StepLink step="supplement">$\cos\frac{5\pi}{6} = -\frac{\sqrt{3}}{2}$</StepLink>. The <StepLink step="complement">third</StepLink> swaps the coordinates, which is where the name comes from: cosine is the sine of the complementary angle.
+
+## Angle addition
+
+Rotating the plane by $\beta$ <StepLink step="addition">moves the axes</StepLink> to the unit vectors
+
+$$
+\mathbf{u} = (\cos\beta, \sin\beta), \qquad \mathbf{v} = (-\sin\beta, \cos\beta),
+$$
+
+and moves every point with them. The point at $\alpha$ is $\cos\alpha$ along the first axis and $\sin\alpha$ along the second, so its image, the point at $\alpha + \beta$, is $\cos\alpha$ along $\mathbf{u}$ and $\sin\alpha$ along $\mathbf{v}$:
+
+$$
+(\cos(\alpha + \beta), \sin(\alpha + \beta)) = \cos\alpha\,\mathbf{u} + \sin\alpha\,\mathbf{v}.
+$$
+
+Reading off the two coordinates gives the <Term id="angle-addition">angle addition formulas</Term>:
+
+$$
+\begin{aligned}
+\cos(\alpha + \beta) &= \cos\alpha\cos\beta - \sin\alpha\sin\beta, \\
+\sin(\alpha + \beta) &= \sin\alpha\cos\beta + \cos\alpha\sin\beta.
+\end{aligned}
+$$
+
+Replacing $\beta$ by $-\beta$ and using the reflections gives the differences: $\cos(\alpha - \beta) = \cos\alpha\cos\beta + \sin\alpha\sin\beta$ and $\sin(\alpha - \beta) = \sin\alpha\cos\beta - \cos\alpha\sin\beta$. The vectors $\mathbf{u}$ and $\mathbf{v}$ are the columns of the rotation matrix, which the Linear Algebra course builds on.
+
+## Double angles
+
+With <StepLink step="double">$\alpha = \beta = \theta$</StepLink>:
+
+$$
+\sin 2\theta = 2\sin\theta\cos\theta, \qquad \cos 2\theta = \cos^2\theta - \sin^2\theta.
+$$
+
+Replacing $\cos^2\theta$ or $\sin^2\theta$ with the Pythagorean identity gives two more forms of the <Term id="double-angle">double-angle formula</Term>, $\cos 2\theta = 1 - 2\sin^2\theta = 2\cos^2\theta - 1$. Solved for the squares, they turn a square into a first power of cosine, a step integrals often need:
+
+$$
+\sin^2\theta = \frac{1 - \cos 2\theta}{2}, \qquad \cos^2\theta = \frac{1 + \cos 2\theta}{2}.
+$$

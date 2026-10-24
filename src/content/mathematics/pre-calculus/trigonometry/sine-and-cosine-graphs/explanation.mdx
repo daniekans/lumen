@@ -1,0 +1,45 @@
+The <Term id="unit-circle">unit circle</Term> gives sine and cosine as coordinates. Graphs show them as functions of $x$: how the height and the horizontal position of the point change as the angle grows.
+
+## From the circle to the graph
+
+Since an angle in radians is a length, the arc walked on the circle can be <StepLink step="unroll">laid flat on the $x$-axis</StepLink>, with no change of scale: after walking $\theta$, the arc ends at $x = \theta$. Above that $x$ goes the height of $P$, which is $\sin\theta$. The points traced form $y = \sin x$.
+
+The <StepLink step="cosine">horizontal coordinate</StepLink> traces $y = \cos x$. Cosine starts at its maximum where sine starts at $0$, a quarter turn ahead:
+
+$$
+\cos x = \sin\left(x + \frac{\pi}{2}\right).
+$$
+
+So the two are the same wave, one shifted against the other.
+
+## Period and range
+
+After $2\pi$ the point is back at its start, so both functions repeat with <Term id="period">period</Term> $2\pi$ and take every value in $[-1, 1]$, <StepLink step="period">each one twice per period</StepLink> except the extremes:
+
+$$
+\sin x = 0 \iff x = k\pi, \qquad \cos x = 0 \iff x = \frac{\pi}{2} + k\pi, \qquad k \in \mathbb{Z}.
+$$
+
+## Sinusoids
+
+Every wave of this shape is a transformed sine, read as in the <Term id="graph-transformation">transformations</Term> of the Functions unit:
+
+$$
+y = A \sin\big(B(x - C)\big) + D.
+$$
+
+- $A$ stretches vertically: the <StepLink step="amplitude">amplitude</StepLink> is $\lvert A \rvert$, and a negative $A$ reflects the wave.
+- $B$ squeezes horizontally: $B$ periods fit in $2\pi$, so the period is $\frac{2\pi}{\lvert B \rvert}$.
+- $C$ shifts right and $D$ shifts up: the wave <StepLink step="shift">oscillates around the midline</StepLink> $y = D$, between $D - \lvert A \rvert$ and $D + \lvert A \rvert$.
+
+The <Term id="amplitude">amplitude</Term> and period are the two numbers that describe any oscillation: a pendulum, a sound, a season.
+
+## Tangent
+
+The third function is the <StepLink step="tangent">slope of the radius</StepLink>:
+
+$$
+\tan\theta = \frac{\sin\theta}{\cos\theta}.
+$$
+
+Extend the radius until it meets the vertical line $x = 1$; it rises $\tan\theta$ over a run of $1$, so the height there is $\tan\theta$. The <Term id="tangent-function">tangent</Term> is undefined where $\cos\theta = 0$, at $\frac{\pi}{2} + k\pi$, where the radius is vertical and never meets the line; the graph has vertical asymptotes there. The points at $\theta$ and $\theta + \pi$ lie on the same line through the origin, so tangent repeats every $\pi$, not $2\pi$.

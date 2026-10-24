@@ -35,11 +35,14 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Pre-calculus: Trigonometry (refresher), step 9 of "Suggested order
-of units" in `LEARNING_PLATFORM.md`. The focus is Mathematics and Machine Learning
-(2026-10-23); Data Engineering continues only on request. Partitioning batch 3 (rehashing,
-consistent hashing, practice, checkpoint) was built on 2026-10-24 and waits for Daniel's
-review; the next DE step is outlining the Distributed processing unit.
+**Suggested next session:** Daniel reviews Pre-calculus: Trigonometry (built 2026-10-24, all six
+items in `plans/pre-calculus.md`); then Calculus 1: Derivatives, step 10 of "Suggested order of
+units" in `LEARNING_PLATFORM.md`. Write its unit plan in `plans/calculus.md` from the outline
+first (it includes the legacy items `derivative-as-limit`, `difference-quotients` and the
+derivatives checkpoint; trigonometric derivatives can lean on the new trig unit and
+`src/lib/math/trig.ts`). The focus is Mathematics and Machine Learning; Data Engineering
+continues only on request, and its next step is outlining the Distributed processing unit
+(partitioning batch 3 approved 2026-10-24).
 
 ### Phase 3: Explore page
 

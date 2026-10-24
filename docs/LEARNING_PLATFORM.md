@@ -25,7 +25,7 @@ unit can be picked out of order.
    combinations (done, all batches approved 2026-10-19)
 8. DE: Partitioning, bucketing and hashing, batches 1 and 2 (done, approved 2026-10-23; batch 3
    moved to the Data Engineering list below)
-9. Pre-calculus: Trigonometry (refresher)
+9. Pre-calculus: Trigonometry (refresher) (done 2026-10-24, waits for Daniel's review)
 10. Calculus 1: Derivatives
 11. Linear Algebra: Linear maps and matrices
 12. Outline Probability and Statistics (for review), then its first unit
@@ -38,7 +38,7 @@ list with concrete steps, outline steps included, before it runs out.
 **Data Engineering and Architecture (on request).** Not part of the default order. When Daniel asks
 for it, or when a session offers it as the alternative prompt, take the first open step:
 
-1. DE: Partitioning, bucketing and hashing, batch 3 (done 2026-10-24, waits for Daniel's review)
+1. DE: Partitioning, bucketing and hashing, batch 3 (done, approved 2026-10-24)
 2. DE: Distributed processing (outline its unit plan first)
 3. The rest of the DE track in its order (Curriculum, Tracks)
 

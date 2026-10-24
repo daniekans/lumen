@@ -1,0 +1,56 @@
+Trigonometry starts from one picture: the <Term id="unit-circle">unit circle</Term>, of radius $1$ around the origin. An angle says how far to walk along it, and sine and cosine say where the walk ends.
+
+## Angles as distances
+
+Start at $(1, 0)$ and walk counterclockwise along the circle. The <StepLink step="arc">length of the walk</StepLink> is the angle $\theta$, measured in <Term id="radian">radians</Term>. One radian is the angle whose arc is as long as the radius, about $57.3^\circ$. The circumference is $2\pi$, so
+
+$$
+2\pi = 360^\circ, \qquad \pi = 180^\circ, \qquad \theta_{\text{rad}} = \theta_{\text{deg}} \cdot \frac{\pi}{180}.
+$$
+
+On a circle of radius $r$, every length scales by $r$, so the <StepLink step="arc-length">arc cut by $\theta$</StepLink> is
+
+$$
+s = r\theta.
+$$
+
+That formula is the reason calculus works in radians: with degrees it would carry a factor $\frac{\pi}{180}$, and so would the derivative of $\sin$.
+
+## Sine and cosine
+
+The walk ends at a point $P$. Its <StepLink step="coordinates">coordinates</StepLink> define <Term id="sine-and-cosine">cosine and sine</Term>:
+
+$$
+P = (\cos\theta, \sin\theta).
+$$
+
+For $0 < \theta < \frac{\pi}{2}$, the segment from the origin to $P$ is the hypotenuse of a right triangle with legs $\cos\theta$ and $\sin\theta$. In any right triangle with that angle, scaling by the hypotenuse $h$ gives the familiar ratios: adjacent $= h\cos\theta$ and opposite $= h\sin\theta$. The circle extends them to every angle.
+
+Since $P$ lies on $x^2 + y^2 = 1$, the <StepLink step="pythagoras">Pythagorean identity</StepLink> holds for every $\theta$:
+
+$$
+\sin^2\theta + \cos^2\theta = 1.
+$$
+
+## Exact values
+
+Three triangles give the <StepLink step="special">exact values</StepLink> that come up everywhere:
+
+| $\theta$     | $0$ | $\frac{\pi}{6}$      | $\frac{\pi}{4}$      | $\frac{\pi}{3}$      | $\frac{\pi}{2}$ |
+| ------------ | --- | -------------------- | -------------------- | -------------------- | --------------- |
+| $\cos\theta$ | $1$ | $\frac{\sqrt{3}}{2}$ | $\frac{\sqrt{2}}{2}$ | $\frac{1}{2}$        | $0$             |
+| $\sin\theta$ | $0$ | $\frac{1}{2}$        | $\frac{\sqrt{2}}{2}$ | $\frac{\sqrt{3}}{2}$ | $1$             |
+
+At $\frac{\pi}{4}$ the two legs are equal, so $2x^2 = 1$ and $x = \frac{\sqrt{2}}{2}$. At $\frac{\pi}{3}$, the points $(0, 0)$, $(1, 0)$ and $P$ form an equilateral triangle (two sides are radii and the angle between them is $60^\circ$), so $P$ sits above the midpoint: $\cos\frac{\pi}{3} = \frac{1}{2}$, and $\sin\frac{\pi}{3} = \sqrt{1 - \frac{1}{4}} = \frac{\sqrt{3}}{2}$. The angle $\frac{\pi}{6}$ swaps the two.
+
+## Signs, reflections and turns
+
+In the other quadrants the <StepLink step="quadrants">coordinates change sign</StepLink>, and the point at $\pi - \theta$, $\pi + \theta$ or $2\pi - \theta$ is a reflection of $P$ across an axis or through the origin. So every value comes from an angle in the first quadrant, the reference angle, with a sign read from the quadrant. For example, $\cos\frac{5\pi}{6} = -\cos\frac{\pi}{6} = -\frac{\sqrt{3}}{2}$.
+
+A <StepLink step="beyond">negative angle</StepLink> walks clockwise, and adding $2\pi$ walks one more full turn back to the same point:
+
+$$
+\sin(\theta + 2\pi) = \sin\theta, \qquad \cos(\theta + 2\pi) = \cos\theta.
+$$
+
+The next item unrolls the circle to draw sine and cosine as graphs.

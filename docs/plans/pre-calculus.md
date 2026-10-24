@@ -113,3 +113,30 @@ Skills: `exponential-models`, `natural-exponential`, `logarithms`, `exp-log-equa
 Equation answers are verified by substituting the answer into the prompt's own equation TeX; the
 extraneous root of the logarithmic equation must make the left side undefined. Decimal answers
 ("two decimal places") use a tolerance of $0.006$.
+
+## Trigonometry unit plan
+
+Folder `src/content/mathematics/pre-calculus/trigonometry/`. Refresher, one batch: three
+explorations, a lesson, one practice set and a checkpoint. Built on 2026-10-24; waits for
+Daniel's review. The thread: an angle is a distance
+walked on the unit circle, sine and cosine are the coordinates of where the walk ends, and every
+identity is a symmetry or a rotation of that circle. Later units lean on it: $\sin' = \cos$ on the
+unit circle (Derivatives), rotation matrices (Linear maps), $\cos\theta$ in the dot product, polar
+coordinates and Euler's formula. Exact values and sinusoid helpers live in
+`src/lib/math/trig.ts` (tested).
+
+Skills: `radians`, `unit-circle`, `trig-graphs`, `trig-identities`, `inverse-trig` (titles in
+`unit.ts`).
+
+| #   | Item                        | Kind       | Skills                       | Content                                                                                                                                   | Status |
+| --- | --------------------------- | ---------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | radians-and-the-unit-circle | explore    | radians, unit-circle         | Angle as arc length, one radian, $s = r\theta$, $(\cos\theta, \sin\theta)$ as coordinates, $\sin^2 + \cos^2 = 1$, special angles, signs   | done   |
+| 2   | sine-and-cosine-graphs      | explore    | trig-graphs, unit-circle     | The arc unrolls onto the $x$-axis and the height traces $\sin$; cosine as a shift; period; $A \sin(B(x - C)) + D$; tangent as a slope     | done   |
+| 3   | trig-identities             | lesson     | trig-identities, unit-circle | Pythagorean identity, reflections (even, odd, $\pi - \theta$, complements), angle addition by rotating the frame, double angles           | done   |
+| 4   | inverse-trig                | explore    | inverse-trig                 | $\sin\theta = c$ has many solutions; restricting to get $\arcsin$, $\arccos$, $\arctan$; all solutions; $\arcsin(\sin\theta) \ne \theta$  | done   |
+| 5   | practice-trigonometry       | practice   | all                          | Degrees and radians, arc length, exact values, one ratio from another, sinusoid features, addition and double angles, inverses, equations | done   |
+| 6   | checkpoint                  | checkpoint | all                          | Nine practice generators plus a self-graded proof (the tangent addition formula)                                                          | done   |
+
+Exact answers (multiples of $\pi$, surds) use the `expression` answer kind with the exact TeX, so
+the shown answer stays exact and any equal value is accepted; solutions in one turn are a `list`
+with `tolerance: 1e-5`. The checkpoint uses all nine practice generators plus the proof.

@@ -1,0 +1,35 @@
+Sine turns an angle into a height. The reverse question, which angle has a given sine, has <StepLink step="many-angles">infinitely many answers</StepLink>, so sine has no <Term id="inverse-function">inverse function</Term> as it stands. It fails the <Term id="horizontal-line-test">horizontal line test</Term>.
+
+## Restricting the domain
+
+The fix from the Functions unit applies: keep one piece on which the function is one-to-one and covers all its values, and invert that piece. Each inverse is the reflection of its piece across $y = x$.
+
+| Function | Piece kept                                   | Inverse   | Domain of the inverse | Range of the inverse                         |
+| -------- | -------------------------------------------- | --------- | --------------------- | -------------------------------------------- |
+| $\sin$   | $\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$ | $\arcsin$ | $[-1, 1]$             | $\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$ |
+| $\cos$   | $[0, \pi]$                                   | $\arccos$ | $[-1, 1]$             | $[0, \pi]$                                   |
+| $\tan$   | $\left(-\frac{\pi}{2}, \frac{\pi}{2}\right)$ | $\arctan$ | all real numbers      | $\left(-\frac{\pi}{2}, \frac{\pi}{2}\right)$ |
+
+The pieces are chosen to contain $\left[0, \frac{\pi}{2}\right]$, where the triangle definitions live, and to cover each value once: <StepLink step="arcsin">sine increases</StepLink> on its piece, <StepLink step="arccos">cosine decreases</StepLink> on its own. <StepLink step="arctan">Arctangent</StepLink> takes any slope and returns the angle of the line with that slope, between $-\frac{\pi}{2}$ and $\frac{\pi}{2}$; its graph has horizontal asymptotes at $y = \pm\frac{\pi}{2}$.
+
+The value an inverse returns is the principal value. The notation $\sin^{-1} x$ means $\arcsin x$, not $\frac{1}{\sin x}$.
+
+## Solving equations
+
+The <Term id="inverse-trig-functions">inverse functions</Term> give one solution; the circle gives the others. For $-1 \leq c \leq 1$, the points with height $c$ are at $\arcsin c$ and its reflection across the $y$-axis, $\pi - \arcsin c$, and every turn adds $2\pi$. So the <StepLink step="all-solutions">solutions</StepLink> are
+
+$$
+\sin x = c \iff x = \arcsin c + 2\pi k \ \text{ or } \ x = \pi - \arcsin c + 2\pi k, \qquad k \in \mathbb{Z}.
+$$
+
+For cosine the reflection is across the $x$-axis, so $\cos x = c \iff x = \pm\arccos c + 2\pi k$. For tangent the period is $\pi$: $\tan x = c \iff x = \arctan c + \pi k$. When $c = \pm 1$ the two families of sine or cosine coincide.
+
+## Inverse of what
+
+On its piece the inverse undoes the function: $\sin(\arcsin c) = c$ for every $c$ in $[-1, 1]$. The other order <StepLink step="trap">only works on the piece</StepLink>:
+
+$$
+\arcsin(\sin x) = x \quad \text{only for } -\frac{\pi}{2} \leq x \leq \frac{\pi}{2}.
+$$
+
+Elsewhere $\arcsin(\sin x)$ is the angle of the piece with the same sine, which makes its graph a zigzag. For example, $\arcsin\left(\sin\frac{5\pi}{6}\right) = \arcsin\frac{1}{2} = \frac{\pi}{6}$.
