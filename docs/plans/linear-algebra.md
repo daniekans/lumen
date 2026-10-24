@@ -5,7 +5,7 @@ Outline, threads and unit plans for Linear Algebra. Part of
 
 ## Status
 
-Outline approved by Daniel on 2026-10-18, as drafted: eight units, the dot product in unit 1
+Outline approved by the owner on 2026-10-18, as drafted: eight units, the dot product in unit 1
 (revisited as duality in unit 7), and 3D from Vectors 6 on. The review decisions are at the end
 of the outline. Units are built in order; the Vectors unit (plan below) is done, and Linear maps and matrices
 comes next in the suggested order (it needs its unit plan first).
@@ -153,7 +153,7 @@ low-rank structure in ML (embeddings, low-rank adapters). B, ML.
 2. **Dot product in unit 1.** It is introduced in Vectors 5 as projection length times length,
    with angles and cosine similarity, and Orthogonality extends it (a $1 \times n$ matrix,
    duality). Nothing said in unit 1 is taken back later; unit 7 only adds a second view. This
-   follows Daniel's rule for every course: introduce an idea correctly and expand it later, never
+   follows the owner's rule for every course: introduce an idea correctly and expand it later, never
    simplify it in a way a later item has to correct.
 3. **3D early.** 3D first appears at Vectors 6 (span in space). Phase 5 starts right before that
    item, as the next step after the unit's first batch.
@@ -206,11 +206,11 @@ column), added for this unit. `src/lib/math/vector.ts` has n-dimensional helpers
 | 10  | practice-basis-and-coordinates | practice   | basis-coordinates                                    | Coordinates in a given basis (2D, 3D), is it a basis                                                                                                                                   | done   |
 | 11  | checkpoint                     | checkpoint | all                                                  | All of the above plus a self-graded proof (adding a vector outside the span keeps a set independent)                                                                                   | done   |
 
-Batches: 1 is items 1 to 4 (2D only), approved by Daniel on 2026-10-18. Batch 2 is items 5 to 8,
+Batches: 1 is items 1 to 4 (2D only), approved by the owner on 2026-10-18. Batch 2 is items 5 to 8,
 built on 2026-10-18 together with phase 5 (`Stage3D`, see `ARCHITECTURE.md`, Drawing), approved
-by Daniel on 2026-10-18; the 3D polish that followed his review (depth cue, fades, hover links,
+by the owner on 2026-10-18; the 3D polish that followed that review (depth cue, fades, hover links,
 sway, views, pulses) is applied to items 6 and 7. Item 5 is 2D; items 6 and 7 are the first 3D
-items. Batch 3 is items 9 to 11, built on 2026-10-19 and approved by Daniel
+items. Batch 3 is items 9 to 11, built on 2026-10-19 and approved by the owner
 on 2026-10-19 without changes.
 
 Batch 2 notes: span uses $\mathbf{v} = (1, 2, 0)$, $\mathbf{w} = (-1, 0, 2)$ and a third vector

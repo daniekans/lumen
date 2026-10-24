@@ -134,7 +134,7 @@ of type `Messages`, a locale setting, then content translation as in `PRODUCT_VI
 
 ### Phase 9: Light UI polish
 
-Small improvements, no new routes and no heavy features. Agreed with Daniel on 2026-10-17.
+Small improvements, no new routes and no heavy features. Agreed with the owner on 2026-10-17.
 
 **Course and unit pages, a little more distinct.** Both pages stay separate (units keep their
 own URLs, the sidebar already shows the tree, and the unit page's controls need room), but today

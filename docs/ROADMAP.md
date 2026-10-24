@@ -61,7 +61,7 @@ KaTeX labels and point hover work as in 2D. A step can drive the camera (`camera
 `onCameraChange` make it controlled). Drawing order is tree order; translucent planes keep it
 readable. First used by Vectors items 6 and 7.
 
-Polish (2026-10-18, after Daniel's review): depth cueing (far parts fade, which also removes the
+Polish (2026-10-18, after the owner's review): depth cueing (far parts fade, which also removes the
 illusion that the far edge of a plane is wider), lines, axes and planes that fade into the
 distance, hover highlight linked to the readouts (`useHighlight`, `hoverKey`), a slow idle sway
 (on by default, a button switches it off and the choice is remembered), orbit momentum, a views
@@ -71,7 +71,7 @@ on a focused stage, arrows that grow in (2D too), one-shot pulses (`Pulse`, `Pul
 
 Next for 3D, in order of priority:
 
-1. **Surfaces** $z = f(x, y)$ for Multivariable Calculus and later courses (Daniel's top
+1. **Surfaces** $z = f(x, y)$ for Multivariable Calculus and later courses (the owner's top
    priority; same look as the rest). Plan: an SVG `Surface3D` drawn as a wireframe of grid
    curves plus translucent quads sorted back to front (painter's ordering), shaded by depth and
    optionally by height with one hue; contour lines on the floor; a point and its tangent plane.
@@ -115,7 +115,7 @@ Pages with no server:
 
 A likely path: code view first, applied to a few items in Linear Algebra and Machine Learning;
 runnable cells and the `code` kind once those show what is worth running. Code should model good
-practice (typing, small functions, clear names), since Daniel cares about it.
+practice (typing, small functions, clear names), since the owner cares about it.
 
 ### Later
 

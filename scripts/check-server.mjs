@@ -1,4 +1,4 @@
-// Dev helper: a Vite dev server for checks, separate from Daniel's `pnpm dev` on 5173.
+// Dev helper: a Vite dev server for checks, separate from the owner's `pnpm dev` on 5173.
 // Usage: node scripts/check-server.mjs <cacheDir> [port]   (default port 5199)
 // Stop it by PID when done (never with `pkill -f`, which can match your own shell).
 import { createServer } from 'vite'

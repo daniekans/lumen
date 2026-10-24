@@ -11,8 +11,8 @@ phase trackers are in [HISTORY.md](HISTORY.md).
 ## Suggested order of units
 
 The focus is Mathematics and Machine Learning (decided 2026-10-23). Data Engineering and
-Architecture continue only when Daniel asks; their next steps are listed separately below, and a
-session offers one as an alternative prompt when it fits (see `DECISIONS.md`, Content). Any
+Architecture continue only when the owner asks; their next steps are listed separately below, and a
+session offers one as an alternative prompt when it fits (see `DECISIONS.md`, Content plan). Any
 unit can be picked out of order.
 
 1. Algebra essentials, batch 3 (done)
@@ -35,7 +35,7 @@ After that, keep alternating Calculus, Linear Algebra and Probability, and outli
 as soon as Linear Algebra and Probability have their first units, then build it. Extend this
 list with concrete steps, outline steps included, before it runs out.
 
-**Data Engineering and Architecture (on request).** Not part of the default order. When Daniel asks
+**Data Engineering and Architecture (on request).** Not part of the default order. When the owner asks
 for it, or when a session offers it as the alternative prompt, take the first open step:
 
 1. DE: Partitioning, bucketing and hashing, batch 3 (done, approved 2026-10-24)
@@ -51,7 +51,7 @@ for it, or when a session offers it as the alternative prompt, take the first op
 - The focus is intermediate and advanced material. Fundamentals are refreshers: enough for a smooth
   curve, not full courses (see Curriculum, Unit depths).
 - Math starts from pre-calculus. Mathematics and Machine Learning are the focus (2026-10-23); Data
-  Engineering and Architecture are their own track, continued when Daniel asks.
+  Engineering and Architecture are their own track, continued when the owner asks.
 
 Decisions already made:
 
@@ -202,7 +202,7 @@ Progress describes where things stand. It never creates obligations: no reminder
 
 ## Curriculum
 
-Daniel's focus is intermediate and advanced material: Calculus, Linear Algebra, Probability, Data
+The owner's focus is intermediate and advanced material: Calculus, Linear Algebra, Probability, Data
 Engineering and Architecture, Machine Learning and AI Engineering. Fundamentals stay in the plan
 so the difficulty curve is smooth, but they are refreshers and get less depth. Syllabi (OpenStax
 Precalculus and Calculus, MIT 18.01, 18.06, 18.05) are the reference for what each unit covers.
@@ -249,11 +249,11 @@ gets a full unit plan, like the pre-calculus ones, when its first batch is built
 
 **Outline a course before its first unit.** Every course gets an outline like the Calculus one
 (units with items at headline level, threads, legacy items, wish list topics) before its first
-new unit is built, and Daniel reviews it. The suggested order of units lists these outline steps
+new unit is built, and the owner reviews it. The suggested order of units lists these outline steps
 explicitly, so the next session picks them up without being asked. When that list gets within
 three steps of its end, the session that finishes a step extends it.
 
-### Topics Daniel asked for
+### Topics the owner asked for
 
 Not exhaustive, not in order, and not all in Calculus 1. Place each one in a unit when its course
 is outlined:
@@ -310,7 +310,7 @@ courses.
 
 Every course is outlined in its plan file before its first unit is built, and each unit gets a
 plan there (items, skills, status) when its first batch is built. Status values: `todo`,
-`review` (built, awaiting Daniel's feedback), `done`.
+`review` (built, awaiting the owner's feedback), `done`.
 
 - [plans/pre-calculus.md](plans/pre-calculus.md): Functions, Algebra essentials, Polynomial and
   rational functions, Exponential and logarithmic functions.

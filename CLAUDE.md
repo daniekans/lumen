@@ -1,14 +1,14 @@
 # Lumen: notes for Claude
 
-Lumen is Daniel's personal learning platform: interactive, 3Blue1Brown-style visualizations plus
+Lumen is the owner's personal learning platform: interactive, 3Blue1Brown-style visualizations plus
 lessons, practice and checkpoints. The focus is mathematics (pre-calculus onward) and Machine
-Learning; Data Engineering and AI Engineering continue when Daniel asks. React 19, Vite 8, TypeScript (strict),
+Learning; Data Engineering and AI Engineering continue when the owner asks. React 19, Vite 8, TypeScript (strict),
 pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo daniekans/lumen).
 
 ## Start here (every new session)
 
-1. Read `docs/DECISIONS.md`: the rules in force, short. Do not reopen them without a reason.
-   `docs/DECISIONS-LOG.md` has the dates and reasons; read it only when a reason matters.
+1. Read `docs/DECISIONS.md`: the owner's preferences and the decisions already made. Do not reopen
+   them without a reason.
 2. Read `docs/ROADMAP.md` ("Phases"): what is done, and what comes next.
 3. Read "Suggested order of units" at the top of `docs/LEARNING_PLATFORM.md`, then the plan file
    of the course the next step belongs to (`docs/plans/<course>.md`). Read the rest of
@@ -20,18 +20,18 @@ pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo 
    and the "Suggested next session" in `docs/ROADMAP.md`) in the
    same commit series, so the next session sees the true state.
 
-Daniel prefers short sessions. Keep answers concise, work in focused steps, and leave the repository
+The owner prefers short sessions. Keep answers concise, work in focused steps, and leave the repository
 (and its docs) in a state the next session can continue from without this conversation. Build content
 in batches, then commit, push and deploy without asking. When a piece of work ends, close the answer
-with a short prompt Daniel can paste into a clean session to continue (see `docs/DECISIONS.md`).
+with a short prompt the owner can paste into a clean session to continue (see `docs/DECISIONS.md`).
 
 ## Environment
 
 - WSL. Node 24 is installed with nvm, but the shells Claude gets do not load it: prefix commands with
   `export PATH=$HOME/.nvm/versions/node/v24.22.0/bin:$PATH`.
-- Daniel often runs `pnpm dev` on port 5173. Do not kill it. For your own checks, start a separate
+- The owner often runs `pnpm dev` on port 5173. Do not kill it. For your own checks, start a separate
   server on another port, ideally with its own cache dir (see "Verifying a change").
-- Git pushes use SSH. If the agent has no key (`ssh-add -l` says "no identities"), ask Daniel to run
+- Git pushes use SSH. If the agent has no key (`ssh-add -l` says "no identities"), ask the owner to run
   `ssh-add`, or push once over HTTPS without changing config:
   `git -c credential.helper= -c credential.helper='!gh auth git-credential' push https://github.com/daniekans/lumen.git main`.
 - Every push to `main` deploys (`.github/workflows/deploy.yml`) and runs CI. Check both with `gh run list`.
@@ -41,7 +41,7 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
 
 - Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, `ci:`, `chore:`, `test:`). No
   Co-Authored-By or other Claude attribution lines (decided 2026-10-17; `.claude/settings.json`
-  turns them off). Author and committer are only Daniel's GitHub noreply address.
+  turns them off). Author and committer are only the owner's GitHub noreply address.
 - Writing: follow `docs/WRITING.md` for every string (captions, MDX, UI copy, docs, comments). No em
   dashes, no hype. `pnpm lint` runs a prose lint.
 - UI copy (outside content) goes in `src/i18n/messages.ts` and is read as `msg.<group>.<key>` from

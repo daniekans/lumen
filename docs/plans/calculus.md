@@ -33,7 +33,7 @@ explanation, labels, titles, steps, order and placement where the plan needs it.
 
 ## Calculus outline
 
-Approved by Daniel on 2026-10-17, depth included. Units with items at headline level; slugs, skills and
+Approved by the owner on 2026-10-17, depth included. Units with items at headline level; slugs, skills and
 exact content are settled in each unit plan. Kinds: E explore, L lesson, P practice, C checkpoint.
 Thread marks: **Lz** Leibniz notation, **Lim** limits, **Lin** linear approximation.
 
