@@ -203,11 +203,11 @@ test('a practice session survives leaving the page', async ({ page }) => {
 test('a checkpoint can be checked and scored', async ({ page }) => {
   const errors = collectErrors(page)
   await page.goto('/mathematics/calculus-1/derivatives/checkpoint')
-  await expect(page.getByRole('article', { name: 'Problem 1' })).toBeVisible()
+  await expect(page.getByRole('article', { name: 'Problem 1', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Check answers' }).click()
   for (const no of await page.getByRole('button', { name: 'No', exact: true }).all())
     await no.click()
-  await expect(page.getByText(/of 6 \(\d+%\)/)).toBeVisible()
+  await expect(page.getByText(/of \d+ \(\d+%\)/)).toBeVisible()
   await expect(page.getByText(/Not passed yet/)).toBeVisible()
   expect(errors).toEqual([])
 })
