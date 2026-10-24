@@ -108,7 +108,7 @@ without a shuffle), `consistent-hashing` (keys moved when nodes join or leave).
 Batches: 1 = items 1 to 3 (partitioning by value), 2 = items 4 to 7 (hashing, skew, bucketing),
 3 = items 8 to 11 (consistent hashing and the checkpoint). Batch 1 was built on 2026-10-19 and
 batch 2 on 2026-10-23; Daniel approved both on 2026-10-23. Batch 3 was built on 2026-10-24 and
-waits for Daniel's review.
+approved the same day, which completes the unit.
 
 Batch 1 notes: the exploration's 24 rows (days 1 to 4 with $7, 5, 6, 6$ rows, every
 (day, city) pair present, $8$ rows in OSL) are inline in `partitioning-by-key/index.tsx`; folders
