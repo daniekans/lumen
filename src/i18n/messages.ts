@@ -135,6 +135,8 @@ export const en = {
     zoomOut: 'Zoom out',
     resetView: 'Reset view (or double-click the background)',
     expandPanel: 'Open larger',
+    largerReadouts: 'Larger readouts',
+    smallerReadouts: 'Smaller readouts',
     views: 'Views',
     viewHome: 'Home view',
     viewTop: 'From above',

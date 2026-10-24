@@ -1,9 +1,10 @@
 import clsx from 'clsx'
-import { ChevronDown, Maximize2 } from 'lucide-react'
+import { ChevronDown, Maximize2, ZoomIn, ZoomOut } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { msg } from '@/i18n'
 import { IconButton, RichText, Tooltip } from '../atoms'
 import styles from './Readout.module.css'
+import { displayStyle, setLargeReadouts, useLargeReadouts } from './readoutSize'
 import surfaces from '@/styles/surfaces.module.css'
 
 interface ReadoutProps {
@@ -21,10 +22,11 @@ interface ReadoutProps {
 }
 
 export function Readout({ label, value, color, hint, highlighted, onHoverChange }: ReadoutProps) {
+  const large = useLargeReadouts()
   const text = (
     <span className={clsx(styles.label, hint && styles.hinted)} tabIndex={hint ? 0 : undefined}>
       {color && <span className={styles.swatch} style={{ background: color }} />}
-      <RichText>{label}</RichText>
+      <RichText>{large ? displayStyle(label) : label}</RichText>
     </span>
   )
   return (
@@ -55,11 +57,33 @@ interface ReadoutPanelProps {
   children: ReactNode
 }
 
-/** Glass panel grouping several readouts. */
+/**
+ * Glass panel grouping several readouts. A button beside it switches every panel between the
+ * normal and the large size, and the choice is remembered.
+ */
 export function ReadoutPanel({ title, onExpand, children }: ReadoutPanelProps) {
   const [collapsed, setCollapsed] = useState(false)
+  const large = useLargeReadouts()
   return (
-    <div className={clsx(surfaces.glass, styles.readouts, collapsed && styles.collapsed)}>
+    <div
+      className={clsx(
+        surfaces.glass,
+        styles.readouts,
+        collapsed && styles.collapsed,
+        large && styles.large,
+      )}
+    >
+      {!collapsed && (
+        <span className={styles.size}>
+          <IconButton
+            label={large ? msg.viz.smallerReadouts : msg.viz.largerReadouts}
+            size="sm"
+            onClick={() => setLargeReadouts(!large)}
+          >
+            {large ? <ZoomOut size={13} /> : <ZoomIn size={13} />}
+          </IconButton>
+        </span>
+      )}
       {(title || onExpand) && (
         <div className={styles.header}>
           {title && (
