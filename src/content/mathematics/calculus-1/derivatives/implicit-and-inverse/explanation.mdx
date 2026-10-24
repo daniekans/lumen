@@ -1,0 +1,112 @@
+So far every curve was a graph $y = f(x)$. Many curves are given by an equation in $x$ and $y$
+instead, such as a circle. They still have tangents, and the chain rule finds their slopes without
+solving for $y$.
+
+## Implicit differentiation
+
+The circle $x^2 + y^2 = 25$ fails the vertical line test, but near most of its points it is the
+graph of one function: the upper half $y = \sqrt{25 - x^2}$ or the lower half
+$y = -\sqrt{25 - x^2}$. In the step <StepLink step="circle">a circle has slopes</StepLink> that
+half is highlighted. On it, $y$ is a function of $x$ and the equation holds for every $x$, so both
+sides have the same derivative. By the <Term id="chain-rule">chain rule</Term>,
+$\frac{d}{dx}\left(y^2\right) = 2y\,\frac{dy}{dx}$, and
+
+$$
+2x + 2y\,\frac{dy}{dx} = 0, \qquad \frac{dy}{dx} = -\frac{x}{y} \quad (y \neq 0).
+$$
+
+At $(3, 4)$ the slope is $-\frac{3}{4}$, the same as differentiating $\sqrt{25 - x^2}$ directly. The
+answer depends on $y$ as well as $x$, because the point $(3, -4)$ has the same $x$ and the opposite
+slope.
+
+This is implicit differentiation:
+
+1. Differentiate both sides of the equation in $x$, with $y$ a function of $x$. Every term with $y$
+   gets a factor $\frac{dy}{dx}$ from the chain rule.
+2. Collect the terms with $\frac{dy}{dx}$ and solve for it.
+
+On $x^2 + xy + y^2 = 3$, in the step <StepLink step="implicit">differentiate both sides</StepLink>,
+the middle term is a product, so $\frac{d}{dx}(xy) = y + x\,\frac{dy}{dx}$:
+
+$$
+2x + y + (x + 2y)\,\frac{dy}{dx} = 0, \qquad \frac{dy}{dx} = -\frac{2x + y}{x + 2y}.
+$$
+
+The method assumes the curve is the graph of a differentiable function near the point. That fails
+where the tangent is vertical: here where $x + 2y = 0$, at $(2, -1)$ and $(-2, 1)$, the hollow points.
+Away from such points the assumption holds; the implicit function theorem, proved in multivariable
+calculus, says when.
+
+## The slope of an inverse
+
+Let $f$ be differentiable and strictly increasing (or decreasing), with
+an <Term id="inverse-function">inverse</Term> $g = f^{-1}$. The graph of $g$ is the graph of $f$
+reflected in the line $y = x$, which swaps the two coordinates. In the
+step <StepLink step="inverse">the slope of an inverse</StepLink>, a slope triangle at $P = (a, f(a))$
+with run $h$ and rise $f'(a)\,h$ becomes, at $Q = (f(a), a)$, a triangle with run $f'(a)\,h$ and
+rise $h$. So when $f'(a) \neq 0$,
+
+$$
+g'(f(a)) = \frac{1}{f'(a)}, \qquad \text{or with } b = f(a): \quad g'(b) = \frac{1}{f'(g(b))}.
+$$
+
+Implicit differentiation gives the same rule: $y = g(x)$ means $f(y) = x$, so
+$f'(y)\,\frac{dy}{dx} = 1$. Both arguments assume that $g$ is differentiable. A limit argument
+shows that it is: when $x$ changes by $\Delta x$, $y = g(x)$ changes by $\Delta y \neq 0$ with
+$\frac{\Delta y}{\Delta x} = \frac{1}{\Delta x / \Delta y}$, and $\Delta y \to 0$ because the
+inverse of a continuous, strictly monotonic function is continuous. Where $f'(a) = 0$ the inverse
+has a vertical tangent: $\sqrt[3]{x}$, the inverse of $x^3$, at $0$.
+
+The derivative of $\ln$ in the item on exponentials came from this reflection: $\ln$ is the inverse
+of $e^x$, so $\frac{d}{dx}\ln x = \frac{1}{e^{\ln x}} = \frac{1}{x}$.
+
+## Arctangent and arcsine
+
+The <Term id="inverse-trig-functions">inverse trigonometric functions</Term> get their derivatives
+the same way. In the step <StepLink step="arctan">arctangent</StepLink>, $y = \arctan x$ means
+$\tan y = x$ with $-\frac{\pi}{2} < y < \frac{\pi}{2}$. Differentiate, using
+$\frac{d}{dy}\tan y = \frac{1}{\cos^2 y}$:
+
+$$
+\frac{1}{\cos^2 y}\,\frac{dy}{dx} = 1, \qquad \frac{dy}{dx} = \cos^2 y = \frac{1}{1 + \tan^2 y} = \frac{1}{1 + x^2}.
+$$
+
+The middle step divides $\sin^2 y + \cos^2 y = 1$ by $\cos^2 y$. Similarly $y = \arcsin x$ means
+$\sin y = x$ with $-\frac{\pi}{2} \le y \le \frac{\pi}{2}$, so $\cos y\,\frac{dy}{dx} = 1$. On that
+interval $\cos y \ge 0$, so $\cos y = \sqrt{1 - x^2}$ and
+
+$$
+\frac{d}{dx}\arcsin x = \frac{1}{\sqrt{1 - x^2}} \qquad (-1 < x < 1).
+$$
+
+At $x = \pm 1$ the tangent of $\arcsin$ is vertical, as $\cos y = 0$ there.
+
+## Logarithmic differentiation
+
+In $x^x$ both the base and the exponent change, so neither $\frac{d}{dx}x^n = nx^{n-1}$ (fixed
+exponent) nor $\frac{d}{dx}b^x = (\ln b)\,b^x$ (fixed base) applies. For $x > 0$, take the natural
+logarithm of both sides of $y = x^x$ and differentiate implicitly, as in the
+step <StepLink step="log-diff">logarithmic differentiation</StepLink>:
+
+$$
+\ln y = x \ln x, \qquad \frac{1}{y}\,\frac{dy}{dx} = \ln x + 1, \qquad \frac{dy}{dx} = x^x(\ln x + 1).
+$$
+
+The same works for any positive function built from products, quotients and powers: the logarithm
+turns them into sums, which are easier to differentiate.
+
+## Rational exponents for negative x
+
+The power rule $\frac{d}{dx}x^r = rx^{r-1}$ was proved for $x > 0$. For a rational
+$r = \frac{p}{q}$ in lowest terms with $q$ odd, $x^{\frac{p}{q}} = \left(\sqrt[q]{x}\right)^p$ is also defined for
+$x < 0$. Let $y = x^{\frac{p}{q}}$; then $y^q = x^p$, and implicit differentiation gives
+
+$$
+qy^{q-1}\,\frac{dy}{dx} = px^{p-1}, \qquad \frac{dy}{dx} = \frac{p}{q}\,\frac{x^{p-1}}{y^{q-1}} = \frac{p}{q}\,x^{\frac{p}{q} - 1}
+$$
+
+wherever $y \neq 0$, so for every $x \neq 0$. The step assumes $y$ is differentiable there, and
+it is: $\sqrt[q]{x}$ is the inverse of $u^q$, whose derivative $qu^{q-1}$ is not $0$ for $u \neq 0$,
+and $y$ is its $p$-th power. The last step uses $y^{q-1} = x^{\frac{p(q-1)}{q}}$.
+For example $\frac{d}{dx}\sqrt[3]{x} = \frac{1}{3}x^{-\frac{2}{3}}$ for all $x \neq 0$, and
+$x^{\frac{2}{3}}$ has the cusp at $0$ seen in the item on the derivative function.

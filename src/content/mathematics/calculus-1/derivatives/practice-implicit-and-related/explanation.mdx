@@ -1,0 +1,30 @@
+These problems use the chain rule on equations instead of formulas for $y$: implicit
+differentiation in $x$, and related rates in time $t$.
+
+## Implicit differentiation
+
+1. Differentiate both sides in $x$, with $y$ a function of $x$: $\frac{d}{dx}\left(y^n\right) = ny^{n-1}\,\frac{dy}{dx}$,
+   and a product such as $xy$ needs the product rule.
+2. Collect the terms with $\frac{dy}{dx}$ on one side and solve for it.
+3. For a slope at a point, substitute both coordinates at the end.
+
+For an inverse, $g'(f(a)) = \frac{1}{f'(a)}$: first find the $a$ that $f$ sends to the given value.
+The derivatives of the inverse trigonometric functions come from the same idea:
+
+$$
+\frac{d}{dx}\arctan x = \frac{1}{1 + x^2}, \qquad \frac{d}{dx}\arcsin x = \frac{1}{\sqrt{1 - x^2}}.
+$$
+
+For a power whose base and exponent both change, such as $x^{\sin x}$, take $\ln$ of both sides
+first. Then $\frac{d}{dx}\ln f = \frac{f'}{f}$, so multiply by $f$ at the end.
+
+## Related rates
+
+1. Name the changing quantities as functions of $t$, and note the rates you know and want.
+2. Write an equation that holds at every moment. Remove extra quantities with fixed relations,
+   such as similar triangles.
+3. Differentiate in $t$.
+4. Substitute the values at the instant, then solve for the unknown rate.
+
+Give rates with their sign: negative means the quantity decreases. Leave $\pi$ in an answer as
+$\pi$; the answer field accepts it.

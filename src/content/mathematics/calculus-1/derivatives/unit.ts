@@ -21,6 +21,12 @@ export const unit = defineUnit({
       title: 'Differentiate exponentials, logarithms and trigonometric functions',
     },
     { id: 'chain-rule', title: 'Differentiate compositions with the chain rule' },
+    {
+      id: 'implicit-differentiation',
+      title:
+        'Find slopes of implicit curves and inverse functions, and use logarithmic differentiation',
+    },
+    { id: 'related-rates', title: 'Relate the rates of change of linked quantities' },
   ],
   terms: [
     {
@@ -146,6 +152,35 @@ export const unit = defineUnit({
       summary:
         "The derivative of a composition: $(f \\circ g)'(x) = f'(g(x))\\,g'(x)$, the outer derivative at the inner value times the inner derivative. Stretch factors multiply.",
       introducedIn: 'chain-rule',
+    },
+    {
+      id: 'implicit-differentiation',
+      title: 'Implicit differentiation',
+      summary:
+        'Finding $\\frac{dy}{dx}$ on a curve given by an equation in $x$ and $y$: differentiate both sides in $x$, with $y$ a function of $x$ (each $y$ term gets a factor $\\frac{dy}{dx}$), and solve for $\\frac{dy}{dx}$.',
+      introducedIn: 'implicit-and-inverse',
+    },
+    {
+      id: 'inverse-derivative',
+      title: 'Derivative of an inverse function',
+      tex: "\\left(f^{-1}\\right)'(f(a)) = \\frac{1}{f'(a)}",
+      summary:
+        "Reflecting a graph in $y = x$ swaps rise and run, so the inverse has the reciprocal slope at the mirrored point, when $f'(a) \\neq 0$. It gives $\\frac{d}{dx}\\arctan x = \\frac{1}{1 + x^2}$ and $\\frac{d}{dx}\\arcsin x = \\frac{1}{\\sqrt{1 - x^2}}$.",
+      introducedIn: 'implicit-and-inverse',
+    },
+    {
+      id: 'logarithmic-differentiation',
+      title: 'Logarithmic differentiation',
+      summary:
+        'Differentiating $\\ln y$ instead of $y$ for a positive function: the logarithm turns products, quotients and powers into sums, and $\\frac{d}{dx}\\ln y = \\frac{1}{y}\\frac{dy}{dx}$. It handles $x^x$.',
+      introducedIn: 'implicit-and-inverse',
+    },
+    {
+      id: 'related-rates',
+      title: 'Related rates',
+      summary:
+        'When quantities are linked by an equation at every moment, differentiating it in time $t$ links their rates. Knowing some rates at an instant gives the others.',
+      introducedIn: 'related-rates',
     },
   ],
 })
