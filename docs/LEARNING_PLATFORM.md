@@ -26,8 +26,8 @@ unit can be picked out of order.
 8. DE: Partitioning, bucketing and hashing, batches 1 and 2 (done, approved 2026-10-23; batch 3
    moved to the Data Engineering list below)
 9. Pre-calculus: Trigonometry (refresher) (done, approved 2026-10-24)
-10. Calculus 1: Derivatives (unit plan written; batch 1 built 2026-10-24, waiting for review; batches 2
-    and 3 next)
+10. Calculus 1: Derivatives (unit plan written; batch 1 built 2026-10-24 and reviewed;
+    batch 2 next, after two fixes listed in `ROADMAP.md`)
 11. Linear Algebra: Linear maps and matrices
 12. Outline Probability and Statistics (for review), then its first unit
 13. Calculus 1 and Linear Algebra, next units
