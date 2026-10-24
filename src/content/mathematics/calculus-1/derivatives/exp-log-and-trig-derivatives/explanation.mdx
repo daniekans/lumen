@@ -1,0 +1,123 @@
+Polynomials and quotients of them now have derivatives. The other functions from Pre-calculus,
+exponentials, logarithms and the trigonometric functions, need limits of their own. Each one comes
+from a picture and one standard limit from the Limits unit.
+
+## $e^x$ is its own slope
+
+Factor the difference quotient of $e^x$:
+
+$$
+\frac{e^{x+h} - e^x}{h} = e^x \cdot \frac{e^h - 1}{h}.
+$$
+
+The second factor does not depend on $x$, and the Limits unit showed that it tends to $1$:
+the <Term id="euler-number">number $e$</Term> is the base whose exponential has slope $1$ at $0$. So
+
+$$
+\frac{d}{dx}\left(e^x\right) = e^x.
+$$
+
+At every point the slope equals the height. The step <StepLink step="exp">$e^x$ is its own
+slope</StepLink> draws it as a triangle: the <C c="teal">tangent</C> at $x$ meets the $x$-axis at
+$x - 1$, a run of <C c="yellow">$1$</C>, and it rises by the height $e^x$.
+
+## Other bases
+
+For a base $b > 0$ the same factoring gives $b^x \cdot \frac{b^h - 1}{h}$, and the second factor
+tends to the slope of $b^x$ at $0$. To find it, write $b = e^{\ln b}$, so
+$b^h = e^{h \ln b}$. For $b \neq 1$, put $u = h \ln b$, which tends to $0$ with $h$:
+
+$$
+\frac{b^h - 1}{h} = \ln b \cdot \frac{e^u - 1}{u} \to \ln b.
+$$
+
+(For $b = 1$ both sides are $0$.) So
+
+$$
+\frac{d}{dx}\left(b^x\right) = (\ln b)\,b^x.
+$$
+
+In <StepLink step="base">other bases</StepLink>, the <C c="yellow">tangent at $(0, 1)$</C> has
+slope $\ln b$, and the dashed <C c="teal">derivative</C> is the curve scaled by $\ln b$: steeper
+for $b > e$, flatter for $1 < b < e$, and decreasing for $b < 1$, where $\ln b < 0$. Base $e$ is the
+one where no factor appears, which is why calculus prefers it.
+
+## Sine and cosine on the unit circle
+
+Angles here are in <Term id="radian">radians</Term>, so an angle of $\Delta\theta$ cuts an arc
+of length $\Delta\theta$ on the unit circle. Turn the angle from $\theta$ to
+$\theta + \Delta\theta$, as in <StepLink step="circle">the circle step</StepLink>. For a small
+turn the arc is almost straight, and it points at right angles to the radius, in the direction
+$(-\sin\theta, \cos\theta)$. So the point $(\cos\theta, \sin\theta)$ moves by about
+
+$$
+\Delta\theta \cdot (-\sin\theta, \cos\theta):
+$$
+
+up by <C c="green">$\cos\theta\,\Delta\theta$</C> and left
+by <C c="red">$\sin\theta\,\Delta\theta$</C>. Dividing by $\Delta\theta$ and letting it shrink:
+
+$$
+\frac{d}{d\theta}\sin\theta = \cos\theta, \qquad \frac{d}{d\theta}\cos\theta = -\sin\theta.
+$$
+
+The algebra agrees. By the angle addition formula,
+
+$$
+\frac{\sin(x + h) - \sin x}{h} = \sin x \cdot \frac{\cos h - 1}{h} + \cos x \cdot \frac{\sin h}{h}.
+$$
+
+The Limits unit showed $\frac{\sin h}{h} \to 1$. For the other factor,
+$\frac{\cos h - 1}{h} = -\frac{\sin h}{h} \cdot \frac{\sin h}{\cos h + 1} \to -1 \cdot \frac{0}{2} = 0$.
+So the quotient tends to $\cos x$. Both limits need radians; in degrees every derivative would
+carry a factor $\frac{\pi}{180}$.
+
+The <StepLink step="sine-graph">graph of sine</StepLink> shows the result: the
+dashed <C c="teal">$\cos x$</C> is zero at the peaks of $\sin x$, where the tangent is flat, and reaches
+$\pm 1$ at its zeros. The quotient rule then gives the tangent:
+
+$$
+\frac{d}{dx}\tan x = \frac{\cos x \cdot \cos x - \sin x \cdot (-\sin x)}{\cos^2 x} = \frac{1}{\cos^2 x} = \sec^2 x,
+$$
+
+wherever $\cos x \neq 0$.
+
+## $\ln x$ by reflection
+
+$\ln x$ is the <Term id="inverse-function">inverse</Term> of $e^x$, so its graph is the graph of
+$e^x$ reflected across $y = x$. The reflection takes the tangent at $Q = (y, e^y)$ to the tangent
+at $P = (e^y, y)$ and swaps rise and run, so the slope at $P$ is the reciprocal of the slope at
+$Q$. That slope is $e^y$, never $0$, so the reciprocal exists. With $x = e^y$:
+
+$$
+\frac{d}{dx}\ln x = \frac{1}{e^y} = \frac{1}{x}, \qquad x > 0.
+$$
+
+The step <StepLink step="log">$\ln x$ by reflection</StepLink> shows both tangents. Where $e^x$ is
+steep, $\ln x$ is flat. A later item turns this picture into a rule for every inverse function.
+
+## Every real exponent
+
+For $x > 0$ and a real number $r$, $x^r = e^{r \ln x}$. Factor out $x^r$ and put $u = \frac{h}{x}$:
+
+$$
+\frac{(x + h)^r - x^r}{h} = x^{r-1} \cdot \frac{(1 + u)^r - 1}{u}.
+$$
+
+The last fraction tends to $r$. For $r \neq 0$ write $(1 + u)^r = e^{v}$ with
+$v = r \ln(1 + u)$, which tends to $0$:
+
+$$
+\frac{(1 + u)^r - 1}{u} = \frac{e^v - 1}{v} \cdot r \cdot \frac{\ln(1 + u)}{u} \to 1 \cdot r \cdot 1,
+$$
+
+where $\frac{\ln(1 + u)}{u} \to 1$ is the slope of $\ln$ at $1$. So
+
+$$
+\frac{d}{dx}\left(x^r\right) = rx^{r-1}, \qquad x > 0,
+$$
+
+for every real $r$, as <StepLink step="real-powers">the last step</StepLink> shows. Together with
+the earlier cases, the <Term id="power-rule">power rule</Term> now holds for whole exponents at
+every $x$, for negative integers at $x \neq 0$, and for every real exponent at $x > 0$. The chain
+rule, next, gives a shorter route to the same result.

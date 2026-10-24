@@ -1,0 +1,88 @@
+Most functions are built by feeding one function into another: $\sin\left(\frac{x^2}{2}\right)$,
+$e^{-x^2}$, $\sqrt{1 + x^2}$. The chain rule gives the derivative of such
+a <Term id="composition">composition</Term> from the derivatives of its parts.
+
+## A function stretches intervals
+
+Picture a function $u = g(x)$ as a map from one number line to another, as in the
+step <StepLink step="stretch">a function stretches intervals</StepLink>. Near a point where $g$ is
+differentiable, the graph is close to its tangent (it
+is <Term id="locally-linear">locally linear</Term>), so
+
+$$
+g(x + \Delta x) \approx g(x) + g'(x)\,\Delta x.
+$$
+
+A short interval of length $\Delta x$ lands on an interval of length about $|g'(x)|\,\Delta x$.
+The derivative is the local stretch factor: $g(x) = \frac{x^2}{2}$ has $g'(x) = x$, so it squeezes
+near $0$ and stretches more and more further out. A negative factor also flips the interval.
+
+## Two stretches multiply
+
+In the step <StepLink step="compose">two stretches</StepLink> a second map
+$y = f(u) = 2\sin u$ sends the middle line to a third one. The interval is stretched by about
+$g'(x)$ and then by about $f'(u)$ at $u = g(x)$, so the composition $y = f(g(x))$ stretches it by
+the product. That is the chain rule:
+
+$$
+\frac{d}{dx} f(g(x)) = f'(g(x))\,g'(x).
+$$
+
+In words: the derivative of the outer function, evaluated at the inner value, times the derivative
+of the inner function. For the example,
+$\frac{d}{dx}\, 2\sin\left(\frac{x^2}{2}\right) = 2\cos\left(\frac{x^2}{2}\right) \cdot x$, which
+is the <StepLink step="graph">slope of the composition</StepLink>.
+
+## Why it looks like cancelling
+
+With $u = g(x)$ and $y = f(u)$, <Term id="leibniz-notation">Leibniz notation</Term> writes the
+chain rule as
+
+$$
+\frac{dy}{dx} = \frac{dy}{du}\,\frac{du}{dx}.
+$$
+
+It looks as if $du$ cancels. Each symbol is still one symbol for a limit, not a fraction, but the
+increments behind them do cancel. Move $x$ by $\Delta x$; then $u$ changes by $\Delta u$ and $y$ by
+$\Delta y$. Whenever $\Delta u \neq 0$,
+
+$$
+\frac{\Delta y}{\Delta x} = \frac{\Delta y}{\Delta u} \cdot \frac{\Delta u}{\Delta x}
+$$
+
+is ordinary algebra. As $\Delta x \to 0$, $\Delta u \to 0$ too ($g$ is continuous), so the factors
+tend to $f'(u)$ and $g'(x)$. The <StepLink step="leibniz">third step</StepLink> shrinks
+$\Delta x$ and shows the three ratios settle.
+
+That argument has a gap: $\Delta u$ can be $0$ for some small $\Delta x$ (at $x = 0$ here, the
+interval from $-\frac{\Delta x}{2}$ to $\frac{\Delta x}{2}$ lands on a single point). A complete
+proof avoids dividing by $\Delta u$. Let $\varphi(k) = \frac{f(u + k) - f(u)}{k}$ for $k \neq 0$
+and $\varphi(0) = f'(u)$. Then $\varphi(k) \to f'(u)$ as $k \to 0$, and
+$f(u + \Delta u) - f(u) = \varphi(\Delta u)\,\Delta u$ holds even when $\Delta u = 0$. Divide by
+$\Delta x$:
+
+$$
+\frac{\Delta y}{\Delta x} = \varphi(\Delta u)\,\frac{\Delta u}{\Delta x} \to f'(u)\,g'(x).
+$$
+
+So the rule holds whenever $g$ is differentiable at $x$ and $f$ is differentiable at $g(x)$.
+Applications of derivatives gives $dx$ and $dy$ a meaning of their own, as differentials, and the
+cancelling becomes a true product.
+
+## Examples
+
+$$
+\frac{d}{dx}(3x + 1)^5 = 5(3x + 1)^4 \cdot 3 = 15(3x + 1)^4
+$$
+
+$$
+\frac{d}{dx}\, e^{-x^2} = e^{-x^2} \cdot (-2x)
+$$
+
+$$
+\frac{d}{dx}\sqrt{1 + x^2} = \frac{1}{2\sqrt{1 + x^2}} \cdot 2x = \frac{x}{\sqrt{1 + x^2}}
+$$
+
+The rule also re-derives earlier results in one line. Since $b^x = e^{x \ln b}$,
+$\frac{d}{dx}\, b^x = e^{x \ln b} \cdot \ln b = (\ln b)\,b^x$. For $x > 0$, $x^r = e^{r \ln x}$, so
+$\frac{d}{dx}\, x^r = e^{r \ln x} \cdot \frac{r}{x} = rx^{r-1}$.

@@ -1,0 +1,81 @@
+The derivative of a sum is the sum of the derivatives. A product is different: $x \cdot x = x^2$
+has slope $2x$, while the product of the slopes is $1$. This item finds the right rule for
+products, and from it the rule for quotients.
+
+## A growing rectangle
+
+Draw $f(x)$ as the width of a rectangle and $g(x)$ as its height, so the area is $f(x)g(x)$.
+When $x$ moves to $x + \Delta x$, the width changes by $\Delta f = f(x + \Delta x) - f(x)$ and the
+height by $\Delta g$. The new rectangle in the step <StepLink step="rectangle">a growing
+rectangle</StepLink> is the old one plus three pieces:
+
+$$
+\Delta(fg) = g\,\Delta f + f\,\Delta g + \Delta f\,\Delta g.
+$$
+
+The <C c="teal">right strip</C> has area $g\,\Delta f$, the <C c="purple">top strip</C> has area
+$f\,\Delta g$, and the <C c="yellow">corner</C> is $\Delta f\,\Delta g$. This is the growing square
+of the previous item with two different sides.
+
+## The product rule
+
+Divide by $\Delta x$:
+
+$$
+\frac{\Delta(fg)}{\Delta x} = g\,\frac{\Delta f}{\Delta x} + f\,\frac{\Delta g}{\Delta x} + \frac{\Delta f}{\Delta x}\,\Delta g.
+$$
+
+When $f$ and $g$ are differentiable at $x$, the first two terms tend to $f'(x)g(x)$ and
+$f(x)g'(x)$. In the last term $\frac{\Delta f}{\Delta x} \to f'(x)$ while $\Delta g \to 0$, since
+a differentiable function is continuous. So the corner drops out, as
+the <StepLink step="limit">limit step</StepLink> shows, and
+
+$$
+(fg)' = f'g + fg'.
+$$
+
+Each strip is one side changing while the other stays fixed. For example,
+
+$$
+\frac{d}{dx}\left[(x^2 + 1)(3x - 2)\right] = 2x(3x - 2) + 3(x^2 + 1) = 9x^2 - 4x + 3,
+$$
+
+which matches the derivative of the expanded product $3x^3 - 2x^2 + 3x - 2$.
+
+## The quotient rule
+
+Read the same rectangle another way: let the area be $f$ and the height $g$, so the width is the
+quotient $q = \frac{f}{g}$, defined where $g \neq 0$. In the <StepLink step="quotient">quotient
+step</StepLink> the area grows by $\Delta f$, made of a strip $g\,\Delta q$, a strip
+$q\,\Delta g$ and a corner. The product rule applied to $f = qg$ gives $f' = q'g + qg'$, and
+solving for $q'$:
+
+$$
+q' = \frac{f' - qg'}{g} = \frac{f' - \frac{f}{g}g'}{g}, \qquad
+\left(\frac{f}{g}\right)' = \frac{f'g - fg'}{g^2}.
+$$
+
+This uses that $q$ is differentiable. That holds when $f$ and $g$ are differentiable and
+$g(x) \neq 0$: the difference quotient of $\frac{f}{g}$ can be rewritten with the limit laws, and
+its limit is the formula above.
+
+The order in the numerator matters: the derivative of the top comes first. Example:
+
+$$
+\frac{d}{dx}\left(\frac{x}{x^2 + 1}\right) = \frac{1 \cdot (x^2 + 1) - x \cdot 2x}{(x^2 + 1)^2} = \frac{1 - x^2}{(x^2 + 1)^2}.
+$$
+
+## Negative powers
+
+The <Term id="power-rule">power rule</Term> was proved for whole exponents $n \ge 0$. For
+$x^{-n} = \frac{1}{x^n}$ with $n$ a positive whole number, the quotient rule gives, for $x \neq 0$,
+
+$$
+\frac{d}{dx}\left(\frac{1}{x^n}\right) = \frac{0 \cdot x^n - 1 \cdot nx^{n-1}}{x^{2n}} = -nx^{-n-1}.
+$$
+
+That is $nx^{n-1}$ with $-n$ in place of $n$, so the power rule holds for every integer exponent,
+at every $x \neq 0$. The <StepLink step="negative-powers">last step</StepLink>
+plots <C c="blue">$x^{-n}$</C> with its derivative <C c="teal">dashed</C>: the slope is negative on the
+right of the axis, and for odd $n$ on the left too. Real exponents come with $e^x$ and $\ln x$ in
+the item after the practice.

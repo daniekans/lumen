@@ -148,11 +148,14 @@ test('a chosen answer can be cleared', async ({ page }) => {
 
 test('"I already know this unit" marks content done and can be undone', async ({ page }) => {
   await page.goto('/mathematics/calculus-1/derivatives')
-  await expect(page.getByText('0 of 5 done')).toBeVisible()
+  // The item count grows with the unit, so read it from the page.
+  const none = page.getByText(/^0 of \d+ done$/)
+  await expect(none).toBeVisible()
+  const total = (await none.textContent())!.match(/of (\d+)/)![1]
   await page.getByRole('button', { name: 'I already know this unit' }).click()
-  await expect(page.getByText('5 of 5 done')).toBeVisible()
+  await expect(page.getByText(`${total} of ${total} done`)).toBeVisible()
   await page.getByRole('button', { name: /Undo/ }).click()
-  await expect(page.getByText('0 of 5 done')).toBeVisible()
+  await expect(none).toBeVisible()
 })
 
 test('a practice session runs to its summary', async ({ page }) => {

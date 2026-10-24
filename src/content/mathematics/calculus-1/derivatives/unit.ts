@@ -12,7 +12,15 @@ export const unit = defineUnit({
       id: 'derivative-graphs',
       title: "Read f' from the graph of f and find where f is not differentiable",
     },
-    { id: 'basic-rules', title: 'Differentiate with the power, sum and constant multiple rules' },
+    {
+      id: 'basic-rules',
+      title: 'Differentiate with the power, sum, constant multiple, product and quotient rules',
+    },
+    {
+      id: 'transcendental-derivatives',
+      title: 'Differentiate exponentials, logarithms and trigonometric functions',
+    },
+    { id: 'chain-rule', title: 'Differentiate compositions with the chain rule' },
   ],
   terms: [
     {
@@ -98,6 +106,46 @@ export const unit = defineUnit({
       summary:
         'The derivative of a sum is the sum of the derivatives, and constants factor out. Together they let a polynomial be differentiated term by term.',
       introducedIn: 'power-and-sum-rules',
+    },
+    {
+      id: 'product-rule',
+      title: 'Product rule',
+      tex: "(fg)' = f'g + fg'",
+      summary:
+        'The derivative of a product: each factor changes while the other stays fixed, like the two strips added to a growing rectangle.',
+      introducedIn: 'product-and-quotient-rules',
+    },
+    {
+      id: 'quotient-rule',
+      title: 'Quotient rule',
+      tex: "\\left(\\frac{f}{g}\\right)' = \\frac{f'g - fg'}{g^2}",
+      summary:
+        'The derivative of a quotient where $g \\neq 0$, found by applying the product rule to $f = \\frac{f}{g} \\cdot g$.',
+      introducedIn: 'product-and-quotient-rules',
+    },
+    {
+      id: 'exponential-derivative',
+      title: 'Derivatives of exponentials and logarithms',
+      tex: '\\frac{d}{dx}e^x = e^x',
+      summary:
+        '$e^x$ is its own derivative, $\\frac{d}{dx}b^x = (\\ln b)\\,b^x$, and $\\frac{d}{dx}\\ln x = \\frac{1}{x}$ for $x > 0$.',
+      introducedIn: 'exp-log-and-trig-derivatives',
+    },
+    {
+      id: 'trig-derivatives',
+      title: 'Derivatives of sine and cosine',
+      tex: '\\frac{d}{dx}\\sin x = \\cos x',
+      summary:
+        "With $x$ in radians, $\\sin' = \\cos$ and $\\cos' = -\\sin$: on the unit circle the point moves at right angles to the radius. The quotient rule gives $\\tan' = \\sec^2$.",
+      introducedIn: 'exp-log-and-trig-derivatives',
+    },
+    {
+      id: 'chain-rule',
+      title: 'Chain rule',
+      tex: '\\frac{dy}{dx} = \\frac{dy}{du}\\frac{du}{dx}',
+      summary:
+        "The derivative of a composition: $(f \\circ g)'(x) = f'(g(x))\\,g'(x)$, the outer derivative at the inner value times the inner derivative. Stretch factors multiply.",
+      introducedIn: 'chain-rule',
     },
   ],
 })
