@@ -102,6 +102,9 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       continue
     }
     const explanation = explanations.get(dir)
+    if (!explanation && (kind === 'explore' || kind === 'lesson')) {
+      problem(`${kind} item ${dir} has no explanation.mdx`)
+    }
     const [a, c, u] = parts
     const unitId = `${a}/${c}/${u}`
     const item: Item = {

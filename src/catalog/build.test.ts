@@ -87,6 +87,7 @@ describe('buildCatalog', () => {
     expect(problems.join('\n')).toMatch(/limits\/c has no index\.tsx/)
     expect(problems.join('\n')).toMatch(/unknown skill "missing"/)
     expect(problems.join('\n')).toMatch(/nowhere have no unit\.ts/)
+    expect(problems.join('\n')).toMatch(/limits\/b has no explanation\.mdx/)
   })
 
   it('hides drafts unless asked to include them', () => {

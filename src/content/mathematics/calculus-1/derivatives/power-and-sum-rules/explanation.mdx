@@ -1,0 +1,88 @@
+Computing a <Term id="derivative">derivative</Term> from the limit every time is slow. For powers
+of $x$ and their sums there is a shortcut, and pictures show where it comes from.
+
+## A growing square
+
+A square of side $x$ has area $A = x^2$. Grow the side by $\Delta x$, as in the first
+step, <StepLink step="square">a growing square</StepLink>. The new area is made of the old
+square, two <C c="teal">strips</C> of area $x\,\Delta x$ and a small
+square, the <C c="yellow">corner</C>, of area $(\Delta x)^2$:
+
+$$
+\Delta A = (x + \Delta x)^2 - x^2 = 2x\,\Delta x + (\Delta x)^2.
+$$
+
+Divide by $\Delta x$ to get $\frac{\Delta A}{\Delta x} = 2x + \Delta x$. As $\Delta x \to 0$ the
+corner becomes negligible, even compared with the strips, and the slope is $2x$.
+
+## A growing cube
+
+The same happens one dimension up. A cube of side $x$ that grows by
+$\Delta x$, in <StepLink step="cube">a growing cube</StepLink>, gains three slabs of
+volume $x^2\,\Delta x$ (<C c="teal">teal</C>), three rods of volume $x(\Delta x)^2$
+(<C c="yellow">yellow</C>) and one corner of volume $(\Delta x)^3$ (<C c="orange">orange</C>):
+
+$$
+\frac{\Delta V}{\Delta x} = 3x^2 + 3x\,\Delta x + (\Delta x)^2 \to 3x^2.
+$$
+
+Only the slabs survive the limit, one for each face that touches the growing corner.
+
+## Every whole power
+
+The pictures stop at three dimensions, but the algebra does not. The binomial theorem expands
+$(x + h)^n$ for any whole number $n$:
+
+$$
+(x + h)^n = x^n + nx^{n-1}h + \binom{n}{2}x^{n-2}h^2 + \dots + h^n.
+$$
+
+The term $nx^{n-1}h$ plays the role of the slabs: there are $n$ ways to pick one factor $h$ and
+$x$ from the others. Subtract $x^n$ and divide by $h$:
+
+$$
+\frac{(x + h)^n - x^n}{h} = nx^{n-1} + \binom{n}{2}x^{n-2}h + \dots + h^{n-1}.
+$$
+
+Every term after the first still has a factor $h$, so <StepLink step="expand">the secant
+slope</StepLink> tends to $nx^{n-1}$. This is the <Term id="power-rule">power rule</Term>:
+
+$$
+\frac{d}{dx}\left(x^n\right) = nx^{n-1}.
+$$
+
+The proof above covers whole numbers $n \ge 1$, at every $x$. For $n = 0$, $x^0 = 1$ is a
+constant and its slope is $0$. The rule is true for more exponents, with conditions on $x$: for
+negative whole $n$ wherever $x \neq 0$ (the quotient rule shows it), and for every real $n$ when
+$x > 0$ (once $e^x$ and $\ln x$ have their derivatives). Those items prove each case. Until then,
+use the rule for whole $n$.
+
+The <StepLink step="power-rule">power rule step</StepLink> draws <C c="teal">$nx^{n-1}$</C> as a
+dashed curve next to <C c="blue">$x^n$</C>: at every point its height equals the slope of the
+tangent.
+
+## Sums and constant multiples
+
+The <Term id="limit-laws">limit laws</Term> say a limit of a sum is the sum of the limits, and a
+constant factor comes out of a limit. Applied to difference quotients:
+
+$$
+\frac{(af + bg)(x + h) - (af + bg)(x)}{h} = a\,\frac{f(x + h) - f(x)}{h} + b\,\frac{g(x + h) - g(x)}{h}.
+$$
+
+When $f$ and $g$ are differentiable at $x$, the right side tends to $af'(x) + bg'(x)$, so
+
+$$
+(af + bg)' = af' + bg'.
+$$
+
+In the picture, stretching a graph vertically by $a$ multiplies every slope by $a$, and adding two
+graphs adds their slopes. Together with the power rule this differentiates any polynomial term by
+term:
+
+$$
+\frac{d}{dx}\left(4x^3 - 5x^2 + 7x - 2\right) = 12x^2 - 10x + 7.
+$$
+
+The derivative of a product is not the product of the derivatives: $x \cdot x = x^2$ has slope
+$2x$, not $1 \cdot 1$. The next item finds the rule for products.
