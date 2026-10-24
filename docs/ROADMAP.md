@@ -36,9 +36,13 @@ Storage and file formats). Content units continue after it as ongoing work, in t
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** Calculus 1: Derivatives, batch 2 (items 5 to 9 in the Derivatives
-unit plan, `plans/calculus.md`), after the owner reviews batch 1 (items 1 to 4: the revised
-`derivative-as-limit` and `difference-quotients`, `derivative-function`, `power-and-sum-rules`).
-Trigonometric derivatives can lean on `src/lib/math/trig.ts`. The focus is Mathematics and
+unit plan, `plans/calculus.md`). The owner reviewed batch 1. Start with two fixes, in their own
+commits: (1) write the missing `explanation.mdx` for `power-and-sum-rules` and add a test that
+every explore and lesson item has one; (2) render TeX in item summaries: wrap `item.summary` in
+`RichText` in `UnitPage.tsx` (item list and next card) and `ExplanationPane.tsx`, strip TeX
+delimiters from summaries in the search text (`catalog/queries.ts`), convert summaries with
+plain-text math (`x^2`, `f'`, `d/dx`; Unicode `ε` and `δ` too, for consistency) to `$...$`, and
+note in `ADDING_CONTENT.md` that summaries may use inline TeX. Trigonometric derivatives can lean on `src/lib/math/trig.ts`. The focus is Mathematics and
 Machine Learning; Data Engineering continues only on request, and its next step is outlining the
 Distributed processing unit.
 

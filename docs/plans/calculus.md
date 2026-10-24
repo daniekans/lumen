@@ -228,7 +228,11 @@ Skills: `secant-slope`, `definition` (kept from the legacy items), `derivative-g
 growing cube), 5 to 9, 10 to 13. The legacy checkpoint keeps its six problems, ordered last, until
 batch 3 rebuilds it.
 
-Batch 1 built on 2026-10-24, waiting for the owner's review. Notes for the next batches:
+Batch 1 built on 2026-10-24 and reviewed by the owner. Two fixes open the batch 2 session:
+`power-and-sum-rules` has no `explanation.mdx` (write it: strips and slabs, the binomial
+expansion behind $nx^{n-1}$, real $n$ for $x > 0$, the sum and constant-multiple rules from the
+limit laws; add a test that every explore and lesson item has an explanation), and item summaries
+render as plain text (see "Suggested next session" in `ROADMAP.md`). Notes for the next batches:
 `MathLabel` anchors name the side the label goes to (`'e'` puts it right of the point). Stages
 that zoom by changing `domain` pass `zoomedStep(1, z)` to `Grid` and `Axes`. `Box3D` draws
 translucent boxes with the back faces first.
