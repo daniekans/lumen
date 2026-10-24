@@ -201,8 +201,8 @@ export default function Inverses() {
 
         <g style={{ opacity: lineOpacity }}>
           <Segment from={[0, c]} to={[1, c]} extend color={vc.yellow} width={1.25} dash="4 6" />
-          {crossings.map((x) => (
-            <Point key={x} at={[x, c]} color={crossings.length > 1 ? vc.red : vc.yellow} r={5} />
+          {crossings.map((x, i) => (
+            <Point key={i} at={[x, c]} color={crossings.length > 1 ? vc.red : vc.yellow} r={5} />
           ))}
         </g>
         {testing && (

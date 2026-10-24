@@ -89,14 +89,18 @@ export default function InverseTrig() {
   const wave = step === 'many-angles' || step === 'all-solutions'
 
   const a = Math.asin(c)
-  const firsts: number[] = []
-  const seconds: number[] = []
-  for (let k = -2; k <= 2; k++) {
-    firsts.push(a + TAU * k)
-    seconds.push(Math.PI - a + TAU * k)
-  }
+  // Solutions keyed by family and turn, never by value: at c = ±1 the two families meet, and
+  // value keys would collide.
+  type Solution = { key: string; t: number }
+  const turns = [-2, -1, 0, 1, 2]
   const inView = (t: number) => t >= domain.x[0] && t <= domain.x[1]
-  const crossings = [...firsts, ...seconds].filter(inView)
+  const firsts: Solution[] = turns
+    .map((k) => ({ key: `a${k}`, t: a + TAU * k }))
+    .filter((p) => inView(p.t))
+  const seconds: Solution[] = turns
+    .map((k) => ({ key: `b${k}`, t: Math.PI - a + TAU * k }))
+    .filter((p) => inView(p.t) && !firsts.some((f) => Math.abs(f.t - p.t) < 1e-9))
+  const crossings = [...firsts, ...seconds]
 
   const back = Math.asin(Math.sin(x))
 
@@ -118,7 +122,7 @@ export default function InverseTrig() {
                   )}
                   <Readout
                     label="solutions in view"
-                    value={new Set(crossings.map((t) => t.toFixed(9))).size}
+                    value={crossings.length}
                     hint="Where the line $y = c$ meets the wave between $-7$ and $7$. There are infinitely many in all."
                   />
                 </>
@@ -178,9 +182,9 @@ export default function InverseTrig() {
               width={1.5}
               dash="6 5"
             />
-            {(step === 'many-angles' ? crossings : firsts.filter(inView)).map((t) => (
+            {(step === 'many-angles' ? crossings : firsts).map(({ key, t }) => (
               <Point
-                key={`a${t}`}
+                key={key}
                 at={[t, c]}
                 color={step === 'many-angles' ? LEVEL : FIRST}
                 r={5}
@@ -188,11 +192,9 @@ export default function InverseTrig() {
               />
             ))}
             {step === 'all-solutions' &&
-              seconds
-                .filter(inView)
-                .map((t) => (
-                  <Point key={`b${t}`} at={[t, c]} color={SECOND} r={5} coords={false} />
-                ))}
+              seconds.map(({ key, t }) => (
+                <Point key={key} at={[t, c]} color={SECOND} r={5} coords={false} />
+              ))}
             {step === 'all-solutions' && (
               <>
                 <Segment

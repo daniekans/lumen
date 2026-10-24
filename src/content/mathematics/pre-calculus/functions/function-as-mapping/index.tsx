@@ -261,8 +261,8 @@ export default function FunctionAsMapping() {
         )}
         <g style={{ opacity: lineOpacity }}>
           <Segment from={[x, 0]} to={[x, 1]} extend color={vc.yellow} width={1.5} dash="6 6" />
-          {crossings.map((y) => (
-            <Point key={y} at={[x, y]} color={hitColor} r={5.5} />
+          {crossings.map((y, i) => (
+            <Point key={i} at={[x, y]} color={hitColor} r={5.5} />
           ))}
         </g>
 

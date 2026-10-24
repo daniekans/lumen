@@ -222,6 +222,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Hues per visualization (2026-10-19): three was a guideline, not a limit. Daniel is fine with
   four or more when they make a visualization clearer or prettier, within the same clean,
   minimal look. What matters is that each color means something. Rule in `DESIGN.md`.
+- Visualizations show what the step is about (2026-10-24, Daniel's trigonometry review): exact
+  values such as the special angles are labeled on the stage, not only in the readouts. Labels
+  use book notation, with stacked fractions ($\frac{\pi}{2}$, never "π/2"). A control shown in a
+  step must change the drawing in that step. Checklist in `ADDING_CONTENT.md` (Check).
 - Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
   later units need them, in the same look and feel as the current visualizations.
 

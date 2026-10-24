@@ -121,6 +121,15 @@ start a list item with it (Prettier splits the paragraph).
 ## 5. Check
 
 - [ ] Every hue from `vc` and with a meaning (see `DESIGN.md`, Palette rules)
+- [ ] The values a step is about are drawn on the stage, not only in the readouts: exact angles on
+      a circle, special points, the parts a formula names
+- [ ] Math labels use book notation: fractions as `\frac` (`\dfrac` where a label is small), never
+      `a/b`; the same notation as the explanation
+- [ ] Every control shown in a step visibly changes the drawing in that step; otherwise hide it
+- [ ] Lists of shapes are keyed by index or a stable id, never by a computed value (two equal values
+      give duplicate keys, and React leaves the old shapes on the stage)
+- [ ] `node scripts/sweep-controls.mjs /<item path>` (moves every slider to both ends on every step)
+      reports no console errors
 - [ ] Every step looks right in dark and light (`STEPS=1 node scripts/shoot.mjs <dir> /<item path>`),
       and in paper (`THEMES=paper`) once per batch
 - [ ] Check answers are correct (compute them, do not trust memory)

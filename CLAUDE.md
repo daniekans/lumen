@@ -85,6 +85,9 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
   an `import.meta.glob` in an unchanged file (the catalog registry) misses new content folders and
   `registry.test.ts` reports "introduced in unknown item". Delete that folder and rerun.
 - **Deep links on GitHub Pages return HTTP 404** with the app's `404.html`. That is expected.
+- **Duplicate React keys leave ghost shapes.** Points keyed by a computed value (`key={x}`) collide
+  when two values coincide (roots at a slider's edge, two solution families meeting), and stale
+  points stay on the stage across steps. Key by index or family and index.
 
 ## Verifying a change
 
@@ -96,4 +99,6 @@ with a short prompt Daniel can paste into a clean session to continue (see `docs
    prefix (`/data-engineering/<course>/<unit>/<item>`). Iterate in one theme and view only the
    steps that changed; run both themes once at the end. For interaction checks, write a short
    Playwright script against the same server and delete it after. Stop the server by PID.
-3. `pnpm e2e` (builds and serves a production build) before pushing.
+3. `BASE_URL=http://localhost:5199 node scripts/sweep-controls.mjs /<item path> ...` moves every
+   slider to both ends on every step and fails on console errors (duplicate keys, crashes).
+4. `pnpm e2e` (builds and serves a production build) before pushing.

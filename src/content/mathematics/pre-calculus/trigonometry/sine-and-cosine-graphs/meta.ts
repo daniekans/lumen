@@ -26,7 +26,7 @@ export const meta = defineItem({
       id: 'period',
       title: 'One period',
       caption:
-        'Every $2\\pi$ the point is back where it started, so both graphs repeat with period $2\\pi$ and stay between $-1$ and $1$. Sine is $0$ at multiples of $\\pi$, cosine at odd multiples of $\\frac{\\pi}{2}$.',
+        'Every $2\\pi$ the point is back where it started, so both graphs repeat with period $2\\pi$ and stay between $-1$ and $1$. Sine is $0$ at multiples of $\\pi$, cosine at odd multiples of $\\frac{\\pi}{2}$. Drag $\\theta$.',
     },
     {
       id: 'amplitude',

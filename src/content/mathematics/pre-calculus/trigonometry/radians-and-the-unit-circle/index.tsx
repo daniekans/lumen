@@ -30,6 +30,8 @@ const SPECIAL = [
   ...[1, 3, 5, 7].map((n) => [n, 4] as const),
 ]
 const SPECIAL_ANGLES = SPECIAL.map(([n, d]) => (n * Math.PI) / d)
+/** Names of the three reflections of P in the quadrants step. */
+const REFLECTION_TEX = ['\\pi - \\theta', '\\pi + \\theta', '2\\pi - \\theta']
 
 /** The angle of a dragged point, continued from the previous angle so turns are not lost. */
 const unwrap = (p: Vec2, prev: number) => {
@@ -218,10 +220,16 @@ export default function RadiansAndTheUnitCircle() {
         <Path points={arcPoints(theta, radius)} color={ARC} width={4} />
         <Segment from={[0, 0]} to={[radius, 0]} color={vc.fg} width={1.5} opacity={0.5} />
         <Segment from={[0, 0]} to={P} color={vc.fg} width={1.5} />
-        {Math.abs(theta) > 0.25 && Math.abs(theta) <= TAU && (
+        {Math.abs(theta) > 0.25 && Math.abs(theta) <= TAU && id !== 'special' && (
           <MathLabel
             at={[radius * 1.18 * Math.cos(mid), radius * 1.18 * Math.sin(mid)]}
-            tex={id === 'arc-length' ? 's' : '\\theta'}
+            tex={
+              id === 'arc-length'
+                ? 's'
+                : exact
+                  ? `\\theta = ${piTex(exact[0], exact[1])}`
+                  : '\\theta'
+            }
             color={ARC}
           />
         )}
@@ -236,14 +244,14 @@ export default function RadiansAndTheUnitCircle() {
             <Segment from={[c, 0]} to={P} color={SIN} width={3} />
             <MathLabel
               at={[c / 2, 0]}
-              tex="\cos\theta"
+              tex={exact ? `\\cos\\theta = ${exactTex(c)}` : '\\cos\\theta'}
               color={COS}
               anchor={s >= 0 ? 's' : 'n'}
               offset={8}
             />
             <MathLabel
               at={[c, s / 2]}
-              tex="\sin\theta"
+              tex={exact ? `\\sin\\theta = ${exactTex(s)}` : '\\sin\\theta'}
               color={SIN}
               anchor={c >= 0 ? 'e' : 'w'}
               offset={8}
@@ -252,14 +260,41 @@ export default function RadiansAndTheUnitCircle() {
         )}
         {stepIs('quadrants') &&
           reflections.map((q, i) => (
-            <Point key={i} at={q} color={vc.muted} r={4} hollow coords={false} />
+            <g key={i}>
+              <Point at={q} color={vc.muted} r={4} hollow coords={false} />
+              <MathLabel
+                at={[1.22 * q[0], 1.22 * q[1]]}
+                tex={REFLECTION_TEX[i]!}
+                color={vc.muted}
+              />
+            </g>
           ))}
+        {stepIs('special') &&
+          SPECIAL.map(([n, d], i) => {
+            const t = SPECIAL_ANGLES[i]!
+            const on = exact !== null && exact[0] * d === n * exact[1]
+            return (
+              <g key={`${n}-${d}`}>
+                <Segment
+                  from={[0.96 * Math.cos(t), 0.96 * Math.sin(t)]}
+                  to={[1.04 * Math.cos(t), 1.04 * Math.sin(t)]}
+                  color={on ? ARC : vc.muted}
+                  width={1.5}
+                />
+                <MathLabel
+                  at={[1.24 * Math.cos(t), 1.24 * Math.sin(t)]}
+                  tex={piTex(n, d)}
+                  color={on ? ARC : vc.muted}
+                />
+              </g>
+            )
+          })}
         {stepIs('quadrants') && (
           <>
-            <MathLabel at={[1.35, 1.25]} tex="(+, +)" color={vc.muted} />
-            <MathLabel at={[-1.35, 1.25]} tex="(-, +)" color={vc.muted} />
-            <MathLabel at={[-1.35, -1.25]} tex="(-, -)" color={vc.muted} />
-            <MathLabel at={[1.35, -1.25]} tex="(+, -)" color={vc.muted} />
+            <MathLabel at={[1.45, 0.9]} tex="(+, +)" color={vc.muted} />
+            <MathLabel at={[-1.45, 0.9]} tex="(-, +)" color={vc.muted} />
+            <MathLabel at={[-1.45, -0.9]} tex="(-, -)" color={vc.muted} />
+            <MathLabel at={[1.45, -0.9]} tex="(+, -)" color={vc.muted} />
           </>
         )}
 

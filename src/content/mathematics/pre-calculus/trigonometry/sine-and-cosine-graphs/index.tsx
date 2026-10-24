@@ -27,14 +27,14 @@ const TAN = vc.orange
 const O: Vec2 = [-1.4, 0]
 const X_MAX = 7
 
-const CIRCLE_STEPS = ['unroll', 'cosine', 'tangent']
+const CIRCLE_STEPS = ['unroll', 'cosine', 'period', 'tangent']
 const WAVE_STEPS = ['amplitude', 'shift']
 
 /** Multiples of π/2 from 0 to 2π, with their TeX. */
 const TICKS: [number, string][] = [
-  [Math.PI / 2, '\\pi/2'],
+  [Math.PI / 2, '\\dfrac{\\pi}{2}'],
   [Math.PI, '\\pi'],
-  [(3 * Math.PI) / 2, '3\\pi/2'],
+  [(3 * Math.PI) / 2, '\\dfrac{3\\pi}{2}'],
   [TAU, '2\\pi'],
 ]
 
@@ -70,7 +70,9 @@ export default function SineAndCosineGraphs() {
     },
     period: () => {
       reset()
-      setTheta(TAU)
+      void seq.run(({ tween }) =>
+        tween(0, TAU, { duration: 4, ease: 'linear', onUpdate: setTheta }),
+      )
     },
     amplitude: () => {
       reset()
@@ -104,7 +106,6 @@ export default function SineAndCosineGraphs() {
   const isWave = WAVE_STEPS.includes(id ?? '')
   const [c, s] = [Math.cos(theta), Math.sin(theta)]
   const P: Vec2 = [O[0] + c, O[1] + s]
-  const traced = id === 'period' ? TAU : theta
   const wave = { A, B, C: id === 'shift' ? C : 0, D: id === 'shift' ? D : 0 }
   const features = sinusoidFeatures(wave)
   const tan = Math.tan(theta)
@@ -252,9 +253,13 @@ export default function SineAndCosineGraphs() {
 
         {id === 'period' && (
           <>
-            <FunctionPlot f={Math.sin} color={SIN} width={2.5} />
-            <FunctionPlot f={Math.cos} color={COS} width={2.5} />
-            <Segment from={[0, -1.55]} to={[traced, -1.55]} color={vc.muted} width={1.25} />
+            <FunctionPlot f={Math.sin} domain={[0, X_MAX]} color={SIN} width={2.5} />
+            <FunctionPlot f={Math.cos} domain={[0, X_MAX]} color={COS} width={2.5} />
+            <Segment from={[theta, -1.2]} to={[theta, 1.2]} color={ARC} width={1} dash="3 4" />
+            <Segment from={P} to={[theta, s]} color={SIN} width={1} dash="4 5" opacity={0.7} />
+            <Point at={[theta, s]} color={SIN} r={5} coords={false} />
+            <Point at={[theta, c]} color={COS} r={5} coords={false} />
+            <Segment from={[0, -1.55]} to={[TAU, -1.55]} color={vc.muted} width={1.25} />
             <Segment from={[0, -1.45]} to={[0, -1.65]} color={vc.muted} width={1.25} />
             <Segment from={[TAU, -1.45]} to={[TAU, -1.65]} color={vc.muted} width={1.25} />
             <MathLabel
@@ -264,8 +269,8 @@ export default function SineAndCosineGraphs() {
               anchor="n"
               offset={6}
             />
-            <MathLabel at={[0.9, 1.25]} tex="\sin x" color={SIN} />
-            <MathLabel at={[-0.5, 1.25]} tex="\cos x" color={COS} />
+            <MathLabel at={[Math.PI / 2, 1]} tex="\sin x" color={SIN} anchor="n" offset={8} />
+            <MathLabel at={[TAU, 1]} tex="\cos x" color={COS} anchor="n" offset={8} />
           </>
         )}
 

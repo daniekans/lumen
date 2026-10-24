@@ -167,7 +167,7 @@ export default function PolynomialGraphs() {
         )}
         <FunctionPlot f={f} color={vc.blue} />
         {id === 'turning-points' &&
-          turns.map((t) => <Point key={t} at={[t, f(t)]} color={vc.yellow} r={4} />)}
+          turns.map((t, i) => <Point key={i} at={[t, f(t)]} color={vc.yellow} r={4} />)}
         {roots.map((r, i) => (
           <Point
             key={i}
