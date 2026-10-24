@@ -35,12 +35,13 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Calculus 1: Derivatives, batch 3 (items 10 to 13 in the Derivatives
-unit plan, `plans/calculus.md`): implicit and inverse derivatives, related rates, their practice,
-and the rebuilt checkpoint. Batch 2 (items 5 to 9) awaits the owner's review; if the owner brings
-review notes, apply them first, in their own commits. The focus is Mathematics and
-Machine Learning; Data Engineering continues only on request, and its next step is outlining the
-Distributed processing unit.
+**Suggested next session:** Linear Algebra: Linear maps and matrices. Write its unit plan first
+(`plans/linear-algebra.md`, from the outline's unit 2) for the owner's review, then build batch 1.
+Derivatives batch 3 (items 10 to 13: implicit and inverse derivatives, related rates, their
+practice, the rebuilt checkpoint) awaits the owner's review; if the owner brings review notes,
+apply them first, in their own commits. The focus is Mathematics and Machine Learning; Data
+Engineering continues only on request, and its next step is outlining the Distributed processing
+unit.
 
 ### Phase 3: Explore page
 
