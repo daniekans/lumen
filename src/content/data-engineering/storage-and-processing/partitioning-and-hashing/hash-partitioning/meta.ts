@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Hash partitioning',
   summary:
-    'A hash function maps each key to a large number, and the remainder of that number divided by n picks one of n buckets. The same key always lands in the same bucket, neighboring keys scatter, and range partitioning makes the opposite trade.',
+    'A hash function maps each key to a large number, and the remainder of that number divided by $n$ picks one of $n$ buckets. The same key always lands in the same bucket, neighboring keys scatter, and range partitioning makes the opposite trade.',
   tags: ['hash', 'hash partitioning', 'modulo', 'bucket', 'Murmur3', 'range partitioning'],
   level: 'core',
   order: 4,

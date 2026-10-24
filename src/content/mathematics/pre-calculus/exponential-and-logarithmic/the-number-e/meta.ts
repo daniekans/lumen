@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'The number e',
   summary:
-    'Compounding more and more often approaches a limit, the number e (about 2.718). It is also the one base whose exponential has slope 1 where it crosses the y-axis, so that exponential has a slope equal to its height everywhere. Continuous growth is built on it.',
+    'Compounding more and more often approaches a limit, the number $e \\approx 2.718$. It is also the one base whose exponential has slope $1$ where it crosses the $y$-axis, so that exponential has a slope equal to its height everywhere. Continuous growth is built on it.',
   tags: ['e', 'compound interest', 'continuous growth', 'natural exponential', 'slope'],
   level: 'intro',
   order: 2,

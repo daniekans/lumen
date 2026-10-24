@@ -8,3 +8,7 @@
   overflow-wrap: anywhere;
   box-decoration-break: clone;
 }
+
+.nowrap {
+  white-space: nowrap;
+}

@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'One-sided and infinite limits',
   summary:
-    'A limit can be taken from one side only, and the two-sided limit exists exactly when both sides agree. Values that grow without bound give infinite limits and vertical asymptotes; values that settle as x grows give limits at infinity, decided by the dominant terms.',
+    'A limit can be taken from one side only, and the two-sided limit exists exactly when both sides agree. Values that grow without bound give infinite limits and vertical asymptotes; values that settle as $x$ grows give limits at infinity, decided by the dominant terms.',
   tags: [
     'one-sided limit',
     'jump',

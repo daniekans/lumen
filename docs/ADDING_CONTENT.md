@@ -15,6 +15,10 @@ placeholder text. A new area must first be added to `src/content/areas.ts`.
 
 ## 2. Plan the steps and skills
 
+The item's `summary` shows on the unit page, in the explanation pane and in search. It may use
+inline TeX, as captions do: write math as `$x^2$`, `$f'(x)$` or `$\\frac{dy}{dx}$`, never as plain
+text (`x^2`, `dy/dx`, a bare `ε`).
+
 Write the steps in `meta.ts` before the component. Each step is one thing the learner should notice.
 Lessons add a `check` to the steps worth testing (`choice` or `number`). List the unit's skills in
 `unit.ts` and reference them from the item's `skills`.

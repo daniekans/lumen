@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Domain and range',
   summary:
-    'The domain is the shadow of a graph on the x-axis, the range its shadow on the y-axis. Square roots, fractions and restricted rules each cut these shadows differently.',
+    'The domain is the shadow of a graph on the $x$-axis, the range its shadow on the $y$-axis. Square roots, fractions and restricted rules each cut these shadows differently.',
   tags: ['function', 'domain', 'range', 'interval notation', 'square root', 'asymptote'],
   level: 'intro',
   order: 2,

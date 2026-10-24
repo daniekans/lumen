@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Rehashing',
   summary:
-    'Going from n to n + 1 buckets with h mod n keeps a key only when both remainders agree, which happens for n of every n(n + 1) hash values. So n / (n + 1) of the keys move, n times more than the new bucket needs.',
+    'Going from $n$ to $n + 1$ buckets with $h \\bmod n$ keeps a key only when both remainders agree, which happens for $n$ of every $n(n + 1)$ hash values. So $\\frac{n}{n + 1}$ of the keys move, $n$ times more than the new bucket needs.',
   tags: ['rehashing', 'modulo', 'bucket', 'remainder', 'resize'],
   level: 'core',
   order: 8,

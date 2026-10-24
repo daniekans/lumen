@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Squeeze and standard limits',
   summary:
-    'A function trapped between two others that share a limit has that limit too. With the squeeze theorem and areas on the unit circle, sin x / x tends to 1. The slope of e^x at 0 makes (e^h - 1)/h tend to 1, and (1 + 1/n)^n tends to e. Algebra alone cannot reach these limits.',
+    'A function trapped between two others that share a limit has that limit too. With the squeeze theorem and areas on the unit circle, $\\frac{\\sin x}{x}$ tends to $1$. The slope of $e^x$ at $0$ makes $\\frac{e^h - 1}{h}$ tend to $1$, and $\\left(1 + \\frac{1}{n}\\right)^n$ tends to $e$. Algebra alone cannot reach these limits.',
   tags: ['squeeze theorem', 'sin x / x', 'unit circle', 'e', 'standard limits'],
   level: 'core',
   order: 5,

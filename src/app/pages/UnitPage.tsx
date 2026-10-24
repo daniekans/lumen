@@ -12,7 +12,7 @@ import {
   unitSummary,
   useProgress,
 } from '@/progress'
-import { Button, KindIcon, ProgressRing, Tex, Tooltip } from '@/ui/atoms'
+import { Button, KindIcon, ProgressRing, RichText, Tex, Tooltip } from '@/ui/atoms'
 import { Breadcrumbs, StatusPicker } from '@/ui/molecules'
 import { TopBar } from '@/ui/organisms'
 import { Term } from '@/ui/organisms/MdxWidgets'
@@ -64,7 +64,9 @@ export function UnitPage({ unit }: { unit: Unit }) {
           </span>
           <span className={styles.body}>
             <span className={styles.title}>{item.title}</span>
-            <span className={styles.description}>{item.summary}</span>
+            <span className={styles.description}>
+              <RichText>{item.summary}</RichText>
+            </span>
           </span>
           <span className={styles.trail}>
             <span className={page.kind}>{msg.catalog.kind[item.kind]}</span>
@@ -139,7 +141,9 @@ export function UnitPage({ unit }: { unit: Unit }) {
               {msg.pages.unit.upNext} · {msg.catalog.kind[next.kind]}
             </span>
             <span className={styles.title}>{next.title}</span>
-            <span className={styles.description}>{next.summary}</span>
+            <span className={styles.description}>
+              <RichText>{next.summary}</RichText>
+            </span>
           </span>
           <span className={page.go}>
             {itemProgress(next, data.items[next.id]).state === 'not-started'

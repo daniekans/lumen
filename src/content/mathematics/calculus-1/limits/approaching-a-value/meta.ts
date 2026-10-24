@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Approaching a value',
   summary:
-    'A limit describes what f(x) gets close to as x gets close to a, from both sides, without ever using x = a. It exists even where f(a) is undefined or different, and it starts the notation of increments that grows into dy/dx.',
+    'A limit describes what $f(x)$ gets close to as $x$ gets close to $a$, from both sides, without ever using $x = a$. It exists even where $f(a)$ is undefined or different, and it starts the notation of increments that grows into $\\frac{dy}{dx}$.',
   tags: ['limit', 'hole', 'approach', 'increment', 'delta'],
   level: 'core',
   order: 1,

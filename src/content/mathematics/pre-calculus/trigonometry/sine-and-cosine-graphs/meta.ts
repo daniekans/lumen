@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Graphs of sine and cosine',
   summary:
-    'Unroll the unit circle onto the x-axis and the height of the moving point traces the sine wave; its horizontal coordinate traces cosine, the same wave shifted. Stretching and shifting give every sinusoid, and the slope of the radius gives tangent.',
+    'Unroll the unit circle onto the $x$-axis and the height of the moving point traces the sine wave; its horizontal coordinate traces cosine, the same wave shifted. Stretching and shifting give every sinusoid, and the slope of the radius gives tangent.',
   tags: ['sine', 'cosine', 'tangent', 'period', 'amplitude', 'phase shift', 'sinusoid'],
   level: 'intro',
   order: 2,

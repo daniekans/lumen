@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'The power and sum rules',
   summary:
-    'A square of side x grows by two strips, a cube by three slabs: that is why x^2 has slope 2x and x^3 has slope 3x^2. Expanding (x + h)^n gives the power rule for every whole n, and limits of sums give linearity.',
+    'A square of side $x$ grows by two strips, a cube by three slabs: that is why $x^2$ has slope $2x$ and $x^3$ has slope $3x^2$. Expanding $(x + h)^n$ gives the power rule for every whole $n$, and limits of sums give linearity.',
   tags: ['power rule', 'sum rule', 'constant multiple', 'linearity', 'binomial', 'derivative'],
   level: 'core',
   order: 4,

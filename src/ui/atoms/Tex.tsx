@@ -19,6 +19,9 @@ export const Tex = memo(function Tex({ children, display = false, className }: T
   return <span className={className} dangerouslySetInnerHTML={{ __html: html }} />
 })
 
+const isInline = (p: string) =>
+  p.startsWith('$') && p.endsWith('$') && p.length > 1 && !p.startsWith('$$')
+
 /** TeX, not copy. */
 const DISPLAY_STYLE = '\\displaystyle ' // i18n-ignore
 
@@ -38,6 +41,10 @@ export function RichText({
   displayStyle?: boolean
 }) {
   const parts = children.split(/(\$\$[^$]+\$\$|\$[^$]+\$|`[^`]+`)/g)
+  // Punctuation right after inline math stays on its line, as in "the limit of $x$, is".
+  const glued = parts.map((p, i) =>
+    isInline(p) ? (/^[,.;:!?)]+/.exec(parts[i + 1] ?? '')?.[0] ?? '') : '',
+  )
   return (
     <span>
       {parts.map((p, i) =>
@@ -45,14 +52,17 @@ export function RichText({
           <Tex key={i} display>
             {p.slice(2, -2)}
           </Tex>
-        ) : p.startsWith('$') && p.endsWith('$') && p.length > 1 ? (
-          <Tex key={i}>{(displayStyle ? DISPLAY_STYLE : '') + p.slice(1, -1)}</Tex>
+        ) : isInline(p) ? (
+          <span key={i} className={glued[i] ? styles.nowrap : undefined}>
+            <Tex>{(displayStyle ? DISPLAY_STYLE : '') + p.slice(1, -1)}</Tex>
+            {glued[i]}
+          </span>
         ) : p.startsWith('`') && p.endsWith('`') && p.length > 2 ? (
           <code key={i} className={styles.code}>
             {p.slice(1, -1)}
           </code>
         ) : (
-          <span key={i}>{p}</span>
+          <span key={i}>{p.slice(i > 0 ? glued[i - 1]!.length : 0)}</span>
         ),
       )}
     </span>

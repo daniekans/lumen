@@ -57,6 +57,9 @@ export interface SearchResult {
   context: string
 }
 
+/** Summaries may hold inline TeX ($x^2$) or code (`GROUP BY`); search their text without the delimiters. */
+const plainText = (s: string) => s.replace(/[$`]/g, '')
+
 export const search = (query: string): SearchResult[] => {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
   const results: SearchResult[] = []
@@ -81,7 +84,7 @@ export const search = (query: string): SearchResult[] => {
     .filter(({ node, context }) => {
       const tags = node.type === 'item' ? node.tags : []
       const text = node.type === 'item' || node.type === 'term' ? node.summary : node.description
-      const hay = [node.title, text, context, ...tags].join(' ').toLowerCase()
+      const hay = [node.title, plainText(text), context, ...tags].join(' ').toLowerCase()
       return terms.every((t) => hay.includes(t))
     })
     .sort((a, b) => Number(titled(b)) - Number(titled(a)))

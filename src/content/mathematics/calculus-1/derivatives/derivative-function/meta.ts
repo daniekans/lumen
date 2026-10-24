@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'The derivative function',
   summary:
-    "The slope at every point, plotted as a point of its own, draws a new graph: f'. Its sign says where f rises and falls, its zeros mark flat tangents, and it fails to exist at corners, cusps and vertical tangents. d/dx turns one function into another.",
+    "The slope at every point, plotted as a point of its own, draws a new graph: $f'$. Its sign says where $f$ rises and falls, its zeros mark flat tangents, and it fails to exist at corners, cusps and vertical tangents. $\\frac{d}{dx}$ turns one function into another.",
   tags: ['derivative', 'slope', 'differentiable', 'corner', 'cusp', 'vertical tangent', 'operator'],
   level: 'core',
   order: 3,

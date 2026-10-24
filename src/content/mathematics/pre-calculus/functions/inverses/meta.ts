@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Inverse functions',
   summary:
-    'An inverse function runs a rule backward. Its graph is the reflection across the line y = x, which exists as a function only when no output is repeated.',
+    'An inverse function runs a rule backward. Its graph is the reflection across the line $y = x$, which exists as a function only when no output is repeated.',
   tags: ['function', 'inverse', 'reflection', 'horizontal line test', 'one-to-one'],
   level: 'intro',
   order: 6,

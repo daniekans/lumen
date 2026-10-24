@@ -8,7 +8,7 @@ import { msg } from '@/i18n'
 import { isItemComplete, itemProgress, useProgress } from '@/progress'
 import { ASIDE_WIDTH, useUi } from '@/state/ui'
 import { ease, spring } from '@/styles/motion'
-import { Badge, IconButton, ResizeHandle } from '../atoms'
+import { Badge, IconButton, ResizeHandle, RichText } from '../atoms'
 import { DoneToggle, PlaybackButton, StepList } from '../molecules'
 import { ErrorBoundary } from './ErrorBoundary'
 import styles from './ExplanationPane.module.css'
@@ -96,7 +96,9 @@ export function ExplanationPane({ entry, stepIndex, onStep, playback }: Explanat
           </IconButton>
         </div>
         <h1 className={styles.title}>{entry.title}</h1>
-        <p className={styles.summary}>{entry.summary}</p>
+        <p className={styles.summary}>
+          <RichText>{entry.summary}</RichText>
+        </p>
         <div className={styles.status}>
           <DoneToggle
             done={done}

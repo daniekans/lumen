@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'lesson',
   title: 'Lines and planes',
   summary:
-    'A line is a point plus the multiples of one direction, p + tv, and a plane is a point plus the combinations of two, p + sv + tw. A plane also has one equation: its normal n is perpendicular to every direction in it, so n · (x - p) = 0. Spans are the lines and planes through the origin.',
+    'A line is a point plus the multiples of one direction, $\\mathbf{p} + t\\mathbf{v}$, and a plane is a point plus the combinations of two, $\\mathbf{p} + s\\mathbf{v} + t\\mathbf{w}$. A plane also has one equation: its normal $\\mathbf{n}$ is perpendicular to every direction in it, so $\\mathbf{n} \\cdot (\\mathbf{x} - \\mathbf{p}) = 0$. Spans are the lines and planes through the origin.',
   tags: [
     'parametric line',
     'parametric plane',

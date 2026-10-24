@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Inverse trigonometric functions',
   summary:
-    'Sine takes each value infinitely often, so it has no inverse until its domain is cut to one increasing piece. That piece reflected across y = x is arcsin, and arccos and arctan come the same way. They return one angle; the other solutions follow from symmetry and the period.',
+    'Sine takes each value infinitely often, so it has no inverse until its domain is cut to one increasing piece. That piece reflected across $y = x$ is $\\arcsin$, and $\\arccos$ and $\\arctan$ come the same way. They return one angle; the other solutions follow from symmetry and the period.',
   tags: ['arcsin', 'arccos', 'arctan', 'inverse', 'principal value', 'trigonometric equations'],
   level: 'intro',
   order: 4,

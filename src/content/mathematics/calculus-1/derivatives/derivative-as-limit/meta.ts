@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'lesson',
   title: 'The derivative as a limit',
   summary:
-    "A secant line through two points of a curve turns into the tangent line as the points merge. Its slope, the limit of Δy/Δx, is the derivative, written f'(x) or dy/dx. Zoomed in far enough, the curve and its tangent look the same.",
+    "A secant line through two points of a curve turns into the tangent line as the points merge. Its slope, the limit of $\\frac{\\Delta y}{\\Delta x}$, is the derivative, written $f'(x)$ or $\\frac{dy}{dx}$. Zoomed in far enough, the curve and its tangent look the same.",
   tags: ['derivative', 'limit', 'secant', 'tangent', 'slope', 'rate of change', 'Leibniz notation'],
   level: 'core',
   skills: ['secant-slope', 'definition'],

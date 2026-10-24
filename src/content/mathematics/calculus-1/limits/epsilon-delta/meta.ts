@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'The epsilon-delta definition',
   summary:
-    'The limit made precise as a game: someone names a tolerance ε around L, and you answer with a window δ around a whose outputs all land inside it. The limit is L when you can always answer. A jump has no answer for small ε, and at infinity the window becomes a threshold N.',
+    'The limit made precise as a game: someone names a tolerance $\\varepsilon$ around $L$, and you answer with a window $\\delta$ around $a$ whose outputs all land inside it. The limit is $L$ when you can always answer. A jump has no answer for small $\\varepsilon$, and at infinity the window becomes a threshold $N$.',
   tags: ['limit', 'epsilon-delta', 'epsilon-N', 'definition', 'proof'],
   level: 'core',
   order: 9,

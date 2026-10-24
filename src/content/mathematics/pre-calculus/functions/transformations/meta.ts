@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Transforming graphs',
   summary:
-    'Four numbers move a graph without changing its shape: y = a f(b(x - h)) + k shifts, stretches and reflects the graph of f. Tracked points show where each point goes.',
+    'Four numbers move a graph without changing its shape: $y = af(b(x - h)) + k$ shifts, stretches and reflects the graph of $f$. Tracked points show where each point goes.',
   tags: ['function', 'transformation', 'shift', 'stretch', 'reflection', 'graph'],
   level: 'intro',
   order: 7,

@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'lesson',
   title: 'Epsilon-delta proofs',
   summary:
-    'How to prove a limit from the definition: work backward from |f(x) - L| < ε to a δ, then write the proof forward. Linear functions give δ = ε / |m|; a quadratic needs a bound on the extra factor, hence δ = min(1, ε / 3); the sum law splits ε in two; and a jump is beaten by one ε.',
+    'How to prove a limit from the definition: work backward from $\\lvert f(x) - L \\rvert < \\varepsilon$ to a $\\delta$, then write the proof forward. Linear functions give $\\delta = \\frac{\\varepsilon}{\\lvert m \\rvert}$; a quadratic needs a bound on the extra factor, hence $\\delta = \\min\\left(1, \\frac{\\varepsilon}{3}\\right)$; the sum law splits $\\varepsilon$ in two; and a jump is beaten by one $\\varepsilon$.',
   tags: ['epsilon-delta', 'proof', 'limit laws', 'limit'],
   level: 'core',
   order: 10,

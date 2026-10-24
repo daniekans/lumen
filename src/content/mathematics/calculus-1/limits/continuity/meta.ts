@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Continuity',
   summary:
-    'A function is continuous at a when f(a) is defined, the limit at a exists, and the two are equal. Each failed condition gives a kind of discontinuity: removable, jump, infinite or oscillating. On an interval, continuity gives the intermediate value theorem, and with it the bisection method for finding roots.',
+    'A function is continuous at $a$ when $f(a)$ is defined, the limit at $a$ exists, and the two are equal. Each failed condition gives a kind of discontinuity: removable, jump, infinite or oscillating. On an interval, continuity gives the intermediate value theorem, and with it the bisection method for finding roots.',
   tags: [
     'continuity',
     'discontinuity',

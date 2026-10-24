@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'lesson',
   title: 'Limit laws',
   summary:
-    'Limits respect sums, products and quotients, so the limit of a polynomial or of a rational function with a nonzero denominator is its value. When substitution gives 0/0, factoring, rationalizing or combining fractions removes the cancelling factor; a nonzero number over 0 means an infinite limit.',
+    'Limits respect sums, products and quotients, so the limit of a polynomial or of a rational function with a nonzero denominator is its value. When substitution gives $\\frac{0}{0}$, factoring, rationalizing or combining fractions removes the cancelling factor; a nonzero number over $0$ means an infinite limit.',
   tags: [
     'limit laws',
     'direct substitution',
