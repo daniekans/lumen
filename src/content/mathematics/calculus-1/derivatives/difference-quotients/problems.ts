@@ -1,6 +1,6 @@
 import { defineProblems, tex, type Problem, type Rng } from '@/lib/practice'
 
-const { poly, sum, paren } = tex
+const { poly, sum, paren, frac, num, signed } = tex
 
 /** A quadratic a x^2 + b x + c with small integer coefficients, a nonzero. */
 const quadratic = (rng: Rng) => {
@@ -232,6 +232,91 @@ export const problems = defineProblems([
           `$y = ${line}$.`,
         ],
         data: { a, b, c, x0 },
+      }
+    },
+  },
+  {
+    id: 'reciprocal-at-point',
+    title: 'Derivative of k/x',
+    skills: ['definition'],
+    difficulty: 2,
+    generate: (rng) => {
+      const k = rng.nonZeroInt(-6, 6)
+      const x0 = rng.nonZeroInt(-4, 4)
+      const ft = `${k < 0 ? '-' : ''}\\dfrac{${Math.abs(k)}}{x}`
+      return {
+        prompt: `Use the limit definition to find $f'(${x0})$ for $f(x) = ${ft}$.`,
+        answer: { kind: 'number', value: -k / (x0 * x0) },
+        hints: [
+          `Write $f(${x0} + h) - f(${x0})$ over the common denominator $${x0}(${x0} + h)$, as with limits of differences of fractions.`,
+          'After combining, the numerator is a multiple of $h$, which cancels.',
+        ],
+        solution: [
+          `$\\dfrac{${k}}{${x0} + h} - \\dfrac{${k}}{${x0}} = \\dfrac{${k} \\cdot ${paren(x0)} - ${paren(k)}(${x0} + h)}{${x0}(${x0} + h)} = \\dfrac{${-k}h}{${x0}(${x0} + h)}$.`,
+          `Dividing by $h$: $\\dfrac{${-k}}{${x0}(${x0} + h)}$.`,
+          `Letting $h \\to 0$: $f'(${x0}) = \\dfrac{${-k}}{${x0 * x0}} = ${frac(-k, x0 * x0)}$.`,
+        ],
+        data: { k, x0 },
+      }
+    },
+  },
+  {
+    id: 'root-at-point',
+    title: 'Derivative of a square root',
+    skills: ['definition'],
+    difficulty: 3,
+    generate: (rng) => {
+      const c = rng.int(1, 4)
+      const a = rng.int(1, 5)
+      const x0 = a * a
+      const ft = c === 1 ? '\\sqrt{x}' : `${c}\\sqrt{x}`
+      return {
+        prompt: `Use the limit definition to find $f'(${x0})$ for $f(x) = ${ft}$.`,
+        answer: { kind: 'number', value: c / (2 * a) },
+        hints: [
+          `Multiply $\\dfrac{\\sqrt{${x0} + h} - ${a}}{h}$ by $\\dfrac{\\sqrt{${x0} + h} + ${a}}{\\sqrt{${x0} + h} + ${a}}$, as when rationalizing a limit.`,
+          `The numerator becomes $(${x0} + h) - ${x0} = h$.`,
+        ],
+        solution: [
+          `$f(${x0}) = ${c === 1 ? '' : `${c} \\cdot `}${a}$, so the quotient is $${c === 1 ? '' : c}\\dfrac{\\sqrt{${x0} + h} - ${a}}{h}$.`,
+          `Rationalizing: $\\dfrac{\\sqrt{${x0} + h} - ${a}}{h} = \\dfrac{h}{h(\\sqrt{${x0} + h} + ${a})} = \\dfrac{1}{\\sqrt{${x0} + h} + ${a}}$.`,
+          `Letting $h \\to 0$: $f'(${x0}) = ${c === 1 ? '' : `${c} \\cdot `}\\dfrac{1}{${2 * a}} = ${frac(c, 2 * a)}$.`,
+        ],
+        data: { c, a },
+      }
+    },
+  },
+  {
+    id: 'differentiable-join',
+    title: 'A smooth join',
+    skills: ['derivative-graphs'],
+    difficulty: 3,
+    generate: (rng) => {
+      const p = rng.nonZeroInt(-2, 2)
+      const b = rng.int(-4, 4)
+      const a = rng.nonZeroInt(-2, 3)
+      const y0 = p * a * a + b * a
+      const m = 2 * p * a + b
+      const shift = sum([
+        [1, 'x'],
+        [-a, ''],
+      ])
+      return {
+        prompt: `The function $$f(x) = \\begin{cases} ${poly([p, b, 0])} & x < ${a} \\\\ m(${shift})${signed(y0)} & x \\ge ${a} \\end{cases}$$ is continuous at $x = ${a}$ for every $m$. Find the value of $m$ that makes $f$ differentiable at $x = ${a}$.`,
+        answer: { kind: 'number', value: m },
+        hints: [
+          'Differentiable means the slope from the left equals the slope from the right, so the graph has no corner.',
+          `The left piece has slope $${sum([
+            [2 * p, 'x'],
+            [b, ''],
+          ])}$ at $x$; the right piece is a line with slope $m$.`,
+        ],
+        solution: [
+          `Both pieces equal $${num(y0)}$ at $x = ${a}$, so $f$ is continuous there.`,
+          `Left slope at $${a}$: $${2 * p} \\cdot ${paren(a)}${signed(b)} = ${m}$. Right slope: $m$.`,
+          `The slopes must match, so $m = ${m}$. Any other $m$ leaves a corner.`,
+        ],
+        data: { p, b, a },
       }
     },
   },

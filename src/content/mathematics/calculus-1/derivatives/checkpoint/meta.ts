@@ -6,8 +6,8 @@ export const meta = defineItem({
   summary:
     'Six problems on paper: secant slopes, the limit definition, tangent lines and one short proof.',
   tags: ['derivative', 'checkpoint', 'limit definition'],
-  level: 'intro',
-  order: 3,
+  level: 'core',
+  order: 13,
   skills: ['secant-slope', 'definition'],
   problemCount: 6,
 })

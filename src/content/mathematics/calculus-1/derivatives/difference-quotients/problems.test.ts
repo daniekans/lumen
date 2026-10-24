@@ -41,6 +41,38 @@ describe('difference quotient problems', () => {
             )
           break
         }
+        case 'reciprocal-at-point': {
+          const k = d.k!
+          expect(a).toMatchObject({
+            value: expect.closeTo(
+              derivative((x) => k / x, d.x0!),
+              5,
+            ),
+          })
+          break
+        }
+        case 'root-at-point': {
+          const c = d.c!
+          expect(a).toMatchObject({
+            value: expect.closeTo(
+              derivative((x) => c * Math.sqrt(x), d.a! * d.a!),
+              5,
+            ),
+          })
+          break
+        }
+        case 'differentiable-join': {
+          // With the right m, the one-sided slopes at a agree; with m + 1 they do not.
+          const left = (x: number) => d.p! * x * x + d.b! * x
+          const m = a.kind === 'number' ? a.value : NaN
+          const right = (mm: number) => (x: number) => mm * (x - d.a!) + left(d.a!)
+          const h = 1e-6
+          const leftSlope = (left(d.a!) - left(d.a! - h)) / h
+          expect(left(d.a!)).toBeCloseTo(right(m)(d.a!), 9)
+          expect(leftSlope).toBeCloseTo((right(m)(d.a! + h) - right(m)(d.a!)) / h, 4)
+          expect(Math.abs(leftSlope - (m + 1))).toBeGreaterThan(0.5)
+          break
+        }
         case 'tangent-line': {
           const f = quad(d)
           const m = derivative(f, d.x0!)

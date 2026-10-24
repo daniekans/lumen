@@ -1,0 +1,61 @@
+The <Term id="derivative">derivative</Term> at one point is a number, the slope of the tangent
+there. Computed at every point, those numbers form a function of their own.
+
+## Plotting the slopes
+
+For <C c="blue">$f(x) = 0.2x^3 - 1.2x^2 + 1.8x + 1$</C>, the slope at $x$ is
+
+$$
+f'(x) = 0.6x^2 - 2.4x + 1.8 = 0.6(x - 1)(x - 3).
+$$
+
+Now <StepLink step="trace">plot each slope as a height</StepLink>, and the points $(x, f'(x))$
+draw the <C c="teal">graph of $f'$</C>. The two graphs share the $x$-axis, but their heights mean different
+things: $f(x)$ is a value, $f'(x)$ a rate of change of that value.
+
+## Reading one graph from the other
+
+- Where $f$ rises, every tangent climbs, so $f'(x) > 0$: the <C c="green">rising intervals</C>
+  $(0, 1)$ and $(3, 5.2)$.
+- Where $f$ falls, $f'(x) < 0$: the <C c="red">falling interval</C> $(1, 3)$.
+- At a turning point the tangent is flat, so $f'(x) = 0$. Here at $x = 1$ and $x = 3$.
+- Where $f$ is steepest, $f'$ reaches an extreme value. At $x = 2$, $f$ falls fastest and $f'$ is
+  at its lowest, $-0.6$.
+
+The converse needs care: $f'(x) = 0$ means a flat tangent, not always a turning point. For $x^3$
+the tangent at $0$ is flat, yet the function rises on both sides. The next unit sorts these cases.
+
+## Where the derivative fails
+
+$f'(a)$ exists when the difference quotient has a limit at $a$, the same number from both sides.
+That limit can fail in three typical ways.
+
+- **Corner.** For $|x - 2| + 1$ at $x = 2$, the quotient is $1$ for every $h > 0$ and $-1$ for
+  every $h < 0$. The <Term id="one-sided-limit">one-sided limits</Term> exist but differ.
+- **Cusp.** For $(x - 2)^{2/3} + 1$ the quotient is $h^{-1/3}$, which goes to $\infty$ from the
+  right and to $-\infty$ from the left. The graph comes to a sharp point.
+- **Vertical tangent.** For $\sqrt[3]{x - 2} + 2$ the quotient is $h^{-2/3}$, which goes to
+  $\infty$ from both sides. The tangent exists as a line, but it is vertical, and a vertical line
+  has no slope.
+
+All three functions are continuous at $2$. Continuity does not guarantee a derivative. The
+other direction does hold: if $f'(a)$ exists, then $f$ is continuous at $a$, because
+
+$$
+f(a + h) - f(a) = \frac{f(a + h) - f(a)}{h} \cdot h \to f'(a) \cdot 0 = 0.
+$$
+
+## $\frac{d}{dx}$ as an operator
+
+Differentiation is a machine that takes a function and gives back a function. Leibniz's
+notation names the machine $\frac{d}{dx}$ and writes it in front of its input:
+
+$$
+\frac{d}{dx}\left(x^2\right) = 2x, \qquad \frac{d}{dx}\left(\frac{1}{x}\right) = -\frac{1}{x^2},
+\qquad \frac{d}{dx}\sqrt{x} = \frac{1}{2\sqrt{x}}.
+$$
+
+With $y = f(x)$, the forms $f'(x)$, $\frac{dy}{dx}$ and $\frac{d}{dx} f(x)$ all mean the same
+function. The output can have a smaller domain than the input: $\sqrt{x}$ is defined at $0$, but
+its derivative is not, since the tangent there is vertical. The next items find rules that give
+the output without computing a limit each time.

@@ -4,9 +4,9 @@ export const meta = defineItem({
   kind: 'practice',
   title: 'Practice: difference quotients',
   summary:
-    'Secant slopes, difference quotients and derivatives from the limit definition, for quadratic and cubic functions.',
-  tags: ['derivative', 'limit definition', 'secant', 'tangent line', 'practice'],
-  level: 'intro',
+    'Secant slopes, difference quotients and derivatives from the limit definition, for polynomials, k/x and the square root, and a slope that removes a corner.',
+  tags: ['derivative', 'limit definition', 'secant', 'tangent line', 'differentiable', 'practice'],
+  level: 'core',
   order: 2,
-  skills: ['secant-slope', 'definition'],
+  skills: ['secant-slope', 'definition', 'derivative-graphs'],
 })

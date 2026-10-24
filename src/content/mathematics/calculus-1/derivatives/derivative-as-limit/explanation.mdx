@@ -1,29 +1,45 @@
 The slope of a straight line is rise over run. A curve has no single slope, but we can still ask how
-steep it is at one point. The derivative answers that question by turning it into a limit.
+steep it is at one point. The derivative answers that question with a <Term id="limit">limit</Term>.
 
 ## Average rate of change
 
-Pick a point $P = (x_0, f(x_0))$ and a second point $Q$ a horizontal distance $h$ away. The line
-through both is the <C c="yellow">secant</C>, and its slope is
+Pick a point $P = (x_0, f(x_0))$ and a second point $Q$ a horizontal distance $h$ away. The step
+$h$ is the <Term id="increment">increment</Term> $\Delta x$ written with one letter, and the
+change in height is $\Delta y = f(x_0 + h) - f(x_0)$. The line through both points is the
+yellow <C c="yellow">secant</C>, and its slope is
 
 $$
-m_{\text{sec}} = \frac{f(x_0 + h) - f(x_0)}{h}.
+\frac{\Delta y}{\Delta x} = \frac{f(x_0 + h) - f(x_0)}{h}.
 $$
 
 This is the average rate of change of $f$ between $x_0$ and $x_0 + h$.
 
 ## Instantaneous rate of change
 
-Setting $h = 0$ directly gives $0/0$, which means nothing. Instead we look at what the secant slope
-approaches as $h$ gets small:
+Setting $h = 0$ gives $\frac{0}{0}$, which has no value. As in the Limits unit, we ask what the
+quotient approaches instead:
 
 $$
 f'(x_0) = \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}.
 $$
 
-When this limit exists, the line through $P$ with slope $f'(x_0)$ is the <C c="teal">tangent</C>. In
-the visualization the readouts converge: at $h = 0.001$ the secant slope and $f'(x_0)$ agree to
+When this limit exists, $f$ is differentiable at $x_0$, and the line through $P$ with slope
+$f'(x_0)$ is the <C c="teal">tangent</C>:
+
+$$
+y = f(x_0) + f'(x_0)(x - x_0).
+$$
+
+In the visualization the readouts converge: at $h = 0.001$ the secant slope and $f'(x_0)$ agree to
 about three decimal places.
+
+## Locally straight
+
+Try <StepLink step="zoom">zooming in on $P$</StepLink>: it shows what the limit means geometrically. The gap
+between the curve and its tangent shrinks faster than the distance from $P$, so under enough
+magnification the two look like one line. A function with a derivative at $x_0$ is locally straight
+there, and the tangent is the straight line it resembles. This idea returns as linear approximation
+in the next unit, and later as the tangent plane and the gradient.
 
 ## The derivative is a function
 
@@ -34,6 +50,20 @@ $$
 f(x) = 0.1x^3 - 0.8x^2 + 1.6x + 1, \qquad f'(x) = 0.3x^2 - 1.6x + 1.6.
 $$
 
-Where $f$ climbs, $f'$ is positive. Where $f$ turns around, at $x = 4/3$ and $x = 4$,
-the tangent is flat and $f'$ crosses zero. Try <StepLink step="function">dragging $P$ over those
+Where $f$ climbs, $f'$ is positive. Where $f$ turns around, at $x = \frac{4}{3}$ and $x = 4$, the
+tangent is flat and $f'$ crosses zero. Try <StepLink step="notation">dragging $P$ over those
 points</StepLink>.
+
+## Leibniz notation
+
+Writing $y = f(x)$, Leibniz wrote the derivative as
+
+$$
+\frac{dy}{dx} = \lim_{\Delta x \to 0} \frac{\Delta y}{\Delta x}.
+$$
+
+The notation keeps the memory of the ratio it came from: $\Delta$, a finite change, becomes $d$ in
+the limit. At this stage $\frac{dy}{dx}$ is one symbol for that limit, the same number as $f'(x)$.
+Its value at a point is written $\left.\frac{dy}{dx}\right|_{x = x_0}$. Later items give $dy$ and
+$dx$ their own meaning, as the rise and run along the tangent line, and the fraction then holds
+literally.

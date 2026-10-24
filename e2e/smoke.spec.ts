@@ -97,6 +97,7 @@ test('a lesson completes after all steps and checks', async ({ page }) => {
   await page.getByRole('radio', { name: /slope of the tangent/ }).click()
   await expect(page.getByRole('status')).toContainText('Correct.')
   await steps.nth(3).click()
+  await steps.nth(4).click()
   await page.getByLabel('Your answer').fill('-0.4')
   await page.getByRole('button', { name: 'Check', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Done', exact: true })).toBeVisible()
@@ -147,11 +148,11 @@ test('a chosen answer can be cleared', async ({ page }) => {
 
 test('"I already know this unit" marks content done and can be undone', async ({ page }) => {
   await page.goto('/mathematics/calculus-1/derivatives')
-  await expect(page.getByText('0 of 3 done')).toBeVisible()
+  await expect(page.getByText('0 of 5 done')).toBeVisible()
   await page.getByRole('button', { name: 'I already know this unit' }).click()
-  await expect(page.getByText('3 of 3 done')).toBeVisible()
+  await expect(page.getByText('5 of 5 done')).toBeVisible()
   await page.getByRole('button', { name: /Undo/ }).click()
-  await expect(page.getByText('0 of 3 done')).toBeVisible()
+  await expect(page.getByText('0 of 5 done')).toBeVisible()
 })
 
 test('a practice session runs to its summary', async ({ page }) => {
