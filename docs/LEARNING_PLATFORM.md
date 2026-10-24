@@ -38,8 +38,7 @@ list with concrete steps, outline steps included, before it runs out.
 **Data Engineering and Architecture (on request).** Not part of the default order. When Daniel asks
 for it, or when a session offers it as the alternative prompt, take the first open step:
 
-1. DE: Partitioning, bucketing and hashing, batch 3 (items 8 to 11 in
-   `plans/data-engineering.md`: rehashing, consistent hashing, practice, checkpoint)
+1. DE: Partitioning, bucketing and hashing, batch 3 (done 2026-10-24, waits for Daniel's review)
 2. DE: Distributed processing (outline its unit plan first)
 3. The rest of the DE track in its order (Curriculum, Tracks)
 

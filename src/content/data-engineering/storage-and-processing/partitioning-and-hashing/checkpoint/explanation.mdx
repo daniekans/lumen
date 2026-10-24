@@ -1,0 +1,26 @@
+Ten problems that cover the whole unit. Work them on paper first, then enter the answers in any
+order and check the sheet at the end. The checkpoint passes at $80\%$.
+
+## What it covers
+
+- partition counts, the data a filter reads after <Term id="partition-pruning">pruning</Term>, and the finest layout that fits;
+- the bucket of a hash, <Term id="data-skew">skew</Term> ratios, and loads after <Term id="salting">salting</Term>;
+- pairs compared in a <Term id="bucketing">bucketed</Term> join;
+- keys moved when a node joins a <Term id="hash-ring">hash ring</Term>, and hash values that keep their bucket under modulo;
+- one short proof about <Term id="consistent-hashing">consistent hashing</Term>, graded by you against the solution.
+
+## Useful facts
+
+$$
+\begin{aligned}
+\text{partitions: } & P = d_1 \cdots d_k \leq \frac{B}{T} \\
+\text{bucket: } & h \bmod n \\
+\text{skew ratio: } & r = \frac{\max_j L_j}{N / n} \\
+\text{bucketed join: } & \textstyle\sum_k a_k b_k \text{ pairs}
+\end{aligned}
+$$
+
+From $n$ to $n + 1$ buckets, a key keeps its bucket only when $h \bmod n(n + 1) < n$. On a ring, a key
+belongs to the first node at or after it, clockwise.
+
+If a problem feels unfamiliar, the matching practice set in this unit has more of the same kind.

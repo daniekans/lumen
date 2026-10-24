@@ -100,15 +100,15 @@ without a shuffle), `consistent-hashing` (keys moved when nodes join or leave).
 | 5   | skew                        | lesson     | skew, hashing                  | Bucket load as a sum of key frequencies, mean $N/n$, the max-to-mean ratio, a hot key no hash can split, salting                 | done   |
 | 6   | bucketed-joins              | explore    | bucketing                      | Two tables bucketed on the join key: bucket $k$ meets bucket $k$; pairs compared $\sum a_k b_k$ versus $ab$; $4$ and $8$ buckets | done   |
 | 7   | practice-hashing-and-skew   | practice   | hashing, skew, bucketing       | Buckets of keys, bucket loads and skew ratios, salted keys, which buckets meet in a join                                         | done   |
-| 8   | rehashing                   | explore    | consistent-hashing             | From $n$ to $n + 1$ buckets with modulo: a key stays only if $h \bmod n(n+1) < n$, so $\frac{n}{n+1}$ of the keys move           | todo   |
-| 9   | consistent-hashing          | explore    | consistent-hashing             | Nodes and keys on a ring, each key to the next node clockwise; a new node takes one arc; virtual nodes even the arcs out         | todo   |
-| 10  | practice-consistent-hashing | practice   | consistent-hashing, hashing    | Owner of a key on a ring, keys moved when a node joins or leaves, modulo versus ring                                             | todo   |
-| 11  | checkpoint                  | checkpoint | all                            | Mix of the practice generators plus a self-graded proof (adding a node to a ring moves keys only onto the new node)              | todo   |
+| 8   | rehashing                   | explore    | consistent-hashing             | From $n$ to $n + 1$ buckets with modulo: a key stays only if $h \bmod n(n+1) < n$, so $\frac{n}{n+1}$ of the keys move           | done   |
+| 9   | consistent-hashing          | explore    | consistent-hashing             | Nodes and keys on a ring, each key to the next node clockwise; a new node takes one arc; virtual nodes even the arcs out         | done   |
+| 10  | practice-consistent-hashing | practice   | consistent-hashing, hashing    | Owner of a key on a ring, keys moved when a node joins or leaves, modulo versus ring                                             | done   |
+| 11  | checkpoint                  | checkpoint | all                            | Mix of the practice generators plus a self-graded proof (adding a node to a ring moves keys only onto the new node)              | done   |
 
 Batches: 1 = items 1 to 3 (partitioning by value), 2 = items 4 to 7 (hashing, skew, bucketing),
 3 = items 8 to 11 (consistent hashing and the checkpoint). Batch 1 was built on 2026-10-19 and
-batch 2 on 2026-10-23; Daniel approved both on 2026-10-23. Batch 3 waits until Daniel asks
-for Data Engineering again (see `DECISIONS.md`, Content plan).
+batch 2 on 2026-10-23; Daniel approved both on 2026-10-23. Batch 3 was built on 2026-10-24 and
+waits for Daniel's review.
 
 Batch 1 notes: the exploration's 24 rows (days 1 to 4 with $7, 5, 6, 6$ rows, every
 (day, city) pair present, $8$ rows in OSL) are inline in `partitioning-by-key/index.tsx`; folders
@@ -129,3 +129,15 @@ $8$ customers ($32$ pairs at $n = 4$, $20$ at $n = 8$). `Chip` (a key or cell bo
 kit for batch 3. New terms: `hash-function`, `hash-partitioning`, `range-partitioning`,
 `data-skew`, `hot-key`, `salting`, `shuffle`, `bucketing`. The shuffle is introduced here;
 Distributed processing should link it rather than define it again.
+
+Batch 3 notes: ring logic is in `src/lib/partitioning/ring.ts` (`ringPoints`, `ringOwner`,
+`arcShares`, `keysMovedOnRing`, `movesOnResize`), tested by brute force. Ring positions are the
+same Murmur3 hashes; virtual node `i` of a node hashes `name#i` (the bare name for `i = 0`). The
+rehashing item uses hash values $0$ to $29$ for the strip and customer ids $1$ to $400$ for the
+dots ($323$ move from $4$ to $5$, $190$ from $4$ to $8$). The ring uses node-A to node-D (shares
+$28.4, 53.5, 12.4, 5.7\%$; node-D owns none of the $24$ keys $1001$ to $1024$), node-E joins at
+$0.498$ of a turn and takes $9$ keys from node-B (modulo moves $19$), and node-A then leaves,
+sending its $8$ keys to node-E. At $V = 32$ the max-to-mean ratio is $1.10$ and node-E takes
+$24.6\%$. Practice uses a ring of $100$ positions so problems work by hand. The checkpoint has
+nine practice generators plus the proof that a joining node takes keys only for itself. New
+terms: `rehashing`, `consistent-hashing`, `hash-ring`, `virtual-node`.

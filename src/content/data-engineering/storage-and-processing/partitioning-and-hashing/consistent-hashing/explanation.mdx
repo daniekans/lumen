@@ -1,0 +1,29 @@
+With $h \bmod n$, adding a bucket moves $\frac{n}{n + 1}$ of the keys, as the last item showed. <Term id="consistent-hashing">Consistent hashing</Term> moves about $\frac{1}{n + 1}$, the least any even split allows. It is how Amazon's Dynamo, Cassandra and many caches spread keys over nodes that come and go.
+
+## The ring
+
+Bend the range of $h$ into a <Term id="hash-ring">circle</Term>: a value $x$ sits at the fraction $\frac{x}{2^{32}}$ of a turn, <StepLink step="ring">clockwise from the top</StepLink>, and $2^{32} - 1$ is next to $0$. Nodes are hashed onto the same circle by their names, and a key belongs to the <StepLink step="owner">first node at or after it</StepLink>, clockwise:
+
+$$
+\text{owner}(k) = \text{the node } v \text{ with the smallest } \big(h(v) - h(k)\big) \bmod 2^{32}.
+$$
+
+The difference modulo $2^{32}$ is the clockwise distance from the key to the node, so a node exactly at the key's point has distance $0$ and wins.
+
+So <StepLink step="arcs">each node owns an arc</StepLink>: the points after the previous node, up to and including its own. A node's share of the keys is, on average, the length of its arc over the circumference.
+
+## Joining and leaving
+
+The number of nodes appears nowhere in a key's position, only in which points are on the ring. When <StepLink step="join">node-E joins</StepLink>, a key changes owner only if node-E is now the first node clockwise from it. That happens exactly for the keys on the arc between node-E and the node before it, and those keys move to node-E. Every other key keeps its owner, and no key moves between two old nodes.
+
+When <StepLink step="leave">a node leaves</StepLink>, the same argument runs backwards: only its own keys lose their owner, and all of them go to the next node clockwise. Here node-A's $8$ keys go to node-E.
+
+The moved share is the length of one arc. With $n$ nodes placed at random its expected value is $\frac{1}{n + 1}$ for a node that joins, against $\frac{n}{n + 1}$ for modulo.
+
+## Uneven arcs and virtual nodes
+
+Points placed at random cut very uneven arcs. Four of them gave node-B $53.5\%$ of the ring and node-D $5.7\%$: a <Term id="data-skew">skew</Term> ratio of $2.14$ before any hot key. And a node that joins relieves only its one successor, not the cluster.
+
+Both are fixed by <Term id="virtual-node">virtual nodes</Term>. Each node is hashed onto the ring $V$ times, by names such as node-A#1, node-A#2, and owns the arcs that end at all of its points. Its share is a sum of $V$ short arcs, and sums of many small random pieces vary much less than one piece: the <StepLink step="virtual">max-to-mean ratio</StepLink> falls from $2.14$ at $V = 1$ to $1.10$ at $V = 32$. It does not fall at every step, since the points are random, but the spread shrinks roughly like $\frac{1}{\sqrt{V}}$.
+
+A node that <StepLink step="virtual-join">joins with $V$ points</StepLink> takes the short arc that ends at each of them from the node that owned it, so it draws keys from many nodes at once and ends close to its fair $\frac{1}{n + 1}$: node-E gets $24.6\%$ of the ring against a fair $20\%$. Cassandra uses $16$ points per node by default (`num_tokens`), and nodes with more memory can take more points to get a larger share.

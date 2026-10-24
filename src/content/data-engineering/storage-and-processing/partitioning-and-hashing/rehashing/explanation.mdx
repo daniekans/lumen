@@ -1,0 +1,36 @@
+A table <Term id="hash-partitioning">hash partitioned</Term> into $n$ buckets grows, and a cluster gets one more worker. With $h \bmod n$, how many keys have to move to reach $n + 1$ buckets? The answer depends only on the hash values, so the question is which values of $h$ keep their bucket.
+
+## Where the remainders agree
+
+A key keeps its bucket when
+
+$$
+h \bmod n = h \bmod (n + 1).
+$$
+
+The <StepLink step="remainders">first row</StepLink> of remainders counts $0$ to $n - 1$ and starts again; the <StepLink step="add-bucket">second</StepLink> counts to $n$, one step longer, so the rows drift apart after $h = n - 1$. They agree at $h = 0, 1, \dots, n - 1$ and nowhere else until both restart together.
+
+Both rows restart together every $n(n + 1)$ values, since $n$ and $n + 1$ both divide it. Inside one such <StepLink step="period">period</StepLink>, two different values of $h$ never have the same pair of remainders (two such values would differ by a multiple of both $n$ and $n + 1$, so by a multiple of $n(n + 1)$). The pairs $(0, 0), (1, 1), \dots, (n - 1, n - 1)$ are each taken by $h = 0, 1, \dots, n - 1$, so those are the only values in the period that stay:
+
+$$
+\text{a key stays} \iff h \bmod n(n + 1) < n.
+$$
+
+A good hash spreads keys evenly over the period, so a share of
+
+$$
+\frac{n}{n(n + 1)} = \frac{1}{n + 1}
+$$
+
+of the keys stays and $\frac{n}{n + 1}$ moves. With <StepLink step="real-keys">$400$ real keys</StepLink> and $n = 4$, $323$ move, against the $320$ the formula predicts. The share grows with $n$: <StepLink step="any-n">$90\%$ at $n = 9$</StepLink>, $99\%$ at $n = 99$. A larger cluster pays more for each node it adds.
+
+## Doubling
+
+Engines that resize hash tables usually <StepLink step="doubling">double</StepLink> instead. A key stays when $h \bmod 2n = h \bmod n$, which holds exactly when $h \bmod 2n < n$, so half of the keys stay. The other half goes from bucket $b$ to $b + n$: every old bucket splits into itself and one new bucket, and no data crosses between unrelated buckets. That is one reason hash tables and many <Term id="bucketing">bucketed</Term> layouts use powers of two. The cost is still half of the data for a doubling, and no way to add a single node.
+
+## The fewest moves
+
+After the change, an even split gives the new bucket $\frac{1}{n + 1}$ of the keys, and they have to come from somewhere, so at least that share must move. <StepLink step="fewest">Modulo moves $\frac{n}{n + 1}$</StepLink>, $n$ times the minimum: most of the moved keys go from one old bucket to another old bucket, which the new bucket did not need. For a stored table that means rewriting most files; for a cache or a database cluster it means most keys miss or travel over the network at once.
+
+The next item, <Term id="consistent-hashing">consistent hashing</Term>, moves close to the
+minimum.

@@ -1,0 +1,17 @@
+The problems use a <Term id="hash-ring">hash ring</Term> with $100$ positions, $0$ to $99$, so they work by hand. A real ring has $2^{32}$, and the rules are the same.
+
+## Owners and arcs
+
+A key belongs to the first node at or after its position, walking up and wrapping from $99$ to $0$. A node owns the positions after the node before it, up to and including its own:
+
+$$
+\text{share} = \frac{(\text{own} - \text{previous}) \bmod 100}{100}.
+$$
+
+## Joining and leaving
+
+Under <Term id="consistent-hashing">consistent hashing</Term>, a node that joins takes the keys between the node before it and itself, and no other key moves. A node that leaves hands all its keys to the next node clockwise.
+
+## Modulo
+
+With buckets $h \bmod n$, going to $n + 1$ keeps a key only when $h \bmod n(n + 1) < n$, so $\frac{n}{n + 1}$ of the keys move. Doubling to $2n$ keeps the keys with $h \bmod 2n < n$, half of them. On a ring with even shares, a node that joins moves $\frac{1}{n + 1}$, the share it takes. More on this in <Term id="rehashing">rehashing</Term>.

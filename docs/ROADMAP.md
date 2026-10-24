@@ -37,10 +37,9 @@ of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** Pre-calculus: Trigonometry (refresher), step 9 of "Suggested order
 of units" in `LEARNING_PLATFORM.md`. The focus is Mathematics and Machine Learning
-(2026-10-23); Data Engineering continues only on request. Its next step is DE: Partitioning,
-bucketing and hashing, batch 3 (items 8 to 11 in `plans/data-engineering.md`; batches 1 and 2
-approved 2026-10-23): hashing logic is in `src/lib/partitioning/hashing.ts` (add the ring there,
-with tests), and `Chip` in the kit draws keys.
+(2026-10-23); Data Engineering continues only on request. Partitioning batch 3 (rehashing,
+consistent hashing, practice, checkpoint) was built on 2026-10-24 and waits for Daniel's
+review; the next DE step is outlining the Distributed processing unit.
 
 ### Phase 3: Explore page
 

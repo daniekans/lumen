@@ -114,5 +114,33 @@ export const unit = defineUnit({
         'Storing a table hash partitioned on a key into a fixed number of buckets, each in its own files. Tables bucketed alike on the join key join bucket $k$ with bucket $k$, with no shuffle.',
       introducedIn: 'bucketed-joins',
     },
+    {
+      id: 'rehashing',
+      title: 'Rehashing',
+      summary:
+        'Moving keys to new buckets after the bucket count changes. With $h \\bmod n$, going from $n$ to $n + 1$ buckets moves $\\frac{n}{n + 1}$ of the keys; doubling moves half.',
+      introducedIn: 'rehashing',
+    },
+    {
+      id: 'consistent-hashing',
+      title: 'Consistent hashing',
+      summary:
+        'Placing keys and nodes on a hash ring and giving each key to the next node clockwise. A node that joins or leaves moves only the keys of one arc, about $\\frac{1}{n + 1}$ of them.',
+      introducedIn: 'consistent-hashing',
+    },
+    {
+      id: 'hash-ring',
+      title: 'Hash ring',
+      summary:
+        'The range of a hash, $0$ to $2^{32} - 1$, bent into a circle so that the largest value is next to $0$. Each node owns the arc that ends at its point.',
+      introducedIn: 'consistent-hashing',
+    },
+    {
+      id: 'virtual-node',
+      title: 'Virtual node',
+      summary:
+        'One of $V$ points a node gets on a hash ring, by hashing its name with a suffix. A node owns many short arcs, so shares even out and a joining node draws keys from many nodes.',
+      introducedIn: 'consistent-hashing',
+    },
   ],
 })
