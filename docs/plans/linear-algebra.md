@@ -300,7 +300,7 @@ with batch 1 of Linear maps and matrices.
 
 ## Linear maps and matrices unit plan
 
-Draft for the owner's review (2026-10-25). Folder `src/content/mathematics/linear-algebra/linear-maps/`
+Approved by the owner on 2026-10-25, with the review decisions at the end. Folder `src/content/mathematics/linear-algebra/linear-maps/`
 (the legacy unit folder `linear-transformations/` renamed, with a redirect). Core unit, 12 items
 in three batches, as in the outline. The thread: a function of space is linear when it keeps
 linear combinations; then it is fixed by where the basis lands, and those images are the columns
@@ -402,9 +402,11 @@ vectors.
 Vectors revision item 6), the `matrix` answer kind and `matN.ts`. 2: items 5 to 8. 3: items 9 to
 12 (3D). Each batch is one session.
 
-**Open questions for the review.**
+**Review decisions (2026-10-25).**
 
-1. The `matrix` answer kind as a grid of fields with the shape given (recommended), or one MathLive
-   field with a `bmatrix` (shape is part of the answer, harder to type).
-2. The determinant leaves the legacy item now, so this unit names area effects only in words until
-   Determinants (next unit). The alternative keeps the legacy item's two determinant steps until then.
+1. The `matrix` answer kind is a grid of fields with the shape given.
+2. The legacy item's two determinant steps (`area`, `sign`) and its determinant section leave it
+   in batch 1. The Determinants unit (next) teaches them in depth. Nothing is taken back: the
+   gallery says in words what a map does to areas and orientation, and its last sentence points
+   ahead ("Determinants measures this with one number"). The owner's rule for later units: a
+   reframing is fine when the earlier item says explicitly that a later unit extends the idea.
