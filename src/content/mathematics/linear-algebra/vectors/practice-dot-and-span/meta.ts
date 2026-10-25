@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'practice',
   title: 'Practice: dot products and span',
   summary:
-    'Dot products, angles, orthogonality and projections; whether a vector is in a span and whether two or three vectors are independent; equations of planes and where a line meets a plane.',
+    'Dot products, angles, orthogonality and projections; cosine and distance of feature vectors in four or five dimensions; weights in a span and dependence relations; planes in normal and parametric form, where a line meets a plane, and short proofs.',
   tags: [
     'dot product',
     'angle',

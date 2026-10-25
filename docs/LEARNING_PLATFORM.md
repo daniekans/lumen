@@ -30,8 +30,8 @@ unit can be picked out of order.
     scenarios and differentiating in $y$ approved 2026-10-24)
 11. Calculus 1: Limits, the revision from the self-review (done, approved 2026-10-25)
 12. Linear Algebra: Vectors, the revision from the self-review (`plans/linear-algebra.md`):
-    text, captions and the food-mix step built 2026-10-25; next its practice (revision item 8),
-    then the owner's review; then Linear maps and matrices, starting with its unit plan
+    text, captions, the food-mix step and the practice built 2026-10-25; next the owner's
+    review; then Linear maps and matrices, starting with its unit plan
 13. Outline Probability and Statistics (for review), then its first unit
 14. Calculus 1 and Linear Algebra, next units
 

@@ -57,12 +57,19 @@ describe('basis and coordinates practice problems', () => {
           expect(a.values.every(Number.isInteger)).toBe(true)
           break
         }
-        case 'is-basis': {
-          if (a.kind !== 'choice') throw new Error('expected a choice')
-          const vs = basisOf(d, d.count!)
-          vs.forEach((v) => expect(v).toHaveLength(d.dim!))
-          const isBasis = vs.length === d.dim && rank(vs) === d.dim
-          expect(a.correct).toBe(isBasis ? 0 : 1)
+        case 'basis-k': {
+          const [v, w, u] = basisOf(d, 3) as [number[], number[], number[]]
+          expect(rank([v, w])).toBe(2)
+          if (d.shape === 2) {
+            if (a.kind !== 'vector') throw new Error('expected a vector')
+            expect(combine([v, w], a.values)).toEqual(u)
+            break
+          }
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const set = (k: number) => u.map((c, i) => (i === d.at ? k : c))
+          expect(rank([v, w, set(a.value)])).toBe(2)
+          // Unique: any other k gives a basis.
+          expect(rank([v, w, set(a.value + 1)])).toBe(3)
           break
         }
         case 'not-a-basis-k': {

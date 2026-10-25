@@ -5,8 +5,10 @@ independence, and lines and planes in space.
 
 - Angles are in degrees: type $60$, not $60^\circ$ or $\frac{\pi}{3}$.
 - Type a vector or a point as its components in order: $(3, -1, 2)$. Fractions work too.
-- Questions about span and independence are multiple choice; the worked solution shows the
-  check.
+- Weights are typed as a vector too: $(a, b)$ for $a\mathbf{v} + b\mathbf{w}$, and
+  $(a, b, c, d)$ for a plane $ax + by + cz = d$.
+- A cosine or a distance can be exact ($\frac{3}{\sqrt{10}}$) or rounded to two decimals.
+- Proofs are graded by you: write the proof, then compare it with the worked solution.
 
 ## Formulas
 
@@ -22,9 +24,12 @@ Vectors are <Term id="orthogonal">orthogonal</Term> when their dot product is $0
 the span of $\mathbf{v}$ and $\mathbf{w}$ when $a\mathbf{v} + b\mathbf{w}$ equals it for some
 weights: solve two components and check the third. Three vectors are
 linearly <Term id="linear-dependence">dependent</Term> exactly when one is a combination of the
-others.
+others; moving it across the equals sign gives a dependence relation with a weight that is not
+$0$.
 
 The plane through $\mathbf{p}$ with <Term id="normal-vector">normal</Term> $\mathbf{n}$ is
 $n_1 x + n_2 y + n_3 z = \mathbf{n} \cdot \mathbf{p}$. A
 parametric <Term id="parametric-line">line</Term> $\mathbf{p} + t\mathbf{v}$ meets it where the
-components of $\mathbf{p} + t\mathbf{v}$ satisfy that equation.
+components of $\mathbf{p} + t\mathbf{v}$ satisfy that equation. A normal of the plane
+$\mathbf{p} + s\mathbf{v} + t\mathbf{w}$ is orthogonal to both directions; going the other way,
+directions of $\mathbf{n} \cdot \mathbf{x} = d$ are the vectors with $\mathbf{n} \cdot \mathbf{v} = 0$.

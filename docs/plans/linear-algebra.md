@@ -232,7 +232,7 @@ overlaps `standard-basis`: merge it when Linear maps and matrices is built. The 
 problems (13 from the three practice sets and a self-graded proof that adding a vector outside the
 span keeps a set independent).
 
-### Revision after the self-review (2026-10-24; items 1 to 5, 7 and 9 built 2026-10-25)
+### Revision after the self-review (2026-10-24; items 1 to 5 and 7 to 9 built 2026-10-25)
 
 A review of the unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All 11
 items match the plan and the rigor is mostly good; these need fixing. Do them before or together
@@ -267,7 +267,15 @@ $= (0.5, 2)$ in units of 10 g, weights clamped at $0$, the cone shaded; the othe
 explanation sections: house distances and standardization, a basket bill and an exam score
 $\mathbf{w} \cdot \mathbf{x} + b$ with $\mathbf{w} = (0.5, 0.3)$, $b = -4$, unit embeddings,
 a rent table with one-hot columns, a drone at constant velocity, the exam model's decision
-boundary). Next: item 8 (practice), one session, then the owner's review. Item 6 waits for
+boundary). Item 8 built the same day: `in-span` became `span-weights` (find $(a, b)$),
+`independent` became `dependence` (a relation $a\mathbf{v} + b\mathbf{w} + \mathbf{u} = \mathbf{0}$,
+or $k$ that makes two vectors dependent), `is-basis` became `basis-k` ($k$ that stops three
+vectors of space being a basis, or a third vector of the plane from the other two); new
+`plane-normal` (parametric to $ax + by + cz = d$, no cross product, which the unit does not
+teach), `normal-to-parametric` (a missing component of the point or a direction),
+`feature-vectors` (cosine of word counts in $\mathbb{R}^5$, distance of standardized houses in
+$\mathbb{R}^4$) and `proof-short` (the four proofs, one per problem). The checkpoint has 16
+problems with the new ones. Next: the owner's review of the whole revision. Item 6 waits for
 Linear maps and matrices.
 
 **Depth and real scenarios:**

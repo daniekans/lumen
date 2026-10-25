@@ -78,22 +78,33 @@ describe('dot product and span practice problems', () => {
           a.values.forEach((x, i) => close(x, k * v[i]!))
           break
         }
-        case 'in-span': {
-          if (a.kind !== 'choice') throw new Error('expected a choice')
+        case 'span-weights': {
+          if (a.kind !== 'vector') throw new Error('expected a vector')
           const v = read(d, 'v')
           const w = read(d, 'w')
           const u = read(d, 'u')
+          // Not parallel, so the weights are unique.
           expect(rank([v, w])).toBe(2)
-          const inSpan = rank([v, w, u]) === 2
-          expect(a.correct).toBe(inSpan ? 0 : 1)
-          expect(d.inSpan).toBe(inSpan ? 1 : 0)
+          const [x, y] = a.values as [number, number]
+          expect(v.map((c, i) => x * c + y * w[i]!)).toEqual(u)
           break
         }
-        case 'independent': {
-          if (a.kind !== 'choice') throw new Error('expected a choice')
-          const vs = ['v', 'w', 'u'].slice(0, d.size).map((n) => read(d, n))
-          const independent = rank(vs) === vs.length
-          expect(a.correct).toBe(independent ? 0 : 1)
+        case 'dependence': {
+          const v = read(d, 'v')
+          const w = read(d, 'w')
+          if (d.size === 2) {
+            if (a.kind !== 'number') throw new Error('expected a number')
+            const set = (k: number) => w.map((c, i) => (i === d.at ? k : c))
+            expect(rank([v, set(a.value)])).toBe(1)
+            // Unique: another component of v is nonzero, so it fixes the multiple.
+            expect(v.some((c, i) => i !== d.at && c !== 0)).toBe(true)
+            break
+          }
+          if (a.kind !== 'vector') throw new Error('expected a vector')
+          const u = read(d, 'u')
+          expect(rank([v, w])).toBe(2)
+          const [x, y] = a.values as [number, number]
+          expect(v.map((c, i) => x * c + y * w[i]! + u[i]!)).toEqual([0, 0, 0])
           break
         }
         case 'plane-equation': {
@@ -113,6 +124,51 @@ describe('dot product and span practice problems', () => {
           expect(rank([v, a.values.map((x, i) => x - pp[i]!)])).toBeLessThanOrEqual(1)
           // The line is not parallel to the plane, so the point is unique.
           expect(dot(n, v)).not.toBe(0)
+          break
+        }
+        case 'plane-normal': {
+          if (a.kind !== 'vector') throw new Error('expected a vector')
+          const v = read(d, 'v')
+          const w = read(d, 'w')
+          const pp = read(d, 'p')
+          const n = a.values.slice(0, 3)
+          // Orthogonal to two independent directions: the normal line, and n[j] = 1 picks one.
+          expect(rank([v, w])).toBe(2)
+          expect(dot(n, v)).toBe(0)
+          expect(dot(n, w)).toBe(0)
+          expect(n[d.j!]).toBe(1)
+          expect(a.values[3]).toBe(dot(n, pp))
+          break
+        }
+        case 'normal-to-parametric': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const n = read(d, 'n')
+          const set = (x: number[]) => x.map((c, i) => (i === d.at ? a.value : c))
+          const v = read(d, 'v')
+          const w = d.inPoint ? read(d, 'w') : set(read(d, 'w'))
+          const pp = d.inPoint ? set(read(d, 'p')) : read(d, 'p')
+          // The parametric form describes the plane: point on it, two independent directions in it.
+          expect(dot(n, pp)).toBe(d.d)
+          expect(dot(n, v)).toBe(0)
+          expect(dot(n, w)).toBe(0)
+          expect(rank([v, w])).toBe(2)
+          // Unique: the unknown has a nonzero coefficient.
+          expect(n[d.at!]).not.toBe(0)
+          break
+        }
+        case 'feature-vectors': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const x = read(d, 'x')
+          const y = read(d, 'y')
+          expect(x.length).toBeGreaterThanOrEqual(4)
+          const expected = d.cosine
+            ? dot(x, y) / Math.sqrt(dot(x, x) * dot(y, y))
+            : Math.hypot(...x.map((c, i) => c - y[i]!))
+          close(a.value, expected)
+          break
+        }
+        case 'proof-short': {
+          expect(a.kind).toBe('self')
           break
         }
         default:

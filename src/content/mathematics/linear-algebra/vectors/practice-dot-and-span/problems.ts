@@ -1,11 +1,11 @@
 import { addN, cross3, dotN, scaleN, type Vec3 } from '@/lib/math'
 import { defineProblems, tex, type Rng } from '@/lib/practice'
 
-const { frac, num, paren, sum, vector } = tex
+const { frac, num, paren, signed, sum, vector } = tex
 
-/** A vector of n whole components in [lo, hi], not the zero vector. */
 const ORDINAL = ['first', 'second', 'third']
 
+/** A vector of n whole components in [lo, hi], not the zero vector. */
 const intVector = (rng: Rng, n: number, lo: number, hi: number) => {
   for (;;) {
     const v = Array.from({ length: n }, () => rng.int(lo, hi))
@@ -39,22 +39,6 @@ const ANGLE_PAIRS: readonly { v: number[]; w: number[]; deg: number }[] = [
   { v: [3, 4, 0], w: [-4, 3, 0], deg: 90 },
 ]
 
-/**
- * Weights a, b with a v + b w matching u in components i and j (Cramer's rule on those two
- * rows), and the component k left to check. `ij` must have a nonzero determinant.
- */
-const solveTwoRows = (
-  v: Vec3,
-  w: Vec3,
-  u: readonly number[],
-  [i, j]: readonly [number, number],
-) => {
-  const det = v[i]! * w[j]! - v[j]! * w[i]!
-  const a = (u[i]! * w[j]! - u[j]! * w[i]!) / det
-  const b = (v[i]! * u[j]! - v[j]! * u[i]!) / det
-  return { a, b, det }
-}
-
 /** Two components where v and w are not parallel, so the weights can be solved from them. */
 const solvableRows = (v: Vec3, w: Vec3): [number, number] => {
   const pairs: [number, number][] = [
@@ -74,26 +58,109 @@ const independentPair = (rng: Rng): [Vec3, Vec3] => {
   }
 }
 
-/** A third vector: a combination of v and w, or that plus a multiple of their normal (off the plane). */
-const thirdVector = (rng: Rng, v: Vec3, w: Vec3, inSpan: boolean) => {
+/** A combination a v + b w with small nonzero weights. */
+const thirdVector = (rng: Rng, v: Vec3, w: Vec3) => {
   const a = rng.nonZeroInt(-2, 2)
   const b = rng.nonZeroInt(-2, 2)
-  const base = addN(scaleN(v, a), scaleN(w, b))
-  if (inSpan) return { u: base, a, b }
-  // A small step off the plane, so the numbers stay readable.
-  const n = cross3(v, w)
-  const g = n.reduce((acc, x) => gcd(acc, Math.abs(x)), 0)
-  const step = scaleN(n, rng.pick([1, -1]) / g)
-  return { u: addN(base, step), a, b }
+  return { u: addN(scaleN(v, a), scaleN(w, b)), a, b }
 }
-
-const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))
 
 const combo = (a: number, b: number) =>
   sum([
     [a, '\\mathbf{v}'],
     [b, '\\mathbf{w}'],
   ])
+
+/** The equation of component i in a v + b w = u, with the weight names given. */
+const weightEquation = (
+  v: readonly number[],
+  w: readonly number[],
+  u: readonly number[],
+  i: number,
+  [a, b] = ['a', 'b'],
+) =>
+  `${sum([
+    [v[i]!, a],
+    [w[i]!, b],
+  ])} = ${u[i]}`
+
+const planeLhs = (n: readonly number[]) =>
+  sum([
+    [n[0]!, 'x'],
+    [n[1]!, 'y'],
+    [n[2]!, 'z'],
+  ])
+
+/**
+ * Two directions of the plane with normal n, not parallel, with small whole components. n[j]
+ * must be 1 or -1, so the component j that makes a direction orthogonal to n is whole.
+ */
+const planeDirections = (rng: Rng, n: readonly number[], j: number) => {
+  const direction = () => {
+    const x = Array.from({ length: 3 }, () => rng.int(-2, 2))
+    x[j] = 0
+    x[j] = -dotN(n, x) * n[j]!
+    return x
+  }
+  for (;;) {
+    const v = direction()
+    const w = direction()
+    if (cross3(as3(v), as3(w)).some((x) => x !== 0)) return { v, w }
+  }
+}
+
+/** Short proofs from the unit: statement, hints and a worked proof. */
+const PROOFS: readonly { prompt: string; hints: string[]; solution: string[] }[] = [
+  {
+    prompt:
+      'Let $\\mathbf{v}_1, \\ldots, \\mathbf{v}_k$ be nonzero vectors with $\\mathbf{v}_i \\cdot \\mathbf{v}_j = 0$ whenever $i \\ne j$. Prove that they are linearly independent.',
+    hints: [
+      'Start from $c_1\\mathbf{v}_1 + \\cdots + c_k\\mathbf{v}_k = \\mathbf{0}$ and take the dot product of both sides with one $\\mathbf{v}_i$.',
+    ],
+    solution: [
+      'Suppose $c_1\\mathbf{v}_1 + \\cdots + c_k\\mathbf{v}_k = \\mathbf{0}$, and take the dot product of both sides with $\\mathbf{v}_i$.',
+      'Every term $c_j\\,(\\mathbf{v}_j \\cdot \\mathbf{v}_i)$ with $j \\ne i$ is $0$, and $\\mathbf{0} \\cdot \\mathbf{v}_i = 0$, so $c_i\\,(\\mathbf{v}_i \\cdot \\mathbf{v}_i) = 0$.',
+      '$\\mathbf{v}_i \\cdot \\mathbf{v}_i = \\lVert \\mathbf{v}_i \\rVert^2 > 0$ because $\\mathbf{v}_i \\ne \\mathbf{0}$, so $c_i = 0$.',
+      'This holds for every $i$, so only the trivial combination gives $\\mathbf{0}$: the vectors are independent. Without "nonzero" it fails: $\\mathbf{0}$ is orthogonal to everything, and any set containing it is dependent.',
+    ],
+  },
+  {
+    prompt:
+      'Let $\\mathbf{u} \\cdot \\mathbf{v}_i = 0$ for each of $\\mathbf{v}_1, \\ldots, \\mathbf{v}_k$. Prove that $\\mathbf{u}$ is orthogonal to every vector in $\\operatorname{span}\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$.',
+    hints: [
+      'A vector of the span is $c_1\\mathbf{v}_1 + \\cdots + c_k\\mathbf{v}_k$. Which rules of the dot product let you split $\\mathbf{u} \\cdot (\\ldots)$?',
+    ],
+    solution: [
+      'Let $\\mathbf{x}$ be in the span: $\\mathbf{x} = c_1\\mathbf{v}_1 + \\cdots + c_k\\mathbf{v}_k$ for some weights.',
+      'The dot product distributes over sums and lets numbers move out: $\\mathbf{u} \\cdot \\mathbf{x} = c_1\\,(\\mathbf{u} \\cdot \\mathbf{v}_1) + \\cdots + c_k\\,(\\mathbf{u} \\cdot \\mathbf{v}_k)$.',
+      'Every $\\mathbf{u} \\cdot \\mathbf{v}_i$ is $0$, so $\\mathbf{u} \\cdot \\mathbf{x} = 0$. This is why a normal vector checked against two directions is orthogonal to the whole plane.',
+    ],
+  },
+  {
+    prompt:
+      'Prove that $\\lVert \\mathbf{v} + \\mathbf{w} \\rVert^2 = \\lVert \\mathbf{v} \\rVert^2 + \\lVert \\mathbf{w} \\rVert^2$ exactly when $\\mathbf{v} \\cdot \\mathbf{w} = 0$.',
+    hints: [
+      'Write $\\lVert \\mathbf{v} + \\mathbf{w} \\rVert^2$ as $(\\mathbf{v} + \\mathbf{w}) \\cdot (\\mathbf{v} + \\mathbf{w})$ and expand.',
+    ],
+    solution: [
+      '$\\lVert \\mathbf{v} + \\mathbf{w} \\rVert^2 = (\\mathbf{v} + \\mathbf{w}) \\cdot (\\mathbf{v} + \\mathbf{w}) = \\mathbf{v} \\cdot \\mathbf{v} + 2\\,\\mathbf{v} \\cdot \\mathbf{w} + \\mathbf{w} \\cdot \\mathbf{w}$, using that the dot product distributes and is symmetric.',
+      'So $\\lVert \\mathbf{v} + \\mathbf{w} \\rVert^2 = \\lVert \\mathbf{v} \\rVert^2 + \\lVert \\mathbf{w} \\rVert^2 + 2\\,\\mathbf{v} \\cdot \\mathbf{w}$.',
+      'The two sides of the claim differ by exactly $2\\,\\mathbf{v} \\cdot \\mathbf{w}$, so they are equal exactly when $\\mathbf{v} \\cdot \\mathbf{w} = 0$. That proves both directions at once.',
+    ],
+  },
+  {
+    prompt:
+      'Let $\\mathbf{x}$ and $\\mathbf{y}$ be in $\\operatorname{span}\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$ and let $c$ be a number. Prove that $\\mathbf{x} + \\mathbf{y}$ and $c\\,\\mathbf{x}$ are in the span too.',
+    hints: [
+      'Write $\\mathbf{x}$ and $\\mathbf{y}$ as combinations with their own weights, then regroup.',
+    ],
+    solution: [
+      'Write $\\mathbf{x} = a_1\\mathbf{v}_1 + \\cdots + a_k\\mathbf{v}_k$ and $\\mathbf{y} = b_1\\mathbf{v}_1 + \\cdots + b_k\\mathbf{v}_k$.',
+      'Regrouping with the rules of vector algebra, $\\mathbf{x} + \\mathbf{y} = (a_1 + b_1)\\mathbf{v}_1 + \\cdots + (a_k + b_k)\\mathbf{v}_k$, a combination of the $\\mathbf{v}_i$.',
+      'Likewise $c\\,\\mathbf{x} = (c a_1)\\mathbf{v}_1 + \\cdots + (c a_k)\\mathbf{v}_k$. Both are in the span: it is closed under addition and scaling, and taking $c = 0$ shows it contains $\\mathbf{0}$.',
+    ],
+  },
+]
 
 export const problems = defineProblems([
   {
@@ -212,105 +279,77 @@ export const problems = defineProblems([
     },
   },
   {
-    id: 'in-span',
-    title: 'In the span or not',
+    id: 'span-weights',
+    title: 'Weights for a vector in a span',
     skills: ['span-and-independence'],
     difficulty: 2,
     generate: (rng) => {
       const [v, w] = independentPair(rng)
-      const inSpan = rng.bool()
-      const { u } = thirdVector(rng, v, w, inSpan)
+      const { u, a, b } = thirdVector(rng, v, w)
       const rows = solvableRows(v, w)
-      const { a, b } = solveTwoRows(v, w, u, rows)
       const k = 3 - rows[0] - rows[1]
-      const reached = a * v[k]! + b * w[k]!
-      const options = ['Yes', 'No']
-      const name = (i: number) => ['first', 'second', 'third'][i]!
       return {
-        prompt: `Is $\\mathbf{u} = ${vector(u)}$ in the span of $\\mathbf{v} = ${vector(v)}$ and $\\mathbf{w} = ${vector(w)}$?`,
-        answer: { kind: 'choice', options, correct: inSpan ? 0 : 1 },
+        prompt: `$\\mathbf{u} = ${vector(u)}$ is in the span of $\\mathbf{v} = ${vector(v)}$ and $\\mathbf{w} = ${vector(w)}$. Find the weights $(a, b)$ with $a\\mathbf{v} + b\\mathbf{w} = \\mathbf{u}$.`,
+        answer: { kind: 'vector', values: [a, b] },
         hints: [
-          'Look for weights with $a\\mathbf{v} + b\\mathbf{w} = \\mathbf{u}$: one equation per component.',
+          'Write $a\\mathbf{v} + b\\mathbf{w} = \\mathbf{u}$ as one equation per component.',
           'Solve two of the equations, then check the third.',
         ],
         solution: [
-          `The ${name(rows[0])} and ${name(rows[1])} components give $a = ${num(a, 400)}$ and $b = ${num(b, 400)}$.`,
-          inSpan
-            ? `The ${name(k)} component checks: $${num(a, 400)} \\cdot ${paren(v[k]!)} + ${paren(b)} \\cdot ${paren(w[k]!)} = ${u[k]}$. So $\\mathbf{u} = ${combo(a, b)}$ is in the span.`
-            : `The ${name(k)} component would need $${num(reached, 400)} = ${u[k]}$, which fails. No weights work, so $\\mathbf{u}$ is not in the span.`,
+          `The ${ORDINAL[rows[0]]} and ${ORDINAL[rows[1]]} components give $${weightEquation(v, w, u, rows[0])}$ and $${weightEquation(v, w, u, rows[1])}$, so $a = ${a}$ and $b = ${b}$.`,
+          `The ${ORDINAL[k]} component checks: $${paren(a)} \\cdot ${paren(v[k]!)} + ${paren(b)} \\cdot ${paren(w[k]!)} = ${u[k]}$. The weights are the only ones, since $\\mathbf{v}$ and $\\mathbf{w}$ are not parallel.`,
         ],
-        data: { inSpan: inSpan ? 1 : 0, ...flat('v', v), ...flat('w', w), ...flat('u', u) },
+        data: { ...flat('v', v), ...flat('w', w), ...flat('u', u) },
       }
     },
   },
   {
-    id: 'independent',
-    title: 'Independent or dependent',
+    id: 'dependence',
+    title: 'A dependence relation',
     skills: ['span-and-independence'],
     difficulty: 2,
     generate: (rng) => {
-      const options = ['Linearly independent', 'Linearly dependent']
       if (rng.int(1, 3) === 1) {
-        // Two vectors: dependent exactly when one is a multiple of the other.
-        const v = intVector(rng, 3, -3, 3)
-        const dependent = rng.bool()
+        // Two vectors: dependent exactly when the second is a multiple of the first.
+        let v: number[]
+        do v = intVector(rng, 3, -3, 3)
+        while (v.filter((x) => x !== 0).length < 2)
         const c = rng.pick([2, -2, 3, -1, -3])
-        let w = scaleN(v, c)
-        // Nudge one component until w is no longer parallel to v.
-        while (!dependent && cross3(as3(v), as3(w)).every((x) => x === 0)) {
-          const i = rng.int(0, 2)
-          w = scaleN(v, c).map((x, j) => (j === i ? x + rng.pick([1, -1]) : x))
-        }
-        // Solve for the only possible multiple from a nonzero component, then find a component
-        // that disagrees (cross-multiplied, so no rounding).
-        const i = v.findIndex((x) => x !== 0)
-        const [vi, wi] = [v[i]!, w[i]!]
-        const j = w.findIndex((x, m) => x * vi !== wi * v[m]!)
-        const [vj, wj] = [v[j]!, w[j]!]
-        const k = wi / vi
+        const w = scaleN(v, c)
+        const at = rng.int(0, 2)
+        // A nonzero component of v other than the unknown one fixes the multiple.
+        const m = v.findIndex((x, i) => i !== at && x !== 0)
+        const shown = w.map((x, i) => (i === at ? 'k' : num(x)))
         return {
-          prompt: `Are $${vector(v)}$ and $${vector(w)}$ linearly independent or dependent?`,
-          answer: { kind: 'choice', options, correct: dependent ? 1 : 0 },
-          hints: ['Two vectors are dependent exactly when one is a multiple of the other.'],
-          solution: dependent
-            ? [`$${vector(w)} = ${c}${vector(v)}$, so they are dependent.`]
-            : [
-                `If $${vector(w)} = k${vector(v)}$, the ${ORDINAL[i]} component forces $k = ${frac(wi, vi)}$.`,
-                `Then the ${ORDINAL[j]} component would be $${num(k)} \\cdot ${paren(vj)} = ${num(k * vj)}$, not $${wj}$. So the second vector is not a multiple of the first.`,
-                'Nor is the first a multiple of the second: the first is not $\\mathbf{0}$, so the factor would be nonzero, and dividing by it would make the second a multiple of the first. They are independent.',
-              ],
-          data: { size: 2, dependent: dependent ? 1 : 0, ...flat('v', v), ...flat('w', w) },
+          prompt: `Find $k$ so that $${vector(v)}$ and $(${shown.join(', ')})$ are linearly dependent.`,
+          answer: { kind: 'number', value: w[at]! },
+          hints: [
+            'Two vectors, the first not $\\mathbf{0}$, are dependent exactly when the second is a multiple of the first.',
+            `The ${ORDINAL[m]} components fix the multiple.`,
+          ],
+          solution: [
+            `The ${ORDINAL[m]} components give the multiple: $${w[m]} = ${paren(c)} \\cdot ${paren(v[m]!)}$, so the second vector must be $${c}${vector(v)} = ${vector(w)}$.`,
+            `So $k = ${paren(c)} \\cdot ${paren(v[at]!)} = ${w[at]}$. For any other $k$ the two are not parallel and are independent.`,
+          ],
+          data: { size: 2, at, ...flat('v', v), ...flat('w', w) },
         }
       }
       const [v, w] = independentPair(rng)
-      const dependent = rng.bool()
-      const { u, a, b } = thirdVector(rng, v, w, dependent)
+      const { u, a, b } = thirdVector(rng, v, w)
       const rows = solvableRows(v, w)
-      const solved = solveTwoRows(v, w, u, rows)
-      const k = 3 - rows[0] - rows[1]
       return {
-        prompt: `Are $\\mathbf{v} = ${vector(v)}$, $\\mathbf{w} = ${vector(w)}$ and $\\mathbf{u} = ${vector(u)}$ linearly independent or dependent?`,
-        answer: { kind: 'choice', options, correct: dependent ? 1 : 0 },
+        prompt: `$\\mathbf{v} = ${vector(v)}$, $\\mathbf{w} = ${vector(w)}$ and $\\mathbf{u} = ${vector(u)}$ are linearly dependent. Find the weights $(a, b)$ in the dependence relation $a\\mathbf{v} + b\\mathbf{w} + \\mathbf{u} = \\mathbf{0}$.`,
+        answer: { kind: 'vector', values: [-a, -b] },
         hints: [
-          '$\\mathbf{v}$ and $\\mathbf{w}$ are not parallel. The set is dependent exactly when $\\mathbf{u}$ is a combination of them.',
-          'Solve $a\\mathbf{v} + b\\mathbf{w} = \\mathbf{u}$ with two components and check the third.',
+          'The relation says $\\mathbf{u} = -a\\mathbf{v} - b\\mathbf{w}$: find the weights that build $\\mathbf{u}$ first.',
+          'One equation per component: solve two, check the third.',
         ],
-        solution: dependent
-          ? [
-              `$\\mathbf{u} = ${combo(a, b)}$, which checks in every component.`,
-              `So $${combo(a, b)} - \\mathbf{u} = \\mathbf{0}$ with weights not all zero: dependent.`,
-            ]
-          : [
-              `Two components give $a = ${num(solved.a, 400)}$, $b = ${num(solved.b, 400)}$, but then component ${k + 1} would be $${num(solved.a * v[k]! + solved.b * w[k]!, 400)} \\ne ${u[k]}$.`,
-              '$\\mathbf{u}$ is not in the span of $\\mathbf{v}$ and $\\mathbf{w}$, and those two are not parallel, so the three are independent.',
-            ],
-        data: {
-          size: 3,
-          dependent: dependent ? 1 : 0,
-          ...flat('v', v),
-          ...flat('w', w),
-          ...flat('u', u),
-        },
+        solution: [
+          `With $\\mathbf{u} = p\\mathbf{v} + q\\mathbf{w}$, the ${ORDINAL[rows[0]]} and ${ORDINAL[rows[1]]} components give $${weightEquation(v, w, u, rows[0], ['p', 'q'])}$ and $${weightEquation(v, w, u, rows[1], ['p', 'q'])}$, so $p = ${a}$ and $q = ${b}$. The ${ORDINAL[3 - rows[0] - rows[1]]} component checks.`,
+          `So $\\mathbf{u} = ${combo(a, b)}$, and moving it across gives $${combo(-a, -b)} + \\mathbf{u} = \\mathbf{0}$: $(a, b) = (${-a}, ${-b})$.`,
+          'The weight of $\\mathbf{u}$ is $1$, not $0$, so the relation is not the trivial one. Every multiple of it is a relation too; fixing that weight at $1$ makes the answer unique.',
+        ],
+        data: { size: 3, ...flat('v', v), ...flat('w', w), ...flat('u', u) },
       }
     },
   },
@@ -371,6 +410,145 @@ export const problems = defineProblems([
         ],
         data: { t, d, ...flat('n', n), ...flat('v', v), ...flat('p', p) },
       }
+    },
+  },
+  {
+    id: 'plane-normal',
+    title: 'From parametric to normal form',
+    skills: ['lines-and-planes'],
+    difficulty: 3,
+    generate: (rng) => {
+      const j = rng.int(0, 2)
+      const n = Array.from({ length: 3 }, () => rng.int(-3, 3))
+      n[j] = 1
+      const { v, w } = planeDirections(rng, n, j)
+      const p = Array.from({ length: 3 }, () => rng.int(-3, 3))
+      const d = dotN(n, p)
+      const names = ['a', 'b', 'c']
+      // n · x = 0 with the fixed component known: two unknowns left.
+      const orthogonal = (x: readonly number[]) =>
+        `${sum([...[0, 1, 2].filter((i) => i !== j).map((i) => [x[i]!, names[i]!] as [number, string]), [x[j]!, '']])} = 0`
+      return {
+        prompt: `Write the plane $${vector(p)} + s${vector(v)} + t${vector(w)}$ in normal form $ax + by + cz = d$ with $${names[j]} = 1$. Type $(a, b, c, d)$.`,
+        answer: { kind: 'vector', values: [...n, d] },
+        hints: [
+          'The normal $(a, b, c)$ is orthogonal to both directions: its dot product with each is $0$.',
+          `With $${names[j]} = 1$ that is two equations in the other two unknowns. Then $d = \\mathbf{n} \\cdot \\mathbf{p}$, since the point is on the plane.`,
+        ],
+        solution: [
+          `Orthogonal to both directions: $${orthogonal(v)}$ and $${orthogonal(w)}$.`,
+          `Solving gives $\\mathbf{n} = ${vector(n)}$. The directions are not parallel, so the normals form one line, and $${names[j]} = 1$ picks one point of it.`,
+          `$d = ${products(n, p)} = ${d}$. The plane is $${planeLhs(n)} = ${d}$.`,
+        ],
+        data: { j, d, ...flat('n', n), ...flat('v', v), ...flat('w', w), ...flat('p', p) },
+      }
+    },
+  },
+  {
+    id: 'normal-to-parametric',
+    title: 'From normal to parametric form',
+    skills: ['lines-and-planes'],
+    difficulty: 2,
+    generate: (rng) => {
+      const j = rng.int(0, 2)
+      const n = intVector(rng, 3, -3, 3)
+      n[j] = rng.pick([1, -1])
+      const { v, w } = planeDirections(rng, n, j)
+      const p = Array.from({ length: 3 }, () => rng.int(-3, 3))
+      const d = dotN(n, p)
+      const inPoint = rng.bool()
+      const at = rng.pick([0, 1, 2].filter((i) => n[i] !== 0))
+      const hidden = inPoint ? p : w
+      const k = hidden[at]!
+      const shown = (x: readonly number[]) =>
+        x === hidden ? `(${x.map((c, i) => (i === at ? 'k' : num(c))).join(', ')})` : vector(x)
+      const rest = dotN(n, hidden) - n[at]! * k
+      return {
+        prompt: `The plane $${planeLhs(n)} = ${d}$ is also $\\mathbf{p} + s\\mathbf{v} + t\\mathbf{w}$ with $\\mathbf{p} = ${shown(p)}$, $\\mathbf{v} = ${vector(v)}$ and $\\mathbf{w} = ${shown(w)}$. Find $k$.`,
+        answer: { kind: 'number', value: k },
+        hints: [
+          inPoint
+            ? 'The point $\\mathbf{p}$ is on the plane, so its components satisfy the equation.'
+            : 'A direction of the plane is orthogonal to its normal: $\\mathbf{n} \\cdot \\mathbf{w} = 0$.',
+          `The normal is $${vector(n)}$, read from the coefficients.`,
+        ],
+        solution: [
+          inPoint
+            ? `Substituting $\\mathbf{p}$: $${sum([[n[at]!, 'k']])}${signed(rest)} = ${d}$, so $k = ${k}$.`
+            : `$\\mathbf{n} \\cdot \\mathbf{w} = ${sum([[n[at]!, 'k']])}${signed(rest)} = 0$, so $k = ${k}$.`,
+          `The rest checks: ${inPoint ? '$\\mathbf{n} \\cdot \\mathbf{v} = 0$ and $\\mathbf{n} \\cdot \\mathbf{w} = 0$' : `$\\mathbf{n} \\cdot \\mathbf{v} = 0$ and $\\mathbf{n} \\cdot \\mathbf{p} = ${d}$`}, and $\\mathbf{v}$, $\\mathbf{w}$ are not parallel.`,
+        ],
+        data: {
+          at,
+          d,
+          inPoint: inPoint ? 1 : 0,
+          ...flat('n', n),
+          ...flat('v', v),
+          ...flat('w', w),
+          ...flat('p', p),
+        },
+      }
+    },
+  },
+  {
+    id: 'feature-vectors',
+    title: 'Distance and cosine in more dimensions',
+    skills: ['dot-product'],
+    difficulty: 2,
+    generate: (rng) => {
+      if (rng.bool()) {
+        // Word counts of two documents over five words: the cosine ignores document length.
+        const x = intVector(rng, 5, 0, 4)
+        const y = intVector(rng, 5, 0, 4)
+        const xy = dotN(x, y)
+        const xx = dotN(x, x)
+        const yy = dotN(y, y)
+        const value = xy / Math.sqrt(xx * yy)
+        return {
+          prompt: `Two short documents are counted over the same five words, giving $\\mathbf{x} = ${vector(x)}$ and $\\mathbf{y} = ${vector(y)}$ in $\\mathbb{R}^5$. Find their cosine similarity $\\cos\\theta$, exactly or to two decimals.`,
+          answer: { kind: 'number', value, tolerance: 0.005 },
+          hints: [
+            '$\\cos\\theta = \\frac{\\mathbf{x} \\cdot \\mathbf{y}}{\\lVert \\mathbf{x} \\rVert \\, \\lVert \\mathbf{y} \\rVert}$, with five products instead of two or three.',
+          ],
+          solution: [
+            `$\\mathbf{x} \\cdot \\mathbf{y} = ${xy}$, $\\lVert \\mathbf{x} \\rVert = \\sqrt{${xx}}$, $\\lVert \\mathbf{y} \\rVert = \\sqrt{${yy}}$.`,
+            `$\\cos\\theta = \\frac{${xy}}{\\sqrt{${xx * yy}}} \\approx ${+value.toFixed(3)}$. Doubling every count of one document leaves this unchanged: only the direction counts, which is why search compares documents this way.`,
+          ],
+          data: { cosine: 1, ...flat('x', x), ...flat('y', y) },
+        }
+      }
+      // Two houses after standardization: size, age, rooms and distance to the center, each in
+      // standard deviations from the mean.
+      const half = () => rng.int(-4, 4) / 2
+      const x = Array.from({ length: 4 }, half)
+      let y: number[]
+      do y = Array.from({ length: 4 }, half)
+      while (y.every((c, i) => c === x[i]))
+      const diff = y.map((c, i) => c - x[i]!)
+      const squares = dotN(diff, diff)
+      const value = Math.sqrt(squares)
+      return {
+        prompt: `Two houses are described by size, age, number of rooms and distance to the center, each standardized (in standard deviations from the mean): $\\mathbf{x} = ${vector(x)}$ and $\\mathbf{y} = ${vector(y)}$ in $\\mathbb{R}^4$. Find the distance between them, exactly or to two decimals.`,
+        answer: { kind: 'number', value, tolerance: 0.005 },
+        hints: [
+          'The distance is $\\lVert \\mathbf{y} - \\mathbf{x} \\rVert$: subtract, square each component, add, take the square root.',
+        ],
+        solution: [
+          `$\\mathbf{y} - \\mathbf{x} = ${vector(diff)}$.`,
+          `The squares add up to $${num(squares)}$, so the distance is $\\sqrt{${num(squares)}} \\approx ${+value.toFixed(3)}$. Standardizing first keeps one feature in large units, such as square meters, from deciding the distance alone.`,
+        ],
+        data: { cosine: 0, ...flat('x', x), ...flat('y', y) },
+      }
+    },
+  },
+  {
+    id: 'proof-short',
+    title: 'A short proof',
+    skills: ['dot-product', 'span-and-independence'],
+    difficulty: 3,
+    generate: (rng) => {
+      const which = rng.int(0, PROOFS.length - 1)
+      return { ...PROOFS[which]!, answer: { kind: 'self' }, data: { which } }
     },
   },
 ])

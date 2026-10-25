@@ -1,4 +1,4 @@
-import { addN, cross3, det3, scaleN, type Vec3 } from '@/lib/math'
+import { addN, det3, scaleN, type Vec3 } from '@/lib/math'
 import { defineProblems, tex, type Rng } from '@/lib/practice'
 
 const { paren, sum, vector } = tex
@@ -129,87 +129,51 @@ export const problems = defineProblems([
     },
   },
   {
-    id: 'is-basis',
-    title: 'Is it a basis',
+    id: 'basis-k',
+    title: 'When three vectors stop being a basis',
     skills: ['basis-coordinates', 'span-and-independence'],
     difficulty: 2,
     generate: (rng) => {
-      const options = ['Yes', 'No']
-      const shape = rng.pick(['2-in-2', '2-in-2', '3-in-3', '3-in-3', '2-in-3', '3-in-2'] as const)
-      let vs: number[][]
-      let hints: string[]
-      let solution: string[]
-      const space = shape.endsWith('3') ? '\\mathbb{R}^3' : '\\mathbb{R}^2'
-      if (shape === '2-in-2') {
-        const v = intVector(rng, 2, -3, 3)
-        const parallel = rng.bool()
-        let w = scaleN(v, rng.pick([2, -2, 3, -1, -3]))
-        if (!parallel) {
-          do w = intVector(rng, 2, -4, 4)
-          while (det([v, w]) === 0)
+      const a = rng.nonZeroInt(-2, 2)
+      const b = rng.nonZeroInt(-2, 2)
+      const weights = (eq: number[], vs: number[][]) =>
+        eq.map(
+          (i) =>
+            `$${sum(vs.slice(0, 2).map((x, k) => [x[i]!, 'ab'[k]!] as [number, string]))} = ${vs[2]![i]}$`,
+        )
+      if (rng.int(1, 3) === 1) {
+        // Three vectors of the plane: the third is a combination of the other two.
+        const [v, w] = randomBasis(rng, 2) as [number[], number[]]
+        const u = combine([v, w], [a, b])
+        return {
+          prompt: `Three vectors of the plane are never a basis of $\\mathbb{R}^2$: one is a combination of the others. Find $(a, b)$ with $a${vector(v)} + b${vector(w)} = ${vector(u)}$.`,
+          answer: { kind: 'vector', values: [a, b] },
+          hints: ['One equation per component: two equations, two unknowns.'],
+          solution: [
+            `The components give ${weights([0, 1], [v, w, u]).join(' and ')}, so $a = ${a}$ and $b = ${b}$.`,
+            'The first two are not parallel, so these weights are the only ones. The third vector adds nothing to their span: the three are dependent, and no set of three vectors of the plane is a basis.',
+          ],
+          data: { shape: 2, ...flatBasis([v, w, u]) },
         }
-        vs = [v, w]
-        hints = [
-          'Two vectors of the plane form a basis exactly when neither is a multiple of the other.',
-        ]
-        solution = parallel
-          ? [`$${vector(w)}$ is a multiple of $${vector(v)}$: they span only a line. Not a basis.`]
-          : [
-              `$${v[0]!} \\cdot ${paren(w[1]!)} - ${paren(v[1]!)} \\cdot ${paren(w[0]!)} = ${det([v, w])} \\ne 0$. This number, $v_1 w_2 - v_2 w_1$, is $0$ exactly when one vector is a multiple of the other, so they are independent.`,
-              'Two independent vectors span the plane: a basis.',
-            ]
-      } else if (shape === '3-in-3') {
-        const [v, w] = randomBasis(rng, 3)
-        const inPlane = rng.bool()
-        const a = rng.nonZeroInt(-2, 2)
-        const b = rng.nonZeroInt(-2, 2)
-        let u = addN(scaleN(v!, a), scaleN(w!, b))
-        if (!inPlane) {
-          const n = cross3(as3(v!), as3(w!))
-          const g = n.reduce((acc, x) => gcd(acc, Math.abs(x)), 0)
-          u = addN(u, scaleN(n, rng.pick([1, -1]) / g))
-        }
-        vs = [v!, w!, u]
-        hints = [
-          'Three vectors of space form a basis exactly when they are independent: none is a combination of the others.',
-          'The first two are not parallel. Check whether the third is a combination of them.',
-        ]
-        solution = inPlane
-          ? [
-              `$${vector(u)} = ${sum([
-                [a, vector(v!)],
-                [b, vector(w!)],
-              ])}$: the three lie in one plane and are dependent. Not a basis.`,
-            ]
-          : [
-              'Solving for weights with two components and checking the third fails, so the third vector is not a combination of the first two.',
-              'The first two are not parallel, so the three are independent, and three independent vectors span $\\mathbb{R}^3$: a basis.',
-            ]
-      } else if (shape === '2-in-3') {
-        vs = randomBasis(rng, 3).slice(0, 2)
-        hints = ['How many vectors does a basis of $\\mathbb{R}^3$ have?']
-        solution = [
-          'Two vectors span at most a plane, so they cannot span $\\mathbb{R}^3$. Not a basis, even though they are independent.',
-        ]
-      } else {
-        vs = [...randomBasis(rng, 2), intVector(rng, 2, -3, 3)]
-        hints = ['How many vectors does a basis of $\\mathbb{R}^2$ have?']
-        solution = [
-          'Three vectors of the plane are always dependent: the third is a combination of the other two, or the first two are parallel. Not a basis.',
-        ]
       }
-      const dim = shape.endsWith('3') ? 3 : 2
-      const isBasis = vs.length === dim && det(vs) !== 0
+      const [v, w] = randomBasis(rng, 3) as [number[], number[]]
+      const u = combine([v, w], [a, b])
+      // Hide a component whose other two still fix the weights.
+      const rest = (i: number) => [0, 1, 2].filter((m) => m !== i)
+      const at = rng.shuffle([0, 1, 2]).find((i) => det(rest(i).map((m) => [v[m]!, w[m]!])) !== 0)!
+      const shown = `(${u.map((c, i) => (i === at ? 'k' : String(c))).join(', ')})`
       return {
-        prompt: `Do ${vs.map((v) => `$${vector(v)}$`).join(', ')} form a basis of $${space}$?`,
-        answer: { kind: 'choice', options, correct: isBasis ? 0 : 1 },
-        hints,
-        solution,
-        data: {
-          count: vs.length,
-          dim,
-          ...flatBasis(vs),
-        },
+        prompt: `For which $k$ do $\\mathbf{v} = ${vector(v)}$, $\\mathbf{w} = ${vector(w)}$ and $\\mathbf{u} = ${shown}$ fail to be a basis of $\\mathbb{R}^3$?`,
+        answer: { kind: 'number', value: u[at]! },
+        hints: [
+          'Three vectors of space fail to be a basis exactly when they are dependent. $\\mathbf{v}$ and $\\mathbf{w}$ are not parallel, so $\\mathbf{u}$ must be a combination $a\\mathbf{v} + b\\mathbf{w}$.',
+          'Find $a$ and $b$ from the two components without $k$.',
+        ],
+        solution: [
+          `The components without $k$ give ${weights(rest(at), [v, w, u]).join(' and ')}, so $a = ${a}$ and $b = ${b}$.`,
+          `Then $k = ${paren(a)} \\cdot ${paren(v[at]!)} + ${paren(b)} \\cdot ${paren(w[at]!)} = ${u[at]}$. For any other $k$, $\\mathbf{u}$ is off the plane of $\\mathbf{v}$ and $\\mathbf{w}$, and the three form a basis.`,
+        ],
+        data: { shape: 3, at, ...flatBasis([v, w, u]) },
       }
     },
   },
@@ -239,5 +203,3 @@ export const problems = defineProblems([
     },
   },
 ])
-
-const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b))

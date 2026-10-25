@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'checkpoint',
   title: 'Checkpoint: vectors',
   summary:
-    'Fourteen problems across the unit: combinations and their weights, lengths and distances, dot products, angles and projections, independence, planes and lines in space, coordinates in a basis, and one proof about independence.',
+    'Sixteen problems across the unit: combinations and their weights, distances, dot products, angles and projections, a distance or cosine in four or five dimensions, dependence relations, planes in normal and parametric form, lines meeting planes, bases and coordinates, and one proof about independence.',
   tags: [
     'vector',
     'linear combination',
@@ -24,5 +24,5 @@ export const meta = defineItem({
     'lines-and-planes',
     'basis-coordinates',
   ],
-  problemCount: 14,
+  problemCount: 16,
 })
