@@ -213,7 +213,7 @@ infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decim
 fractions), so their answers are chosen to be short decimals. Infinite limits in practice are
 multiple choice ($\infty$, $-\infty$, $0$, does not exist).
 
-### Revision after the self-review (2026-10-24, built 2026-10-25)
+### Revision after the self-review (2026-10-24, built and approved 2026-10-25)
 
 A review of the whole unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All
 items match the plan and the numbers in the text are right; these need fixing:
