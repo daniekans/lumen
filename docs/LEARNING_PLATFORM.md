@@ -31,7 +31,7 @@ unit can be picked out of order.
 11. Calculus 1: Limits, the revision from the self-review (done, approved 2026-10-25)
 12. Linear Algebra: Vectors, the revision from the self-review (done, approved 2026-10-25);
     then Linear maps and matrices: unit plan approved 2026-10-25 (`plans/linear-algebra.md`),
-    batch 1 (items 1 to 4) built 2026-10-25 for review; next batch 2 (items 5 to 8), then 3
+    batch 1 (items 1 to 4) built and reviewed 2026-10-25; next batch 2 (items 5 to 8), then 3
 13. Outline Probability and Statistics (for review), then its first unit
 14. Calculus 1 and Linear Algebra, next units
 

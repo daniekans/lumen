@@ -427,6 +427,18 @@ own focus move raced with a scripted one). `matN.ts` has products, transpose, po
 exact rank. Skill `determinant` redirects to `determinants#determinant` (progress migration
 now follows a redirect for a whole skill key).
 
+**Batch 1 review (2026-10-25), applied.** `linear-maps`: the map picker gained None (the plane
+before the map) so the learner can compare; the red $T(\mathbf{0})$ only under Shift is
+intended (only the shift moves the origin). `WarpedGrid` draws smooth curves (Catmull-Rom
+through the samples, `Path smooth`), takes more samples as `reach` grows, and draws only the
+pieces of lines that cross the view, so the Collapse to Bend morph no longer stutters.
+`matrix-transformations`: each step plays from the plain grid (back to it first when the plane
+has moved), so Replay after Reset or a drag shows the intended transition; teal for
+$T(\mathbf{x})$ confirmed. `matrix-vector-product`, layer step: the grid starts square, moves
+by $W$, then shifts by $\mathbf{b}$, with a stage picker ($\mathbf{x}$, $W\mathbf{x}$,
+$W\mathbf{x} + \mathbf{b}$). Kit-wide: a draggable `Point` carries a thin ring in its color
+(`DESIGN.md`, Layout).
+
 **Review decisions (2026-10-25).**
 
 1. The `matrix` answer kind is a grid of fields with the shape given.

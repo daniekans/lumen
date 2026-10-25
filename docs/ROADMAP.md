@@ -35,9 +35,9 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Linear maps and matrices batch 1 is built (`plans/linear-algebra.md`,
-"Batch 1"). Collect the owner's review of it, then build batch 2 (items 5 to 8: the gallery of
-maps, composition, matrix multiplication and its practice). The focus is
+**Suggested next session:** Linear maps and matrices batch 1 is built and its review applied
+(`plans/linear-algebra.md`, "Batch 1 review"). Build batch 2 (items 5 to 8: the gallery of maps,
+composition, matrix multiplication and its practice). The focus is
 Mathematics and Machine Learning; Data Engineering continues only on request, and its next step
 is outlining the Distributed processing unit.
 
