@@ -11,6 +11,8 @@ interface AxesProps {
   labelLimit?: number
   /** Custom y tick labels, such as powers of ten on a logarithmic axis. Null hides a label. */
   formatY?: (v: number) => ReactNode
+  /** Custom x tick labels, such as seconds on an axis drawn at two units per second. */
+  formatX?: (v: number) => ReactNode
 }
 
 /** x and y axes through the origin with small ticks and mono labels. */
@@ -20,6 +22,7 @@ export function Axes({
   color = vc.axis,
   labelLimit = Infinity,
   formatY,
+  formatX,
 }: AxesProps) {
   const c = useCoords()
   const step = zoomedStep(base, c.zoom)
@@ -49,7 +52,7 @@ export function Axes({
         <g style={{ fill: color, stroke: 'none', fontFamily: 'var(--font-mono)', fontSize: 10.5 }}>
           {xs.map((v) => (
             <text key={`lx${v}`} x={c.x(v)} y={ly + 18} textAnchor="middle">
-              {fmt(v, digits)}
+              {formatX ? formatX(v) : fmt(v, digits)}
             </text>
           ))}
           {ys.map((v) => (

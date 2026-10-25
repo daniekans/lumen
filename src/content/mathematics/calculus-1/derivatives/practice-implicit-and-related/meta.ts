@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'practice',
   title: 'Practice: implicit derivatives and related rates',
   summary:
-    'Slopes and tangent lines of curves given by equations, slopes of inverse functions, $\\arctan$ and $\\arcsin$, logarithmic differentiation, and related rates: ladders, cones, balloons and angles.',
+    'Slopes and tangent lines of curves given by equations, $\\frac{dx}{dy}$, slopes of inverse functions, $\\arctan$ and $\\arcsin$, logarithmic differentiation, and related rates: ladders, cones, balloons, angles, shadows and cars.',
   tags: [
     'implicit differentiation',
     'inverse function',
@@ -14,6 +14,6 @@ export const meta = defineItem({
     'practice',
   ],
   level: 'core',
-  order: 12,
+  order: 13,
   skills: ['implicit-differentiation', 'related-rates', 'chain-rule'],
 })

@@ -7,7 +7,7 @@ export const meta = defineItem({
     'Twelve problems across the unit: the limit definition, a slope that removes a corner, the product, quotient and chain rules, implicit and inverse derivatives, a related rate, and a proof of the product rule.',
   tags: ['derivative', 'checkpoint', 'limit definition', 'chain rule', 'implicit differentiation'],
   level: 'core',
-  order: 13,
+  order: 14,
   skills: [
     'secant-slope',
     'definition',

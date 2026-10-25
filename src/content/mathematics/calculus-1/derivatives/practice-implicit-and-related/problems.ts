@@ -29,6 +29,26 @@ const curvePoint = (rng: Rng) => {
   }
 }
 
+/** A point on x² + kxy + y² = c (c > 0) where dx/dy is defined: 2x + ky ≠ 0. */
+const dxdyPoint = (rng: Rng) => {
+  for (;;) {
+    const x0 = rng.nonZeroInt(-3, 3)
+    const y0 = rng.nonZeroInt(-3, 3)
+    const k = rng.nonZeroInt(-3, 3)
+    if (2 * x0 + k * y0 !== 0 && x0 * x0 + k * x0 * y0 + y0 * y0 > 0) return { x0, y0, k }
+  }
+}
+
+/**
+ * A point with a vertical tangent (kx + 2y = 0) on x² + kxy + y² = c. With |k| < 2 the curve is an
+ * ellipse (c > 0) and 2x + ky ≠ 0 there; x is even so that y = -kx/2 is whole.
+ */
+const verticalPoint = (rng: Rng) => {
+  const k = rng.int(-1, 1)
+  const x0 = rng.pick([-4, -2, 2, 4])
+  return { x0, y0: -(k * x0) / 2, k }
+}
+
 /** Right triangles with whole sides: legs and hypotenuse. */
 const TRIPLES: readonly (readonly [number, number, number])[] = [
   [3, 4, 5],
@@ -36,6 +56,28 @@ const TRIPLES: readonly (readonly [number, number, number])[] = [
   [5, 12, 13],
   [9, 12, 15],
   [8, 15, 17],
+]
+
+/** '= 1.8', or '= \\frac{5}{3} \\approx 1.67' when the value is not a short decimal. */
+const approx = (v: number) => {
+  const exact = tex.num(v, 30)
+  if (Math.abs(+v.toFixed(2) - v) < 1e-9) return `= ${+v.toFixed(2)}`
+  return exact.startsWith('\\frac')
+    ? `= ${exact} \\approx ${v.toFixed(2)}`
+    : `\\approx ${v.toFixed(2)}`
+}
+
+/** Positions (east, north) of the two cars, with the distance between them, in km. */
+const CAR_TRIPLES: readonly (readonly [number, number, number])[] = [
+  [6, 8, 10],
+  [8, 6, 10],
+  [12, 16, 20],
+  [16, 12, 20],
+  [12, 5, 13],
+  [15, 8, 17],
+  [9, 12, 15],
+  [20, 15, 25],
+  [24, 7, 25],
 ]
 
 export const problems = defineProblems([
@@ -71,6 +113,47 @@ export const problems = defineProblems([
             [2, 'y'],
           ])}}$.`,
           `At $(${x0}, ${y0})$: $\\frac{dy}{dx} = -\\frac{${top}}{${bottom}} = ${frac(-top, bottom)}$.`,
+        ],
+        data: { x0, y0, k, c },
+      }
+    },
+  },
+  {
+    id: 'dx-dy',
+    title: 'Differentiate in y',
+    skills: ['implicit-differentiation'],
+    difficulty: 2,
+    generate: (rng) => {
+      // A third of the time, a point with a vertical tangent, where dy/dx fails but dx/dy = 0.
+      const vertical = rng.int(0, 2) === 0
+      const { x0, y0, k } = vertical ? verticalPoint(rng) : dxdyPoint(rng)
+      const c = x0 * x0 + k * x0 * y0 + y0 * y0
+      const top = k * x0 + 2 * y0
+      const bottom = 2 * x0 + k * y0
+      const curve =
+        k === 0
+          ? `x^{2} + y^{2} = ${c}`
+          : `x^{2} ${k < 0 ? '-' : '+'} ${term(Math.abs(k), 'xy')} + y^{2} = ${c}`
+      return {
+        prompt: `Find $\\frac{dx}{dy}$ at the point $(${x0}, ${y0})$ on the curve $${curve}$.${vertical ? ' (The tangent there is vertical, so $\\frac{dy}{dx}$ does not exist.)' : ''}`,
+        answer: { kind: 'number', value: -top / bottom },
+        hints: [
+          `Differentiate both sides in $y$, with $x$ a function of $y$: $\\frac{d}{dy}\\left(x^2\\right) = 2x\\,\\frac{dx}{dy}$.${k === 0 ? '' : ' The middle term needs the product rule: $\\frac{d}{dy}(xy) = \\frac{dx}{dy}\\,y + x$.'}`,
+          `Collect the terms with $\\frac{dx}{dy}$ and solve for it.`,
+        ],
+        solution: [
+          k === 0
+            ? '$2x\\,\\frac{dx}{dy} + 2y = 0$, so $\\frac{dx}{dy} = -\\frac{y}{x}$.'
+            : `$2x\\,\\frac{dx}{dy} + ${paren(k)}\\left(\\frac{dx}{dy}\\,y + x\\right) + 2y = 0$, so $\\frac{dx}{dy} = -\\frac{${sum(
+                [
+                  [k, 'x'],
+                  [2, 'y'],
+                ],
+              )}}{${sum([
+                [2, 'x'],
+                [k, 'y'],
+              ])}}$.`,
+          `At $(${x0}, ${y0})$: $\\frac{dx}{dy} = -\\frac{${top}}{${bottom}} = ${frac(-top, bottom)}$.`,
         ],
         data: { x0, y0, k, c },
       }
@@ -262,6 +345,73 @@ export const problems = defineProblems([
           `$\\frac{dy}{dt} = -\\frac{x}{y}\\,\\frac{dx}{dt} = -\\frac{${x0}}{${y0}} \\cdot ${v} = ${tex.num(value)}$ meters per second.`,
         ],
         data: { x0, y0, v },
+      }
+    },
+  },
+  {
+    id: 'shadow',
+    title: 'A walking shadow',
+    skills: ['related-rates'],
+    difficulty: 2,
+    generate: (rng) => {
+      const h = rng.pick([1.5, 1.6, 1.8, 2])
+      const r = rng.pick([2, 2.5, 3, 4])
+      const H = r * h
+      const v = rng.pick([1, 1.2, 1.5, 2])
+      const d = rng.int(3, 15)
+      const tip = rng.bool()
+      // s = (H / (H - h)) x, and the length s - x = (h / (H - h)) x
+      const factor = tip ? H / (H - h) : h / (H - h)
+      const value = factor * v
+      const f = (n: number) => String(+n.toFixed(4))
+      const q = tex.num(factor)
+      return {
+        prompt: `A person $${h}$ meters tall walks away from a streetlight $${f(H)}$ meters high at $${v}$ meters per second. How fast is ${tip ? 'the tip of the shadow moving' : 'the length of the shadow growing'} when the person is $${d}$ meters from the light? Give the rate in meters per second.`,
+        answer: { kind: 'number', value, tolerance: 0.005 },
+        hints: [
+          `With $x$ the person's distance and $s$ the tip's distance from the pole, similar triangles give $\\frac{s}{${f(H)}} = \\frac{s - x}{${h}}$ at every moment.`,
+          `Solve for $s$ in terms of $x$, then differentiate in $t$.${tip ? '' : ' The length is $s - x$.'}`,
+        ],
+        solution: [
+          `$${h}s = ${f(H)}(s - x)$, so $s = ${tex.num(H / (H - h))}x$${tip ? '' : ` and the length is $s - x = ${tex.num(h / (H - h))}x$`}.`,
+          `$\\frac{d}{dt}${tip ? 's' : '(s - x)'} = ${q} \\cdot ${v} ${approx(value)}$ meters per second. The distance $${d}$ is not needed: the relation is linear.`,
+        ],
+        data: { h, H, v, d, tip: Number(tip) },
+      }
+    },
+  },
+  {
+    id: 'two-cars',
+    title: 'Two cars',
+    skills: ['related-rates'],
+    difficulty: 3,
+    generate: (rng) => {
+      for (;;) {
+        const [x, y, D] = rng.pick(CAR_TRIPLES)
+        const minutes = rng.pick([6, 9, 12, 15, 30])
+        const t = minutes / 60
+        const a = x / t
+        const b = rng.pick([30, 40, 50, 60, 80])
+        const y0 = y - b * t
+        if (!Number.isInteger(a) || a < 30 || a > 120 || y0 < 0 || !Number.isInteger(y0)) continue
+        const value = (x * a + y * b) / D
+        const start =
+          y0 === 0
+            ? `car B leaves the same crossing heading north at $${b}$ km/h`
+            : `car B is $${y0}$ km north of the crossing, heading north at $${b}$ km/h`
+        return {
+          prompt: `Car A leaves a crossing heading east at $${a}$ km/h. At the same moment ${start}. How fast is the distance between the cars growing $${minutes}$ minutes later? Give the rate in km/h.`,
+          answer: { kind: 'number', value, tolerance: 0.005 },
+          hints: [
+            'With $x$ and $y$ the distances from the crossing, the distance $D$ between the cars satisfies $D^2 = x^2 + y^2$ at every moment.',
+            'Differentiate in $t$: $2D\\,\\frac{dD}{dt} = 2x\\,\\frac{dx}{dt} + 2y\\,\\frac{dy}{dt}$. Work out $x$, $y$ and $D$ at the instant first.',
+          ],
+          solution: [
+            `After $${minutes}$ minutes, $${tex.num(t)}$ hours: $x = ${a} \\cdot ${tex.num(t)} = ${x}$, $y = ${y0 === 0 ? '' : `${y0} + `}${b} \\cdot ${tex.num(t)} = ${y}$, and $D = \\sqrt{${x * x} + ${y * y}} = ${D}$.`,
+            `$\\frac{dD}{dt} = \\frac{${x} \\cdot ${a} + ${y} \\cdot ${b}}{${D}} ${approx(value)}$ km/h.`,
+          ],
+          data: { a, b, y0, t },
+        }
       }
     },
   },

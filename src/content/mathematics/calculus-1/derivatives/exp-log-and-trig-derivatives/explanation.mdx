@@ -42,6 +42,29 @@ slope $\ln b$, and the dashed <C c="teal">derivative</C> is the curve scaled by 
 for $b > e$, flatter for $1 < b < e$, and decreasing for $b < 1$, where $\ln b < 0$. Base $e$ is the
 one where no factor appears, which is why calculus prefers it.
 
+## Growth proportional to size
+
+The rule $\frac{d}{dx}e^x = e^x$ is why $e$ shows up wherever something grows in proportion to
+how much there is. A population of bacteria with plenty of food grows faster when there are more of
+them: each one divides at about the same rate, so the growth rate is a fixed fraction $k$ of the
+size,
+
+$$
+\frac{dP}{dt} = kP.
+$$
+
+The function $P(t) = P_0 e^{kt}$ has this property. Write $e^{kt} = \left(e^k\right)^t$, an
+exponential with base $b = e^k$ and $\ln b = k$, so by the rule above
+$\frac{dP}{dt} = P_0 \cdot k\left(e^k\right)^t = kP$. The units read off the equation: with $P$ in
+cells and $t$ in hours, $k$ is in "per hour", and $k = 0.3$ means that a colony of $5000$ cells is
+growing by $1500$ cells per hour at that moment. Money earning interest $r$ compounded continuously
+follows the same law, $\frac{dA}{dt} = rA$, so $A(t) = A_0 e^{rt}$. The rule $kP$ also runs
+backward: radioactive decay has $k < 0$, and the amount shrinks in proportion to what is left.
+
+An equation that relates a function to its own derivative is a differential equation. Here it says
+the rate of change is proportional to the size, and the units on differential equations show that $P_0e^{kt}$ is
+its only solution with $P(0) = P_0$.
+
 ## Sine and cosine on the unit circle
 
 Angles here are in <Term id="radian">radians</Term>, so an angle of $\Delta\theta$ cuts an arc

@@ -37,6 +37,36 @@ where the tangent is vertical: here where $x + 2y = 0$, at $(2, -1)$ and $(-2, 1
 Away from such points the assumption holds; the implicit function theorem, proved in multivariable
 calculus, says when.
 
+## Which variable to differentiate in
+
+Nothing above requires $x$ to be the variable. An equation can be differentiated in any variable
+for which it holds at every value, on a stretch of the curve where the other quantities are
+functions of that variable. The chain rule then gives each of those quantities a factor: its
+derivative in the chosen variable.
+
+At $(5, 0)$ on the circle the tangent is vertical, so $\frac{dy}{dx}$ does not exist. But near that
+point the right half of the circle is the graph of $x = \sqrt{25 - y^2}$, a function of $y$, and
+the equation holds for every $y$ between $-5$ and $5$ on it. In the
+step <StepLink step="in-y">differentiate in y</StepLink>, differentiate both sides in $y$:
+
+$$
+2x\,\frac{dx}{dy} + 2y = 0, \qquad \frac{dx}{dy} = -\frac{y}{x} \quad (x \neq 0).
+$$
+
+At $(5, 0)$ this gives $\frac{dx}{dy} = 0$: as $y$ moves away from $0$, $x$ does not change at first.
+Now the trouble is at the top and bottom, where the tangent is horizontal and $x = 0$. Each choice
+of variable fails where the curve doubles back in that variable, and the two fail at different
+points. At a point where both exist, $-\frac{y}{x}$ is the reciprocal of $-\frac{x}{y}$:
+
+$$
+\frac{dx}{dy} = \frac{1}{\frac{dy}{dx}}.
+$$
+
+The same holds on any curve: a small step along it with run $\Delta x$ and rise $\Delta y$ has
+$\frac{\Delta x}{\Delta y} = 1 \big/ \frac{\Delta y}{\Delta x}$, and the limits keep it. The
+choice is a practical one: differentiate in the variable the question asks about (in $t$ for rates
+in time, as the next item does), or in the one that makes the equation a function near the point.
+
 ## The slope of an inverse
 
 Let $f$ be differentiable and strictly increasing (or decreasing), with
@@ -51,7 +81,8 @@ g'(f(a)) = \frac{1}{f'(a)}, \qquad \text{or with } b = f(a): \quad g'(b) = \frac
 $$
 
 Implicit differentiation gives the same rule: $y = g(x)$ means $f(y) = x$, so
-$f'(y)\,\frac{dy}{dx} = 1$. Both arguments assume that $g$ is differentiable. A limit argument
+$f'(y)\,\frac{dy}{dx} = 1$. In Leibniz notation it is the reciprocal rule above: on the graph of
+$g$, $x = f(y)$, so $\frac{dx}{dy} = f'(y)$ and $\frac{dy}{dx} = 1 \big/ \frac{dx}{dy}$. Both arguments assume that $g$ is differentiable. A limit argument
 shows that it is: when $x$ changes by $\Delta x$, $y = g(x)$ changes by $\Delta y \neq 0$ with
 $\frac{\Delta y}{\Delta x} = \frac{1}{\Delta x / \Delta y}$, and $\Delta y \to 0$ because the
 inverse of a continuous, strictly monotonic function is continuous. Where $f'(a) = 0$ the inverse

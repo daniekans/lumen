@@ -50,6 +50,9 @@ const circle: ImplicitCurve = {
   labelAt: [-3.8, 3.8],
 }
 
+/** The same circle split at its horizontal tangents, so each half is a graph x(y). */
+const circleInY: ImplicitCurve = { ...circle, t0: Math.PI / 2 }
+
 /** x² + xy + y² = 3, an ellipse along the diagonals. */
 const S3 = Math.sqrt(3)
 const tilted: ImplicitCurve = {
@@ -113,6 +116,7 @@ const wrap = (t: number, t0: number) => t0 + ((((t - t0) % TAU) + TAU) % TAU)
 export default function ImplicitAndInverse() {
   const { id } = useVizStep()
   const [theta, setTheta] = useState(Math.atan2(4, 3))
+  const [phi, setPhi] = useState(TAU)
   const [s, setS] = useState(2.2)
   const [a, setA] = useState(0.6)
   const [ax, setAx] = useState(1)
@@ -132,7 +136,9 @@ export default function ImplicitAndInverse() {
 
   const setCircleT = (t: number) => setTheta(wrap(t, circle.t0))
   const setTiltedT = (t: number) => setS(wrap(t, tilted.t0))
+  const setPhiT = (t: number) => setPhi(wrap(t, circleInY.t0))
   const [cx, cy] = circle.at(theta)
+  const [yx, yy] = circle.at(phi)
   const [ex, ey] = tilted.at(s)
 
   // Inverse: slope triangles of run h at P on f and, mirrored, at Q on its inverse.
@@ -172,6 +178,23 @@ export default function ImplicitAndInverse() {
                   value={slopeText(cx, cy)}
                   color={vc.teal}
                   hint="Undefined where $y = 0$: the tangent is vertical."
+                />
+              </ReadoutPanel>
+            )}
+            {id === 'in-y' && (
+              <ReadoutPanel>
+                <Readout label="$x$" value={fmt(yx, 2)} />
+                <Readout label="$y$" value={fmt(yy, 2)} />
+                <Readout
+                  label="$\frac{dy}{dx} = -\frac{x}{y}$"
+                  value={slopeText(yx, yy)}
+                  hint="Undefined where $y = 0$: the tangent is vertical."
+                />
+                <Readout
+                  label="$\frac{dx}{dy} = -\frac{y}{x}$"
+                  value={slopeText(yy, yx)}
+                  color={vc.teal}
+                  hint="Undefined where $x = 0$, at the two hollow points: there the tangent is horizontal."
                 />
               </ReadoutPanel>
             )}
@@ -228,6 +251,9 @@ export default function ImplicitAndInverse() {
 
         {id === 'circle' && (
           <CurveWithTangent curve={circle} t={theta} setT={setCircleT} label="x^2 + y^2 = 25" />
+        )}
+        {id === 'in-y' && (
+          <CurveWithTangent curve={circleInY} t={phi} setT={setPhiT} label="x^2 + y^2 = 25" />
         )}
         {id === 'implicit' && (
           <CurveWithTangent curve={tilted} t={s} setT={setTiltedT} label="x^2 + xy + y^2 = 3" />
@@ -314,6 +340,17 @@ export default function ImplicitAndInverse() {
             onChange={setTheta}
             min={0}
             max={TAU}
+            step={0.01}
+            color={vc.blue}
+          />
+        )}
+        {id === 'in-y' && (
+          <LabeledSlider
+            label="Position of $P$"
+            value={phi}
+            onChange={setPhiT}
+            min={circleInY.t0}
+            max={circleInY.t0 + TAU}
             step={0.01}
             color={vc.blue}
           />

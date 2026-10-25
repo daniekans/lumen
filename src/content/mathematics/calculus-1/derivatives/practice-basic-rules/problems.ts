@@ -209,4 +209,119 @@ export const problems = defineProblems([
       }
     },
   },
+  {
+    id: 'motion-rates',
+    title: 'Velocity and acceleration',
+    skills: ['motion', 'basic-rules'],
+    difficulty: 2,
+    generate: (rng) => {
+      for (;;) {
+        const a = rng.nonZeroInt(-2, 2)
+        const b = rng.int(-6, 6)
+        const c = rng.int(-9, 9)
+        const d = rng.int(0, 20)
+        const t1 = rng.int(1, 4)
+        const v = 3 * a * t1 * t1 + 2 * b * t1 + c
+        const acc = 6 * a * t1 + 2 * b
+        if (v === 0 || acc === 0) continue
+        const kind = rng.int(0, 2)
+        const s = poly([a, b, c, d], 't')
+        const vt = poly([3 * a, 2 * b, c], 't')
+        const at = poly([6 * a, 2 * b], 't')
+        const intro = `An object moves along a line, and its position after $t$ seconds is $s(t) = ${s}$ meters.`
+        const steps = [
+          `$v(t) = s'(t) = ${vt}$, so $v(${t1}) = ${v}$ meters per second.`,
+          `$a(t) = v'(t) = ${at}$, so $a(${t1}) = ${acc}$ meters per second per second.`,
+        ]
+        if (kind === 2) {
+          const speeding = Math.sign(v) === Math.sign(acc)
+          return {
+            prompt: `${intro} At $t = ${t1}$, is it speeding up or slowing down?`,
+            answer: {
+              kind: 'choice',
+              options: ['Speeding up', 'Slowing down'],
+              correct: speeding ? 0 : 1,
+            },
+            hints: [
+              'Find the velocity and the acceleration at that time.',
+              'The speed grows when $v$ and $a$ have the same sign, and shrinks when their signs differ.',
+            ],
+            solution: [
+              ...steps,
+              `${speeding ? 'Same signs, so the speed grows: speeding up.' : 'Opposite signs, so the speed shrinks: slowing down.'}`,
+            ],
+            data: { a, b, c, d, t1, kind },
+          }
+        }
+        return {
+          prompt: `${intro} Find its ${kind === 0 ? 'velocity, in meters per second' : 'acceleration, in meters per second per second'}, at $t = ${t1}$.`,
+          answer: { kind: 'number', value: kind === 0 ? v : acc },
+          hints: [
+            "The velocity is $v(t) = s'(t)$.",
+            ...(kind === 1 ? ["The acceleration is $a(t) = v'(t) = s''(t)$."] : []),
+          ],
+          solution: kind === 0 ? [steps[0]!] : steps,
+          data: { a, b, c, d, t1, kind },
+        }
+      }
+    },
+  },
+  {
+    id: 'motion-rest',
+    title: 'When does it stop?',
+    skills: ['motion', 'basic-rules'],
+    difficulty: 2,
+    generate: (rng) => {
+      // v(t) = 3(t - p)(t - q) with p + q even, so s has whole coefficients.
+      const p = rng.int(1, 4)
+      const q = p + rng.pick([2, 4])
+      const b = (-3 * (p + q)) / 2
+      const c = 3 * p * q
+      const d = rng.int(0, 10)
+      return {
+        prompt: `An object moves along a line, and its position after $t$ seconds is $s(t) = ${poly([1, b, c, d], 't')}$ meters. At which times $t > 0$ is it at rest for an instant? Enter all of them.`,
+        answer: { kind: 'list', values: [p, q] },
+        hints: [
+          "At rest means velocity $0$: solve $s'(t) = 0$.",
+          `$s'(t) = ${poly([3, 2 * b, c], 't')}$. Divide by $3$ and factor.`,
+        ],
+        solution: [
+          `$v(t) = ${poly([3, 2 * b, c], 't')} = 3(${poly([1, -(p + q), p * q], 't')}) = 3(t - ${p})(t - ${q})$.`,
+          `$v(t) = 0$ at $t = ${p}$ and $t = ${q}$ seconds. Between them $v < 0$ and the object moves backward.`,
+        ],
+        data: { b, c, d, p, q },
+      }
+    },
+  },
+  {
+    id: 'highest-point',
+    title: 'A ball thrown upward',
+    skills: ['motion', 'basic-rules'],
+    difficulty: 2,
+    generate: (rng) => {
+      const k = rng.int(1, 3)
+      const v0 = +(9.8 * k).toFixed(1)
+      const s0 = rng.pick([0, 1.5, 2, 5, 10])
+      const height = rng.bool()
+      const top = +(s0 + 4.9 * k * k).toFixed(2)
+      const s = s0 === 0 ? `${v0}t - 4.9t^{2}` : `${s0} + ${v0}t - 4.9t^{2}`
+      return {
+        prompt: `A ball is thrown straight up, and its height after $t$ seconds is $s(t) = ${s}$ meters. ${height ? 'What is its greatest height, in meters?' : 'After how many seconds does it reach its highest point?'}`,
+        answer: { kind: 'number', value: height ? top : k, tolerance: 1e-6 },
+        hints: [
+          'At the highest point the ball stops rising: its velocity is $0$.',
+          `$v(t) = s'(t) = ${v0} - 9.8t$.`,
+        ],
+        solution: [
+          `$${v0} - 9.8t = 0$ at $t = ${k}$ seconds.`,
+          ...(height
+            ? [
+                `$s(${k}) = ${s0 === 0 ? '' : `${s0} + `}${v0} \\cdot ${k} - 4.9 \\cdot ${k * k} = ${top}$ meters.`,
+              ]
+            : []),
+        ],
+        data: { v0, s0, k, height: Number(height) },
+      }
+    },
+  },
 ])

@@ -4,10 +4,10 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'The chain rule',
   summary:
-    "A function stretches a small interval around $x$ by the factor $g'(x)$. A composition stretches twice, so the factors multiply: $(f \\circ g)'(x) = f'(g(x))\\,g'(x)$. In Leibniz notation $\\frac{dy}{dx} = \\frac{dy}{du}\\frac{du}{dx}$, which looks like cancelling because the increments really do cancel.",
+    "A function stretches a small interval around $x$ by the factor $g'(x)$. A composition stretches twice, so the factors multiply: $(f \\circ g)'(x) = f'(g(x))\\,g'(x)$. In Leibniz notation $\\frac{dy}{dx} = \\frac{dy}{du}\\frac{du}{dx}$, which looks like cancelling because the increments really do cancel. Rates with units multiply the same way, and so do the layers of a neural network.",
   tags: ['chain rule', 'composition', 'derivative', 'leibniz notation', 'stretching'],
   level: 'core',
-  order: 8,
+  order: 9,
   skills: ['chain-rule'],
   steps: [
     {

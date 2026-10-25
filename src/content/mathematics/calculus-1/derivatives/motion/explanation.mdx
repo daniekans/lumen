@@ -1,0 +1,114 @@
+The derivative was born as the mathematics of motion. A moving object has a position at every
+moment, and its velocity and acceleration are derivatives of that position. This item follows a
+ball thrown straight up, and reads Leibniz notation through its units.
+
+## Position as a function of time
+
+A ball leaves the ground at $19.6$ meters per second, straight up. Gravity slows it, and its height
+in meters after $t$ seconds is
+
+$$
+s(t) = 19.6t - 4.9t^2.
+$$
+
+The step <StepLink step="position">position over time</StepLink> shows the ball on a vertical track
+and, beside it, the graph of $s$. The graph is not the ball's path, which is a straight vertical
+line: it records the height against time. The ball rises to $19.6$ meters at $t = 2$ and lands at
+$t = 4$, when $s(4) = 78.4 - 78.4 = 0$.
+
+## Average velocity
+
+Over the interval from $t$ to $t + \Delta t$ the position changes by
+$\Delta s = s(t + \Delta t) - s(t)$. The <Term id="difference-quotient">difference quotient</Term>
+
+$$
+\frac{\Delta s}{\Delta t} = \frac{s(t + \Delta t) - s(t)}{\Delta t}
+$$
+
+is the average velocity over the interval, the slope of the <C c="yellow">secant</C> in the
+step <StepLink step="average">average velocity</StepLink>. Its units come from the quotient:
+$\Delta s$ is in meters and $\Delta t$ in seconds, so $\frac{\Delta s}{\Delta t}$ is in meters per
+second. Over the first second, $\frac{14.7 - 0}{1} = 14.7$ meters per second.
+
+A car trip works the same way: $120$ kilometers in $1.5$ hours is an average of $80$ km/h, even
+though the car stopped at lights and passed trucks on the way.
+
+## Velocity is the derivative
+
+The speedometer does not show an average over the trip. It shows the rate at one instant, which is
+what the averages over shorter and shorter intervals approach. In the
+step <StepLink step="instant">the speedometer reading</StepLink>, $\Delta t$ shrinks and the secant
+turns into the <C c="teal">tangent</C>. The limit is the <Term id="velocity">velocity</Term>:
+
+$$
+v(t) = \frac{ds}{dt} = \lim_{\Delta t \to 0} \frac{\Delta s}{\Delta t} = 19.6 - 9.8t,
+$$
+
+by the power and sum rules. The <Term id="leibniz-notation">Leibniz notation</Term> keeps the
+units visible: $\frac{ds}{dt}$ reads "change in $s$ over change in $t$", meters per second, because
+each average in the limit has those units. At $t = 1$ the velocity is $9.8$ meters per second, less
+than the average $14.7$ over the first second, since the ball was faster at the start of that
+second than at its end.
+
+## Velocity as a function
+
+Computed at every instant, the velocity is a new function, drawn as the <C c="teal">teal
+line</C> in the step <StepLink step="velocity">velocity as a function</StepLink>.
+It is the <Term id="derivative-function">derivative function</Term> of $s$, and it carries the
+direction of motion in its sign:
+
+- $v > 0$: $s$ increases, the ball moves up.
+- $v < 0$: $s$ decreases, the ball moves down.
+- $v = 0$: the ball is at rest for an instant, here at the top, $t = 2$, where the tangent to $s$ is
+  flat.
+
+The speed is $\lvert v \rvert$, the reading without the direction. The ball leaves at $19.6$ meters
+per second and lands with velocity $v(4) = -19.6$: the same speed, moving down.
+
+## Acceleration, the second derivative
+
+The velocity changes too. Its rate of change is the <Term id="acceleration">acceleration</Term>,
+the derivative of the derivative:
+
+$$
+a(t) = \frac{dv}{dt} = \frac{d}{dt}\left(\frac{ds}{dt}\right) = \frac{d^2s}{dt^2}.
+$$
+
+For the ball, $a(t) = \frac{d}{dt}(19.6 - 9.8t) = -9.8$, the same at every moment: gravity, drawn
+in <C c="orange">orange</C> in the step <StepLink step="acceleration">acceleration</StepLink>.
+
+The units follow the notation again. $\frac{dv}{dt}$ is meters per second, per second: every second
+the velocity drops by $9.8$ meters per second. That is written m/s², and the $dt^2$ in
+$\frac{d^2s}{dt^2}$ is the same "seconds squared". The $2$s sit in different places because they
+mean different things: in $d^2s$ the operator $\frac{d}{dt}$ is applied twice to $s$, and in $dt^2$
+the time unit appears twice.
+
+For any function whose derivative is itself differentiable, the derivative of $f'$ is
+the <Term id="second-derivative">second derivative</Term> $f'' = (f')'$, written
+$\frac{d^2y}{dx^2}$ for $y = f(x)$. It
+measures how fast the slope changes. The unit on applications of derivatives reads it on a graph as
+the way the curve bends.
+
+## Speeding up or slowing down
+
+A negative acceleration does not by itself mean slowing down. The speed $\lvert v \rvert$ grows when
+the velocity moves away from $0$, which happens when $v$ and $a$ have the same sign:
+
+| $v$ | $a$ | the ball                  |
+| --- | --- | ------------------------- |
+| $+$ | $-$ | moves up and slows down   |
+| $-$ | $-$ | moves down and speeds up  |
+| $+$ | $+$ | moves up and speeds up    |
+| $-$ | $+$ | moves down and slows down |
+
+The ball has $a = -9.8$ the whole time. Going up ($0 < t < 2$) it slows down; coming down
+($2 < t < 4$) it speeds up, although the acceleration never changed.
+
+## A general throw
+
+With initial velocity $v_0$ and initial height $s_0$, the height is
+$s(t) = s_0 + v_0t - 4.9t^2$ (in meters, with $t$ in seconds, near the Earth's surface and without
+air resistance). Then $v(t) = v_0 - 9.8t$ and $a = -9.8$. Note what the derivatives recover:
+$s(0) = s_0$, $v(0) = v_0$ and $a = -9.8$, the three facts the formula was built from. The ball
+stops at the top when $v = 0$, at $t = \frac{v_0}{9.8}$. Going backward, from the acceleration to
+the velocity and the position, is what integrals do in a later unit.

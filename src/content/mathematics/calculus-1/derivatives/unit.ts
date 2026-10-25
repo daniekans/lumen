@@ -17,6 +17,10 @@ export const unit = defineUnit({
       title: 'Differentiate with the power, sum, constant multiple, product and quotient rules',
     },
     {
+      id: 'motion',
+      title: 'Find velocity and acceleration from position, and tell speeding up from slowing down',
+    },
+    {
       id: 'transcendental-derivatives',
       title: 'Differentiate exponentials, logarithms and trigonometric functions',
     },
@@ -112,6 +116,30 @@ export const unit = defineUnit({
       summary:
         'The derivative of a sum is the sum of the derivatives, and constants factor out. Together they let a polynomial be differentiated term by term.',
       introducedIn: 'power-and-sum-rules',
+    },
+    {
+      id: 'velocity',
+      title: 'Velocity',
+      tex: 'v = \\frac{ds}{dt}',
+      summary:
+        'The derivative of position $s(t)$ in time: the instantaneous rate of change of position, the limit of average velocities $\\frac{\\Delta s}{\\Delta t}$. Its sign gives the direction of motion, and its absolute value is the speed.',
+      introducedIn: 'motion',
+    },
+    {
+      id: 'acceleration',
+      title: 'Acceleration',
+      tex: 'a = \\frac{dv}{dt}',
+      summary:
+        'The derivative of velocity in time, and so the second derivative of position: $a = \\frac{d^2s}{dt^2}$. When $v$ and $a$ have the same sign the speed grows; when their signs differ it shrinks.',
+      introducedIn: 'motion',
+    },
+    {
+      id: 'second-derivative',
+      title: 'Second derivative',
+      tex: "f''",
+      summary:
+        "The derivative of the derivative: $f'' = (f')'$, written $\\frac{d^2y}{dx^2}$ in Leibniz notation. It measures how fast the slope changes.",
+      introducedIn: 'motion',
     },
     {
       id: 'product-rule',

@@ -7,7 +7,7 @@ export const meta = defineItem({
     "A rectangle with sides $f(x)$ and $g(x)$ has area $fg$. When $x$ moves, it gains two strips and a corner, and in the limit only the strips count: $(fg)' = f'g + fg'$. Reading the same rectangle with a known area gives the quotient rule, and with it the power rule for negative $n$.",
   tags: ['product rule', 'quotient rule', 'power rule', 'derivative', 'rectangle'],
   level: 'core',
-  order: 5,
+  order: 6,
   skills: ['basic-rules'],
   steps: [
     {

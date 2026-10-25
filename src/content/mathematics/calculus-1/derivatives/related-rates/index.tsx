@@ -23,10 +23,17 @@ const VIEWS = {
   ladder: [-1.2, 6.4, -1.4, 6.2],
   tank: [-4.6, 4.6, -0.9, 7.4],
   balloon: [-5.4, 2.6, -1, 8.8],
+  shadow: [-1.5, 14, -1.4, 7.6],
+  cars: [-3, 27, -3, 27],
 } as const
 
-/** How long each motion lasts, in seconds; the animation runs in real time. */
-const DURATION = { ladder: 7.2, tank: 9, balloon: 8 } as const
+type Scene = keyof typeof VIEWS
+
+/** The time each motion covers, in its own unit (seconds, or hours for the cars). */
+const DURATION = { ladder: 7.2, tank: 9, balloon: 8, shadow: 6, cars: 0.25 } as const
+
+/** How long each animation plays, in seconds; all but the cars run in real time. */
+const PLAY = { ...DURATION, cars: 9 } as const
 
 /** Ladder of length 5 whose foot starts 1 m from the wall and slides away at 0.5 m/s. */
 const LADDER = 5
@@ -40,18 +47,35 @@ const depth = (t: number) => Math.cbrt(24 * t)
 /** Balloon rising at 1 m/s, 4 m from the observer. */
 const DISTANCE = 4
 
+/** A person 1.8 m tall walking away from a 5.4 m streetlight at 1.2 m/s: the tip is at s = 1.5x. */
+const LAMP = 5.4
+const PERSON = 1.8
+const WALK = 1.2
+const walker = (t: number) => 1 + WALK * t
+
+/** Car A leaves the crossing east at 80 km/h; car B, 7 km north, drives north at 60 km/h. */
+const SPEED_A = 80
+const SPEED_B = 60
+const carA = (t: number) => SPEED_A * t
+const carB = (t: number) => 7 + SPEED_B * t
+/** Velocity arrows are drawn this many km long per km/h. */
+const ARROW = 0.05
+
+const SCENES: readonly Scene[] = ['ladder', 'tank', 'balloon', 'shadow', 'cars']
+const sceneOf = (id: string | undefined): Scene => SCENES.find((s) => s === id) ?? 'ladder'
+
 export default function RelatedRates() {
   const { id } = useVizStep()
   const [t, setT] = useState(0)
   const seq = useSequence()
-  const step = id === 'tank' ? 'tank' : id === 'balloon' ? 'balloon' : 'ladder'
+  const step = sceneOf(id)
   const T = DURATION[step]
 
   const play = () =>
     void seq.run(({ tween }) =>
-      tween(0, DURATION[step], { duration: DURATION[step], ease: 'linear', onUpdate: setT }),
+      tween(0, DURATION[step], { duration: PLAY[step], ease: 'linear', onUpdate: setT }),
     )
-  useStepEffect({ ladder: play, tank: play, balloon: play })
+  useStepEffect({ ladder: play, tank: play, balloon: play, shadow: play, cars: play })
 
   const [vx0, vx1, vy0, vy1] = useAnimatedValue(VIEWS[step], { duration: 1.2 })
   const setTime = (v: number) => {
@@ -76,12 +100,22 @@ export default function RelatedRates() {
   const dTheta = Math.cos(theta) ** 2 / DISTANCE
   const O: Vec2 = [-DISTANCE, 0]
 
+  // Shadow
+  const px = walker(time)
+  const tip = (LAMP / (LAMP - PERSON)) * px
+
+  // Cars
+  const ax = carA(time)
+  const by = carB(time)
+  const D = Math.hypot(ax, by)
+  const dD = (ax * SPEED_A + by * SPEED_B) / D
+
   return (
     <>
       <Stage
         zoomable
         domain={{ x: [vx0, vx1], y: [vy0, vy1] }}
-        ariaLabel="Three moving pictures: a ladder sliding down a wall, water filling a cone, and a balloon rising while an observer watches"
+        ariaLabel="Moving pictures: a ladder sliding down a wall, water filling a cone, a balloon rising while an observer watches, a person walking away from a streetlight, and two cars driving apart"
         overlay={
           <Overlay corner="top-right">
             {step === 'ladder' && (
@@ -125,10 +159,43 @@ export default function RelatedRates() {
                 />
               </ReadoutPanel>
             )}
+            {step === 'shadow' && (
+              <ReadoutPanel>
+                <Readout label="$t$" value={fmt(time, 2)} />
+                <Readout label="$x$" value={fmt(px, 3)} color={vc.blue} />
+                <Readout label="$s = 1.5x$" value={fmt(tip, 3)} color={vc.purple} />
+                <Readout label="$\frac{dx}{dt}$" value={fmt(WALK, 3)} color={vc.blue} />
+                <Readout
+                  label="$\frac{ds}{dt}$"
+                  value={fmt(1.5 * WALK, 3)}
+                  color={vc.purple}
+                  hint="$1.5\,\frac{dx}{dt}$, from similar triangles."
+                />
+                <Readout
+                  label="$\frac{d}{dt}(s - x)$"
+                  value={fmt(0.5 * WALK, 3)}
+                  hint="The shadow's length $s - x = 0.5x$ grows at $0.5\,\frac{dx}{dt}$."
+                />
+              </ReadoutPanel>
+            )}
+            {step === 'cars' && (
+              <ReadoutPanel>
+                <Readout label="$t$ (hours)" value={fmt(time, 3)} />
+                <Readout label="$x$" value={fmt(ax, 2)} color={vc.blue} />
+                <Readout label="$y$" value={fmt(by, 2)} color={vc.purple} />
+                <Readout label="$D$" value={fmt(D, 2)} color={vc.teal} />
+                <Readout
+                  label="$\frac{dD}{dt}$"
+                  value={fmt(dD, 2)}
+                  color={vc.teal}
+                  hint="$\frac{x\,\frac{dx}{dt} + y\,\frac{dy}{dt}}{D}$, from $D^2 = x^2 + y^2$."
+                />
+              </ReadoutPanel>
+            )}
           </Overlay>
         }
       >
-        <Grid />
+        <Grid step={step === 'cars' ? 5 : 1} />
 
         {step === 'ladder' && (
           <>
@@ -206,10 +273,52 @@ export default function RelatedRates() {
             <Point at={[0, b]} color={vc.purple} r={9} coords={false} />
           </>
         )}
+
+        {step === 'shadow' && (
+          <>
+            <Segment from={[-1, 0]} to={[14, 0]} color={vc.muted} width={3} />
+            <Segment from={[0, 0]} to={[0, LAMP]} color={vc.muted} width={4} />
+            <Segment from={[0, LAMP]} to={[tip, 0]} color={vc.yellow} width={1.5} dash="4 6" />
+            <Segment from={[px, 0]} to={[tip, 0]} color={vc.purple} width={6} />
+            <Segment from={[px, 0]} to={[px, PERSON]} color={vc.fg} width={4} />
+            <MathLabel at={[0, LAMP / 2]} tex="5.4" anchor="w" />
+            <MathLabel at={[px, PERSON / 2]} tex="1.8" anchor="w" />
+            <MathLabel at={[px / 2, 0]} tex="x" anchor="s" color={vc.blue} />
+            <MathLabel at={[tip, 0]} tex="s" anchor="s" color={vc.purple} />
+            <Vector from={[px, PERSON]} to={[px + WALK, PERSON]} color={vc.blue} grow={false} />
+            <Vector from={[tip, 0]} to={[tip + 1.5 * WALK, 0]} color={vc.purple} grow={false} />
+            <Point at={[0, LAMP]} color={vc.yellow} r={7} coords={false} />
+            <Point at={[px, PERSON]} color={vc.blue} r={5} coords={false} />
+            <Point at={[tip, 0]} color={vc.purple} r={5} coords={false} />
+          </>
+        )}
+
+        {step === 'cars' && (
+          <>
+            <Segment from={[-3, 0]} to={[27, 0]} color={vc.muted} width={4} />
+            <Segment from={[0, -3]} to={[0, 27]} color={vc.muted} width={4} />
+            <Segment from={[12, 0]} to={[0, 16]} color={vc.muted} width={1} dash="4 6" />
+            <Point at={[12, 0]} color={vc.muted} r={4} hollow coords={false} />
+            <Point at={[0, 16]} color={vc.muted} r={4} hollow coords={false} />
+            <MathLabel at={[12, 0]} tex="12" anchor="n" color={vc.muted} />
+            <MathLabel at={[0, 16]} tex="16" anchor="e" color={vc.muted} />
+            <MathLabel at={[6, 8]} tex="20" anchor="sw" color={vc.muted} />
+            <Segment from={[ax, 0]} to={[0, by]} color={vc.teal} width={2.5} />
+            <MathLabel at={[ax / 2, by / 2]} tex="D" anchor="ne" color={vc.teal} />
+            <MathLabel at={[ax / 2, 0]} tex="x" anchor="s" color={vc.blue} />
+            <MathLabel at={[0, by / 2]} tex="y" anchor="w" color={vc.purple} />
+            <Vector from={[ax, 0]} to={[ax + SPEED_A * ARROW, 0]} color={vc.blue} grow={false} />
+            <Vector from={[0, by]} to={[0, by + SPEED_B * ARROW]} color={vc.purple} grow={false} />
+            <Point at={[ax, 0]} color={vc.blue} r={7} coords={false} />
+            <Point at={[0, by]} color={vc.purple} r={7} coords={false} />
+            <MathLabel at={[ax, 0]} tex="A" anchor="se" color={vc.blue} />
+            <MathLabel at={[0, by]} tex="B" anchor="w" color={vc.purple} />
+          </>
+        )}
       </Stage>
 
       <VizControls>
-        <LabeledSlider label="$t$" value={time} onChange={setTime} min={0} max={T} step={0.01} />
+        <LabeledSlider label="$t$" value={time} onChange={setTime} min={0} max={T} step={T / 720} />
       </VizControls>
     </>
   )

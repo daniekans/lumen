@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'lesson',
   title: 'Implicit and inverse derivatives',
   summary:
-    "A curve given by an equation in $x$ and $y$ still has slopes. Differentiate both sides, treating $y$ as a function of $x$, and solve for $\\frac{dy}{dx}$. The same idea gives the slope of an inverse function, $\\frac{1}{f'}$, the derivatives of $\\arctan$ and $\\arcsin$, and logarithmic differentiation.",
+    "A curve given by an equation in $x$ and $y$ still has slopes. Differentiate both sides, treating $y$ as a function of $x$, and solve for $\\frac{dy}{dx}$, or differentiate in $y$ for $\\frac{dx}{dy}$. The same idea gives the slope of an inverse function, $\\frac{1}{f'}$, the derivatives of $\\arctan$ and $\\arcsin$, and logarithmic differentiation.",
   tags: [
     'implicit differentiation',
     'inverse function',
@@ -14,7 +14,7 @@ export const meta = defineItem({
     'derivative',
   ],
   level: 'core',
-  order: 10,
+  order: 11,
   skills: ['implicit-differentiation'],
   steps: [
     {
@@ -36,6 +36,20 @@ export const meta = defineItem({
       title: 'Differentiate both sides',
       caption:
         'On $x^2 + xy + y^2 = 3$ the middle term needs the product rule: $2x + y + x\\,\\frac{dy}{dx} + 2y\\,\\frac{dy}{dx} = 0$. Solving, $\\frac{dy}{dx} = -\\frac{2x + y}{x + 2y}$. Where $x + 2y = 0$ the tangent is vertical and the curve is not a graph $y(x)$ near that point.',
+    },
+    {
+      id: 'in-y',
+      title: 'Differentiate in y',
+      caption:
+        'At $(5, 0)$ the tangent is vertical and $\\frac{dy}{dx}$ does not exist. Near that point the right half of the circle is a graph $x(y)$, highlighted, and the equation holds for every $y$ on it. So differentiate both sides in $y$: $2x\\,\\frac{dx}{dy} + 2y = 0$, so $\\frac{dx}{dy} = -\\frac{y}{x}$, which is $0$ there. Where both exist, $\\frac{dx}{dy} = 1 \\big/ \\frac{dy}{dx}$. Drag $P$.',
+      check: {
+        kind: 'number',
+        prompt: 'What is $\\frac{dx}{dy}$ on the circle $x^2 + y^2 = 25$ at the point $(4, 3)$?',
+        answer: -0.75,
+        tolerance: 0.005,
+        explanation:
+          '$\\frac{dx}{dy} = -\\frac{y}{x} = -\\frac{3}{4}$, the reciprocal of $\\frac{dy}{dx} = -\\frac{x}{y} = -\\frac{4}{3}$.',
+      },
     },
     {
       id: 'inverse',

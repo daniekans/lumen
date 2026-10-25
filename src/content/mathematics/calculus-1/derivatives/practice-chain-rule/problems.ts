@@ -294,4 +294,43 @@ export const problems = defineProblems([
       }
     },
   },
+  {
+    id: 'rates-with-units',
+    title: 'Rates that multiply',
+    skills: ['chain-rule'],
+    difficulty: 2,
+    generate: (rng) => {
+      if (rng.bool()) {
+        const k = rng.pick([0.005, 0.006, 0.0065, 0.008])
+        const v = rng.pick([8, 10, 12, 15, 20])
+        const value = -k * v
+        return {
+          prompt: `A hiker climbs at $${v}$ meters per minute. The air temperature drops by $${k}$ degrees for every meter of height. How fast is the temperature around the hiker changing, in degrees per minute? (Negative means cooling.)`,
+          answer: { kind: 'number', value, tolerance: 1e-6 },
+          hints: [
+            'Temperature $T$ depends on height $h$, and $h$ depends on time $t$.',
+            '$\\frac{dT}{dt} = \\frac{dT}{dh}\\,\\frac{dh}{dt}$: degrees per meter times meters per minute.',
+          ],
+          solution: [
+            `$\\frac{dT}{dh} = -${k}$ degrees per meter and $\\frac{dh}{dt} = ${v}$ meters per minute.`,
+            `$\\frac{dT}{dt} = -${k} \\cdot ${v} = ${+value.toFixed(6)}$ degrees per minute.`,
+          ],
+          data: { kind: 0, rate: -k, speed: v },
+        }
+      }
+      const k = rng.pick([0.05, 0.06, 0.07, 0.08])
+      const v = rng.pick([50, 60, 80, 90, 100, 120])
+      const value = k * v
+      return {
+        prompt: `A car burns $${k}$ liters of fuel per kilometer and drives at $${v}$ km/h. How fast is it using fuel, in liters per hour?`,
+        answer: { kind: 'number', value, tolerance: 1e-6 },
+        hints: [
+          'The fuel used $F$ depends on the distance $s$, and $s$ depends on time $t$.',
+          '$\\frac{dF}{dt} = \\frac{dF}{ds}\\,\\frac{ds}{dt}$: liters per kilometer times kilometers per hour.',
+        ],
+        solution: [`$\\frac{dF}{dt} = ${k} \\cdot ${v} = ${+value.toFixed(6)}$ liters per hour.`],
+        data: { kind: 1, rate: k, speed: v },
+      }
+    },
+  },
 ])

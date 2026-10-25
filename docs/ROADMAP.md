@@ -35,12 +35,12 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Calculus 1: Derivatives, the revision after the owner's review of
-batch 3 ("Revision after the batch 3 review" in `plans/calculus.md`): a new `motion` lesson,
-real scenarios in items 1, 7 and 8, differentiating in $y$ in item 10, two more related rates
-examples, and their practice generators. After it come the Limits and Vectors revisions from the
-2026-10-24 self-reviews (in their plan files), then Linear maps and matrices, starting with its
-unit plan for the owner's review. The focus is Mathematics and Machine Learning; Data
+**Suggested next session:** Calculus 1: Limits, the revision from the 2026-10-24 self-review
+("Revision after the self-review" in `plans/calculus.md`): correctness first, then depth and
+real scenarios. The Derivatives revision (motion, real scenarios, differentiating in $y$) is
+built and waits for the owner's review; fold any notes into it first. After Limits come the
+Vectors revision (`plans/linear-algebra.md`) and then Linear maps and matrices, starting with
+its unit plan for the owner's review. The focus is Mathematics and Machine Learning; Data
 Engineering continues only on request, and its next step is outlining the Distributed processing
 unit.
 

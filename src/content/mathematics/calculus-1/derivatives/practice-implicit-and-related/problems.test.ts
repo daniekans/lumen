@@ -49,6 +49,18 @@ describe('implicit differentiation and related rates problems', () => {
           close(value, curveSlope(F, x0!, y0!), g.id)
           return
         }
+        case 'dx-dy': {
+          const { x0, y0, k, c } = d as Record<string, number>
+          const F = (x: number, y: number) => x * x + k! * x * y + y * y - c!
+          expect(F(x0!, y0!)).toBe(0)
+          // swap the roles: x as a function of y on G(y, x) = F(x, y) = 0
+          close(
+            value,
+            curveSlope((y, x) => F(x, y), y0!, x0!),
+            g.id,
+          )
+          return
+        }
         case 'implicit-derivative': {
           const { m, n, a: ca, b } = d as Record<string, number>
           for (const [x, y] of [
@@ -107,6 +119,26 @@ describe('implicit differentiation and related rates problems', () => {
             derivative((s) => Math.sqrt(L * L - (x0! + v! * s) ** 2), 0),
             g.id,
           )
+          return
+        }
+        case 'shadow': {
+          const { h, H, v, d: dist, tip } = d as Record<string, number>
+          // the tip by intersecting the ray over the head with the ground, from scratch
+          const tipAt = (x: number) => x + (h! * x) / (H! - h!)
+          const where = (s: number) => {
+            const x = dist! + v! * s
+            return tip ? tipAt(x) : tipAt(x) - x
+          }
+          close(value, derivative(where, 0), g.id)
+          const slopeOfRay = (H! - h!) / dist!
+          close(tipAt(dist!), H! / slopeOfRay, `${g.id} geometry`)
+          return
+        }
+        case 'two-cars': {
+          const { a: va, b, y0, t: t0 } = d as Record<string, number>
+          const dist = (s: number) => Math.hypot(va! * s, y0! + b! * s)
+          close(value, derivative(dist, t0!), g.id)
+          close(dist(t0!), Math.round(dist(t0!)), `${g.id}: whole distance`)
           return
         }
         case 'cone': {

@@ -12,7 +12,7 @@ export const problems = defineProblems([
   ...pick(definition, ['difference-quotient', 'derivative-at-point', 'differentiable-join']),
   ...pick(basic, ['product', 'quotient']),
   ...pick(chain, ['trig-of-inner', 'product-with-chain', 'chain-from-values']),
-  ...pick(implicit, ['implicit-slope', 'inverse-derivative', 'ladder']),
+  ...pick(implicit, ['implicit-slope', 'inverse-derivative', 'two-cars']),
   {
     id: 'proof-product-rule',
     title: 'Prove the product rule',

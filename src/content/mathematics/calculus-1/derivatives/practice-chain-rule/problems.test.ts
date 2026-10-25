@@ -54,6 +54,19 @@ describe('chain rule problems', () => {
         }
         return
       }
+      if (g.id === 'rates-with-units') {
+        // a quantity linear in the distance or height, which is linear in time
+        const { rate, speed } = d as Record<string, number>
+        const along: Fn = (h) => 20 + rate! * h
+        const position: Fn = (t) => 100 + speed! * t
+        expect(a).toMatchObject({
+          value: expect.closeTo(
+            derivative((t) => along(position(t)), 1),
+            6,
+          ),
+        })
+        return
+      }
       // chain-from-values: h = f∘g with linear f and g that have the given values and slopes.
       const { x0, g0, g1, f1 } = d as Record<string, number>
       const inner: Fn = (x) => g0! + g1! * (x - x0!)

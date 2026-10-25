@@ -4,10 +4,10 @@ export const meta = defineItem({
   kind: 'lesson',
   title: 'Related rates',
   summary:
-    'When quantities are linked by an equation at every moment, differentiating that equation in time links their rates of change. A sliding ladder, a filling cone and a rising balloon, each solved the same way.',
+    'When quantities are linked by an equation at every moment, differentiating that equation in time links their rates of change. A sliding ladder, a filling cone, a rising balloon, a walking shadow and two cars, each solved the same way.',
   tags: ['related rates', 'chain rule', 'implicit differentiation', 'rate of change', 'derivative'],
   level: 'core',
-  order: 11,
+  order: 12,
   skills: ['related-rates'],
   steps: [
     {
@@ -51,6 +51,36 @@ export const meta = defineItem({
         tolerance: 0.002,
         explanation:
           'At $h = 4$, $\\theta = \\frac{\\pi}{4}$ and $\\cos^2\\theta = \\frac{1}{2}$, so $\\frac{d\\theta}{dt} = \\frac{1}{8}$ radians per second.',
+      },
+    },
+    {
+      id: 'shadow',
+      title: 'A walking shadow',
+      caption:
+        'A person $1.8$ meters tall walks away from a $5.4$ meter streetlight at $\\frac{dx}{dt} = 1.2$ meters per second. Similar triangles link the tip of the shadow $s$ to the person $x$ at every moment: $\\frac{s}{5.4} = \\frac{s - x}{1.8}$, so $s = 1.5x$. Differentiate in $t$: $\\frac{ds}{dt} = 1.5\\,\\frac{dx}{dt}$. The tip outruns the person, at the same speed wherever they are.',
+      check: {
+        kind: 'number',
+        prompt:
+          'How fast does the tip of the shadow move, in meters per second, when the person is $8$ meters from the light?',
+        answer: 1.8,
+        tolerance: 0.005,
+        explanation:
+          '$\\frac{ds}{dt} = 1.5 \\cdot 1.2 = 1.8$ meters per second, at $8$ meters or anywhere else: the relation $s = 1.5x$ has no other variable in it.',
+      },
+    },
+    {
+      id: 'cars',
+      title: 'Two cars',
+      caption:
+        'Car A leaves a crossing heading east at $80$ km/h. At that moment car B is $7$ km north of the crossing, heading north at $60$ km/h. The distance between them satisfies $D^2 = x^2 + y^2$, with both legs changing. Differentiate in $t$: $2D\\,\\frac{dD}{dt} = 2x\\,\\frac{dx}{dt} + 2y\\,\\frac{dy}{dt}$.',
+      check: {
+        kind: 'number',
+        prompt:
+          'How fast is the distance between the cars growing, in km/h, after $9$ minutes, when $x = 12$ and $y = 16$?',
+        answer: 96,
+        tolerance: 0.05,
+        explanation:
+          '$D = 20$, so $\\frac{dD}{dt} = \\frac{12 \\cdot 80 + 16 \\cdot 60}{20} = \\frac{1920}{20} = 96$ km/h.',
       },
     },
   ],

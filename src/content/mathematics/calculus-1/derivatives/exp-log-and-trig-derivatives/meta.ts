@@ -4,10 +4,10 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'Derivatives of exponentials, logarithms and sine',
   summary:
-    "$e^x$ is its own slope, and $b^x$ has slope $\\ln b$ times its height. On the unit circle, the point moves at right angles to the radius, which gives $\\sin' = \\cos$ and $\\cos' = -\\sin$. Reflecting $e^x$ gives $\\frac{d}{dx}\\ln x = \\frac{1}{x}$, and with it the power rule for every real exponent.",
+    "$e^x$ is its own slope, and $b^x$ has slope $\\ln b$ times its height, which is why growth in proportion to size, $\\frac{dP}{dt} = kP$, is exponential. On the unit circle, the point moves at right angles to the radius, which gives $\\sin' = \\cos$ and $\\cos' = -\\sin$. Reflecting $e^x$ gives $\\frac{d}{dx}\\ln x = \\frac{1}{x}$, and with it the power rule for every real exponent.",
   tags: ['exponential', 'logarithm', 'sine', 'cosine', 'derivative', 'power rule', 'unit circle'],
   level: 'core',
-  order: 7,
+  order: 8,
   skills: ['transcendental-derivatives'],
   steps: [
     {

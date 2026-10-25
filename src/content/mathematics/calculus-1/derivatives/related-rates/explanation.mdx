@@ -1,6 +1,8 @@
-Implicit differentiation treated $y$ as a function of $x$. Here every quantity is a function of
-time $t$, and the equation that links them holds at every moment. Differentiating it in $t$ links
-their rates: knowing some of them at an instant gives the others.
+Implicit differentiation treated $y$ as a function of $x$, and the previous item showed that an
+equation can be differentiated in any variable for which it holds at every value. Here every
+quantity is a function of time $t$, and the equation that links them holds at every moment, so it
+can be differentiated in $t$. That links their rates: knowing some of them at an instant gives the
+others.
 
 ## A sliding ladder
 
@@ -77,3 +79,55 @@ $$
 At $h = 4$ the angle is $\frac{\pi}{4}$, $\cos^2\theta = \frac{1}{2}$, and $\theta$ grows at
 $\frac{1}{8}$ radian per second. The balloon keeps its speed, but the angle turns more and more
 slowly as it rises: with the angle in radians, the rate falls from $\frac{1}{4}$ toward $0$.
+
+## A walking shadow
+
+A person $1.8$ meters tall walks away from a streetlight $5.4$ meters high at $1.2$ meters per
+second, as in the step <StepLink step="shadow">a walking shadow</StepLink>. Let $x$ be the
+person's distance from the pole and $s$ the distance of the tip of the shadow. The ray from the
+lamp over the person's head to the tip makes two similar right triangles, one with the pole and one
+with the person:
+
+$$
+\frac{s}{5.4} = \frac{s - x}{1.8}, \qquad 1.8s = 5.4s - 5.4x, \qquad s = 1.5x.
+$$
+
+This holds at every moment, so differentiate in $t$:
+
+$$
+\frac{ds}{dt} = 1.5\,\frac{dx}{dt} = 1.5 \cdot 1.2 = 1.8 \text{ meters per second}.
+$$
+
+The tip moves faster than the person, and the shadow's length $s - x = 0.5x$ grows at
+$0.6$ meters per second. Unlike the ladder, the rate does not depend on where the person is: the
+relation is linear, so its derivative is a constant. Asked "how fast is the tip moving when the
+person is $8$ meters away", the $8$ is not needed.
+
+## Two cars
+
+Car A leaves a crossing heading east at $80$ km/h. At that moment car B is $7$ km north of the
+crossing, heading north at $60$ km/h. In the step <StepLink step="cars">two cars</StepLink>, $x$
+and $y$ are their distances from the crossing, and both change. The distance $D$ between them
+satisfies
+
+$$
+D^2 = x^2 + y^2.
+$$
+
+Differentiate in $t$, with the chain rule on each of the three changing quantities:
+
+$$
+2D\,\frac{dD}{dt} = 2x\,\frac{dx}{dt} + 2y\,\frac{dy}{dt}, \qquad \frac{dD}{dt} = \frac{x\,\frac{dx}{dt} + y\,\frac{dy}{dt}}{D}.
+$$
+
+After $9$ minutes, $\frac{3}{20}$ of an hour, $x = 80 \cdot \frac{3}{20} = 12$ and
+$y = 7 + 60 \cdot \frac{3}{20} = 16$, so $D = 20$ and
+
+$$
+\frac{dD}{dt} = \frac{12 \cdot 80 + 16 \cdot 60}{20} = 96 \text{ km/h}.
+$$
+
+Each car contributes its speed times $\frac{x}{D}$ or $\frac{y}{D}$, the cosine of the angle between
+its road and the line joining the cars: the part of its velocity that points away from the other
+car. Here the distance grows faster than either car moves, yet always slower than $80 + 60$, since
+neither car heads straight away from the other.

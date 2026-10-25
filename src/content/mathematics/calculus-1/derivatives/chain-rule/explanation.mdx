@@ -69,6 +69,20 @@ So the rule holds whenever $g$ is differentiable at $x$ and $f$ is differentiabl
 Applications of derivatives gives $dx$ and $dy$ a meaning of their own, as differentials, and the
 cancelling becomes a true product.
 
+## Rates that multiply, with units
+
+The chain rule is how rates combine in the real world. A hiker climbs at $\frac{dh}{dt} = 12$
+meters per minute, and the air cools with height at about $\frac{dT}{dh} = -0.0065$ degrees per
+meter. The temperature the hiker feels is a function of height, which is a function of time, so
+
+$$
+\frac{dT}{dt} = \frac{dT}{dh}\,\frac{dh}{dt} = -0.0065\,\frac{\text{degrees}}{\text{meter}} \cdot 12\,\frac{\text{meters}}{\text{minute}} = -0.078\,\frac{\text{degrees}}{\text{minute}}.
+$$
+
+The units cancel the way the symbols seem to: degrees per meter times meters per minute is degrees
+per minute. Each factor is a stretch factor with units, and reading a derivative as "change in the
+top quantity per unit change in the bottom one" makes the right product hard to get wrong.
+
 ## Examples
 
 $$
@@ -86,3 +100,16 @@ $$
 The rule also re-derives earlier results in one line. Since $b^x = e^{x \ln b}$,
 $\frac{d}{dx}\, b^x = e^{x \ln b} \cdot \ln b = (\ln b)\,b^x$. For $x > 0$, $x^r = e^{r \ln x}$, so
 $\frac{d}{dx}\, x^r = e^{r \ln x} \cdot \frac{r}{x} = rx^{r-1}$.
+
+## Through many layers
+
+A chain can have any number of links: if $y$ depends on $v$, $v$ on $u$ and $u$ on $x$, then
+$\frac{dy}{dx} = \frac{dy}{dv}\,\frac{dv}{du}\,\frac{du}{dx}$, one stretch factor per link.
+This is what trains a neural network. The network computes its error $L$ from a weight $w$
+through a chain of layers. In a network with one neuron per layer, the effect of a small change
+in $w$ on $L$ is the product of the local derivatives along that chain. With many neurons per
+layer there are many paths from $w$ to $L$, and their products add up: that is the chain rule in
+several variables, which comes in Multivariable Calculus. Backpropagation computes the factors
+from the last layer back to the first, reusing each partial product, which is why it is fast. The
+item [Backpropagation](/machine-learning/neural-networks/training/backpropagation) shows it on a
+small network.
