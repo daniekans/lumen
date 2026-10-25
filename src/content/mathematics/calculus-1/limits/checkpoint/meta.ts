@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'checkpoint',
   title: 'Checkpoint: limits',
   summary:
-    'Twelve problems across the unit: algebraic, one-sided and infinite limits, continuity, standard limits, the intermediate value theorem, growth rates, $\\delta$ for a given $\\varepsilon$, and one epsilon-delta proof.',
+    'Fourteen problems across the unit: algebraic, one-sided and infinite limits, two multi-step limits, continuity, standard limits, the intermediate value theorem, growth rates, $\\delta$ for a given $\\varepsilon$, and one epsilon-delta proof.',
   tags: ['limit', 'continuity', 'epsilon-delta', 'checkpoint'],
   level: 'core',
   order: 12,
@@ -18,5 +18,5 @@ export const meta = defineItem({
     'growth-rates',
     'limit-definition',
   ],
-  problemCount: 12,
+  problemCount: 14,
 })

@@ -19,6 +19,8 @@ export const problems = defineProblems([
     'ivt-interval',
     'growth-ratio',
     'delta-min-rule',
+    'conjugate-at-infinity',
+    'two-techniques',
   ]),
   {
     id: 'proof-constant-multiple',

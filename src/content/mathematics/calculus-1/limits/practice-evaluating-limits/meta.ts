@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'practice',
   title: 'Practice: evaluating limits',
   summary:
-    'Direct substitution, factor and cancel, rationalize, combine fractions, one-sided limits of piecewise functions, infinite limits, and limits at infinity of rational and root expressions.',
+    'Limits read from a table, direct substitution, factor and cancel (cubes too), rationalize, combine fractions, two techniques at once, $\\frac{0}{0}$ limits that do not exist, one-sided limits of piecewise and absolute value functions, infinite limits, and limits at infinity of rational and root expressions, $\\infty - \\infty$ included.',
   tags: ['limit', 'one-sided limit', 'infinite limit', 'limit at infinity', 'practice'],
   level: 'core',
   order: 4,

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { limit, oneSidedLimit } from '@/lib/math'
+import { bisection, limit, oneSidedLimit } from '@/lib/math'
 import { evaluateTex } from '@/lib/practice'
 import { testProblemSet } from '@/lib/practice/testing'
-import { KINDS, problems } from './problems'
+import { BISECT, KINDS, KINDS_OSC, problems } from './problems'
 
 const close = (a: number, b: number, eps = 1e-6) =>
   expect(Math.abs(a - b), `${a} vs ${b}`).toBeLessThan(eps * Math.max(1, Math.abs(b)))
@@ -96,6 +96,65 @@ describe('continuity and standard limits practice problems', () => {
             const [lo, hi] = o.slice(2, -2).split(', ').map(Number) as [number, number]
             expect(Math.sign(f(lo)) !== Math.sign(f(hi)), o).toBe(i === a.correct)
           })
+          break
+        }
+        case 'build-squeeze': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          if (d.variant === 1) {
+            close(limitOfPrompt(p.prompt), a.value, 1e-5)
+            break
+          }
+          // x^n times a bounded factor: the squeeze bound itself, |f(x) - c| <= |x|^n, near 0.
+          // (The numerical limit is too noisy here: the oscillation spoils its extrapolation.)
+          const expr = firstTex(p.prompt).replace(/^\\lim_\{x \\to 0\} /, '')
+          for (let k = 1; k <= 7; k++)
+            for (const x of [10 ** -k, -(10 ** -k) * 1.37])
+              expect(Math.abs((evaluateTex(expr, { x }) ?? NaN) - a.value)).toBeLessThanOrEqual(
+                Math.abs(x) ** d.n! + 1e-12,
+              )
+          break
+        }
+        case 'classify-oscillating': {
+          if (a.kind !== 'choice') throw new Error('expected a choice')
+          const body = firstTex(p.prompt).match(/\\begin\{cases\} (.+?) & x \\neq/)![1]!
+          const f = (x: number) => evaluateTex(body, { x }) ?? NaN
+          const damped = body.startsWith('(')
+          for (let k = 1; k <= 1000; k *= 10) {
+            // Inputs ever closer to a where sin(1/(x - a)) is 1 and -1.
+            const [up, down] = [Math.PI / 2, (3 * Math.PI) / 2].map(
+              (t) => d.a! + 1 / (t + 2 * Math.PI * k),
+            )
+            if (damped) {
+              for (const x of [up!, down!])
+                expect(Math.abs(f(x))).toBeLessThanOrEqual(Math.abs(x - d.a!) + 1e-12)
+            } else {
+              close(f(up!), 1)
+              close(f(down!), -1)
+            }
+          }
+          // Damped: the limit is 0, so f(a) = 0 is continuous and anything else removable.
+          const kind = damped ? (d.v === 0 ? 0 : 1) : KINDS_OSC.indexOf('Oscillating discontinuity')
+          expect(kind).toBe(a.correct)
+          break
+        }
+        case 'bisection-steps': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const { g: fn, lo } = BISECT[d.i!]!
+          expect(Math.sign(fn(lo))).not.toBe(Math.sign(fn(lo + 1)))
+          const width = (k: number) => {
+            const last = bisection(fn, lo, lo + 1, k).at(-1)!
+            return last.b - last.a
+          }
+          expect(width(a.value)).toBeLessThan(d.tol!)
+          expect(width(a.value - 1)).toBeGreaterThanOrEqual(d.tol!)
+          break
+        }
+        case 'continuous-interest': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const amount = (n: number) => d.P! * (1 + d.rate! / n) ** (d.t! * n)
+          close(limit(amount, Infinity), a.value, 1e-6)
+          // The worded formula is the one in the prompt.
+          expect(p.prompt).toContain(`\\frac{${d.rate}}{n}`)
           break
         }
         default:

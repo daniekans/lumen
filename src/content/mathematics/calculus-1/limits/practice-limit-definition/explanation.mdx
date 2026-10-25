@@ -9,6 +9,10 @@ $f(x)$ reaches $L \pm \varepsilon$.
 - A line $mx + b$: $|f(x) - L| = |m|\,|x - a|$, so $\delta = \frac{\varepsilon}{|m|}$.
 - A parabola $x^2$: solve $x^2 = a^2 \pm \varepsilon$ near $a$ and take the nearer solution. The
   side away from $0$ is steeper, so it is the nearer one.
+- $\frac{1}{x}$ and $\sqrt{x}$: the same, solving $\frac{1}{x} = \frac{1}{a} \pm \varepsilon$
+  or squaring $\sqrt{a} \pm \varepsilon$. Both are steeper on the side nearer $0$.
+- A tolerance on a part is the same game: the customer's allowed error is $\varepsilon$, the
+  precision the machinist must hold is $\delta$.
 - The proof rule for $x^2$: restrict $\delta \le 1$, so $|x + a| < 2|a| + 1 = C$, and take
   $\delta = \min\left(1, \frac{\varepsilon}{C}\right)$. It is not the largest $\delta$, only one
   that always works.
@@ -30,6 +34,10 @@ at least the largest value of $\frac{f(x)}{x^2}$ there.
 Proofs are graded by you. Work backward in scratch work, then write the proof forward: given
 $\varepsilon > 0$, name $\delta$, and show that $0 < |x - a| < \delta$ gives
 $|f(x) - L| < \varepsilon$. Compare with the solution step by step.
+
+To prove a limit does not exist, negate the definition: find one $\varepsilon$ such that every
+$\delta$ has an $x$ in the window with $|f(x) - L| \ge \varepsilon$, for every $L$. At a jump,
+half the jump with the triangle inequality does it.
 
 ## Answering
 

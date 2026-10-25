@@ -213,7 +213,7 @@ infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decim
 fractions), so their answers are chosen to be short decimals. Infinite limits in practice are
 multiple choice ($\infty$, $-\infty$, $0$, does not exist).
 
-### Revision after the self-review (2026-10-24; items 1 to 5 and 7 done, 6 next)
+### Revision after the self-review (2026-10-24, built 2026-10-25)
 
 A review of the whole unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All
 items match the plan and the numbers in the text are right; these need fixing:
@@ -273,10 +273,22 @@ machined plate (area tolerance $0.1\ \text{cm}^2$) are paragraphs with numbers. 
 variable. MDX pitfall: a `\$` for dollars breaks MDX math parsing (`n is not defined`); write
 "dollars" in words.
 
-**Next: item 6** (practice depth), one batch: the new generators listed there, a `reading-limits`
-generator (a limit read from a described graph or a table), and one or two multi-step checkpoint
-problems; consider a pollutant or tolerance generator for the real scenarios. Then the unit is
-done again, pending the owner's review.
+Item 6 built on 2026-10-25. New generators: `conjugate-at-infinity`, `top-higher-at-infinity`,
+`zero-over-zero-exists` ($\frac{k|x - a|}{x - a}$, or a double root below that leaves
+$\frac{k}{0}$), `difference-of-cubes`, `two-techniques` (conjugate, then a difference of squares)
+and `table-limit` (the first `reading-limits` generator: a table with $f(a)$ as a decoy) in
+`practice-evaluating-limits`; `build-squeeze` ($c + x^n \sin\frac{1}{x}$, $\frac{ax + \sin x}{bx}$
+at $\infty$), `classify-oscillating` (`KINDS_OSC`), `bisection-steps` ($\cos x = x$ and four
+other equations in `BISECT`) and `continuous-interest` in `practice-continuity-and-squeeze`;
+`delta-reciprocal-root`, `machining-tolerance` (square plate or cube) and `proof-no-limit`
+(self-graded) in `practice-limit-definition`. The checkpoint adds `conjugate-at-infinity` and
+`two-techniques` (14 problems). Test note: the numerical two-sided `limit` is too noisy for
+$x^n \sin\frac{1}{x}$, so those tests check the squeeze bound instead. The pollutant scenario has
+no generator (it would be a one-step sign check).
+
+Lint, typecheck and unit tests passed; committed locally only, at the owner's request (not pushed,
+no e2e). Next session: run `pnpm e2e`, push and check the deploy, then the unit is done again,
+pending the owner's review of the whole revision.
 
 ## Derivatives unit plan
 

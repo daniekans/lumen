@@ -5,7 +5,7 @@ import { problems } from './problems'
 describe('limits checkpoint problems', () => {
   it('generate valid problems', () => {
     // The practice generators are verified independently in their own sets.
-    expect(problems).toHaveLength(12)
+    expect(problems).toHaveLength(14)
     expect(problems.every(Boolean)).toBe(true)
     testProblemSet(problems, undefined, 20)
   })

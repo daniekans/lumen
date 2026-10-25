@@ -9,7 +9,17 @@ infinity, and evaluating limits with algebra.
    the bottom on each side; a square is positive on both.
 3. $\frac{0}{0}$ is an <Term id="indeterminate-form">indeterminate form</Term>. Factor and cancel,
    multiply by the conjugate of a root, or combine fractions over a common denominator, then
-   substitute again.
+   substitute again. Some problems need two of these in a row, and $x^3 - a^3 = (x - a)(x^2 + ax + a^2)$
+   factors a difference of cubes.
+
+Removing the factor does not always give a number. If substitution then gives $\frac{k}{0}$ with
+$k \neq 0$, the limit is infinite on each side, and it may not exist. An absolute value
+$|x - a|$ is $x - a$ on the right and $-(x - a)$ on the left, so treat the sides separately.
+
+## Reading a table
+
+A table of values near $a$ suggests a limit: read the inputs below $a$ and above $a$ separately,
+and ignore the value at $a$. It suggests, not proves; algebra settles it.
 
 ## One-sided limits
 
@@ -21,10 +31,12 @@ the point itself never matters.
 
 For a <Term id="limit-at-infinity">limit at infinity</Term>, divide the top and the bottom by the
 highest power of $x$ in the denominator. A lower degree on top gives $0$, equal degrees give the
-ratio of the leading coefficients. Under a square root, $\sqrt{x^2} = |x|$, which is $-x$ when
-$x \to -\infty$.
+ratio of the leading coefficients, a higher degree on top gives $\pm\infty$ (the sign of the
+ratio of leading terms decides which). Under a square root, $\sqrt{x^2} = |x|$, which is $-x$ when
+$x \to -\infty$. For $\infty - \infty$ with a root, such as $\sqrt{x^2 + 3x} - x$, multiply
+and divide by the conjugate first.
 
 ## Answering
 
 Answers are numbers, and exact forms are accepted: $\frac{10}{7}$ or $-\frac{1}{16}$. Infinite
-limits are multiple choice.
+limits, and limits that may not exist, are multiple choice.

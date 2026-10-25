@@ -27,12 +27,34 @@ const limitOfPrompt = (prompt: string) => {
 
 const INFINITY_OPTIONS = [Infinity, -Infinity, 0, NaN]
 
+/** The value a choice option stands for: a number, an infinity, or NaN for "does not exist". */
+const optionValue = (option: string) =>
+  option === '$\\infty$'
+    ? Infinity
+    : option === '$-\\infty$'
+      ? -Infinity
+      : option.startsWith('The limit does not exist')
+        ? NaN
+        : Number(option.slice(1, -1))
+
+/** Checks that the correct option is the value found, and that no other option is. */
+const expectOption = (options: readonly string[], correct: number, found: number) => {
+  options.forEach((o, i) => {
+    const v = optionValue(o)
+    const same = Number.isNaN(found) ? Number.isNaN(v) : Math.abs(v - found) < 1e-9 || v === found
+    expect(same, `${o} for ${found}`).toBe(i === correct)
+  })
+}
+
 describe('evaluating limits practice problems', () => {
   it('generate valid problems with correct answers', () => {
     testProblemSet(problems, (g, p) => {
       const d = p.data ?? {}
       const a = p.answer
       switch (g.id) {
+        case 'conjugate-at-infinity':
+        case 'difference-of-cubes':
+        case 'two-techniques':
         case 'substitution':
         case 'factor-cancel':
         case 'rationalize':
@@ -66,6 +88,24 @@ describe('evaluating limits practice problems', () => {
           if (Number.isNaN(found)) expect(option).toMatch(/does not exist/)
           else close(Number(option.slice(1, -1)), found)
           expect(d.agree === 1).toBe(!Number.isNaN(found))
+          break
+        }
+        case 'top-higher-at-infinity':
+        case 'zero-over-zero-exists': {
+          if (a.kind !== 'choice') throw new Error('expected a choice')
+          expectOption(a.options, a.correct, limitOfPrompt(p.prompt))
+          break
+        }
+        case 'table-limit': {
+          if (a.kind !== 'choice') throw new Error('expected a choice')
+          const f = (x: number) => {
+            const h = x - d.a!
+            return (h < 0 ? d.L! : d.R!) + d.m! * h + d.q! * h * h
+          }
+          // The table in the prompt shows f's own values.
+          for (const h of [-0.1, -0.001, 0.01])
+            expect(p.prompt).toContain(String(+f(d.a! + h).toFixed(6)))
+          expectOption(a.options, a.correct, limit(f, d.a!))
           break
         }
         default:

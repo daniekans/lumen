@@ -80,6 +80,21 @@ describe('limit definition practice problems', () => {
           close(sup, a.value)
           break
         }
+        case 'delta-reciprocal-root': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const f = d.variant === 0 ? (x: number) => 1 / x : Math.sqrt
+          const eps = epsOf(p.prompt)
+          close(largestDelta(f, d.a!, f(d.a!), eps, 0.9 * d.a!, 20000).delta, a.value, 1e-5)
+          break
+        }
+        case 'machining-tolerance': {
+          if (a.kind !== 'number') throw new Error('expected a number')
+          const f = (x: number) => x ** d.n!
+          close(largestDelta(f, d.s!, f(d.s!), d.eps!, 1, 20000).delta, a.value, 1e-5)
+          expect(p.prompt).toContain(`below $${d.eps}\\`)
+          break
+        }
+        case 'proof-no-limit':
         case 'proof-linear':
         case 'proof-quadratic':
           expect(a.kind).toBe('self')

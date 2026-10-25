@@ -1,5 +1,5 @@
 import { polyEval, polyFromRoots } from '@/lib/math'
-import { defineProblems, tex, type Rng } from '@/lib/practice'
+import { defineProblems, tex, type Problem, type Rng } from '@/lib/practice'
 
 const { frac, num, poly, sum } = tex
 
@@ -325,6 +325,212 @@ export const problems = defineProblems([
           `So the limit is $${num(value)}$.`,
         ],
         data: { p, q, negative: negative ? 1 : 0 },
+      }
+    },
+  },
+  {
+    id: 'conjugate-at-infinity',
+    title: 'Infinity minus infinity',
+    skills: ['limits-at-infinity', 'evaluating-limits'],
+    difficulty: 3,
+    generate: (rng) => {
+      const k = rng.int(1, 3)
+      const b = nonzero(rng, -6, 6)
+      const c = rng.int(1, 9)
+      const root = `\\sqrt{${poly([k * k, b, c])}}`
+      const kx = tex.term(k, 'x')
+      return {
+        prompt: `Find $${lim('\\infty')} \\left(${root} - ${kx}\\right)$.`,
+        answer: { kind: 'number', value: b / (2 * k) },
+        hints: [
+          'Both terms grow without bound: $\\infty - \\infty$ decides nothing.',
+          `Multiply and divide by the conjugate $${root} + ${kx}$.`,
+        ],
+        solution: [
+          `The conjugate turns the difference into $\\frac{(${poly([k * k, b, c])}) - ${k * k === 1 ? '' : k * k}x^2}{${root} + ${kx}} = \\frac{${poly([b, c])}}{${root} + ${kx}}$.`,
+          `Divide the top and the bottom by $x$ (positive here). The top becomes $${b} + \\frac{${c}}{x} \\to ${b}$, and the bottom $\\sqrt{${k * k} + \\frac{${poly([b, c])}}{x^2}} + ${k} \\to ${2 * k}$.`,
+          `So the limit is $\\frac{${b}}{${2 * k}} = ${frac(b, 2 * k)}$.`,
+        ],
+        data: { k, b, c },
+      }
+    },
+  },
+  {
+    id: 'top-higher-at-infinity',
+    title: 'Top degree higher at infinity',
+    skills: ['limits-at-infinity'],
+    difficulty: 2,
+    generate: (rng) => {
+      const n = rng.int(1, 2)
+      const extra = rng.int(1, 2)
+      const p = nonzero(rng, -5, 5)
+      const q = nonzero(rng, -4, 4)
+      const top = [p, ...Array.from({ length: n + extra }, () => rng.int(-5, 5))]
+      const bottom = [q, ...Array.from({ length: n }, () => rng.int(-5, 5))]
+      const negative = rng.bool()
+      // Leading terms: (p/q) x^extra, whose sign at -infinity flips for an odd extra.
+      const sign = Math.sign(p / q) * (negative && extra % 2 === 1 ? -1 : 1)
+      const options = ['$\\infty$', '$-\\infty$', `$${frac(p, q)}$`, '$0$']
+      const power = extra === 1 ? 'x' : `x^{${extra}}`
+      return {
+        prompt: `Find $${lim(negative ? '-\\infty' : '\\infty')} \\frac{${poly(top)}}{${poly(bottom)}}$.`,
+        answer: { kind: 'choice', options, correct: sign > 0 ? 0 : 1 },
+        hints: [
+          'Compare the degrees of the top and the bottom.',
+          'The quotient behaves like the ratio of the leading terms.',
+        ],
+        solution: [
+          `For large $|x|$ the quotient behaves like $\\frac{${tex.term(p, `x^{${n + extra}}`)}}{${tex.term(q, n === 1 ? 'x' : `x^{${n}}`)}} = ${frac(p, q)}\\,${power}$.`,
+          `As $x \\to ${negative ? '-' : ''}\\infty$, $${power}$ tends to $${negative && extra % 2 === 1 ? '-' : ''}\\infty$, so the quotient tends to $${sign > 0 ? '' : '-'}\\infty$. The ratio $${frac(p, q)}$ would be the answer only for equal degrees.`,
+        ],
+        data: { p, q, n, extra, negative: negative ? 1 : 0 },
+      }
+    },
+  },
+  {
+    id: 'zero-over-zero-exists',
+    title: 'A 0/0 limit that may not exist',
+    skills: ['one-sided-limits', 'evaluating-limits'],
+    difficulty: 2,
+    generate: (rng): Problem => {
+      const a = rng.int(-3, 3)
+      const side = rng.pick([-1, 0, 0, 1] as const)
+      const sideWord = side < 0 ? 'left' : 'right'
+      if (rng.bool()) {
+        const k = rng.int(1, 4)
+        const coef = k === 1 ? '' : String(k)
+        const options = [`$${k}$`, `$${-k}$`, '$0$', DNE]
+        const correct = side === 0 ? 3 : side > 0 ? 0 : 1
+        return {
+          prompt: `Find $${lim(String(a), side)} \\frac{${coef}|${plus(-a)}|}{${plus(-a)}}$.`,
+          answer: { kind: 'choice', options, correct },
+          hints: [
+            `$|${plus(-a)}|$ is $${plus(-a)}$ when $x > ${a}$ and $-(${plus(-a)})$ when $x < ${a}$.`,
+          ],
+          solution: [
+            `For $x > ${a}$ the quotient is $${k}$; for $x < ${a}$ it is $${-k}$. Substituting gives $\\frac{0}{0}$, but the quotient never comes near $0$.`,
+            side === 0
+              ? 'The one-sided limits differ, so the two-sided limit does not exist.'
+              : `From the ${sideWord} the quotient is constant, so the limit is $${side > 0 ? k : -k}$.`,
+          ],
+          data: { a, side, k, variant: 0 },
+        }
+      }
+      const b = rng.pick(distinct(rng, 1, -4, 4, [a]))
+      // (x - a)(x - b) / (x - a)^2 = (x - b) / (x - a): a nonzero number over 0 after cancelling.
+      const sign = side === 0 ? 0 : Math.sign(a - b) * side
+      const decoy = rng.pick([0, 1, a - b])
+      const options = ['$\\infty$', '$-\\infty$', `$${decoy}$`, DNE]
+      return {
+        prompt: `Find $${lim(String(a), side)} \\frac{${poly(polyFromRoots([a, b]))}}{${factor(a)}^{2}}$.`,
+        answer: { kind: 'choice', options, correct: sign > 0 ? 0 : sign < 0 ? 1 : 3 },
+        hints: [
+          'Substitution gives $\\frac{0}{0}$. Factor and cancel first.',
+          'After cancelling, substitute again and look at what is left.',
+        ],
+        solution: [
+          `The top is $${factor(a)}${factor(b)}$, so for $x \\neq ${a}$ the quotient is $\\frac{${plus(-b)}}{${plus(-a)}}$.`,
+          `Now substitution gives $\\frac{${a - b}}{0}$: a nonzero number over something tending to $0$. Cancelling did not remove the $\\frac{0}{0}$; it showed an infinite limit.`,
+          side === 0
+            ? `The bottom changes sign at $${a}$, so the sides go to opposite infinities and the limit does not exist.`
+            : `From the ${sideWord} the bottom is ${side < 0 ? 'negative' : 'positive'} and the top is near $${a - b}$, so the limit is $${sign > 0 ? '' : '-'}\\infty$.`,
+        ],
+        data: { a, side, b, variant: 1 },
+      }
+    },
+  },
+  {
+    id: 'difference-of-cubes',
+    title: 'Difference of cubes',
+    skills: ['evaluating-limits'],
+    difficulty: 2,
+    generate: (rng) => {
+      const a = nonzero(rng, -3, 3)
+      const squares = rng.bool()
+      const top = poly([1, 0, 0, -(a ** 3)])
+      const bottom = squares ? poly([1, 0, -a * a]) : plus(-a)
+      const quad = poly([1, a, a * a])
+      const value = squares ? (3 * a) / 2 : 3 * a * a
+      return {
+        prompt: `Find $${lim(String(a))} \\frac{${top}}{${bottom}}$.`,
+        answer: { kind: 'number', value },
+        hints: [
+          'Substitution gives $\\frac{0}{0}$.',
+          `Use $x^3 - b^3 = (x - b)(x^2 + bx + b^2)$ with $b = ${a}$${squares ? ', and a difference of squares below' : ''}.`,
+        ],
+        solution: [
+          `$${top} = ${factor(a)}(${quad})$${squares ? ` and $${bottom} = ${factor(a)}${factor(-a)}$` : ''}.`,
+          squares
+            ? `For $x \\neq ${a}$ the quotient is $\\frac{${quad}}{${plus(a)}}$, which at $x = ${a}$ is $\\frac{${3 * a * a}}{${2 * a}} = ${frac(3 * a, 2)}$.`
+            : `For $x \\neq ${a}$ the quotient is $${quad}$, which at $x = ${a}$ is $${3 * a * a}$.`,
+        ],
+        data: { a, squares: squares ? 1 : 0 },
+      }
+    },
+  },
+  {
+    id: 'two-techniques',
+    title: 'Two techniques at once',
+    skills: ['evaluating-limits'],
+    difficulty: 3,
+    generate: (rng) => {
+      const k = rng.int(1, 4)
+      const a = nonzero(rng, -3, 4)
+      const c = k * k - a
+      const root = `\\sqrt{${plus(c)}}`
+      return {
+        prompt: `Find $${lim(String(a))} \\frac{${root} - ${k}}{${poly([1, 0, -a * a])}}$.`,
+        answer: { kind: 'number', value: 1 / (4 * k * a) },
+        hints: [
+          `Multiply the top and the bottom by the conjugate $${root} + ${k}$.`,
+          `Then factor the difference of squares $${poly([1, 0, -a * a])}$.`,
+        ],
+        solution: [
+          `The top becomes $(${plus(c)}) - ${k * k} = ${plus(-a)}$, so the quotient is $\\frac{${plus(-a)}}{(${poly([1, 0, -a * a])})(${root} + ${k})}$.`,
+          `$${poly([1, 0, -a * a])} = ${factor(a)}${factor(-a)}$, and cancelling $${factor(a)}$ leaves $\\frac{1}{(${plus(a)})(${root} + ${k})}$.`,
+          `At $x = ${a}$: $\\frac{1}{${2 * a} \\cdot ${2 * k}} = ${frac(1, 4 * k * a)}$.`,
+        ],
+        data: { k, a },
+      }
+    },
+  },
+  {
+    id: 'table-limit',
+    title: 'Read a limit from a table',
+    skills: ['reading-limits'],
+    difficulty: 1,
+    generate: (rng) => {
+      const a = rng.int(-2, 4)
+      const L = rng.int(-5, 6)
+      const jump = rng.int(0, 2) === 0
+      const R = jump ? L + rng.pick([-2, -1, 1, 2]) : L
+      const [m, q] = [nonzero(rng, -3, 3), rng.int(-2, 2)]
+      const v = rng.pick(distinct(rng, 1, -6, 8, [L, R]))
+      const steps = [-0.1, -0.01, -0.001, 0.001, 0.01, 0.1]
+      const f = (h: number) => (h < 0 ? L : R) + m * h + q * h * h
+      const cells = steps.map((h) => +f(h).toFixed(6))
+      const xs = steps.map((h) => +(a + h).toFixed(3))
+      const table = `\\begin{array}{c|cccccc} x & ${xs.join(' & ')} \\\\ \\hline f(x) & ${cells.join(' & ')} \\end{array}`
+      const numbers = [...new Set([L, v, R, jump ? L + R : L + m])]
+      const options = rng.shuffle(numbers.slice(0, 3).map((n) => `$${n}$`)).concat(DNE)
+      return {
+        prompt: `A function has $f(${a}) = ${v}$ and these values near $x = ${a}$: $${table}$ What does the table suggest for $${lim(String(a))} f(x)$?`,
+        answer: {
+          kind: 'choice',
+          options,
+          correct: jump ? options.indexOf(DNE) : options.indexOf(`$${L}$`),
+        },
+        hints: [
+          `Read the left half (inputs below $${a}$) and the right half separately.`,
+          `The value $f(${a}) = ${v}$ plays no part.`,
+        ],
+        solution: [
+          `From the left the values close in on $${L}$; from the right on $${R}$.`,
+          jump
+            ? 'The two sides approach different numbers, so the two-sided limit does not exist.'
+            : `Both sides approach $${L}$, so the table suggests a limit of $${L}$, whatever $f(${a})$ is. A table only suggests a limit; algebra or a proof settles it.`,
+        ],
+        data: { a, L, R, m, q, v },
       }
     },
   },

@@ -1,5 +1,5 @@
 import { polyFromRoots } from '@/lib/math'
-import { defineProblems, tex, type Rng } from '@/lib/practice'
+import { defineProblems, tex, type Problem, type Rng } from '@/lib/practice'
 
 const { frac, poly, sum } = tex
 
@@ -36,6 +36,18 @@ export const KINDS = [
   'Removable discontinuity',
   'Jump discontinuity',
   'Infinite discontinuity',
+] as const
+
+/** The classification options with oscillation added, for functions such as sin(1/x). */
+export const KINDS_OSC = [...KINDS, 'Oscillating discontinuity'] as const
+
+/** Equations with one root in [lo, lo + 1], for bisection: TeX, g with g = 0 at the root, lo. */
+export const BISECT = [
+  { tex: '\\cos x = x', g: (x: number) => Math.cos(x) - x, lo: 0, gTex: '\\cos x - x' },
+  { tex: 'e^{-x} = x', g: (x: number) => Math.exp(-x) - x, lo: 0, gTex: 'e^{-x} - x' },
+  { tex: 'x^3 = x + 1', g: (x: number) => x ** 3 - x - 1, lo: 1, gTex: 'x^3 - x - 1' },
+  { tex: 'x^3 - 2x - 5 = 0', g: (x: number) => x ** 3 - 2 * x - 5, lo: 2, gTex: 'x^3 - 2x - 5' },
+  { tex: '\\ln x = 2 - x', g: (x: number) => Math.log(x) - 2 + x, lo: 1, gTex: '\\ln x - 2 + x' },
 ] as const
 
 export const problems = defineProblems([
@@ -257,6 +269,149 @@ export const problems = defineProblems([
           `$f$ is continuous and changes sign on $[${n}, ${n + 1}]$, so it has a root there. (It is increasing, so the root is the only one and the other intervals have no sign change.)`,
         ],
         data: { n, p, q, start },
+      }
+    },
+  },
+  {
+    id: 'build-squeeze',
+    title: 'Build the squeeze',
+    skills: ['standard-limits'],
+    difficulty: 2,
+    generate: (rng): Problem => {
+      if (rng.bool()) {
+        const c = rng.int(-5, 5)
+        const n = rng.int(1, 3)
+        const trig = rng.pick(['\\sin', '\\cos'])
+        const xn = n === 1 ? 'x' : `x^{${n}}`
+        const absN = n === 2 ? 'x^2' : `|x|${n === 1 ? '' : `^{${n}}`}`
+        const body = `${xn} ${trig}\\frac{1}{x}`
+        return {
+          prompt: `Find $${lim('0')} \\left(${c === 0 ? '' : `${c} + `}${body}\\right)$.`,
+          answer: { kind: 'number', value: c },
+          hints: [
+            `$${trig}\\frac{1}{x}$ has no limit at $0$, so the product law does not apply.`,
+            `$-1 \\le ${trig}\\frac{1}{x} \\le 1$. Multiply by $|${xn}|$.`,
+          ],
+          solution: [
+            `$|${body}| \\le ${absN}$, so $-${absN} \\le ${body} \\le ${absN}$ for $x \\neq 0$.`,
+            `Both bounds tend to $0$, so by the squeeze theorem $${body} \\to 0$, and the limit is $${c}$.`,
+          ],
+          data: { c, n, variant: 0 },
+        }
+      }
+      const a = rng.int(0, 4)
+      const b = rng.int(1, 4)
+      const top = a === 0 ? '\\sin x' : `${tex.term(a, 'x')} + \\sin x`
+      const bottom = tex.term(b, 'x')
+      return {
+        prompt: `Find $${lim('\\infty')} \\frac{${top}}{${bottom}}$.`,
+        answer: { kind: 'number', value: a / b },
+        hints: [
+          '$\\sin x$ keeps oscillating, but it stays between $-1$ and $1$.',
+          `Bound the top between $${a === 0 ? '-1' : `${tex.term(a, 'x')} - 1`}$ and $${a === 0 ? '1' : `${tex.term(a, 'x')} + 1`}$.`,
+        ],
+        solution: [
+          `For $x > 0$: $\\frac{${a === 0 ? '-1' : `${tex.term(a, 'x')} - 1`}}{${bottom}} \\le \\frac{${top}}{${bottom}} \\le \\frac{${a === 0 ? '1' : `${tex.term(a, 'x')} + 1`}}{${bottom}}$.`,
+          `Both bounds tend to $${frac(a, b)}$, so by the squeeze theorem the limit is $${frac(a, b)}$.`,
+        ],
+        data: { a, b, variant: 1 },
+      }
+    },
+  },
+  {
+    id: 'classify-oscillating',
+    title: 'Oscillation near a point',
+    skills: ['continuity', 'standard-limits'],
+    difficulty: 3,
+    generate: (rng) => {
+      const a = rng.int(-2, 3)
+      const kind = rng.pick([0, 1, 4] as const)
+      const xa = sum([
+        [1, 'x'],
+        [-a, ''],
+      ])
+      const inner = `\\sin\\frac{1}{${xa}}`
+      const expr = kind === 4 ? inner : `(${xa}) ${inner}`
+      const v = kind === 1 ? nonzero(rng, -3, 3) : 0
+      const def = `f(x) = \\begin{cases} ${expr} & x \\neq ${a} \\\\ ${v} & x = ${a} \\end{cases}`
+      return {
+        prompt: `Is $${def}$ continuous at $x = ${a}$? If not, what kind of discontinuity does it have there?`,
+        answer: { kind: 'choice', options: [...KINDS_OSC], correct: kind },
+        hints: [
+          `$${inner}$ swings between $-1$ and $1$ infinitely often near $${a}$.`,
+          kind === 4
+            ? 'Does anything damp the swings?'
+            : `The factor $${xa}$ tends to $0$. Squeeze.`,
+        ],
+        solution:
+          kind === 4
+            ? [
+                `Every interval around $${a}$ contains inputs where $f = 1$ and inputs where $f = -1$, so the values never settle: no limit, from either side.`,
+                'Not a jump (no one-sided limits) and not infinite (the values stay between $-1$ and $1$): an oscillating discontinuity.',
+              ]
+            : [
+                `$|${expr}| \\le |${xa}|$, which tends to $0$, so by the squeeze theorem the limit at $${a}$ is $0$.`,
+                kind === 0
+                  ? `$f(${a}) = 0$ equals the limit, so $f$ is continuous at $${a}$.`
+                  : `$f(${a}) = ${v}$ differs from the limit $0$: a removable discontinuity.`,
+              ],
+        data: { a, kind, v },
+      }
+    },
+  },
+  {
+    id: 'bisection-steps',
+    title: 'Bisection to an accuracy',
+    skills: ['continuity'],
+    difficulty: 2,
+    generate: (rng) => {
+      const i = rng.int(0, BISECT.length - 1)
+      const { tex: eq, gTex, g, lo } = BISECT[i]!
+      const tol = rng.pick([0.1, 0.05, 0.01, 0.005, 0.001, 0.0001])
+      let k = 0
+      while (2 ** -k >= tol) k++
+      const [glo, ghi] = [g(lo), g(lo + 1)]
+      return {
+        prompt: `The equation $${eq}$ has a solution in $[${lo}, ${lo + 1}]$. Starting from this interval, how many bisection steps are needed before the interval that traps the solution is narrower than $${tol}$?`,
+        answer: { kind: 'number', value: k },
+        hints: [
+          `Write the equation as $g(x) = ${gTex} = 0$ and check the signs at the ends.`,
+          'Each step halves the width: after $k$ steps it is $\\frac{1}{2^k}$.',
+        ],
+        solution: [
+          `$g(x) = ${gTex}$ is continuous, with $g(${lo}) \\approx ${glo.toFixed(3)}$ and $g(${lo + 1}) \\approx ${ghi.toFixed(3)}$, of opposite signs, so the intermediate value theorem traps a root.`,
+          `After $k$ steps the width is $\\frac{1}{2^k}$. Need $\\frac{1}{2^k} < ${tol}$: $2^{${k - 1}} = ${2 ** (k - 1)}$ is not enough, $2^{${k}} = ${2 ** k}$ is. So $k = ${k}$.`,
+        ],
+        data: { i, tol },
+      }
+    },
+  },
+  {
+    id: 'continuous-interest',
+    title: 'Continuous compounding',
+    skills: ['standard-limits'],
+    difficulty: 2,
+    generate: (rng) => {
+      const P = rng.pick([100, 500, 1000, 2000])
+      const r = rng.pick([2, 3, 4, 5, 6, 8, 10])
+      const t = rng.pick([1, 2, 5, 10, 20])
+      const rt = (r * t) / 100
+      const rate = r / 100
+      const value = P * Math.exp(rt)
+      return {
+        prompt: `A deposit of $${P}$ dollars earns $${r}\\%$ a year, compounded $n$ times a year. After $${t}$ years it is worth $${P}\\left(1 + \\frac{${rate}}{n}\\right)^{${t === 1 ? 'n' : `${t}n`}}$ dollars. What does this tend to as $n \\to \\infty$? Give it to the cent, or exactly, such as $100e^{0.3}$.`,
+        answer: { kind: 'number', value, tolerance: 0.006 },
+        hints: [
+          'Use $\\lim_{n \\to \\infty} \\left(1 + \\frac{a}{n}\\right)^n = e^a$.',
+          t === 1
+            ? 'The exponent is already $n$.'
+            : `Write the power as $\\left(\\left(1 + \\frac{${rate}}{n}\\right)^{n}\\right)^{${t}}$.`,
+        ],
+        solution: [
+          `$\\left(1 + \\frac{${rate}}{n}\\right)^{n} \\to e^{${rate}}$, and raising to the power $${t}$ is continuous, so the amount tends to $${P}\\left(e^{${rate}}\\right)^{${t}} = ${P}e^{${+rt.toFixed(4)}}$.`,
+          `That is about $${value.toFixed(2)}$ dollars, the value under continuous compounding.`,
+        ],
+        data: { P, rate, t },
       }
     },
   },

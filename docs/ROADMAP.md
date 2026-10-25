@@ -35,9 +35,9 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Calculus 1: Limits, the rest of the revision from the 2026-10-24
-self-review: practice depth (item 6 of "Revision after the self-review" in `plans/calculus.md`;
-items 1 to 5 and 7 are done). After Limits come the
+**Suggested next session:** first run `pnpm e2e`, push the local commits (the Limits practice
+batch, not pushed at the owner's request) and check CI and the deploy. The Limits revision is
+built and waits for the owner's review; fold any notes into it. Then come the
 Vectors revision (`plans/linear-algebra.md`) and then Linear maps and matrices, starting with
 its unit plan for the owner's review. The focus is Mathematics and Machine Learning; Data
 Engineering continues only on request, and its next step is outlining the Distributed processing

@@ -9,7 +9,10 @@ piecewise function, find the limit from each side and the value at the point:
 - the one-sided limits differ: a jump;
 - they agree but the value differs or is missing: removable;
 - the values grow without bound: infinite (for a rational function, a factor of the bottom that
-  does not cancel).
+  does not cancel);
+- the values swing forever without settling, as $\sin\frac{1}{x - a}$ does: oscillating. A factor
+  that tends to $0$, as in $(x - a)\sin\frac{1}{x - a}$, damps the swings, and the squeeze
+  theorem gives the limit $0$.
 
 To make a piecewise function continuous, set the limit of one piece equal to the value of the
 other at the meeting point and solve for the constant.
@@ -18,12 +21,18 @@ other at the meeting point and solve for the constant.
 
 By the <Term id="intermediate-value-theorem">intermediate value theorem</Term>, a continuous
 function that changes sign on $[a, b]$ has a root there. Evaluate at whole numbers until the sign
-changes.
+changes. To solve an equation such as $\cos x = x$, move everything to one side,
+$g(x) = \cos x - x$, and look for a sign change of $g$.
+
+Bisection halves the interval at each step, so after $k$ steps an interval of width $w$ has width
+$\frac{w}{2^k}$. For an accuracy, find the smallest $k$ with $\frac{w}{2^k}$ below it.
 
 ## Standard limits
 
 The <Term id="squeeze-theorem">squeeze theorem</Term>: bounds with a common limit force it on
-the function between them. The three standard limits, each with $u \to 0$ or $n \to \infty$:
+the function between them. When a bounded factor such as $\sin\frac{1}{x}$ or $\sin x$ appears,
+build the bounds yourself from $-1 \le \sin \le 1$. The three standard limits, each with
+$u \to 0$ or $n \to \infty$:
 
 $$
 \frac{\sin u}{u} \to 1, \qquad \frac{e^u - 1}{u} \to 1, \qquad \left(1 + \frac{a}{n}\right)^n \to e^a.
@@ -31,6 +40,7 @@ $$
 
 Rewrite the expression so that one of them appears with the same $u$ on top and bottom, and pull
 the constants out: $\frac{\sin 4x}{3x} = \frac{4}{3} \cdot \frac{\sin 4x}{4x} \to \frac{4}{3}$.
+The third gives continuous compounding: at a yearly rate $r$ for $t$ years, $P\left(1 + \frac{r}{n}\right)^{nt} \to Pe^{rt}$.
 
 ## Answering
 
