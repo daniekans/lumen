@@ -1,44 +1,61 @@
 import { defineUnit } from '@/catalog/types'
 
 export const unit = defineUnit({
-  title: 'Linear transformations',
-  description: 'Matrices as functions of the plane, composition and the determinant.',
+  title: 'Linear maps and matrices',
+  description:
+    'Functions of space that keep linear combinations, the matrix that records where the basis lands, a matrix times a vector read by columns and by rows, and the layers of a neural network.',
   order: 2,
   skills: [
-    { id: 'matrix-columns', title: 'Columns as images of the basis vectors' },
-    { id: 'determinant', title: 'The determinant as signed area' },
+    {
+      id: 'linear-maps',
+      title: 'Decide whether a map is linear, and find images from the images of a basis',
+    },
+    { id: 'matrix-columns', title: 'Write the matrix of a map from where the basis lands' },
+    {
+      id: 'matrix-vector',
+      title: 'Multiply a matrix and a vector, by columns and by rows, and read shapes',
+    },
   ],
   terms: [
     {
       id: 'linear-transformation',
-      title: 'Linear transformation',
+      title: 'Linear map',
+      tex: 'T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v}),\\ T(c\\mathbf{v}) = cT(\\mathbf{v})',
       summary:
-        'A function of the plane that fixes the origin and keeps grid lines straight, parallel and evenly spaced, so $A(x\\mathbf{v} + y\\mathbf{w}) = x\\,A\\mathbf{v} + y\\,A\\mathbf{w}$.',
-      introducedIn: 'matrix-transformations',
-    },
-    {
-      id: 'basis-vectors',
-      title: 'Basis vectors',
-      tex: '\\hat{\\imath},\\ \\hat{\\jmath}',
-      summary:
-        'The unit vectors along the axes. Every vector is $x\\hat{\\imath} + y\\hat{\\jmath}$, so a linear transformation is fixed by where these two land.',
-      introducedIn: 'matrix-transformations',
+        'A function $T$ from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ that keeps sums and multiples: $T(\\mathbf{u} + \\mathbf{v}) = T(\\mathbf{u}) + T(\\mathbf{v})$ and $T(c\\mathbf{v}) = cT(\\mathbf{v})$ for all vectors and scalars. Also called a linear transformation.',
+      introducedIn: 'linear-maps',
     },
     {
       id: 'matrix',
       title: 'Matrix',
-      tex: '\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}',
+      tex: 'A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}',
       summary:
-        'A grid of numbers that describes a linear transformation. Its columns are the images of the basis vectors: $A\\hat{\\imath} = (a, c)$ and $A\\hat{\\jmath} = (b, d)$.',
+        'A table of numbers with $m$ rows and $n$ columns. The matrix of a linear map $\\mathbb{R}^n \\to \\mathbb{R}^m$ has as its columns the images of the standard basis vectors.',
       introducedIn: 'matrix-transformations',
     },
     {
-      id: 'determinant',
-      title: 'Determinant',
-      tex: '\\det A = ad - bc',
+      id: 'matrix-vector-product',
+      title: 'Matrix times vector',
+      tex: 'A\\mathbf{x} = x_1\\mathbf{a}_1 + \\cdots + x_n\\mathbf{a}_n',
       summary:
-        'The signed factor by which a transformation scales areas. Negative means the plane is flipped; zero means it collapses and $A$ has no inverse.',
-      introducedIn: 'matrix-transformations',
+        'For an $m \\times n$ matrix $A$ with columns $\\mathbf{a}_1, \\ldots, \\mathbf{a}_n$ and $\\mathbf{x}$ in $\\mathbb{R}^n$: the combination of the columns with the components of $\\mathbf{x}$ as weights. Entry $i$ is also the dot product of row $i$ with $\\mathbf{x}$.',
+      introducedIn: 'matrix-vector-product',
+    },
+    {
+      id: 'identity-matrix',
+      title: 'Identity matrix',
+      tex: 'I',
+      summary:
+        'The square matrix with $1$ on the diagonal and $0$ elsewhere. Its columns are the standard basis, so $I\\mathbf{x} = \\mathbf{x}$ for every $\\mathbf{x}$.',
+      introducedIn: 'matrix-vector-product',
+    },
+    {
+      id: 'affine-map',
+      title: 'Affine map',
+      tex: '\\mathbf{x} \\mapsto A\\mathbf{x} + \\mathbf{b}',
+      summary:
+        'A linear map followed by a shift by $\\mathbf{b}$. When $\\mathbf{b} \\ne \\mathbf{0}$ it is not linear, since it moves the origin. A layer of a neural network, before its activation, is affine.',
+      introducedIn: 'matrix-vector-product',
     },
   ],
 })

@@ -16,6 +16,10 @@ export const redirects: Readonly<Record<string, string>> = {
   'mathematics/pre-calculus/linear-and-quadratic':
     'mathematics/pre-calculus/polynomial-and-rational',
   'mathematics/pre-calculus/sequences-and-series': 'mathematics/pre-calculus',
+  'mathematics/linear-algebra/linear-transformations': 'mathematics/linear-algebra/linear-maps',
+  // A skill that moved to another unit: the key is the old unit id, '#', and the skill id.
+  'mathematics/linear-algebra/linear-transformations#determinant':
+    'mathematics/linear-algebra/determinants#determinant',
 }
 
 /**

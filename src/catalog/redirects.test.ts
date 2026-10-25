@@ -13,4 +13,13 @@ describe('currentId', () => {
       'mathematics/calculus-1/limits/continuity',
     )
   })
+
+  it('follows a chain of moves and a skill that moved to another unit', () => {
+    expect(currentId('linear-algebra/matrix-transformations')).toBe(
+      'mathematics/linear-algebra/linear-maps/matrix-transformations',
+    )
+    expect(currentId('mathematics/linear-algebra/linear-transformations#determinant')).toBe(
+      'mathematics/linear-algebra/determinants#determinant',
+    )
+  })
 })

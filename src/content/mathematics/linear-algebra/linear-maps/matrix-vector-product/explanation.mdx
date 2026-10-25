@@ -1,0 +1,130 @@
+A <Term id="matrix">matrix</Term> stores where a linear map sends the basis. The product
+$A\mathbf{x}$ turns that table back into the map: it computes the image of $\mathbf{x}$. There are
+two ways to read the same computation, and both are used all the time.
+
+## By columns
+
+Let $A$ have $m$ rows and $n$ columns $\mathbf{a}_1, \ldots, \mathbf{a}_n$, and let $\mathbf{x}$
+have $n$ components. Then
+
+$$
+A\mathbf{x} = x_1\mathbf{a}_1 + x_2\mathbf{a}_2 + \cdots + x_n\mathbf{a}_n.
+$$
+
+The components of $\mathbf{x}$ are the weights of
+a <Term id="linear-combination">linear combination</Term> of the columns. In
+the <StepLink step="columns">plane</StepLink>, $x_1$ steps along <C c="green">$\mathbf{a}_1$</C>
+and then $x_2$ steps along <C c="red">$\mathbf{a}_2$</C> reach <C c="teal">$A\mathbf{x}$</C>.
+For example,
+
+$$
+\begin{bmatrix} 2 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 1.5 \\ 1 \end{bmatrix}
+= 1.5 \begin{bmatrix} 2 \\ 1 \end{bmatrix} + 1 \begin{bmatrix} -1 \\ 1 \end{bmatrix}
+= \begin{bmatrix} 2 \\ 2.5 \end{bmatrix}.
+$$
+
+## By rows
+
+Entry $i$ of $x_1\mathbf{a}_1 + \cdots + x_n\mathbf{a}_n$ is $a_{i1}x_1 + \cdots + a_{in}x_n$:
+the <Term id="dot-product">dot product</Term> of row $i$ of $A$ with $\mathbf{x}$. So, writing
+$\mathbf{r}_1, \ldots, \mathbf{r}_m$ for the rows,
+
+$$
+A\mathbf{x} = \begin{bmatrix} \mathbf{r}_1 \cdot \mathbf{x} \\ \vdots \\ \mathbf{r}_m \cdot \mathbf{x} \end{bmatrix}.
+$$
+
+In the example, $(2, -1) \cdot (1.5, 1) = 2$ and $(1, 1) \cdot (1.5, 1) = 2.5$. The two readings
+are the same sum grouped two ways. The column picture says what $A\mathbf{x}$ can reach (later:
+span, column space, rank); the row picture is how it is computed by hand, and it leads to equations
+and orthogonality.
+
+## Shapes
+
+An $m \times n$ matrix has $m$ rows and $n$ columns. $A\mathbf{x}$ needs one weight per column, so
+$\mathbf{x}$ is in $\mathbb{R}^n$, and gives one entry per row, so $A\mathbf{x}$ is in $\mathbb{R}^m$:
+
+$$
+A \text{ is } m \times n: \qquad \mathbf{x} \in \mathbb{R}^n \ \mapsto\ A\mathbf{x} \in \mathbb{R}^m.
+$$
+
+The <StepLink step="shapes">$2 \times 3$ example</StepLink> combines three columns of the plane, so it
+maps space to the plane. When the sizes do not match, $A\mathbf{x}$ is not defined.
+
+## Every matrix is a linear map
+
+The column form shows that $\mathbf{x} \mapsto A\mathbf{x}$ keeps sums and multiples:
+
+$$
+A(\mathbf{u} + \mathbf{v}) = \sum_j (u_j + v_j)\,\mathbf{a}_j = \sum_j u_j\mathbf{a}_j + \sum_j v_j\mathbf{a}_j = A\mathbf{u} + A\mathbf{v},
+$$
+
+and $A(c\mathbf{v}) = \sum_j c\,v_j\mathbf{a}_j = c\,A\mathbf{v}$. In the other direction,
+a <Term id="linear-transformation">linear map</Term> $T$ from $\mathbb{R}^n$ to $\mathbb{R}^m$ has the
+matrix with columns $T(\mathbf{e}_1), \ldots, T(\mathbf{e}_n)$, and $T(\mathbf{x}) = A\mathbf{x}$
+for every $\mathbf{x}$. Matrices with $m$ rows and $n$ columns and linear maps from $\mathbb{R}^n$
+to $\mathbb{R}^m$ are two descriptions of the same things, as long as both use the standard basis.
+
+The <StepLink step="identity">identity matrix</StepLink> $I$ has the standard basis as its columns,
+$1$ on the diagonal and $0$ elsewhere, so $I\mathbf{x} = \mathbf{x}$.
+
+## Tables of data
+
+Put <StepLink step="food">two foods</StepLink> in the columns, in grams per serving, with
+$\mathbf{x}$ the servings:
+
+$$
+\begin{bmatrix} 20 & 5 \\ 10 & 20 \end{bmatrix} \begin{bmatrix} 1.5 \\ 1 \end{bmatrix}
+= \begin{bmatrix} 35 \\ 35 \end{bmatrix} \begin{matrix} \text{protein (g)} \\ \text{carbs (g)} \end{matrix}
+$$
+
+The column picture is the meal: $1.5$ servings of A plus one of B. The row picture is the label:
+protein is $20 \cdot 1.5 + 5 \cdot 1$. Units check out row by row, grams per serving times
+servings.
+
+The same works for prices. Put the price per kg of three products in two stores in the rows of $P$
+(euros per kg), and a basket $\mathbf{q}$ in kg:
+
+$$
+P\mathbf{q} = \begin{bmatrix} 3 & 12 & 1 \\ 2.5 & 14 & 1.2 \end{bmatrix} \begin{bmatrix} 2 \\ 0.5 \\ 3 \end{bmatrix}
+= \begin{bmatrix} 15 \\ 15.6 \end{bmatrix},
+$$
+
+the cost of the basket in each store, in euros. Each entry is the basket total from Vectors, one
+row at a time.
+
+## One row: a dot product
+
+A $1 \times n$ matrix $\begin{bmatrix} w_1 & \cdots & w_n \end{bmatrix}$ has one row, so it returns
+one number: $\mathbf{w} \cdot \mathbf{x}$. A dot product with a fixed $\mathbf{w}$ is a linear map
+from $\mathbb{R}^n$ to the numbers, written as a matrix. The <StepLink step="dot">exam score</StepLink>
+of Vectors, $\mathbf{w} = (0.5, 0.3)$ on hours studied and slept, is one. Inputs with the same
+output lie on a line perpendicular to <C c="orange">$\mathbf{w}$</C>, and the outputs grow by the
+same amount from one line to the next.
+
+## A layer: $W\mathbf{x} + \mathbf{b}$
+
+A <StepLink step="layer">layer</StepLink> of a neural network computes several scores at once.
+Each row of $W$ holds one neuron's weights and $\mathbf{b}$ holds their constants:
+
+$$
+W\mathbf{x} + \mathbf{b} = \begin{bmatrix} 0.5 & 0.3 \\ -0.2 & 0.4 \end{bmatrix} \begin{bmatrix} 6 \\ 7 \end{bmatrix}
++ \begin{bmatrix} -4 \\ -1 \end{bmatrix} = \begin{bmatrix} 5.1 \\ 1.6 \end{bmatrix} + \begin{bmatrix} -4 \\ -1 \end{bmatrix}
+= \begin{bmatrix} 1.1 \\ 0.6 \end{bmatrix}.
+$$
+
+The first row is the exam score of Vectors. Then an activation function is applied to each entry;
+that comes with neural networks.
+
+With $\mathbf{b} \ne \mathbf{0}$ the map $\mathbf{x} \mapsto W\mathbf{x} + \mathbf{b}$ is not linear:
+it sends $\mathbf{0}$ to <C c="yellow">$\mathbf{b}$</C>. It is a linear map followed by a shift,
+an <Term id="affine-map">affine map</Term>, like Celsius to Fahrenheit. One extra coordinate makes it
+linear one dimension up. Append a $1$ to $\mathbf{x}$, put $\mathbf{b}$ as a last column next to
+$W$, and add a last row of zeros ending in $1$:
+
+$$
+\begin{bmatrix} W & \mathbf{b} \\ 0 \ \cdots \ 0 & 1 \end{bmatrix} \begin{bmatrix} \mathbf{x} \\ 1 \end{bmatrix}
+= \begin{bmatrix} W\mathbf{x} + \mathbf{b} \\ 1 \end{bmatrix}.
+$$
+
+These are homogeneous coordinates. Machine learning code often does the same thing by adding a
+column of ones to the data, so the bias becomes one more weight.

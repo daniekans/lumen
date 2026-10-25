@@ -73,19 +73,27 @@ test('area, course and unit pages render', async ({ page }) => {
 })
 
 test('skill statuses can be set and persist', async ({ page }) => {
-  await page.goto('/mathematics/linear-algebra/linear-transformations')
-  await page.getByRole('button', { name: /The determinant as signed area: New/ }).click()
+  await page.goto('/mathematics/linear-algebra/linear-maps')
+  await page
+    .getByRole('button', { name: /Write the matrix of a map from where the basis lands: New/ })
+    .click()
   await page.getByRole('menuitemradio', { name: /Mastered/ }).click()
   await page.waitForTimeout(500)
   await page.reload()
   await expect(
-    page.getByRole('button', { name: /The determinant as signed area: Mastered/ }),
+    page.getByRole('button', {
+      name: /Write the matrix of a map from where the basis lands: Mastered/,
+    }),
   ).toBeVisible()
   // And back down again.
-  await page.getByRole('button', { name: /The determinant as signed area: Mastered/ }).click()
+  await page
+    .getByRole('button', { name: /Write the matrix of a map from where the basis lands: Mastered/ })
+    .click()
   await page.getByRole('menuitemradio', { name: /Practiced/ }).click()
   await expect(
-    page.getByRole('button', { name: /The determinant as signed area: Practiced/ }),
+    page.getByRole('button', {
+      name: /Write the matrix of a map from where the basis lands: Practiced/,
+    }),
   ).toBeVisible()
 })
 

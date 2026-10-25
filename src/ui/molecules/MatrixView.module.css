@@ -10,7 +10,6 @@
 .matrix {
   position: relative;
   display: grid;
-  grid-template-columns: auto auto;
   column-gap: var(--space-4);
   row-gap: 2px;
   padding: 3px 9px;

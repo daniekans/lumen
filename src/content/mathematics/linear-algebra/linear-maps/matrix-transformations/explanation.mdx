@@ -1,51 +1,65 @@
-A $2 \times 2$ matrix is a compact description of a <Term id="function">function</Term> that moves every point of the plane.
-The functions it can describe are the linear ones: they fix the origin and keep grid lines straight,
-parallel and evenly spaced.
+A <Term id="linear-transformation">linear map</Term> of the plane moves infinitely many points, yet
+four numbers describe it completely. This item shows why, and how those four numbers are arranged
+in a matrix.
 
-## Columns record the basis
+## The basis decides everything
 
-Write any vector as $\mathbf{v} = x\hat{\imath} + y\hat{\jmath}$. Linearity means
+Every vector of the plane is a combination of the <Term id="standard-basis">standard basis</Term>:
+$\mathbf{x} = (x, y) = x\hat{\imath} + y\hat{\jmath}$. A linear map keeps combinations, so
 
 $$
-A\mathbf{v} = x\,A\hat{\imath} + y\,A\hat{\jmath},
+T(\mathbf{x}) = x\,T(\hat{\imath}) + y\,T(\hat{\jmath}).
 $$
 
-so $A$ is fully determined by two vectors: where <C c="green">$\hat{\imath}$</C> lands and where <C c="red">$\hat{\jmath}$</C> lands. Those are the columns of the matrix:
+Once <C c="green">$T(\hat{\imath})$</C> and <C c="red">$T(\hat{\jmath})$</C> are known, the image of
+every vector follows: the weights $x$ and $y$ stay the same, only the vectors they multiply change.
+The dashed path to <C c="teal">$T(\mathbf{x})$</C> shows this for $\mathbf{x} = (2, 1)$: two steps
+along $T(\hat{\imath})$, then one along $T(\hat{\jmath})$. Two different linear maps that agree on
+$\hat{\imath}$ and $\hat{\jmath}$ agree everywhere.
+
+## The columns of the matrix
+
+The <Term id="matrix">matrix</Term> of $T$ writes the two images side by side, as columns:
 
 $$
 A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}, \qquad
-A\hat{\imath} = \begin{bmatrix} a \\ c \end{bmatrix}, \quad
-A\hat{\jmath} = \begin{bmatrix} b \\ d \end{bmatrix}.
+T(\hat{\imath}) = \begin{bmatrix} a \\ c \end{bmatrix}, \quad
+T(\hat{\jmath}) = \begin{bmatrix} b \\ d \end{bmatrix}.
 $$
 
-Drag the tips of the basis vectors to edit the columns directly. The dashed path to <C c="blue">$A\mathbf{v}$</C>
-shows the recipe $2\,A\hat{\imath} + A\hat{\jmath}$ for $\mathbf{v} = (2, 1)$.
+Then $T(\mathbf{x}) = x \begin{bmatrix} a \\ c \end{bmatrix} + y \begin{bmatrix} b \\ d \end{bmatrix}$,
+which the next lesson writes as the product $A\mathbf{x}$. The order matters: the first column is
+always the image of $\hat{\imath}$.
 
-## Determinant
+Going both ways:
 
-The unit square spanned by $\hat{\imath}$ and $\hat{\jmath}$ maps to the parallelogram spanned by the
-two columns. Its signed area is
+- From a picture to a matrix (<StepLink step="read">reading</StepLink>): find where $\hat{\imath}$
+  and $\hat{\jmath}$ land and write those vectors as the columns.
+- From a matrix to a picture (<StepLink step="draw">drawing</StepLink>): put the tip of
+  $\hat{\imath}$ at the first column and the tip of $\hat{\jmath}$ at the second; the grid is
+  spanned by them.
+
+Drag the tips in any step to set the columns yourself.
+
+## Italic type
+
+Slanted type is a <StepLink step="italic">shear</StepLink>. The baseline stays put, so
+$T(\hat{\imath}) = \hat{\imath}$, and each point moves sideways in proportion to its height:
+$T(\hat{\jmath}) = (0.25, 1)$. The matrix is
 
 $$
-\det A = ad - bc.
+\begin{bmatrix} 1 & 0.25 \\ 0 & 1 \end{bmatrix}, \qquad (x, y) \mapsto (x + 0.25\,y,\ y).
 $$
-
-Because the grid stays evenly spaced, every region scales by the same factor $|\det A|$.
-
-- $\det A > 0$: orientation is kept. Turning from $\hat{\imath}$ to $\hat{\jmath}$ is still
-  counterclockwise.
-- $\det A < 0$: the plane is <StepLink step="sign">flipped</StepLink>, like a reflection.
-- $\det A = 0$: the plane collapses onto a line or a point. Different inputs share the same output,
-  so $A$ has no <Term id="inverse-function">inverse</Term>.
 
 ## Presets
 
-| Preset  | Matrix                                                 | $\det$ |
-| ------- | ------------------------------------------------------ | ------ |
-| Rotate  | $\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$        | $1$    |
-| Shear   | $\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}$         | $1$    |
-| Scale   | $\begin{bmatrix} 2 & 0 \\ 0 & 1.5 \end{bmatrix}$       | $3$    |
-| Reflect | $\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$        | $-1$   |
-| Project | $\begin{bmatrix} 0.8 & 0.4 \\ 0.4 & 0.2 \end{bmatrix}$ | $0$    |
+| Map                            | Matrix                                                 | What it does                                        |
+| ------------------------------ | ------------------------------------------------------ | --------------------------------------------------- |
+| Rotate by $90^\circ$           | $\begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$        | Turns the plane; lengths, angles and shapes stay    |
+| Reflect across the $y$-axis    | $\begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$        | Flips the letter; lengths and angles stay           |
+| Scale                          | $\begin{bmatrix} 2 & 0 \\ 0 & 1.5 \end{bmatrix}$       | Stretches by $2$ across and $1.5$ up                |
+| Project onto $y = \frac{x}{2}$ | $\begin{bmatrix} 0.8 & 0.4 \\ 0.4 & 0.2 \end{bmatrix}$ | Flattens the plane onto a line; it cannot be undone |
 
-The shear and the rotation change shapes but not areas, which is why both have determinant $1$.
+A rotation is a rigid motion: the letter turns and nothing about its shape changes. A shear keeps
+areas but not shapes: the letter leans and its angles change. The gallery of maps later in this
+unit looks at what each kind of map keeps and loses.

@@ -1,0 +1,86 @@
+Which functions of the plane, or of space, are simple enough to describe by a few numbers and
+still rich enough to rotate, stretch, shear and flatten? A map $T$ is
+a <Term id="function">function</Term> that takes a vector <C c="blue">$\mathbf{u}$</C> and returns a
+vector <C c="teal">$T(\mathbf{u})$</C>. This unit studies the maps that keep the two operations of
+vectors: addition and scaling.
+
+## The two rules
+
+A map $T$ from $\mathbb{R}^n$ to $\mathbb{R}^m$ is linear when, for all vectors $\mathbf{u}$,
+$\mathbf{v}$ and every scalar $c$,
+
+$$
+T(\mathbf{u} + \mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v}), \qquad T(c\mathbf{v}) = c\,T(\mathbf{v}).
+$$
+
+In words: adding before mapping gives the same result as mapping before adding
+(<StepLink step="sum">sums</StepLink>), and the same for scaling
+(<StepLink step="scale">multiples</StepLink>). One example where the rules hold is not enough; they
+must hold for every choice. One example where a rule fails is enough to show a map is not linear.
+
+The rules together keep every <Term id="linear-combination">linear combination</Term>:
+
+$$
+T(a\mathbf{u} + b\mathbf{v}) = T(a\mathbf{u}) + T(b\mathbf{v}) = a\,T(\mathbf{u}) + b\,T(\mathbf{v}),
+$$
+
+and the same for combinations of any number of vectors. This is why a linear map is fixed by
+where it sends a <Term id="basis">basis</Term>, the subject of the next item.
+
+## The origin stays fixed
+
+Take $c = 0$ in the second rule: $T(\mathbf{0}) = T(0\,\mathbf{0}) = 0\,T(\mathbf{0}) = \mathbf{0}$.
+Every linear map sends the origin to the origin. The converse is false: a map can fix the origin
+and still not be linear. The <StepLink step="bend">bend</StepLink>
+$(x, y) \mapsto (x, y + \frac{x^2}{4})$ fixes it, and so does $(x, y) \mapsto (x^2, y)$, yet for the
+second one $T(2, 0) = (4, 0)$ while $2\,T(1, 0) = (2, 0)$.
+
+## What the rules look like
+
+A line through $\mathbf{p}$ with direction $\mathbf{d}$ is the set of points $\mathbf{p} + t\mathbf{d}$.
+A linear map sends it to
+
+$$
+T(\mathbf{p} + t\mathbf{d}) = T(\mathbf{p}) + t\,T(\mathbf{d}).
+$$
+
+When $T(\mathbf{d}) \ne \mathbf{0}$ this is again a line, and equal steps in $t$ stay equal steps.
+Lines with the same direction go to lines with the same direction $T(\mathbf{d})$. So for a map that
+does not flatten the plane, the <StepLink step="grid">grid</StepLink> stays straight, parallel and
+evenly spaced, with the origin in place. That picture comes from the rules; the rules are the
+definition.
+
+A map can also <StepLink step="collapse">collapse</StepLink> the plane. When $T(\mathbf{d}) = \mathbf{0}$,
+the whole line $\mathbf{p} + t\mathbf{d}$ lands on the single point $T(\mathbf{p})$. The projection
+onto the line $y = \frac{x}{2}$ sends the whole plane onto that line: every grid line lands on it,
+equal steps along a grid line stay equal along it, and both rules hold. Linear maps may lose directions; the
+item on kernels later in this unit measures what is lost.
+
+## Maps that are not linear
+
+The <StepLink step="shift">shift</StepLink> $T(\mathbf{x}) = \mathbf{x} + \mathbf{b}$ with
+$\mathbf{b} \ne \mathbf{0}$ keeps lines straight and parallel, but it moves the origin, and
+
+$$
+T(\mathbf{u}) + T(\mathbf{v}) = \mathbf{u} + \mathbf{v} + 2\mathbf{b} \ne \mathbf{u} + \mathbf{v} + \mathbf{b} = T(\mathbf{u} + \mathbf{v}).
+$$
+
+The gap, <C c="red">in red</C>, is exactly $\mathbf{b}$. A linear map followed by a shift is
+called affine; the lesson on matrix times vector meets it again as a layer of a neural network.
+
+The bend fails the scaling rule: doubling $\mathbf{v} = (v_1, v_2)$ multiplies the bend
+$\frac{v_1^2}{4}$ by four, not two.
+
+## Units and temperatures
+
+Converting lengths is linear: $f(x) = 3.28084\,x$ turns meters into feet, and twice the meters is
+twice the feet. Converting temperatures is not:
+
+$$
+F = 1.8\,C + 32.
+$$
+
+Ten degrees Celsius is $50$ degrees Fahrenheit, but twenty degrees Celsius is $68$, not $100$.
+The $32$ is a shift: $0$ degrees Celsius is not $0$ degrees Fahrenheit, so the map moves the
+origin and both rules fail. Differences of temperatures do convert linearly, $\Delta F = 1.8\,\Delta C$,
+because subtracting removes the shift.

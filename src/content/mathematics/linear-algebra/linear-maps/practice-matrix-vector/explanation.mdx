@@ -1,0 +1,25 @@
+Problems on <Term id="linear-transformation">linear maps</Term>, their matrices and
+the <Term id="matrix-vector-product">product</Term> of a matrix and a vector.
+
+## Answers
+
+- Type a vector as its components in order: $(3, -1)$. A column such as the result of
+  $A\mathbf{x}$ is typed the same way.
+- A matrix answer is a grid of boxes in the shape of the matrix. Type one number per box; Tab moves
+  to the next box.
+- Shapes are numbers: the count of rows or of components.
+
+## Formulas
+
+For an $m \times n$ matrix $A$ with columns $\mathbf{a}_1, \ldots, \mathbf{a}_n$ and rows
+$\mathbf{r}_1, \ldots, \mathbf{r}_m$:
+
+$$
+A\mathbf{x} = x_1\mathbf{a}_1 + \cdots + x_n\mathbf{a}_n = \begin{bmatrix} \mathbf{r}_1 \cdot \mathbf{x} \\ \vdots \\ \mathbf{r}_m \cdot \mathbf{x} \end{bmatrix}.
+$$
+
+The matrix of a linear map has $T(\mathbf{e}_j)$ as its column $j$; for a formula, row $i$ holds the
+coefficients of component $i$. A linear map keeps combinations, so if
+$\mathbf{x} = a\mathbf{u} + b\mathbf{v}$ then $T(\mathbf{x}) = a\,T(\mathbf{u}) + b\,T(\mathbf{v})$.
+One pair of vectors where $T(\mathbf{u} + \mathbf{v}) \ne T(\mathbf{u}) + T(\mathbf{v})$, or one
+$\mathbf{u}$ and $c$ where $T(c\mathbf{u}) \ne c\,T(\mathbf{u})$, shows that $T$ is not linear.

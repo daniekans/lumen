@@ -80,8 +80,11 @@ export const migrate = (
   if (isRecord(raw.skills))
     for (const [key, s] of Object.entries(raw.skills)) {
       if (!isRecord(s) || !SKILL_STATUSES.includes(s.status as never)) continue
+      // A skill moves with its unit, or on its own when the whole key has a redirect.
       const hash = key.lastIndexOf('#')
-      const target = hash < 0 ? key : `${rename(key.slice(0, hash))}${key.slice(hash)}`
+      const moved = rename(key)
+      const target =
+        moved !== key || hash < 0 ? moved : `${rename(key.slice(0, hash))}${key.slice(hash)}`
       const updatedAt = typeof s.updatedAt === 'string' ? s.updatedAt : new Date(0).toISOString()
       if ((data.skills[target]?.updatedAt ?? '') > updatedAt) continue
       data.skills[target] = {

@@ -3,41 +3,47 @@ import { defineItem } from '@/catalog/types'
 export const meta = defineItem({
   title: 'Matrices as transformations',
   summary:
-    'A 2x2 matrix moves the whole plane. Its columns say where the basis vectors land, and its determinant says how areas scale.',
-  tags: ['matrix', 'linear transformation', 'basis', 'determinant', 'shear', 'rotation'],
-  level: 'intro',
-  skills: ['matrix-columns', 'determinant'],
-  order: 1,
+    'A linear map of the plane is fixed by where it sends $\\hat{\\imath}$ and $\\hat{\\jmath}$. Those two images are the columns of its $2 \\times 2$ matrix, so a matrix can be read from a picture and a picture drawn from a matrix.',
+  tags: ['matrix', 'linear map', 'linear transformation', 'basis', 'columns', 'shear', 'rotation'],
+  level: 'core',
+  skills: ['matrix-columns', 'linear-maps'],
+  order: 2,
   steps: [
     {
       id: 'basis',
-      title: 'Two basis vectors',
+      title: 'Every vector from the basis',
       caption:
-        'Every vector in the plane is a combination $x\\hat{\\imath} + y\\hat{\\jmath}$ of $\\hat{\\imath} = (1, 0)$ and $\\hat{\\jmath} = (0, 1)$. Here $\\mathbf{v} = 2\\hat{\\imath} + \\hat{\\jmath}$.',
+        'Every vector of the plane is a combination of $\\hat{\\imath} = (1, 0)$ and $\\hat{\\jmath} = (0, 1)$: $\\mathbf{x} = (x, y)$ is $x\\hat{\\imath} + y\\hat{\\jmath}$. Here $\\mathbf{x} = 2\\hat{\\imath} + \\hat{\\jmath}$.',
     },
     {
       id: 'columns',
-      title: 'Columns are where the basis lands',
+      title: 'Where the basis lands',
       caption:
-        'A matrix stores the new positions of $\\hat{\\imath}$ and $\\hat{\\jmath}$ as its columns. Then $A\\mathbf{v} = 2\\,A\\hat{\\imath} + A\\hat{\\jmath}$: the same recipe, new ingredients.',
+        'A linear map keeps combinations, so $T(\\mathbf{x}) = 2\\,T(\\hat{\\imath}) + T(\\hat{\\jmath})$: the same weights, new vectors. The matrix stores $T(\\hat{\\imath})$ and $T(\\hat{\\jmath})$ as its two columns.',
     },
     {
-      id: 'grid',
-      title: 'Grid lines stay parallel',
+      id: 'read',
+      title: 'Reading a matrix from a picture',
       caption:
-        'Under a linear map the origin stays fixed and grid lines remain straight, parallel and evenly spaced. This shear keeps $\\hat{\\imath}$ and tilts $\\hat{\\jmath}$.',
+        'To read the matrix of a drawn map, find the tips of the images of $\\hat{\\imath}$ and $\\hat{\\jmath}$. Here $T(\\hat{\\imath}) = (1, 1)$ and $T(\\hat{\\jmath}) = (-1, 0.5)$ are the columns, in that order.',
     },
     {
-      id: 'area',
-      title: 'Determinant as area',
+      id: 'draw',
+      title: 'Drawing a map from a matrix',
       caption:
-        'The unit square becomes a parallelogram. Its area is $\\det A = ad - bc$, and every other region scales by the same factor.',
+        'Going the other way, the matrix with columns $(2, 0)$ and $(1, 1)$ puts $\\hat{\\imath}$ at $(2, 0)$ and $\\hat{\\jmath}$ at $(1, 1)$, and the rest of the grid follows. Drag the tips to set the columns yourself.',
     },
     {
-      id: 'sign',
-      title: 'Negative and zero determinants',
+      id: 'italic',
+      title: 'Italic type is a shear',
       caption:
-        'When $\\det A < 0$ the plane is flipped over. When $\\det A = 0$ it collapses onto a line and the map cannot be undone.',
+        'Slanting type keeps $\\hat{\\imath}$ and moves $\\hat{\\jmath}$ to $(0.25, 1)$. Upright strokes lean, the baseline stays where it was, and the letter keeps its height: a shear.',
+    },
+    {
+      id: 'presets',
+      title: 'A few maps',
+      caption:
+        'A rotation turns the letter without changing its shape or size; a reflection flips it; a scaling stretches it; a projection flattens it onto a line. Pick a map, then read its columns.',
     },
   ],
 })

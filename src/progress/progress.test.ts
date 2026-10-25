@@ -175,7 +175,11 @@ describe('resetItem', () => {
 })
 
 describe('migrate with moved content', () => {
-  const moves: Record<string, string> = { 'old-unit': 'area/course/unit', 'a/x': 'a/y' }
+  const moves: Record<string, string> = {
+    'old-unit': 'area/course/unit',
+    'a/x': 'a/y',
+    'old-unit#gone': 'area/course/other#gone',
+  }
   const rename = (id: string) => {
     const prefix = Object.keys(moves).find((m) => id === m || id.startsWith(`${m}/`))
     return prefix ? moves[prefix] + id.slice(prefix.length) : id
@@ -186,13 +190,19 @@ describe('migrate with moved content', () => {
       {
         version: 1,
         items: { 'old-unit/item': { visitedSteps: ['s'], correctChecks: [], manual: 'done' } },
-        skills: { 'old-unit#skill': { status: 'mastered', source: 'manual', updatedAt: 'x' } },
+        skills: {
+          'old-unit#skill': { status: 'mastered', source: 'manual', updatedAt: 'x' },
+          'old-unit#gone': { status: 'practiced', source: 'manual', updatedAt: 'x' },
+        },
       },
       rename,
     )
     expect(data.items['area/course/unit/item']?.manual).toBe('done')
     expect(data.items['old-unit/item']).toBeUndefined()
     expect(data.skills['area/course/unit#skill']?.status).toBe('mastered')
+    // A skill with its own redirect leaves the unit.
+    expect(data.skills['area/course/other#gone']?.status).toBe('practiced')
+    expect(data.skills['area/course/unit#gone']).toBeUndefined()
   })
 
   it('keeps the newer entry when old and new ids both exist', () => {

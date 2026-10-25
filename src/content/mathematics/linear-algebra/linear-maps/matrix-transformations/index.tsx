@@ -1,22 +1,20 @@
 import { useState } from 'react'
 import {
-  add,
   apply,
-  clamp,
-  det,
-  fmt,
+  fmtPoint,
   identity,
   lerpMat,
   sameMat,
   mat2,
   rotation,
   scale,
+  toRows,
   type Mat2,
   type Vec2,
 } from '@/lib/math'
-import { alpha, vc } from '@/styles/viz-colors'
+import { vc } from '@/styles/viz-colors'
 import { Button, Divider } from '@/ui/atoms'
-import { Readout, ReadoutPanel, SegmentedControl, ToggleField } from '@/ui/molecules'
+import { MatrixView, Readout, ReadoutPanel, SegmentedControl, ToggleField } from '@/ui/molecules'
 import {
   Grid,
   MathLabel,
@@ -30,38 +28,53 @@ import {
   useStepEffect,
   useStepStart,
   type StepRun,
+  useVizStep,
   Vector,
   VizControls,
 } from '@/viz-kit'
-import { MatrixView } from './MatrixView'
 
 const I_COLOR = vc.green
 const J_COLOR = vc.red
-const AREA_COLOR = vc.yellow
+const X_COLOR = vc.blue
+const OUT_COLOR = vc.teal
 
-type Preset = 'rotate' | 'shear' | 'scale' | 'reflect' | 'project'
+type Preset = 'rotate' | 'reflect' | 'scale' | 'project'
 
 const presets: Record<Preset, Mat2> = {
   rotate: rotation(Math.PI / 2),
-  shear: mat2(1, 1, 0, 1),
-  scale: mat2(2, 0, 0, 1.5),
   reflect: mat2(-1, 0, 0, 1),
+  scale: mat2(2, 0, 0, 1.5),
   // Orthogonal projection onto the line y = x / 2.
   project: mat2(0.8, 0.4, 0.4, 0.2),
 }
 
 const presetOptions = [
   { value: 'rotate', label: 'Rotate' },
-  { value: 'shear', label: 'Shear' },
-  { value: 'scale', label: 'Scale' },
   { value: 'reflect', label: 'Reflect' },
+  { value: 'scale', label: 'Scale' },
   { value: 'project', label: 'Project' },
 ] as const
 
-const V: Vec2 = [2, 1]
+const READ = mat2(1, -1, 1, 0.5)
+const DRAW = mat2(2, 1, 0, 1)
+const ITALIC = mat2(1, 0.25, 0, 1)
 
-const isIdentity = (m: Mat2) =>
-  [m.i[0] - 1, m.i[1], m.j[0], m.j[1] - 1].every((v) => Math.abs(v) < 1e-6)
+const X: Vec2 = [2, 1]
+
+/** The letter F, upright on the baseline y = 0, as strokes. */
+const LETTER: Vec2[][] = [
+  [
+    [-3, 0],
+    [-3, 2],
+    [-1.8, 2],
+  ],
+  [
+    [-3, 1.1],
+    [-2.1, 1.1],
+  ],
+]
+
+const isIdentity = (m: Mat2) => sameMat(m, identity, 1e-6)
 
 /** Snaps a dragged coordinate to the nearest half unit when it is close to it. */
 const snap = (v: number) => {
@@ -70,14 +83,15 @@ const snap = (v: number) => {
 }
 
 export default function MatrixTransformations() {
+  const { id } = useVizStep()
   const [m, setM] = useState<Mat2>(identity)
   const [preset, setPreset] = useState<Preset | 'custom'>('custom')
-  const [showV, setShowV] = useState(true)
-  const [showSquare, setShowSquare] = useState(false)
+  const [showX, setShowX] = useState(true)
+  const [showLetter, setShowLetter] = useState(false)
   const seq = useSequence()
 
-  const vOpacity = useAnimatedValue(showV ? 1 : 0, { duration: 0.5 })
-  const squareOpacity = useAnimatedValue(showSquare ? 1 : 0, { duration: 0.5 })
+  const xOpacity = useAnimatedValue(showX ? 1 : 0, { duration: 0.5 })
+  const letterOpacity = useAnimatedValue(showLetter ? 1 : 0, { duration: 0.5 })
 
   const start = useStepStart(m)
   /** Animates to `target`; in a step handler, pass `run` so a replay starts where the step began. */
@@ -94,68 +108,67 @@ export default function MatrixTransformations() {
     animateTo(presets[p])
   }
 
-  const replay = () => {
-    const target = m
-    seq.run(async ({ tween, wait }) => {
-      setM(identity)
-      await wait(0.25)
-      await tween(0, 1, { duration: 1.6, onUpdate: (t) => setM(lerpMat(identity, target, t)) })
-    })
-  }
-
   const dragBasis = (which: 'i' | 'j') => (p: Vec2) => {
     seq.cancel()
     setPreset('custom')
     setM((cur) => ({ ...cur, [which]: [snap(p[0]), snap(p[1])] as Vec2 }))
   }
 
+  const show = (x: boolean, letter: boolean) => {
+    setShowX(x)
+    setShowLetter(letter)
+  }
+
   useStepEffect({
     basis: (run) => {
       setPreset('custom')
-      setShowV(true)
-      setShowSquare(false)
+      show(true, false)
       animateTo(identity, 1, run)
     },
     columns: (run) => {
       setPreset('custom')
-      setShowV(true)
-      setShowSquare(false)
+      show(true, false)
       animateTo(mat2(1.5, -0.5, 0.5, 1), undefined, run)
     },
-    grid: (run) => {
-      setPreset('shear')
-      setShowV(false)
-      setShowSquare(false)
-      animateTo(presets.shear, undefined, run)
-    },
-    area: (run) => {
+    read: (run) => {
       setPreset('custom')
-      setShowV(false)
-      setShowSquare(true)
-      animateTo(mat2(2, 0.5, 0.5, 1.5), undefined, run)
+      show(false, false)
+      animateTo(READ, undefined, run)
     },
-    sign: (run) => {
-      setShowV(false)
-      setShowSquare(true)
+    draw: (run) => {
+      setPreset('custom')
+      show(false, false)
+      // One column at a time: first i-hat moves, then j-hat.
       const from = start(run)
-      const flipped = mat2(0.5, 1, 1, 0.5)
-      seq.run(async ({ tween, wait }) => {
-        setPreset('custom')
-        await tween(0, 1, { duration: 1.6, onUpdate: (t) => setM(lerpMat(from, flipped, t)) })
-        await wait(1.4)
-        setPreset('project')
-        await tween(0, 1, {
-          duration: 1.6,
-          onUpdate: (t) => setM(lerpMat(flipped, presets.project, t)),
-        })
+      const half: Mat2 = { i: DRAW.i, j: from.j }
+      void seq.run(async ({ tween, wait }) => {
+        await tween(0, 1, { duration: 1.1, onUpdate: (t) => setM(lerpMat(from, half, t)) })
+        await wait(0.3)
+        await tween(0, 1, { duration: 1.1, onUpdate: (t) => setM(lerpMat(half, DRAW, t)) })
       })
+    },
+    italic: (run) => {
+      setPreset('custom')
+      show(false, true)
+      const from = start(run)
+      void seq.run(async ({ tween, wait }) => {
+        if (!isIdentity(from)) {
+          await tween(0, 1, { duration: 1, onUpdate: (t) => setM(lerpMat(from, identity, t)) })
+          await wait(0.4)
+        }
+        await tween(0, 1, { duration: 1.4, onUpdate: (t) => setM(lerpMat(identity, ITALIC, t)) })
+      })
+    },
+    presets: (run) => {
+      setPreset('rotate')
+      show(false, true)
+      animateTo(presets.rotate, undefined, run)
     },
   })
 
-  const d = det(m)
-  const corner = add(m.i, m.j)
-  const Av = apply(m, V)
-  const iPart = scale(m.i, V[0])
+  const Ax = apply(m, X)
+  const xPart = scale(m.i, X[0])
+  const moved = !isIdentity(m)
 
   return (
     <>
@@ -165,19 +178,23 @@ export default function MatrixTransformations() {
         zoomable
         overlay={
           <Overlay corner="top-left">
-            <ReadoutPanel title="Matrix $A$">
-              <MatrixView m={m} colors={[I_COLOR, J_COLOR]} />
-              <Readout
-                label="$\det A$"
-                value={fmt(d)}
-                color={AREA_COLOR}
-                hint="The factor by which $A$ scales every area. Negative when it flips the plane."
+            <ReadoutPanel title="Matrix">
+              <MatrixView
+                rows={toRows(m)}
+                name="A ="
+                colors={[I_COLOR, J_COLOR]}
+                label="Matrix A"
               />
-              <Readout
-                label="orientation"
-                hint="Whether $\hat{\imath}$ still turns counterclockwise to reach $\hat{\jmath}$."
-                value={Math.abs(d) < 1e-3 ? 'collapsed' : d < 0 ? 'flipped' : 'preserved'}
-              />
+              <Readout label="$T(\hat{\imath})$, column 1" value={fmtPoint(m.i)} color={I_COLOR} />
+              <Readout label="$T(\hat{\jmath})$, column 2" value={fmtPoint(m.j)} color={J_COLOR} />
+              {showX && (
+                <Readout
+                  label={moved ? '$T(\\mathbf{x})$' : '$\\mathbf{x}$'}
+                  value={fmtPoint(Ax)}
+                  color={moved ? OUT_COLOR : X_COLOR}
+                  hint="$2$ times column 1 plus $1$ times column 2."
+                />
+              )}
             </ReadoutPanel>
           </Overlay>
         }
@@ -186,37 +203,40 @@ export default function MatrixTransformations() {
 
         <TransformedGrid m={m} />
 
-        {squareOpacity > 0.01 && (
-          <g style={{ opacity: squareOpacity }}>
+        {letterOpacity > 0.01 &&
+          moved &&
+          LETTER.map((stroke, k) => (
             <Path
-              points={[[0, 0], m.i, corner, m.j]}
-              closed
-              color={AREA_COLOR}
-              width={1.5}
-              dash={d < 0 ? '5 5' : undefined}
-              fill={alpha(AREA_COLOR, d < 0 ? 0.1 : 0.2)}
+              key={`ghost-${k}`}
+              points={stroke}
+              color={vc.fg}
+              width={2}
+              dash="4 5"
+              opacity={0.3 * letterOpacity}
             />
-            <MathLabel
-              at={[corner[0] / 2, corner[1] / 2]}
-              tex={`\\det = ${fmt(d)}`}
-              color={AREA_COLOR}
-              size={15}
-              opacity={squareOpacity * clamp((Math.abs(d) - 0.4) / 0.4, 0, 1)}
+          ))}
+        {letterOpacity > 0.01 &&
+          LETTER.map((stroke, k) => (
+            <Path
+              key={k}
+              points={stroke.map((p) => apply(m, p))}
+              color={vc.fg}
+              width={4}
+              opacity={letterOpacity}
             />
-          </g>
-        )}
+          ))}
 
-        {vOpacity > 0.01 && (
-          <g style={{ opacity: vOpacity }}>
-            <Path points={[[0, 0], iPart]} color={I_COLOR} width={2} dash="5 6" opacity={0.8} />
-            <Path points={[iPart, Av]} color={J_COLOR} width={2} dash="5 6" opacity={0.8} />
-            <Vector to={Av} color={vc.blue} width={2.5} />
+        {xOpacity > 0.01 && (
+          <g style={{ opacity: xOpacity }}>
+            <Path points={[[0, 0], xPart]} color={I_COLOR} width={2} dash="5 6" opacity={0.8} />
+            <Path points={[xPart, Ax]} color={J_COLOR} width={2} dash="5 6" opacity={0.8} />
+            <Vector to={Ax} color={moved ? OUT_COLOR : X_COLOR} width={2.5} />
             <MathLabel
-              at={Av}
-              tex={isIdentity(m) ? '\\mathbf{v}' : 'A\\mathbf{v}'}
+              at={Ax}
+              tex={moved ? 'T(\\mathbf{x})' : '\\mathbf{x}'}
               anchor="ne"
-              color={vc.blue}
-              opacity={vOpacity}
+              color={moved ? OUT_COLOR : X_COLOR}
+              opacity={xOpacity}
             />
           </g>
         )}
@@ -228,51 +248,60 @@ export default function MatrixTransformations() {
           color={I_COLOR}
           r={3.5}
           onDrag={dragBasis('i')}
-          label="Basis vector i-hat"
+          label="Image of i-hat, the first column"
         />
         <Point
           at={m.j}
           color={J_COLOR}
           r={3.5}
           onDrag={dragBasis('j')}
-          label="Basis vector j-hat"
+          label="Image of j-hat, the second column"
         />
-        <MathLabel at={m.i} tex="\hat{\imath}" color={I_COLOR} anchor="se" offset={12} />
-        <MathLabel at={m.j} tex="\hat{\jmath}" color={J_COLOR} anchor="nw" offset={12} />
+        <MathLabel
+          at={m.i}
+          tex={moved ? 'T(\\hat{\\imath})' : '\\hat{\\imath}'}
+          color={I_COLOR}
+          anchor="se"
+          offset={12}
+        />
+        <MathLabel
+          at={m.j}
+          tex={moved ? 'T(\\hat{\\jmath})' : '\\hat{\\jmath}'}
+          color={J_COLOR}
+          anchor="nw"
+          offset={12}
+        />
       </Stage>
 
       <VizControls>
-        <SegmentedControl
-          label="Preset transformations"
-          value={preset}
-          onChange={(p) => choosePreset(p as Preset)}
-          options={presetOptions}
-        />
-        <Divider />
-        <Button onClick={replay} disabled={seq.running}>
-          Replay
-        </Button>
+        {id === 'presets' && (
+          <>
+            <SegmentedControl
+              label="Preset maps"
+              value={preset}
+              onChange={(p) => choosePreset(p as Preset)}
+              options={presetOptions}
+            />
+            <Divider />
+          </>
+        )}
         <Button
           onClick={() => {
             setPreset('custom')
             animateTo(identity, 1)
           }}
+          disabled={!moved}
         >
           Reset
         </Button>
         <Divider />
         <ToggleField
-          label="Vector $\mathbf{v}$"
-          checked={showV}
-          onChange={setShowV}
-          color={vc.blue}
+          label="Vector $\mathbf{x}$"
+          checked={showX}
+          onChange={setShowX}
+          color={X_COLOR}
         />
-        <ToggleField
-          label="Area"
-          checked={showSquare}
-          onChange={setShowSquare}
-          color={AREA_COLOR}
-        />
+        <ToggleField label="Letter" checked={showLetter} onChange={setShowLetter} />
       </VizControls>
     </>
   )
