@@ -61,6 +61,11 @@ Use `vc` and `role` from `src/styles/viz-colors.ts`; never a hex literal in a co
 - Controls live in the floating dock at the bottom of the stage. Readouts live in an `Overlay`, usually
   top right. Keep both small; the stage is the focus.
 - Stage content stays clear of the dock through the default `insets`.
+- A draggable point carries a thin ring in its own color, always visible, and a halo on hover. Only
+  `Point` with `onDrag` draws it, so fixed points never look draggable.
+- A step's replay shows the step's intended transition. When a step animates from a resting state
+  (the plain grid, say), the replay goes back there first rather than starting from wherever a
+  reset or a drag left the picture.
 
 ## Overlays
 

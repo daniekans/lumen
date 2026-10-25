@@ -16,7 +16,7 @@ interface WarpedGridProps {
    * Raise it for maps that shrink the plane, so the image still covers the view.
    */
   reach?: number
-  /** Sample points per grid line. */
+  /** Sample points per grid line; by default it grows with `reach`. The lines are drawn as smooth curves through them. */
   samples?: number
 }
 
@@ -32,7 +32,7 @@ export function WarpedGrid({
   opacity = 0.22,
   axisOpacity = 0.7,
   reach = 2.5,
-  samples = 80,
+  samples,
 }: WarpedGridProps) {
   const c = useCoords()
   const step = zoomedStep(base, c.zoom)
@@ -40,24 +40,51 @@ export function WarpedGrid({
   const [y0, y1] = c.view.y
   const r = reach * Math.max(...[x0, x1].flatMap((x) => [y0, y1].map((y) => Math.hypot(x, y))))
   const count = Math.ceil(r / step)
+  const n = samples ?? Math.round(32 * reach)
 
   const line = (at: (s: number) => Vec2) =>
-    Array.from({ length: samples + 1 }, (_, i) => f(at(-r + (2 * r * i) / samples)))
+    Array.from({ length: n + 1 }, (_, i) => f(at(-r + (2 * r * i) / n)))
+
+  // Only the pieces of each line that cross the view are drawn: a map that shrinks the plane needs
+  // a large reach, and drawing every off-screen sample made morphs stutter.
+  const pad = 0.1 * Math.max(x1 - x0, y1 - y0)
+  const visible = (a: Vec2, b: Vec2) =>
+    Math.max(a[0], b[0]) >= x0 - pad &&
+    Math.min(a[0], b[0]) <= x1 + pad &&
+    Math.max(a[1], b[1]) >= y0 - pad &&
+    Math.min(a[1], b[1]) <= y1 + pad
+  const pieces = (pts: Vec2[]) => {
+    const out: Vec2[][] = []
+    let run: Vec2[] = []
+    for (let i = 1; i < pts.length; i++) {
+      if (visible(pts[i - 1]!, pts[i]!)) {
+        if (!run.length) run.push(pts[i - 1]!)
+        run.push(pts[i]!)
+      } else if (run.length) {
+        out.push(run)
+        run = []
+      }
+    }
+    if (run.length) out.push(run)
+    return out
+  }
 
   const lines: Vec2[][] = []
   for (let k = -count; k <= count; k++) {
     if (k === 0) continue
-    lines.push(line((s) => [k * step, s]))
-    lines.push(line((s) => [s, k * step]))
+    lines.push(...pieces(line((s) => [k * step, s])))
+    lines.push(...pieces(line((s) => [s, k * step])))
   }
+  const axes = [...pieces(line((s) => [s, 0])), ...pieces(line((s) => [0, s]))]
 
   return (
     <g pointerEvents="none">
       {lines.map((pts, k) => (
-        <Path key={k} points={pts} color={color} width={1} opacity={opacity} />
+        <Path key={k} points={pts} smooth color={color} width={1} opacity={opacity} />
       ))}
-      <Path points={line((s) => [s, 0])} color={color} width={1.5} opacity={axisOpacity} />
-      <Path points={line((s) => [0, s])} color={color} width={1.5} opacity={axisOpacity} />
+      {axes.map((pts, k) => (
+        <Path key={k} points={pts} smooth color={color} width={1.5} opacity={axisOpacity} />
+      ))}
     </g>
   )
 }

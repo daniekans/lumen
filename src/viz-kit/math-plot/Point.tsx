@@ -126,6 +126,14 @@ function DraggablePoint({
         r={dragging ? r + 10 : r + 7}
         style={{ fill: alpha(color, 0.18) }}
       />
+      {/* A thin ring marks the point as draggable before any hover; touch screens have none. */}
+      <circle
+        cx={x}
+        cy={y}
+        r={r + 4}
+        style={{ fill: 'none', stroke: alpha(color, 0.55) }}
+        strokeWidth={1.5}
+      />
       {/* Generous invisible hit area so small points are easy to grab. */}
       <circle cx={x} cy={y} r={Math.max(18, r + 10)} fill="transparent" />
       {children}
