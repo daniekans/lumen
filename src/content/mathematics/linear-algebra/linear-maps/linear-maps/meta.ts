@@ -14,7 +14,7 @@ export const meta = defineItem({
       id: 'map',
       title: 'A map moves every point',
       caption:
-        'A map $T$ of the plane sends each input $\\mathbf{u}$ to an output $T(\\mathbf{u})$, and the whole grid moves with it. Drag $\\mathbf{u}$.',
+        'A map $T$ of the plane sends each input $\\mathbf{u}$ to an output $T(\\mathbf{u})$, and the whole grid moves with it. Drag $\\mathbf{u}$, and pick None to see the plane before the map.',
     },
     {
       id: 'sum',

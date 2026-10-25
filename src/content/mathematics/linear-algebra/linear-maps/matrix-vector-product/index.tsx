@@ -8,6 +8,7 @@ import {
   fmtShort,
   identity,
   lerpMat,
+  lerpVec,
   mat2,
   matVec,
   sameMat,
@@ -18,7 +19,7 @@ import {
   type Vec2,
 } from '@/lib/math'
 import { vc } from '@/styles/viz-colors'
-import { LabeledSlider, MatrixView, Readout, ReadoutPanel } from '@/ui/molecules'
+import { LabeledSlider, MatrixView, Readout, ReadoutPanel, SegmentedControl } from '@/ui/molecules'
 import {
   Axes,
   Grid,
@@ -83,6 +84,19 @@ const B: Vec2 = [-4, -1]
 /** Hours studied and slept. */
 const STUDENT: Vec2 = [6, 7]
 
+/** How far the layer has been applied: 0 the input plane, 1 after W, 2 after W and the shift by b. */
+type LayerStage = '0' | '1' | '2'
+
+const layerOptions = [
+  { value: '0', label: '$\\mathbf{x}$' },
+  { value: '1', label: '$W\\mathbf{x}$' },
+  { value: '2', label: '$W\\mathbf{x} + \\mathbf{b}$' },
+] as const
+
+/** The layer applied up to `phase`: the plane slides to W p, then shifts by b. */
+const layerAt = (p: Vec2, phase: number): Vec2 =>
+  phase <= 1 ? lerpVec(p, apply(W2, p), phase) : add(apply(W2, p), scale(B, phase - 1))
+
 const xy = numbersCodec(['x', 'y'])
 const xyz = numbersCodec(['a', 'b', 'c'])
 
@@ -112,6 +126,7 @@ export default function MatrixVectorProduct() {
   const [xp, setXp] = useVizParam('x', { x: 1.5, y: 1 }, xy)
   const [x3, setX3] = useVizParam('x3', { a: 1, b: 1, c: 1 }, xyz)
   const [m, setM] = useState<Mat2>(id === 'identity' ? identity : A)
+  const [phase, setPhase] = useState(2)
   const seq = useSequence()
 
   const x: Vec2 = [xp.x, xp.y]
@@ -150,8 +165,25 @@ export default function MatrixVectorProduct() {
     },
     identity: (run) => goTo(run, [1.5, 1], identity),
     dot: () => setXp({ x: STUDENT[0], y: STUDENT[1] }),
-    layer: () => setXp({ x: STUDENT[0], y: STUDENT[1] }),
+    layer: () => {
+      setXp({ x: STUDENT[0], y: STUDENT[1] })
+      setPhase(0)
+      void seq.run(async ({ tween, wait }) => {
+        await wait(0.6)
+        await tween(0, 1, { duration: 1.6, onUpdate: setPhase })
+        await wait(0.6)
+        await tween(1, 2, { duration: 1.2, onUpdate: setPhase })
+      })
+    },
   })
+
+  const toStage = (next: LayerStage) => {
+    const from = phase
+    void seq.run(({ tween }) =>
+      tween(from, +next, { duration: Math.max(0.6, Math.abs(+next - from)), onUpdate: setPhase }),
+    )
+  }
+  const layerStage = String(Math.round(phase)) as LayerStage
 
   const dragX = (p: Vec2) => {
     seq.cancel()
@@ -174,6 +206,8 @@ export default function MatrixVectorProduct() {
   const wx = dot(W, x)
   const Wx = apply(W2, x)
   const out = add(Wx, B)
+  const shown = Math.min(phase, 1)
+  const shift = Math.max(phase - 1, 0)
 
   const panel = () => {
     switch (scene) {
@@ -291,7 +325,7 @@ export default function MatrixVectorProduct() {
       >
         <Grid />
         {scene === 'layer' ? (
-          <WarpedGrid f={(p) => add(apply(W2, p), B)} reach={6} opacity={0.12} axisOpacity={0.5} />
+          <WarpedGrid f={(p) => layerAt(p, phase)} reach={6} opacity={0.14} axisOpacity={0.5} />
         ) : (
           <Axes
             formatX={scene === 'food' ? grams : undefined}
@@ -436,35 +470,60 @@ export default function MatrixVectorProduct() {
           <>
             <Vector to={x} color={X_COLOR} />
             <MathLabel at={x} tex="\mathbf{x}" color={X_COLOR} anchor="ne" offset={8} />
-            <Vector to={Wx} color={OUT_COLOR} width={2} opacity={0.5} />
-            <MathLabel at={Wx} tex="W\mathbf{x}" color={OUT_COLOR} anchor="e" offset={10} />
-            <Vector from={Wx} to={out} color={B_COLOR} width={2} />
-            <Vector to={out} color={OUT_COLOR} />
-            <MathLabel
-              at={out}
-              tex="W\mathbf{x} + \mathbf{b}"
-              color={OUT_COLOR}
-              anchor="nw"
-              offset={8}
-            />
+            {phase > 0.02 && (
+              <>
+                <Vector to={layerAt(x, shown)} color={OUT_COLOR} width={2} opacity={0.5} />
+                <MathLabel
+                  at={layerAt(x, shown)}
+                  tex="W\mathbf{x}"
+                  color={OUT_COLOR}
+                  anchor="e"
+                  offset={10}
+                  opacity={shown}
+                />
+              </>
+            )}
+            {shift > 0.02 && (
+              <>
+                <Vector from={Wx} to={layerAt(x, phase)} color={B_COLOR} width={2} />
+                <Vector to={layerAt(x, phase)} color={OUT_COLOR} />
+                <MathLabel
+                  at={layerAt(x, phase)}
+                  tex="W\mathbf{x} + \mathbf{b}"
+                  color={OUT_COLOR}
+                  anchor="nw"
+                  offset={8}
+                  opacity={shift}
+                />
+                <Vector to={scale(B, shift)} color={B_COLOR} />
+                <Point at={scale(B, shift)} color={B_COLOR} r={4} coords={false} />
+                <MathLabel
+                  at={scale(B, shift)}
+                  tex="W\mathbf{0} + \mathbf{b} = \mathbf{b}"
+                  color={B_COLOR}
+                  anchor="s"
+                  offset={10}
+                  opacity={shift}
+                />
+              </>
+            )}
             <Point at={[0, 0]} color={vc.fg} hollow r={5} coords={false} />
             <MathLabel at={[0, 0]} tex="\mathbf{0}" anchor="ne" offset={8} />
-            <Vector to={B} color={B_COLOR} />
-            <Point at={B} color={B_COLOR} r={4} coords={false} />
-            <MathLabel
-              at={B}
-              tex="W\mathbf{0} + \mathbf{b} = \mathbf{b}"
-              color={B_COLOR}
-              anchor="s"
-              offset={10}
-            />
             <Point at={x} color={X_COLOR} onDrag={dragX} label="Tip of x" />
           </>
         )}
       </Stage>
 
-      {(scene === 'food' || scene === 'shapes') && (
+      {(scene === 'food' || scene === 'shapes' || scene === 'layer') && (
         <VizControls>
+          {scene === 'layer' && (
+            <SegmentedControl
+              label="Apply the layer up to"
+              value={layerStage}
+              onChange={toStage}
+              options={layerOptions}
+            />
+          )}
           {scene === 'food' &&
             (['x', 'y'] as const).map((k, j) => (
               <LabeledSlider

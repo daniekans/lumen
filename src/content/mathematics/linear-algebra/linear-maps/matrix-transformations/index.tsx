@@ -26,8 +26,6 @@ import {
   useAnimatedValue,
   useSequence,
   useStepEffect,
-  useStepStart,
-  type StepRun,
   useVizStep,
   Vector,
   VizControls,
@@ -93,14 +91,33 @@ export default function MatrixTransformations() {
   const xOpacity = useAnimatedValue(showX ? 1 : 0, { duration: 0.5 })
   const letterOpacity = useAnimatedValue(showLetter ? 1 : 0, { duration: 0.5 })
 
-  const start = useStepStart(m)
-  /** Animates to `target`; in a step handler, pass `run` so a replay starts where the step began. */
-  const animateTo = (target: Mat2, duration = 1.4, run?: StepRun) => {
-    const from = run ? start(run) : m
-    if (run && sameMat(from, target)) return setM(target)
+  /** Animates from the current matrix to `target`. */
+  const animateTo = (target: Mat2, duration = 1.4) => {
+    const from = m
     return seq.run(({ tween }) =>
       tween(0, 1, { duration, onUpdate: (t) => setM(lerpMat(from, target, t)) }),
     )
+  }
+
+  /**
+   * A step's animation: back to the plain grid first when the plane has moved, then to each target
+   * in turn. A replay, after Reset or a drag, so always shows the same transition.
+   */
+  const play = (...targets: Mat2[]) => {
+    const from = m
+    void seq.run(async ({ tween, wait }) => {
+      if (!isIdentity(from)) {
+        await tween(0, 1, { duration: 0.9, onUpdate: (t) => setM(lerpMat(from, identity, t)) })
+        if (targets.length) await wait(0.4)
+      }
+      let cur = identity
+      for (const [k, target] of targets.entries()) {
+        const a = cur
+        if (k) await wait(0.3)
+        await tween(0, 1, { duration: 1.3, onUpdate: (t) => setM(lerpMat(a, target, t)) })
+        cur = target
+      }
+    })
   }
 
   const choosePreset = (p: Preset) => {
@@ -120,49 +137,36 @@ export default function MatrixTransformations() {
   }
 
   useStepEffect({
-    basis: (run) => {
+    basis: () => {
       setPreset('custom')
       show(true, false)
-      animateTo(identity, 1, run)
+      play()
     },
-    columns: (run) => {
+    columns: () => {
       setPreset('custom')
       show(true, false)
-      animateTo(mat2(1.5, -0.5, 0.5, 1), undefined, run)
+      play(mat2(1.5, -0.5, 0.5, 1))
     },
-    read: (run) => {
+    read: () => {
       setPreset('custom')
       show(false, false)
-      animateTo(READ, undefined, run)
+      play(READ)
     },
-    draw: (run) => {
+    draw: () => {
       setPreset('custom')
       show(false, false)
       // One column at a time: first i-hat moves, then j-hat.
-      const from = start(run)
-      const half: Mat2 = { i: DRAW.i, j: from.j }
-      void seq.run(async ({ tween, wait }) => {
-        await tween(0, 1, { duration: 1.1, onUpdate: (t) => setM(lerpMat(from, half, t)) })
-        await wait(0.3)
-        await tween(0, 1, { duration: 1.1, onUpdate: (t) => setM(lerpMat(half, DRAW, t)) })
-      })
+      play({ i: DRAW.i, j: identity.j }, DRAW)
     },
-    italic: (run) => {
+    italic: () => {
       setPreset('custom')
       show(false, true)
-      const from = start(run)
-      void seq.run(async ({ tween, wait }) => {
-        if (!isIdentity(from)) {
-          await tween(0, 1, { duration: 1, onUpdate: (t) => setM(lerpMat(from, identity, t)) })
-          await wait(0.4)
-        }
-        await tween(0, 1, { duration: 1.4, onUpdate: (t) => setM(lerpMat(identity, ITALIC, t)) })
-      })
+      play(ITALIC)
     },
-    presets: (run) => {
+    presets: () => {
       setPreset('rotate')
       show(false, true)
-      animateTo(presets.rotate, undefined, run)
+      play(presets.rotate)
     },
   })
 

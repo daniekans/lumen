@@ -93,7 +93,7 @@ export const meta = defineItem({
       id: 'layer',
       title: 'A layer of a neural network',
       caption:
-        "Several scores at once: each row of $W$ is one neuron's weights, and $\\mathbf{b}$ adds a constant to each. $W\\mathbf{x} + \\mathbf{b}$ is a linear map followed by a shift, so the origin lands on $\\mathbf{b}$: the map is affine, not linear.",
+        "Several scores at once: each row of $W$ is one neuron's weights, and $\\mathbf{b}$ adds a constant to each. $W\\mathbf{x} + \\mathbf{b}$ is a linear map followed by a shift: the grid first moves by $W$ and keeps the origin, then slides by $\\mathbf{b}$, so the origin lands on $\\mathbf{b}$. The map is affine, not linear. Pick a stage to compare.",
       check: {
         kind: 'choice',
         prompt:

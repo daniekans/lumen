@@ -28,11 +28,11 @@ const IN_COLOR = vc.blue
 const OUT_COLOR = vc.teal
 const FAIL_COLOR = vc.red
 
-type MapKind = 'linear' | 'shift' | 'bend' | 'collapse'
+type MapKind = 'identity' | 'linear' | 'shift' | 'bend' | 'collapse'
 type Rule = 'sum' | 'scale'
 
-/** The maps of the item. `identity` is where a morph starts; it is never offered as a choice. */
-const maps: Record<MapKind | 'identity', (p: Vec2) => Vec2> = {
+/** The maps of the item. `identity` leaves the plane as it is, for comparison. */
+const maps: Record<MapKind, (p: Vec2) => Vec2> = {
   identity: (p) => p,
   linear: ([x, y]) => [x - y, 0.5 * x + y],
   shift: ([x, y]) => [x + 0.5, y + 1.5],
@@ -42,6 +42,7 @@ const maps: Record<MapKind | 'identity', (p: Vec2) => Vec2> = {
 }
 
 const formulas: Record<MapKind, string> = {
+  identity: '(x,\\ y)',
   linear: '(x - y,\\ 0.5x + y)',
   shift: '(x + 0.5,\\ y + 1.5)',
   bend: '(x,\\ y + \\tfrac{x^2}{4})',
@@ -49,6 +50,7 @@ const formulas: Record<MapKind, string> = {
 }
 
 const mapOptions = [
+  { value: 'identity', label: 'None' },
   { value: 'linear', label: 'Linear' },
   { value: 'shift', label: 'Shift' },
   { value: 'bend', label: 'Bend' },
@@ -80,7 +82,7 @@ export default function LinearMaps() {
   const [vp, setVp] = useVizParam('v', { x: V[0], y: V[1] }, xy)
   const [c, setC] = useVizParam<number>('c', 2)
   // The drawn map blends from `prev` to `kind` as t goes from 0 to 1.
-  const [prev, setPrev] = useState<MapKind | 'identity'>('identity')
+  const [prev, setPrev] = useState<MapKind>('identity')
   const [t, setT] = useState(1)
   const seq = useSequence()
 
@@ -90,11 +92,7 @@ export default function LinearMaps() {
 
   const start = useStepStart({ kind, c })
   /** Morphs the drawn map from `from` to `to`; with no change, sets it without a sequence. */
-  const morph = (
-    from: MapKind | 'identity',
-    to: MapKind,
-    then?: (ctx: SequenceContext) => Promise<void>,
-  ) => {
+  const morph = (from: MapKind, to: MapKind, then?: (ctx: SequenceContext) => Promise<void>) => {
     setKind(to)
     if (from === to && !then) {
       setPrev(to)
