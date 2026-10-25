@@ -35,7 +35,7 @@ export const unit = defineUnit({
       title: 'Increment',
       tex: '\\Delta x,\\ \\Delta y',
       summary:
-        'A change in a variable: $\\Delta x = x - a$, and the change in output it causes, $\\Delta y = f(x) - f(a)$ (or $f(x) - L$ near a hole). Leibniz notation $dx$ and $dy$ grows out of these.',
+        'A change in a variable: $\\Delta x = x - a$, and the change in output it causes, $\\Delta y = f(x) - f(a)$. The limit of their ratio is written $\\frac{dy}{dx}$.',
       introducedIn: 'approaching-a-value',
     },
     {
@@ -73,7 +73,7 @@ export const unit = defineUnit({
       id: 'direct-substitution',
       title: 'Direct substitution',
       summary:
-        'For polynomials, and for rational, root, exponential and trigonometric functions where they are defined, the limit at $a$ is $f(a)$. Plug in first; only a failure calls for algebra.',
+        'For polynomials, and for rational, root, exponential and trigonometric functions at points inside their domains (defined on both sides), the limit at $a$ is $f(a)$. Plug in first; only a failure calls for algebra.',
       introducedIn: 'limit-laws',
     },
     {

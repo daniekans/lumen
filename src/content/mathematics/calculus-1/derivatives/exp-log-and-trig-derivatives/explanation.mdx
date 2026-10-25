@@ -119,6 +119,19 @@ $$
 The step <StepLink step="log">$\ln x$ by reflection</StepLink> shows both tangents. Where $e^x$ is
 steep, $\ln x$ is flat. A later item turns this picture into a rule for every inverse function.
 
+## Two descriptions of $e$ agree
+
+The Limits unit met $e$ twice: as the base whose slope at $0$ is $1$, and as the limit of
+$(1 + t)^{1/t}$ as $t \to 0$, the compound interest limit. The slope of $\ln$ at $1$ shows that
+they are the same number. That slope is $\frac{1}{1} = 1$, so
+
+$$
+\frac{\ln(1 + t)}{t} = \frac{\ln(1 + t) - \ln 1}{t} \to 1 \qquad (t \to 0).
+$$
+
+Since $(1 + t)^{1/t} = e^{\ln(1 + t)/t}$ and $e^x$ is continuous at $1$, the limit passes inside:
+$(1 + t)^{1/t} \to e^1 = e$.
+
 ## Every real exponent
 
 For $x > 0$ and a real number $r$, $x^r = e^{r \ln x}$. Factor out $x^r$ and put $u = \frac{h}{x}$:

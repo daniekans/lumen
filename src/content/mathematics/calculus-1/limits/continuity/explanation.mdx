@@ -20,8 +20,16 @@ That one equation holds three conditions, checked in <StepLink step="definition"
 A function is continuous on an interval when it is continuous at every point of it (at an
 endpoint, with the one-sided limit from inside). Polynomials are continuous everywhere; rational,
 root, exponential, logarithmic and trigonometric functions are continuous wherever they are
-defined. By the <Term id="limit-laws">limit laws</Term>, sums, products, quotients (where the
-denominator is not $0$) and compositions of continuous functions are continuous.
+defined. By the <Term id="limit-laws">limit laws</Term>, sums, products and quotients (where the
+denominator is not $0$) of continuous functions are continuous. So are compositions: if $g$ is
+continuous at $a$ and $f$ is continuous at $g(a)$, then
+
+$$
+\lim_{x \to a} f(g(x)) = f\left(\lim_{x \to a} g(x)\right) = f(g(a)),
+$$
+
+the composition rule of the Limit laws lesson with its condition named. More generally the
+limit passes inside $f$ whenever $\lim g = b$ exists and $f$ is continuous at $b$.
 
 ## Kinds of discontinuity
 
@@ -33,6 +41,11 @@ Each failed condition gives a different picture, as in <StepLink step="discontin
 | jump        | a piecewise function that steps        | the one-sided limits differ                                     |
 | infinite    | $2 + \frac{1}{x - 1}$                  | the values grow without bound                                   |
 | oscillating | $2 + \sin\frac{1}{x - 1}$              | the values never settle                                         |
+
+The infinite example is continuous wherever it is defined, since $1$ is not in its domain. Calling
+$1$ an infinite discontinuity names the break in the graph there: the first condition fails, and
+the values blow up on both sides. The two statements describe the same function, one on its
+domain and one at a point outside it.
 
 A removable discontinuity is the mild one: redefine $f(a)$ as the limit and the function becomes
 continuous. That is how $\frac{\sin x}{x}$ with the value $1$ at $0$ becomes continuous

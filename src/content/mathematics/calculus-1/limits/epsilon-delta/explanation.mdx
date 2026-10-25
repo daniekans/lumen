@@ -21,6 +21,15 @@ $\varepsilon$, as small as they like. You answer with a window $\delta$. You win
 $x$ in the window has its output in the band. The limit is $L$ when you can win every round. This
 is the <Term id="epsilon-delta">epsilon-delta definition</Term>, due to Cauchy and Weierstrass.
 
+The game is how tolerances work in a workshop. A machine cuts square plates whose area should be
+$4\ \text{cm}^2$, so the side should be $2$ cm. The customer accepts an area error below
+$\varepsilon = 0.1\ \text{cm}^2$. How precisely must the side be cut? The area $s^2$ stays within
+$0.1$ of $4$ when $s$ is between $\sqrt{3.9} \approx 1.97484$ and $\sqrt{4.1} \approx 2.02485$, so
+the machinist needs $|s - 2| < \delta$ with $\delta = \sqrt{4.1} - 2 \approx 0.0248$ cm, the
+nearer of the two ends. A stricter customer, $\varepsilon = 0.01$, forces $\delta \approx 0.0025$
+cm. That the area tends to $4$ as $s \to 2$ means exactly this: every tolerance on the area can
+be met by some precision on the side.
+
 Three things follow from the wording:
 
 - $\delta$ depends on $\varepsilon$. Smaller tolerances usually need smaller windows, so a proof

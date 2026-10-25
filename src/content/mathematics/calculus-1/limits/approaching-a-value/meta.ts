@@ -32,7 +32,7 @@ export const meta = defineItem({
       id: 'increments',
       title: 'Increments $\\Delta x$ and $\\Delta y$',
       caption:
-        'Write the step away from $1$ as $\\Delta x$ and the change in output as $\\Delta y = f(x) - 3$. Both shrink to $0$, but their ratio $\\frac{\\Delta y}{\\Delta x} = 3 + \\Delta x$ approaches $3$, the slope at the hole. Its limit will be written $\\frac{dy}{dx}$.',
+        'Fill the hole with $g(x) = x^2 + x + 1$, so $g(1) = 3$. Write the step away from $1$ as $\\Delta x$ and the change in output as $\\Delta y = g(x) - g(1)$. Both shrink to $0$, but their ratio $\\frac{\\Delta y}{\\Delta x} = 3 + \\Delta x$ approaches $3$, the slope of the curve at $x = 1$. That limit will be written $\\frac{dy}{dx}$.',
     },
   ],
 })

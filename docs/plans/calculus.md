@@ -213,7 +213,7 @@ infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decim
 fractions), so their answers are chosen to be short decimals. Infinite limits in practice are
 multiple choice ($\infty$, $-\infty$, $0$, does not exist).
 
-### Revision after the self-review (2026-10-24, planned)
+### Revision after the self-review (2026-10-24; items 1 to 5 and 7 done, 6 next)
 
 A review of the whole unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All
 items match the plan and the numbers in the text are right; these need fixing:
@@ -259,6 +259,24 @@ items match the plan and the numbers in the text are right; these need fixing:
    100% compounded $n$ times, $(1 + \frac{r}{n})^n \to e^r$); machining tolerance as the meaning of
    the $\varepsilon$-$\delta$ game; the cost of removing $p\%$ of a pollutant,
    $C = \frac{kp}{100 - p} \to \infty$ as $p \to 100^-$, in `one-sided-and-infinite`.
+
+Items 1 to 5 and 7 built on 2026-10-24, in the explanations (no new steps): item 1's increments
+step fills the hole with $g(x) = x^2 + x + 1$ and its explanation gains a falling-stone speed
+table; `limit-laws` gains "Compositions and a change of variable" (substitution works at $b$,
+then the change of variable with $u \neq b$, the dummy variable) plus the conditions of item 4;
+`continuity` states the composition rule with continuity at $b$ and reconciles the infinite
+example; the squeeze item has the compound interest table, the real-variable squeeze for
+$(1 + \frac{1}{x})^x$, and points to a new section in Derivatives `exp-log-and-trig-derivatives`
+("Two descriptions of $e$ agree", by $\frac{\ln(1 + t)}{t} \to 1$); the pollutant cost and the
+machined plate (area tolerance $0.1\ \text{cm}^2$) are paragraphs with numbers. The generators
+`sin-limit`, `exp-limit` and `compound-limit` state the change-of-variable condition and the real
+variable. MDX pitfall: a `\$` for dollars breaks MDX math parsing (`n is not defined`); write
+"dollars" in words.
+
+**Next: item 6** (practice depth), one batch: the new generators listed there, a `reading-limits`
+generator (a limit read from a described graph or a table), and one or two multi-step checkpoint
+problems; consider a pollutant or tolerance generator for the real scenarios. Then the unit is
+done again, pending the owner's review.
 
 ## Derivatives unit plan
 
@@ -309,7 +327,7 @@ tangent segments, vertical ones included.
 | 13  | practice-implicit-and-related | practice   | implicit-differentiation, related-rates             | Implicit slopes, inverse derivatives, related rates                                                                                                                                                          | done   |
 | 14  | checkpoint                    | checkpoint | all                                                 | Rebuilt for the whole unit, plus a self-graded proof                                                                                                                                                         | done   |
 
-### Revision after the batch 3 review (done 2026-10-24)
+### Revision after the batch 3 review (done and approved 2026-10-24)
 
 The owner approved batch 3's visualizations on 2026-10-24 and asked for more real-world
 scenarios where they add value, motion (position, velocity, time), and the choice of variable in
@@ -353,5 +371,5 @@ step `in-y` and generator `dx-dy` (a third of the problems at a vertical tangent
 cars start apart (B 7 km north when A leaves), since two cars leaving together give a constant
 $\frac{dD}{dt}$; generators `shadow` and `two-cars`; the checkpoint swaps `ladder` for
 `two-cars`. Item 7's growth paragraph uses $e^{kt} = (e^k)^t$, since the chain rule comes later.
-`Axes` gained `formatX` for scaled time axes. The unit is done, pending the owner's review of
-the revision.
+`Axes` gained `formatX` for scaled time axes. The owner approved the revision on 2026-10-24;
+the unit is done.

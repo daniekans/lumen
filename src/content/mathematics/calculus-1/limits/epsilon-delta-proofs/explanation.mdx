@@ -76,8 +76,13 @@ it must hold for every $L$.
 > are in the window, and $2 = |f(x_2) - f(x_1)| \le |f(x_2) - L| + |L - f(x_1)|$. So one of the two
 > distances is at least $1 = \varepsilon$, and no $\delta$ works. There is no limit.
 
-In general, a jump of size $J$ is beaten by any $\varepsilon \le \frac{J}{2}$
-(<StepLink step="no-limit">the last step</StepLink>).
+In general, a jump of size $J$ (the gap between the one-sided limits) is beaten by any
+$\varepsilon < \frac{J}{2}$ (<StepLink step="no-limit">the last step</StepLink>). The inequality
+is strict. With $\varepsilon = \frac{J}{2}$ the proof above works only because $f$ takes the values
+$-1$ and $1$ themselves. If instead $f(x) = -x$ left of $0$ and $1 - x$ right of it, the values
+approach $0$ and $1$ from inside the gap, and $L = \frac{1}{2}$ keeps every one of them strictly
+within $\frac{1}{2}$ of $L$. Then $\varepsilon = \frac{1}{2}$ loses, while every smaller
+$\varepsilon$ wins.
 
 ## A pattern for proofs
 

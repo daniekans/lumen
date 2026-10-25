@@ -50,7 +50,8 @@ For negative $x$ the quotient is the same as at $-x$, so the limit is two-sided.
 area is $\frac{x}{2}$ only when $x$ is in radians; in degrees the limit would be
 $\frac{\pi}{180}$. This limit is why calculus measures angles in radians, and it gives
 $\sin' = \cos$ in the Derivatives unit. Related limits follow from it, for example
-$\lim_{x \to 0} \frac{\sin 3x}{x} = 3 \lim_{u \to 0} \frac{\sin u}{u} = 3$ with $u = 3x$.
+$\lim_{x \to 0} \frac{\sin 3x}{x} = 3 \lim_{u \to 0} \frac{\sin u}{u} = 3$ with $u = 3x$, a change
+of variable as in the Limit laws lesson ($u \to 0$, and $u \neq 0$ for $x \neq 0$).
 
 ## The slope of e^x at 0
 
@@ -67,16 +68,32 @@ limit, in the Derivatives unit.
 
 ## (1 + 1/n)^n
 
-The compound interest formula gives the third limit:
+Put 1 dollar in an account that pays 100% interest a year. Paid once, it becomes 2 dollars. Paid twice, 50%
+each half year, it becomes $1.5^2 = 2.25$ dollars. Paid $n$ times, $\frac{100}{n}\%$ each time, it becomes
+$\left(1 + \frac{1}{n}\right)^n$ dollars:
+
+| $n$                              | $1$ | $2$    | $4$      | $12$     | $365$    |
+| -------------------------------- | --- | ------ | -------- | -------- | -------- |
+| $\left(1 + \frac{1}{n}\right)^n$ | $2$ | $2.25$ | $2.4414$ | $2.6130$ | $2.7146$ |
+
+More payments help less and less, and the amount levels off. That is the third limit:
 
 $$
 \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e \approx 2.71828.
 $$
 
+It is the same $e$ as above, the base whose slope at $0$ is $1$; the Derivatives unit proves that
+the two descriptions agree.
+
 The base tends to $1$ and the exponent to $\infty$, and the two effects balance: $1^\infty$ is an <Term id="indeterminate-form">indeterminate form</Term>, like $\frac{0}{0}$. With $t = \frac{1}{n}$
 the same limit reads $\lim_{t \to 0} (1 + t)^{1/t} = e$, which is
 how <StepLink step="compound">the last step</StepLink> draws it. From either side the values approach
-$e$; at $n = 50$ the gap is still about $0.027$. The more general form is
-$\lim_{n \to \infty} \left(1 + \frac{a}{n}\right)^n = e^a$.
+$e$; at $n = 50$ the gap is still about $0.027$. The limit also holds for a real variable
+$x \to \infty$ in place of the whole number $n$: for $n \le x < n + 1$,
+$\left(1 + \frac{1}{n + 1}\right)^n \le \left(1 + \frac{1}{x}\right)^x \le \left(1 + \frac{1}{n}\right)^{n + 1}$,
+and both bounds tend to $e$, so the squeeze theorem applies once more. The more general form is
+$\lim_{x \to \infty} \left(1 + \frac{a}{x}\right)^x = e^a$: with a yearly rate $r$ compounded $n$
+times, 1 dollar grows to $\left(1 + \frac{r}{n}\right)^n$, which tends to $e^r$, the amount under
+continuous compounding.
 
 Next: continuity, which turns "the limit equals the value" into a definition.

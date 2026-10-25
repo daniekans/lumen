@@ -129,6 +129,12 @@ export default function ApproachingAValue() {
             {id === 'increments' && (
               <ReadoutPanel title="Increments">
                 <Readout
+                  label="$g(x)$"
+                  value={<Tex>{'x^2 + x + 1'}</Tex>}
+                  color={vc.blue}
+                  hint="Equal to $f(x)$ for every $x \neq 1$, with $g(1) = 3$: the curve with its hole filled."
+                />
+                <Readout
                   label="$\Delta x$"
                   value={fmt(dx, 3)}
                   color={vc.yellow}
@@ -138,12 +144,12 @@ export default function ApproachingAValue() {
                   label="$\Delta y$"
                   value={fmt(dy, 4)}
                   color={vc.teal}
-                  hint="The change in output: $\Delta y = f(x) - 3 = 3\Delta x + \Delta x^2$."
+                  hint="The change in output along the filled-in curve: $\Delta y = g(x) - g(1) = 3\Delta x + \Delta x^2$."
                 />
                 <Readout
                   label="$\frac{\Delta y}{\Delta x}$"
                   value={fmt(dy / dx, 4)}
-                  hint="Rise over run from the hole to $P$: $3 + \Delta x$, which approaches $3$."
+                  hint="Rise over run from $(1, 3)$ to $P$: $3 + \Delta x$, which approaches $3$."
                 />
               </ReadoutPanel>
             )}
@@ -154,7 +160,7 @@ export default function ApproachingAValue() {
         <Axes />
         <Segment from={[outX, L]} to={[A, L]} color={vc.teal} width={1.25} dash="4 5" />
         <FunctionPlot f={f} breaks={[A]} color={vc.blue} />
-        <Point at={[A, L]} color={vc.blue} hollow coords={false} />
+        <Point at={[A, L]} color={vc.blue} hollow={id !== 'increments'} coords={false} />
 
         {twoInputs &&
           [

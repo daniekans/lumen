@@ -173,7 +173,7 @@ export const problems = defineProblems([
             : variant === 1
               ? `$\\frac{\\sin ${kx(a)}}{\\sin ${kx(b)}} = \\frac{\\sin ${kx(a)}}{${kx(a)}} \\cdot \\frac{${kx(b)}}{\\sin ${kx(b)}} \\cdot \\frac{${a}}{${b}}$.`
               : `$\\tan ${kx(a)} = \\frac{\\sin ${kx(a)}}{\\cos ${kx(a)}}$, so $\\frac{\\tan ${kx(a)}}{${kx(b)}} = \\frac{${a}}{${b}} \\cdot \\frac{\\sin ${kx(a)}}{${kx(a)}} \\cdot \\frac{1}{\\cos ${kx(a)}}$.`,
-          `Each quotient of a sine and its argument tends to $1$${variant === 2 ? ', and $\\cos 0 = 1$' : ''}, so the limit is $${value}$.`,
+          `Each quotient of a sine and its argument tends to $1$, since each argument tends to $0$ and is not $0$ for $x \\neq 0$${variant === 2 ? '. Also $\\cos 0 = 1$' : ''}. So the limit is $${value}$.`,
         ],
         data: { a, b, variant },
       }
@@ -194,7 +194,7 @@ export const problems = defineProblems([
         hints: ['Use $\\lim_{u \\to 0} \\frac{e^u - 1}{u} = 1$.', `Let $u = ${exponent}$.`],
         solution: [
           `$\\frac{e^{${exponent}} - 1}{${kx(b)}} = \\frac{${a}}{${b}} \\cdot \\frac{e^{${exponent}} - 1}{${exponent}}$.`,
-          `With $u = ${exponent} \\to 0$ the second factor tends to $1$, so the limit is $${frac(a, b)}$.`,
+          `With $u = ${exponent}$, $u \\to 0$ and $u \\neq 0$ for $x \\neq 0$, so the second factor tends to $1$ and the limit is $${frac(a, b)}$.`,
         ],
         data: { a, b },
       }
@@ -215,7 +215,7 @@ export const problems = defineProblems([
         prompt: `Find $${lim('\\infty')} \\left(${inside}\\right)^{${exponent}}$. Exact forms such as $e^{2}$ are accepted.`,
         answer: { kind: 'number', value: Math.exp(a * b), tolerance: 1e-5 },
         hints: [
-          'Use $\\lim_{n \\to \\infty} \\left(1 + \\frac{a}{n}\\right)^n = e^a$.',
+          'Use $\\lim_{x \\to \\infty} \\left(1 + \\frac{a}{x}\\right)^x = e^a$, which holds for real $x$, not only whole numbers.',
           b === 1
             ? 'The exponent is already $x$.'
             : `Write the power as $\\left(\\left(${inside}\\right)^{x}\\right)^{${b}}$.`,

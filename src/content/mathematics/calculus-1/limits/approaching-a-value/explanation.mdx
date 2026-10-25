@@ -41,22 +41,40 @@ the subject of a later item.
 
 ## Increments
 
-Name the step away from $a$ and the change it causes:
+To measure steps near the point, fill the hole: $g(x) = x^2 + x + 1$ equals $f(x)$ for every
+$x \neq 1$, and $g(1) = 3$. Name the step away from $1$ and the change it causes along $g$:
 
 $$
-\Delta x = x - 1, \qquad \Delta y = f(x) - 3.
+\Delta x = x - 1, \qquad \Delta y = g(x) - g(1).
 $$
 
 These are <Term id="increment">increments</Term> ($\Delta$ is a capital delta, for "difference").
-As $\Delta x \to 0$, $\Delta y \to 0$ as well; that is what $\lim_{x \to 1} f(x) = 3$ says. Their
-ratio does not vanish:
+As $\Delta x \to 0$, $\Delta y \to 0$ as well; near $x = 1$ that is what $\lim_{x \to 1} f(x) = 3$
+says. Their ratio does not vanish:
 
 $$
 \frac{\Delta y}{\Delta x} = \frac{(1 + \Delta x)^2 + (1 + \Delta x) + 1 - 3}{\Delta x} = 3 + \Delta x \to 3.
 $$
 
-It is the slope from the hole to $P$, and its limit is the slope of the curve at $x = 1$. Leibniz
-wrote that limit as $\frac{dy}{dx}$: $dx$ and $dy$ are what the increments become in the limit.
-The Derivatives unit defines it properly.
+It is the slope from $(1, 3)$ to $P$, and its limit is the slope of the curve at $x = 1$. Leibniz
+wrote the limit of $\frac{\Delta y}{\Delta x}$ as $\frac{dy}{dx}$, with $d$ recalling the
+$\Delta$ it came from. For now $\frac{dy}{dx}$ is one symbol for that limit; the Derivatives unit
+defines it properly, and $dx$ and $dy$ get a meaning of their own in a later unit.
+
+## A limit you already know: speed
+
+A stone dropped from a cliff falls $s(t) = 4.9t^2$ meters in $t$ seconds. Its average speed from
+$t = 2$ to $t = 2 + \Delta t$ is distance over time,
+$\frac{\Delta s}{\Delta t} = \frac{4.9(2 + \Delta t)^2 - 4.9 \cdot 4}{\Delta t} = 19.6 + 4.9\,\Delta t$
+meters per second:
+
+| $\Delta t$ (s)                    | $1$    | $0.1$   | $0.01$   | $0.001$   |
+| --------------------------------- | ------ | ------- | -------- | --------- |
+| $\frac{\Delta s}{\Delta t}$ (m/s) | $24.5$ | $20.09$ | $19.649$ | $19.6049$ |
+
+At $\Delta t = 0$ the quotient is $\frac{0}{0}$, a trip of no length in no time. The averages
+still close in on $19.6$ m/s, the speed at the instant $t = 2$, which is what a speedometer shows.
+It is the same limit as above: a ratio of increments as the step shrinks. The Derivatives unit
+returns to it in the motion lesson.
 
 Next: limits that differ from the two sides, and limits that are infinite or taken at infinity.

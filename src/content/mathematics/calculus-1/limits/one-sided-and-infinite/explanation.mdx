@@ -36,6 +36,23 @@ vertical <Term id="asymptote">asymptote</Term>. With a square, $\frac{1}{(x - 2)
 and $\lim_{x \to 2} \frac{1}{(x - 2)^2} = \infty$. The sign test is the whole technique: a nonzero
 number over something tending to $0$ gives $\pm\infty$, and the signs on each side decide which.
 
+Some infinite limits come from one side only, because the other side has no meaning. A plant that
+removes $p$ percent of a pollutant from its waste water might pay, in thousands of dollars,
+
+$$
+C(p) = \frac{50p}{100 - p}, \qquad 0 \le p < 100.
+$$
+
+Removing $90\%$ costs $450$, $99\%$ costs $4950$, and $99.9\%$ costs $49\,950$. Each extra nine
+multiplies the cost by about ten, and
+
+$$
+\lim_{p \to 100^-} \frac{50p}{100 - p} = \infty:
+$$
+
+the last bit of pollutant is the most expensive, and removing all of it is out of reach at any
+price. The limit from the right is not asked, since $p$ cannot exceed $100$.
+
 ## Limits at infinity
 
 A <Term id="limit-at-infinity">limit at infinity</Term> lets $x$ grow without bound:
