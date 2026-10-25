@@ -84,6 +84,8 @@ with a short prompt the owner can paste into a clean session to continue (see `d
 - **Vitest caches transformed modules** in `node_modules/.vitest-cache`, keyed on file content, so
   an `import.meta.glob` in an unchanged file (the catalog registry) misses new content folders and
   `registry.test.ts` reports "introduced in unknown item". Delete that folder and rerun.
+- **A `\$` for dollars in MDX** breaks math parsing: a later `{n}` runs as JSX ("n is not
+  defined") and the explanation fails to render. Write "dollars" in words.
 - **Deep links on GitHub Pages return HTTP 404** with the app's `404.html`. That is expected.
 - **Duplicate React keys leave ghost shapes.** Points keyed by a computed value (`key={x}`) collide
   when two values coincide (roots at a slider's edge, two solution families meeting), and stale
