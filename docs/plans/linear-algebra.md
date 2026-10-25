@@ -7,8 +7,8 @@ Outline, threads and unit plans for Linear Algebra. Part of
 
 Outline approved by the owner on 2026-10-18, as drafted: eight units, the dot product in unit 1
 (revisited as duality in unit 7), and 3D from Vectors 6 on. The review decisions are at the end
-of the outline. Units are built in order; the Vectors unit (plan below) is done, and Linear maps and matrices
-comes next in the suggested order (it needs its unit plan first).
+of the outline. Units are built in order; the Vectors unit (plan below) is done, its revision approved on
+2026-10-25, and the Linear maps and matrices unit plan (below) is drafted for the owner's review.
 
 ## Depth and threads
 
@@ -275,8 +275,8 @@ vectors of space being a basis, or a third vector of the plane from the other tw
 teach), `normal-to-parametric` (a missing component of the point or a direction),
 `feature-vectors` (cosine of word counts in $\mathbb{R}^5$, distance of standardized houses in
 $\mathbb{R}^4$) and `proof-short` (the four proofs, one per problem). The checkpoint has 16
-problems with the new ones. Next: the owner's review of the whole revision. Item 6 waits for
-Linear maps and matrices.
+problems with the new ones. The owner approved the revision on 2026-10-25. Item 6 is done
+with batch 1 of Linear maps and matrices.
 
 **Depth and real scenarios:**
 
@@ -297,3 +297,114 @@ Linear maps and matrices.
    (multicollinearity) in `span-and-independence`; a classifier boundary
    $\mathbf{w} \cdot \mathbf{x} = b$ as a plane with normal $\mathbf{w}$, and $\mathbf{p} + t\mathbf{v}$ as
    motion at constant velocity, in `lines-and-planes`.
+
+## Linear maps and matrices unit plan
+
+Draft for the owner's review (2026-10-25). Folder `src/content/mathematics/linear-algebra/linear-maps/`
+(the legacy unit folder `linear-transformations/` renamed, with a redirect). Core unit, 12 items
+in three batches, as in the outline. The thread: a function of space is linear when it keeps
+linear combinations; then it is fixed by where the basis lands, and those images are the columns
+of its matrix; $A\mathbf{x}$ reads as a combination of columns or as row dot products; doing one
+map after another multiplies matrices; a map can lose a direction (kernel) and reach only part of
+the target (image). Colors as in Vectors: $\hat{\imath}$ and its image green, $\hat{\jmath}$ red
+(as `basis-and-coordinates`), the input $\mathbf{x}$ blue, the output $A\mathbf{x}$ teal; a
+second map in composition yellow.
+
+**Stated with conditions, never taken back.**
+
+- Definition: $T$ is linear when $T(\mathbf{u} + \mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v})$ and
+  $T(c\mathbf{v}) = cT(\mathbf{v})$ for all vectors and scalars. "Grid lines stay straight, parallel
+  and evenly spaced, the origin fixed" is the picture of that rule, not the definition, and it
+  holds as stated only for maps that do not collapse; a collapsing map sends lines to a line or to
+  a point, still evenly spaced along it. $T(\mathbf{0}) = \mathbf{0}$ follows (necessary, not
+  sufficient: $(x, y) \mapsto (x^2, y)$ fixes the origin and is not linear).
+- Matrices are introduced for maps $\mathbb{R}^n \to \mathbb{R}^m$ with the standard basis; a map in
+  another basis ($P^{-1}AP$) is unit 5, which adds a view, not a correction.
+- $W\mathbf{x} + \mathbf{b}$ is affine, not linear, when $\mathbf{b} \ne \mathbf{0}$: a linear map
+  followed by a shift. The extra coordinate $1$ (homogeneous coordinates) makes it linear one
+  dimension up; said once, used again in ML.
+- $AB \ne BA$ in general; some pairs commute (two rotations, a matrix and its powers, $I$).
+- Projection onto a line is the orthogonal one, $P = \frac{\mathbf{u}\mathbf{u}^T}{\mathbf{u} \cdot \mathbf{u}}$,
+  from Vectors 5 (scalar projection); an oblique shadow is also linear, named as such.
+- Transpose: defined as rows and columns swapped, with $(AB)^T = B^TA^T$ and
+  $\mathbf{x} \cdot (A\mathbf{y}) = (A^T\mathbf{x}) \cdot \mathbf{y}$ checked by computation. Its
+  geometric meaning waits for unit 7, which adds it.
+- Rank here is the dimension of the image, the same definition unit 4 computes by elimination.
+- Determinant: not in this unit. Gallery items say what a map does to areas (twice, half, the same,
+  flipped) from the picture; the number $\det A$ arrives in Determinants.
+
+**Threads.** Map (M): every item. Two pictures (P): item 3 introduces both readings of
+$A\mathbf{x}$, item 7 both readings of $AB$ (columns $A\mathbf{b}_j$, entries row times column),
+item 10 links the column picture to the image. Basis (B): item 2 reuses
+`basis-and-coordinates`; a matrix records where the basis goes. Duality seed (for unit 7): a $1 \times n$
+matrix is the linear map $\mathbf{x} \mapsto \mathbf{w} \cdot \mathbf{x}$ (item 3, one sentence,
+extending the Vectors 5 seed). ML: item 3 (a layer), item 7 (two layers without an activation
+are one matrix, so the activation is what adds power), item 10 (redundant features leave weights
+undetermined).
+
+Skills: `linear-maps` (is it linear, images from the images of a basis), `matrix-columns` (kept
+from the legacy unit: the matrix of a described or drawn map), `matrix-vector` (products, shapes,
+both pictures) (batch 1); `standard-maps` (rotation, reflection, shear, scaling, projection),
+`matrix-multiplication` (batch 2); `maps-in-3d`, `kernel-and-image` (batch 3). The legacy skill
+`determinant` leaves the unit with a redirect to the future Determinants unit, so progress is kept.
+
+Terms: `linear-transformation` (kept id, retitled "Linear map", definition by the two rules),
+`matrix` (an $m \times n$ table; columns as images), `matrix-vector-product`, `affine-map`,
+`identity-matrix`, `matrix-product`, `transpose`, `rotation-matrix`, `projection-matrix`, `kernel`,
+`image`, `rank`. The legacy `basis-vectors` merges into `standard-basis` (Vectors). `determinant`
+moves to Determinants with the skill.
+
+Practice needs a `matrix` answer kind: a grid of small MathLive fields whose shape the problem
+gives (checked entry by entry, with a per-entry issue code), since typing a `bmatrix` in one field
+is fiddly. Shape questions ("what size is $AB$?") ask for $m$ and $n$ as numbers. `src/lib/math`
+gets an $m \times n$ matrix module (`matN.ts`: product, transpose, power, rank by exact fractions)
+with tests; practice answers are verified with it and, independently, by applying the maps to
+vectors.
+
+| #   | Item                            | Kind       | Skills                                     | Content                                                                                                                                                                                                                                                               | Status |
+| --- | ------------------------------- | ---------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | linear-maps                     | explore    | linear-maps                                | A map moves every point; the two rules drawn (sum of images is image of sum, scaled likewise); grid stays straight, parallel, evenly spaced, origin fixed; maps that fail: a shift, a bend ($x^2$), $T(\mathbf{0}) \ne \mathbf{0}$; a collapse that is still linear   | draft  |
+| 2   | matrix-transformations (legacy) | explore    | matrix-columns, linear-maps                | Revised: $\mathbf{x} = x\hat{\imath} + y\hat{\jmath}$ so $T(\mathbf{x}) = xT(\hat{\imath}) + yT(\hat{\jmath})$; the columns; reading a matrix from a picture and drawing one from a matrix; presets; determinant steps removed                                        | draft  |
+| 3   | matrix-vector-product           | lesson     | matrix-vector                              | $A\mathbf{x}$ as a combination of columns and as row dot products, $m \times n$ shapes ($\mathbb{R}^n \to \mathbb{R}^m$), $I$, linearity of $A\mathbf{x}$ proved, a $1 \times n$ matrix as $\mathbf{w} \cdot \mathbf{x}$, a layer $W\mathbf{x} + \mathbf{b}$ (affine) | draft  |
+| 4   | practice-matrix-vector          | practice   | linear-maps, matrix-columns, matrix-vector | Products (2D, 3D, non-square), matrix from a described map, image from images of a basis, is this map linear (find the failing rule's witness), nutrients and store totals, a layer's output                                                                          | draft  |
+| 5   | gallery-of-maps                 | explore    | standard-maps                              | Rotation by $\theta$ (columns from the unit circle), reflection across a line, shear, scaling, projection onto a line; what each keeps (lengths, angles, areas, orientation) and loses                                                                                | draft  |
+| 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | draft  |
+| 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | draft  |
+| 8   | practice-matrix-products        | practice   | standard-maps, matrix-multiplication       | Products and shapes, powers of a rotation, composing described maps (rotate then reflect), matrices of standard maps, transposes, a product from a table join                                                                                                         | draft  |
+| 9   | maps-in-3d                      | explore    | maps-in-3d                                 | $3 \times 3$ maps on a 3D grid; rotations about the axes; non-square maps: $\mathbb{R}^3 \to \mathbb{R}^2$ (the stage's own orthographic camera) and $\mathbb{R}^2 \to \mathbb{R}^3$ (a sheet placed in space)                                                        | draft  |
+| 10  | kernel-and-image-preview        | explore    | kernel-and-image                           | What a map sends to $\mathbf{0}$ (a subspace) and what it reaches (the span of the columns); rank as the dimension of the image; collapse in 2D and 3D; inputs that differ by a kernel vector share an output                                                         | draft  |
+| 11  | practice-maps                   | practice   | maps-in-3d, kernel-and-image               | 3D rotation and projection matrices, kernel vectors (find one), image dimension (rank), is $\mathbf{b}$ reachable, short proofs (kernel and image are subspaces, $T(\mathbf{0}) = \mathbf{0}$)                                                                        | draft  |
+| 12  | checkpoint                      | checkpoint | all                                        | Problems from items 4, 8 and 11 plus a self-graded proof: a composition of linear maps is linear, so $AB$ is its matrix                                                                                                                                               | draft  |
+
+**Real scenarios** (only where they add meaning):
+
+- Item 1: unit conversion (meters to feet) is linear; Celsius to Fahrenheit, $F = 1.8C + 32$, is
+  not: doubling the temperature does not double it, the shift breaks both rules. Leads to "affine".
+- Item 2: italic type is a shear (upright letters slanted, baselines kept). Otherwise none.
+- Item 3: Vectors' food mix as a matrix: columns are foods A and B in (protein, carbs), $\mathbf{x}$
+  the servings; the column picture is the mix, the row picture computes each nutrient. A price
+  table times a basket gives one total per store. The exam score $\mathbf{w} \cdot \mathbf{x} + b$
+  from Vectors grows into several outputs, $W\mathbf{x} + \mathbf{b}$.
+- Item 5: a shadow at noon as projection onto the ground; a mirror; image rotation.
+- Item 6: photo editing: rotate then stretch differs from stretch then rotate.
+- Item 7: sales quantities (store by product) times prices and weights (product by measure) as SQL:
+  `JOIN` on product, `SUM(q * p)` grouped by store and measure; storing only nonzero entries as
+  (row, column, value) rows is how sparse matrices are kept (COO). Two layers without an
+  activation collapse to $W_2W_1$.
+- Item 9: an aircraft or drone yaw as a rotation about the vertical axis; the 3D stage itself draws
+  by a $2 \times 3$ projection.
+- Item 10: a shadow loses the light's direction (the kernel); a data table with a column equal to the
+  sum of two others (Vectors' multicollinearity): weights that differ by a kernel vector give the
+  same predictions, so the data cannot tell them apart.
+- Practice: nutrients, store totals, a layer's output, a join's totals; the rest is plain math.
+
+**Batches.** 1: items 1 to 4, with the folder rename and redirects, the legacy revision (and
+Vectors revision item 6), the `matrix` answer kind and `matN.ts`. 2: items 5 to 8. 3: items 9 to
+12 (3D). Each batch is one session.
+
+**Open questions for the review.**
+
+1. The `matrix` answer kind as a grid of fields with the shape given (recommended), or one MathLive
+   field with a `bmatrix` (shape is part of the answer, harder to type).
+2. The determinant leaves the legacy item now, so this unit names area effects only in words until
+   Determinants (next unit). The alternative keeps the legacy item's two determinant steps until then.
