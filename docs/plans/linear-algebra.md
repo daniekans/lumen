@@ -231,3 +231,52 @@ $\mathbf{x} = (-3, 2, 2)$, chosen because they read well from the home camera. `
 overlaps `standard-basis`: merge it when Linear maps and matrices is built. The checkpoint has 14
 problems (13 from the three practice sets and a self-graded proof that adding a vector outside the
 span keeps a set independent).
+
+### Revision after the self-review (2026-10-24, planned)
+
+A review of the unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All 11
+items match the plan and the rigor is mostly good; these need fixing. Do them before or together
+with batch 1 of Linear maps and matrices, since that unit revises `matrix-transformations`.
+
+**Correctness (take-backs), first:**
+
+1. `vectors/explanation.mdx:72` and `meta.ts:23` ("a length and a direction, nothing else")
+   clash with the zero vector and with vectors such as polynomials in Vector spaces: say "an
+   arrow in $\mathbb{R}^2$ or $\mathbb{R}^3$". The glossary entry (`unit.ts:48`) becomes "a vector in
+   $\mathbb{R}^n$ is an ordered list".
+2. `vector-algebra/explanation.mdx:37` ("anything that obeys these eight rules counts as a vector")
+   omits closure under addition and scaling.
+3. `linear-combinations/meta.ts:29` reads as if every point lies on the whole-number grid: say
+   every point has exactly one pair $(a, b)$, whole or not, and add the one-line reason
+   (the $2 \times 2$ system has a nonzero determinant) to the explanation.
+4. `lines-and-planes/explanation.mdx:159` states the converse of the normal form without proof:
+   if $\mathbf{x} - \mathbf{p} \perp \mathbf{n}$ but is off the plane, the three vectors span
+   $\mathbb{R}^3$, so $\mathbf{n} \perp \mathbf{n}$ and $\mathbf{n} = \mathbf{0}$.
+5. Wording: "only when" to "exactly when" (`dot-product/meta.ts:50`), "for nonzero vectors"
+   (`dot-product/meta.ts:38`), a nonzero vector spans a line (`span-and-independence/meta.ts:24`);
+   the "components share one ratio" solution text breaks with zero components
+   (`practice-dot-and-span/problems.ts` near 271, `practice-basis-and-coordinates/problems.ts:157`):
+   solve from a nonzero component, then check the rest.
+6. Legacy `matrix-transformations` (fix with Linear maps): a rotation does not change shapes
+   (`explanation.mdx:51`); the area factor is $|\det A|$, $\det A$ being signed (`meta.ts:34`);
+   basis colors to match `basis-and-coordinates`.
+
+**Depth and real scenarios:**
+
+7. The dot product as a weighted sum is missing, the main link to ML: in `dot-product`, a basket
+   total (quantities times prices, with units) and a linear score $\mathbf{w} \cdot \mathbf{x} + b$
+   (a neuron before its activation), which sets up $W\mathbf{x} + \mathbf{b}$ in unit 2. One
+   sentence seeds duality: $\mathbf{w} \mapsto \mathbf{v} \cdot \mathbf{w}$ is linear.
+8. Practice: replace yes/no answers (`independent`, `is-basis`, `in-span`) with weights, a
+   dependence relation or "find $k$ that makes them dependent"; plane problems that find a normal
+   from two directions and convert between parametric and normal form; one problem in
+   $\mathbb{R}^4$ or $\mathbb{R}^5$ (distance or cosine of feature vectors); short proofs in practice
+   (nonzero orthogonal vectors are independent, $\mathbf{u}$ orthogonal to a span, Pythagoras exactly
+   when $\mathbf{v} \cdot \mathbf{w} = 0$, a span is closed).
+9. Real scenarios: two foods as (protein, carbs) per serving in `linear-combinations` (real mixes
+   need weights $\ge 0$, one cone of the span); features in different units dominating a distance,
+   hence standardization (`vector-algebra`); normalized embeddings making the dot product the
+   cosine; a column that is the sum of others, or one-hot columns, adds nothing
+   (multicollinearity) in `span-and-independence`; a classifier boundary
+   $\mathbf{w} \cdot \mathbf{x} = b$ as a plane with normal $\mathbf{w}$, and $\mathbf{p} + t\mathbf{v}$ as
+   motion at constant velocity, in `lines-and-planes`.

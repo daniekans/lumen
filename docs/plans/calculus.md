@@ -213,6 +213,50 @@ infinity) passes a coarser `step` to `Grid` and `Axes`. Lesson checks take decim
 fractions), so their answers are chosen to be short decimals. Infinite limits in practice are
 multiple choice ($\infty$, $-\infty$, $0$, does not exist).
 
+### Revision after the self-review (2026-10-24, planned)
+
+A review of the whole unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All
+items match the plan and the numbers in the text are right; these need fixing:
+
+**Correctness (take-backs and missing conditions), first:**
+
+1. `approaching-a-value/explanation.mdx:58-59` says $dx$ and $dy$ "are what the increments become
+   in the limit", which differentials later contradict. Say $\frac{dy}{dx}$ is one symbol for the
+   limit for now, as `derivative-as-limit` does. The same item (`meta.ts:35`, `unit.ts:64`)
+   speaks of a slope and $\Delta y = f(x) - L$ at the hole, where $f$ is undefined: use the
+   filled-in curve $x^2 + x + 1$.
+2. Composition and substitution are used (`squeeze-and-standard-limits/explanation.mdx:53`, the
+   `exp-limit`, `sin-limit` and `compound-limit` generators) but never stated, and
+   `continuity/explanation.mdx:23-24` credits compositions to the limit laws. State
+   $\lim f(g(x)) = f(\lim g(x))$ for $f$ continuous there, and the change of variable $u = g(x)$
+   with its condition ($u \to b$, $u \neq b$ near $a$). This is also where the choice of variable
+   starts: the limit variable is a dummy, a precursor of the chain rule.
+3. `epsilon-delta-proofs/explanation.mdx:79`: a jump of size $J$ is beaten by $\varepsilon < \frac{J}{2}$,
+   not $\le$ (with $\varepsilon = \frac{J}{2}$ a function sloping into the jump stays within it).
+4. `limit-laws/explanation.mdx:84`: "Substitute. A number is the answer" needs "when $f$ is
+   continuous at $a$"; line 42 ("$\frac{0}{0}$ signals a factor $x - a$") holds for polynomial
+   and rational cases only. State that a two-sided limit needs $f$ defined near $a$; the root
+   law needs $L \ge 0$ with $f \ge 0$, not $L > 0$.
+5. Smaller: `squeeze-and-standard-limits/explanation.mdx:59-80` defines $e$ twice without saying
+   the two agree (point to Derivatives); `continuity` should say how "continuous wherever defined"
+   and "infinite discontinuity at 1" fit together; `compound-limit` passes from integer $n$ to
+   real $x$ without comment.
+
+**Depth and real scenarios:**
+
+6. Practice is mostly one-step. Add: $\infty - \infty$ with roots ($\sqrt{x^2 + ax} - x$), degree
+   of the top higher at infinity, a $\frac{0}{0}$ limit that does not exist, $\frac{|x - a|}{x - a}$,
+   difference of cubes, two techniques at once, squeeze where the learner builds the bounds
+   ($x^2\cos\frac{1}{x}$, $\frac{\sin x}{x}$ at $\infty$), an oscillating discontinuity, the IVT for
+   $\cos x = x$ and the number of bisection steps for an accuracy, $\varepsilon$-$\delta$ for
+   $\frac{1}{x}$ or $\sqrt{x}$, a no-limit proof at a jump, and limits read from a graph (the
+   `reading-limits` skill has none). The checkpoint gains one or two multi-step problems.
+7. Real scenarios: average speed over shrinking intervals in `approaching-a-value` (ties to the
+   `motion` lesson); compound interest made concrete in `squeeze-and-standard-limits` ($1 at
+   100% compounded $n$ times, $(1 + \frac{r}{n})^n \to e^r$); machining tolerance as the meaning of
+   the $\varepsilon$-$\delta$ game; the cost of removing $p\%$ of a pollutant,
+   $C = \frac{kp}{100 - p} \to \infty$ as $p \to 100^-$, in `one-sided-and-infinite`.
+
 ## Derivatives unit plan
 
 Folder `src/content/mathematics/calculus-1/derivatives/`. Core unit, 13 items in three batches, as

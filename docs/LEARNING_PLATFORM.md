@@ -29,9 +29,12 @@ unit can be picked out of order.
 10. Calculus 1: Derivatives (all three batches built and approved 2026-10-24; the revision
     from the owner's review is next: motion, real scenarios, differentiating in $y$, see
     `plans/calculus.md`)
-11. Linear Algebra: Linear maps and matrices
-12. Outline Probability and Statistics (for review), then its first unit
-13. Calculus 1 and Linear Algebra, next units
+11. Calculus 1: Limits, the revision from the self-review (correctness first, then depth and
+    real scenarios; `plans/calculus.md`)
+12. Linear Algebra: Vectors, the revision from the self-review, then Linear maps and matrices
+    (`plans/linear-algebra.md`)
+13. Outline Probability and Statistics (for review), then its first unit
+14. Calculus 1 and Linear Algebra, next units
 
 After that, keep alternating Calculus, Linear Algebra and Probability, and outline Machine Learning
 as soon as Linear Algebra and Probability have their first units, then build it. Extend this
