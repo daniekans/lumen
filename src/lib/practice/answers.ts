@@ -25,6 +25,12 @@ export type Answer =
       values: readonly number[]
       tolerance?: number
     }
+  | {
+      kind: 'matrix'
+      /** Entries row by row. The input is a grid of this shape, so only the entries are typed. */
+      rows: readonly (readonly number[])[]
+      tolerance?: number
+    }
   | { kind: 'choice'; options: readonly string[]; correct: number }
   /** For proofs and long work: the learner compares with the solution and grades themselves. */
   | { kind: 'self' }
@@ -43,6 +49,9 @@ export type CheckIssue =
   | { kind: 'more-to-find'; remaining: number }
   | { kind: 'vector-length'; expected: number }
   | { kind: 'unknown-variable'; allowed: readonly string[] }
+  /** A matrix entry (counted from 1) that is empty or not a number. */
+  | { kind: 'matrix-entry'; row: number; col: number }
+  | { kind: 'wrong-entries'; count: number }
   | { kind: 'no-answer' }
 
 export interface CheckResult {
@@ -64,6 +73,8 @@ export const answerTex = (a: Answer): string | undefined => {
       return a.values.map(formatNumber).join(',\\ ')
     case 'vector':
       return `(${a.values.map(formatNumber).join(',\\ ')})`
+    case 'matrix':
+      return matrixTex(a.rows.map((r) => r.map(formatNumber)))
     default:
       return undefined
   }
@@ -87,4 +98,15 @@ const formatNumber = (v: number) => {
   const f = asFraction(v)
   if (f) return `${f[0] < 0 ? '-' : ''}\\frac{${Math.abs(f[0])}}{${f[1]}}`
   return String(+v.toFixed(6))
+}
+
+/** Entries (TeX) as a bracketed matrix, the form a matrix answer is stored and shown in. */
+export const matrixTex = (rows: readonly (readonly string[])[]) =>
+  `\\begin{bmatrix} ${rows.map((r) => r.join(' & ')).join(' \\\\ ')} \\end{bmatrix}`
+
+/** The entries of a matrix written by `matrixTex`, row by row (empty strings for empty cells). */
+export const matrixCells = (tex: string): string[][] => {
+  const m = /^\s*\\begin\{[pb]?matrix\}([\s\S]*)\\end\{[pb]?matrix\}\s*$/.exec(tex)
+  if (!m) return [[tex.trim()]]
+  return m[1]!.split('\\\\').map((r) => r.split('&').map((c) => c.trim()))
 }

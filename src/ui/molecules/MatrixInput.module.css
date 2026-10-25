@@ -1,0 +1,40 @@
+.field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+
+/* Square brackets drawn as borders with short serifs, like a printed matrix. */
+.matrix {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  overflow-x: auto;
+}
+
+.matrix::before,
+.matrix::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  border: 2px solid var(--fg-muted);
+  content: '';
+  pointer-events: none;
+}
+
+.matrix::before {
+  left: 0;
+  border-right: 0;
+}
+
+.matrix::after {
+  right: 0;
+  border-left: 0;
+}
+
+.cell {
+  min-width: 0;
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { answerTex } from './answers'
+import { answerTex, matrixCells, matrixTex } from './answers'
 import { checkAnswer } from './check'
 import { autoDifficulty, nextGenerator, suggestStatus, type Attempt } from './session'
 import { createRng } from './rng'
@@ -69,6 +69,73 @@ describe('checkAnswer', () => {
     expect(checkAnswer(a, tex('(-0.5, 3)')).verdict).toBe('incorrect')
     expect(checkAnswer(a, tex('(3)')).issue).toEqual({ kind: 'vector-length', expected: 2 })
     expect(checkAnswer(a, tex('(3, x)')).issue).toEqual({ kind: 'list-format' })
+  })
+
+  it('checks matrices entry by entry', () => {
+    const a = {
+      kind: 'matrix',
+      rows: [
+        [1, -0.5],
+        [0, 2],
+      ],
+    } as const
+    const grid = (cells: string[][]) => tex(matrixTex(cells))
+    expect(answerTex(a)).toBe('\\begin{bmatrix} 1 & -0.5 \\\\ 0 & 2 \\end{bmatrix}')
+    expect(checkAnswer(a, tex(answerTex(a)!)).verdict).toBe('correct')
+    expect(
+      checkAnswer(
+        a,
+        grid([
+          ['1', '-0.5'],
+          ['0', '\\sqrt{4}'],
+        ]),
+      ).verdict,
+    ).toBe('correct')
+    expect(
+      checkAnswer(
+        a,
+        grid([
+          ['1', '0.5'],
+          ['1', '2'],
+        ]),
+      ).issue,
+    ).toEqual({
+      kind: 'wrong-entries',
+      count: 2,
+    })
+    expect(
+      checkAnswer(
+        a,
+        grid([
+          ['1', ''],
+          ['0', '2'],
+        ]),
+      ).issue,
+    ).toEqual({
+      kind: 'matrix-entry',
+      row: 1,
+      col: 2,
+    })
+    expect(
+      checkAnswer(
+        a,
+        grid([
+          ['1', '-0.5'],
+          ['x', '2'],
+        ]),
+      ).verdict,
+    ).toBe('invalid')
+    expect(
+      matrixCells(
+        matrixTex([
+          ['a', 'b'],
+          ['', 'd'],
+        ]),
+      ),
+    ).toEqual([
+      ['a', 'b'],
+      ['', 'd'],
+    ])
   })
 
   it('checks choices and self-graded answers', () => {

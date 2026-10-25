@@ -1,4 +1,4 @@
-import type { Answer, CheckResult, Response } from './answers'
+import { matrixCells, type Answer, type CheckResult, type Response } from './answers'
 import { createRng } from './rng'
 import { evaluate, parseTex, variablesOf, type Node } from './texEval'
 
@@ -88,6 +88,23 @@ export const vectorComponents = (tex: string): (number | undefined)[] => {
     .map((part) => toNumber(parse(part)))
 }
 
+/**
+ * Each entry of a typed matrix against the answer, in the answer's shape: true when right, false
+ * when wrong, undefined when empty or not a number.
+ */
+export const matrixEntries = (
+  answer: Extract<Answer, { kind: 'matrix' }>,
+  tex: string,
+): (boolean | undefined)[][] => {
+  const cells = matrixCells(tex)
+  return answer.rows.map((row, i) =>
+    row.map((expected, j) => {
+      const v = toNumber(parse(cells[i]?.[j] ?? ''))
+      return v === undefined ? undefined : close(v, expected, answer.tolerance)
+    }),
+  )
+}
+
 export const checkAnswer = (answer: Answer, response: Response): CheckResult => {
   switch (answer.kind) {
     case 'choice':
@@ -143,6 +160,19 @@ export const checkAnswer = (answer: Answer, response: Response): CheckResult => 
           ? 'correct'
           : 'incorrect',
       }
+    }
+    case 'matrix': {
+      if (!('tex' in response)) return unreadable
+      const entries = matrixEntries(answer, response.tex)
+      for (const [i, row] of entries.entries()) {
+        const j = row.indexOf(undefined)
+        if (j >= 0)
+          return { verdict: 'invalid', issue: { kind: 'matrix-entry', row: i + 1, col: j + 1 } }
+      }
+      const wrong = entries.flat().filter((ok) => !ok).length
+      return wrong === 0
+        ? { verdict: 'correct' }
+        : { verdict: 'incorrect', issue: { kind: 'wrong-entries', count: wrong } }
     }
     case 'expression': {
       if (!('tex' in response)) return unreadable

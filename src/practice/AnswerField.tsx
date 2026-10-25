@@ -1,5 +1,5 @@
-import type { Answer, Response } from '@/lib/practice'
-import { ChoiceOptions, MathInput } from '@/ui/molecules'
+import { matrixEntries, type Answer, type Response } from '@/lib/practice'
+import { ChoiceOptions, MathInput, MatrixInput } from '@/ui/molecules'
 import styles from './Practice.module.css'
 import { msg } from '@/i18n'
 
@@ -39,6 +39,22 @@ export function AnswerField({
         disabled={readOnly}
       />
     )
+  if (answer.kind === 'matrix') {
+    const tex = response && 'tex' in response ? response.tex : ''
+    return (
+      <MatrixInput
+        rows={answer.rows.length}
+        cols={answer.rows[0]?.length ?? 0}
+        label={label}
+        value={tex}
+        onChange={(t) => onChange(t ? { tex: t } : null)}
+        onSubmit={onSubmit}
+        marks={status ? matrixEntries(answer, tex) : undefined}
+        autoFocus={autoFocus}
+        readOnly={readOnly}
+      />
+    )
+  }
   if (answer.kind === 'self') return <p className={styles.note}>{msg.practice.selfGraded}</p>
   return (
     <MathInput

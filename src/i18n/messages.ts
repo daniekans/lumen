@@ -180,6 +180,10 @@ export const en = {
           return `The vector has ${n(issue.expected)} components. Write them in order, separated by commas.`
         case 'unknown-variable':
           return `Use only ${issue.allowed.join(', ') || 'numbers'} in your answer.`
+        case 'matrix-entry':
+          return `Fill in the entry in row ${n(issue.row)}, column ${n(issue.col)} with a number.`
+        case 'wrong-entries':
+          return `${plural(issue.count, { one: 'One entry is', other: `${n(issue.count)} entries are` })} not right yet.`
         case 'no-answer':
           return 'No answer.'
       }
@@ -190,6 +194,8 @@ export const en = {
       list: 'Numbers separated by commas',
       vector: 'Components in order, like $(3, -1)$',
     },
+    /** Accessible name of one cell of a matrix answer. */
+    matrixCell: (row: number, col: number) => `Row ${n(row)}, column ${n(col)}`,
     selfGraded: 'Work this out on paper, then compare with the solution and grade yourself.',
     howDidItGo: 'How did it go?',
     gotItRight: 'I got it right',

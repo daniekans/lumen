@@ -55,6 +55,15 @@
   display: none;
 }
 
+.bare {
+  min-width: 64px;
+}
+
+.bare math-field {
+  padding: 6px 10px;
+  text-align: center;
+}
+
 .loading {
   display: flex;
   align-items: center;
