@@ -113,7 +113,9 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   (with its conditions), and later items extend it. The test (the owner's words, 2026-10-24): a
   later item may say "it is not simply that; it also represents this", never "it is not that;
   it is this". Reframing, adding precision and new views is welcome; replacing a meaning is not.
-  So an early statement must stay literally true when the later view arrives.
+  So an early statement must stay literally true when the later view arrives. Refined on
+  2026-10-25: a later reframing is acceptable when the earlier item says explicitly, at that
+  point, that a future unit reframes or extends the idea. Prefer statements that stay true anyway.
 - Linear Algebra outline approved (2026-10-18), as drafted: eight units, about 90 items; the dot
   product in Vectors (unit 1), extended as duality in Orthogonality; 3D from Vectors 6 on, so
   phase 5 starts after the Vectors unit's first batch. Details in `plans/linear-algebra.md`.
