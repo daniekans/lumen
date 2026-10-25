@@ -221,10 +221,13 @@ items match the plan and the numbers in the text are right; these need fixing:
 **Correctness (take-backs and missing conditions), first:**
 
 1. `approaching-a-value/explanation.mdx:58-59` says $dx$ and $dy$ "are what the increments become
-   in the limit", which differentials later contradict. Say $\frac{dy}{dx}$ is one symbol for the
-   limit for now, as `derivative-as-limit` does. The same item (`meta.ts:35`, `unit.ts:64`)
-   speaks of a slope and $\Delta y = f(x) - L$ at the hole, where $f$ is undefined: use the
-   filled-in curve $x^2 + x + 1$.
+   in the limit". Read literally, the limit of $\Delta x$ is $0$, so this makes $dx = 0$, and
+   $\frac{dy}{dx}$ would be $\frac{0}{0}$; Applications 1 then gives $dx$ any nonzero value and
+   $dy = f'(x)\,dx$, which this sentence would have to retract. Keep the idea that $d$ recalls
+   $\Delta$ and say what stays true at every level: $\frac{dy}{dx}$ is the limit of the ratio
+   $\frac{\Delta y}{\Delta x}$, one symbol for now, and $dx$ and $dy$ get their own meaning later.
+   The same item (`meta.ts:35`, `unit.ts:64`) speaks of a slope and $\Delta y = f(x) - L$ at the
+   hole, where $f$ is undefined: use the filled-in curve $x^2 + x + 1$.
 2. Composition and substitution are used (`squeeze-and-standard-limits/explanation.mdx:53`, the
    `exp-limit`, `sin-limit` and `compound-limit` generators) but never stated, and
    `continuity/explanation.mdx:23-24` credits compositions to the limit laws. State
