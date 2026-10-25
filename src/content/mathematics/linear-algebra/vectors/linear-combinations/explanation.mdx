@@ -41,9 +41,20 @@ the unit Systems and inverses, where this observation is the starting point.
 Whole-number weights mark a <StepLink step="grid">slanted grid</StepLink>: the lines where $a$ is
 fixed run along $\mathbf{w}$, and the lines where $b$ is fixed run along $\mathbf{v}$. When
 $\mathbf{v}$ and $\mathbf{w}$ are not parallel, every point of the plane has exactly one pair of
-weights, just as it has one pair of coordinates. The weights are coordinates measured with
-$\mathbf{v}$ and $\mathbf{w}$ instead of the usual unit steps; the item on bases makes this
-precise.
+weights, whole or not, just as it has one pair of coordinates. The reason is the same elimination
+as above, done for any target $(x, y)$:
+
+$$
+a = \frac{2x + y}{5}, \qquad b = \frac{2y - x}{5}.
+$$
+
+Every target gives one answer. The $5$ is $v_1 w_2 - v_2 w_1 = 2 \cdot 2 - 1 \cdot (-1)$, and the
+same elimination for any two vectors divides by that number. It is $0$ exactly when one vector is a
+multiple of the other, the case below. The number comes back as the determinant in the unit
+Determinants.
+
+The weights are coordinates measured with $\mathbf{v}$ and $\mathbf{w}$ instead of the usual unit
+steps; the item on bases makes this precise.
 
 ## When the vectors are parallel
 
@@ -57,3 +68,25 @@ a multiple of $\mathbf{v}$ for every choice of weights. The
 combinations <StepLink step="parallel">fill only a line</StepLink>, points off it are out of reach, and each
 point on it is reached by infinitely many pairs $(a, b)$. Whether a set of vectors reaches a whole
 plane, a line or all of space is the question of span, which the unit takes up again in 3D.
+
+## Mixing two foods
+
+Linear combinations appear wherever amounts add up. Write a food as the vector of what one serving
+contains, in grams of protein and carbs. With <C c="blue">food A</C> $= (20, 10)$ and the second
+food, <C c="yellow">food B</C> $= (5, 20)$, a meal of $a$ servings of A and $b$ servings of B
+contains
+
+$$
+a\begin{bmatrix} 20 \\ 10 \end{bmatrix} + b\begin{bmatrix} 5 \\ 20 \end{bmatrix}
+= \begin{bmatrix} 20a + 5b \\ 10a + 20b \end{bmatrix}.
+$$
+
+A meal with $35$ g of each needs $20a + 5b = 35$ and $10a + 20b = 35$, which
+gives <StepLink step="mix">$a = 1.5$ and $b = 1$</StepLink>. The units explain why this works:
+grams per serving times servings gives grams, and grams add.
+
+Here the weights cannot be negative. With $a, b \ge 0$ the meals do not fill the plane, only
+the <C c="teal">wedge</C> between the two arrows, a cone. A meal with $5$ g of protein and $40$ g
+of carbs is outside it: the equations give $a = -\frac{2}{7}$, a negative amount of food A. Limits
+on the weights like this one are the starting point of linear programming, which plans diets,
+production and shipping.

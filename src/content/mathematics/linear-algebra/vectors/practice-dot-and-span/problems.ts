@@ -4,6 +4,8 @@ import { defineProblems, tex, type Rng } from '@/lib/practice'
 const { frac, num, paren, sum, vector } = tex
 
 /** A vector of n whole components in [lo, hi], not the zero vector. */
+const ORDINAL = ['first', 'second', 'third']
+
 const intVector = (rng: Rng, n: number, lo: number, hi: number) => {
   for (;;) {
     const v = Array.from({ length: n }, () => rng.int(lo, hi))
@@ -259,6 +261,13 @@ export const problems = defineProblems([
           const i = rng.int(0, 2)
           w = scaleN(v, c).map((x, j) => (j === i ? x + rng.pick([1, -1]) : x))
         }
+        // Solve for the only possible multiple from a nonzero component, then find a component
+        // that disagrees (cross-multiplied, so no rounding).
+        const i = v.findIndex((x) => x !== 0)
+        const [vi, wi] = [v[i]!, w[i]!]
+        const j = w.findIndex((x, m) => x * vi !== wi * v[m]!)
+        const [vj, wj] = [v[j]!, w[j]!]
+        const k = wi / vi
         return {
           prompt: `Are $${vector(v)}$ and $${vector(w)}$ linearly independent or dependent?`,
           answer: { kind: 'choice', options, correct: dependent ? 1 : 0 },
@@ -266,8 +275,9 @@ export const problems = defineProblems([
           solution: dependent
             ? [`$${vector(w)} = ${c}${vector(v)}$, so they are dependent.`]
             : [
-                'Dividing matching components does not give one common ratio, so neither is a multiple of the other.',
-                'They are independent.',
+                `If $${vector(w)} = k${vector(v)}$, the ${ORDINAL[i]} component forces $k = ${frac(wi, vi)}$.`,
+                `Then the ${ORDINAL[j]} component would be $${num(k)} \\cdot ${paren(vj)} = ${num(k * vj)}$, not $${wj}$. So the second vector is not a multiple of the first.`,
+                'Nor is the first a multiple of the second: the first is not $\\mathbf{0}$, so the factor would be nonzero, and dividing by it would make the second a multiple of the first. They are independent.',
               ],
           data: { size: 2, dependent: dependent ? 1 : 0, ...flat('v', v), ...flat('w', w) },
         }

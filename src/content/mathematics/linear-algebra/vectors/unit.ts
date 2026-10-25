@@ -38,7 +38,7 @@ export const unit = defineUnit({
       title: 'Vector',
       tex: '\\mathbf{v} = (v_1, v_2, \\ldots, v_n)',
       summary:
-        'An ordered list of $n$ numbers, its components. In $\\mathbb{R}^2$ and $\\mathbb{R}^3$ it is drawn as an arrow from the origin to the point with those coordinates; moving the arrow without turning or stretching it gives the same vector.',
+        'A vector in $\\mathbb{R}^n$ is an ordered list of $n$ numbers, its components. In $\\mathbb{R}^2$ and $\\mathbb{R}^3$ it is drawn as an arrow from the origin to the point with those coordinates; moving the arrow without turning or stretching it gives the same vector.',
       introducedIn: 'vectors',
     },
     {

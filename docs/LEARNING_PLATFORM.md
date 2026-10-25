@@ -28,11 +28,10 @@ unit can be picked out of order.
 9. Pre-calculus: Trigonometry (refresher) (done, approved 2026-10-24)
 10. Calculus 1: Derivatives (done; all three batches and the revision with motion, real
     scenarios and differentiating in $y$ approved 2026-10-24)
-11. Calculus 1: Limits, the revision from the self-review (`plans/calculus.md`): built
-    2026-10-24 and 2026-10-25; the practice batch is committed but not pushed (run `pnpm e2e`,
-    push, check the deploy), then it awaits the owner's review
-12. Linear Algebra: Vectors, the revision from the self-review, then Linear maps and matrices
-    (`plans/linear-algebra.md`)
+11. Calculus 1: Limits, the revision from the self-review (done, approved 2026-10-25)
+12. Linear Algebra: Vectors, the revision from the self-review (`plans/linear-algebra.md`):
+    text, captions and the food-mix step built 2026-10-25; next its practice (revision item 8),
+    then the owner's review; then Linear maps and matrices, starting with its unit plan
 13. Outline Probability and Statistics (for review), then its first unit
 14. Calculus 1 and Linear Algebra, next units
 

@@ -21,7 +21,7 @@ export const meta = defineItem({
       id: 'one',
       title: 'One vector: a line',
       caption:
-        'The combinations of a single vector are its multiples $a\\mathbf{v}$, which fill the line through the origin along $\\mathbf{v}$: its span. Drag the background to turn the view.',
+        'The combinations of a single nonzero vector are its multiples $a\\mathbf{v}$, which fill the line through the origin along $\\mathbf{v}$: its span. Drag the background to turn the view.',
     },
     {
       id: 'two',

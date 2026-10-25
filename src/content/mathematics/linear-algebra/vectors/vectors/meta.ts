@@ -20,7 +20,7 @@ export const meta = defineItem({
       id: 'same-vector',
       title: 'The same vector anywhere',
       caption:
-        'A vector has a length and a direction but no fixed position. Every arrow that goes $3$ right and $1$ up is the same $\\mathbf{v}$, wherever its tail is. Drag the tail.',
+        'An arrow in the plane has a length and a direction but no fixed position. Every arrow that goes $3$ right and $1$ up is the same $\\mathbf{v}$, wherever its tail is. Drag the tail.',
     },
     {
       id: 'add',

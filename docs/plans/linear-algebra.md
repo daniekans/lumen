@@ -232,7 +232,7 @@ overlaps `standard-basis`: merge it when Linear maps and matrices is built. The 
 problems (13 from the three practice sets and a self-graded proof that adding a vector outside the
 span keeps a set independent).
 
-### Revision after the self-review (2026-10-24, planned)
+### Revision after the self-review (2026-10-24; items 1 to 5, 7 and 9 built 2026-10-25)
 
 A review of the unit against the owner's goals (see `ADDING_CONTENT.md`, section 0). All 11
 items match the plan and the rigor is mostly good; these need fixing. Do them before or together
@@ -260,6 +260,15 @@ with batch 1 of Linear maps and matrices, since that unit revises `matrix-transf
 6. Legacy `matrix-transformations` (fix with Linear maps): a rotation does not change shapes
    (`explanation.mdx:51`); the area factor is $|\det A|$, $\det A$ being signed (`meta.ts:34`);
    basis colors to match `basis-and-coordinates`.
+
+**Status (2026-10-25).** Built: 1 to 5, 7 and 9 (text and captions; item 9's food mix is a
+new last step `mix` in `linear-combinations`, food A $= \mathbf{v} = (2, 1)$ and food B
+$= (0.5, 2)$ in units of 10 g, weights clamped at $0$, the cone shaded; the other scenarios are
+explanation sections: house distances and standardization, a basket bill and an exam score
+$\mathbf{w} \cdot \mathbf{x} + b$ with $\mathbf{w} = (0.5, 0.3)$, $b = -4$, unit embeddings,
+a rent table with one-hot columns, a drone at constant velocity, the exam model's decision
+boundary). Next: item 8 (practice), one session, then the owner's review. Item 6 waits for
+Linear maps and matrices.
 
 **Depth and real scenarios:**
 

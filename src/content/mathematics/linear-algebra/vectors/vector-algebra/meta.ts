@@ -48,7 +48,7 @@ export const meta = defineItem({
         ],
         answer: 3,
         explanation:
-          '$\\mathbf{w} - \\mathbf{v} = -(\\mathbf{v} - \\mathbf{w})$, the same arrow reversed. They are equal only when $\\mathbf{v} = \\mathbf{w}$.',
+          '$\\mathbf{w} - \\mathbf{v} = -(\\mathbf{v} - \\mathbf{w})$, the same arrow reversed. They are equal exactly when $\\mathbf{v} = \\mathbf{w}$.',
       },
     },
     {
@@ -119,7 +119,7 @@ export const meta = defineItem({
         ],
         answer: 1,
         explanation:
-          'The triangle collapses onto a line only when both arrows point the same way, or one of them is $\\mathbf{0}$. Perpendicular arrows give $\\sqrt{\\lVert \\mathbf{v} \\rVert^2 + \\lVert \\mathbf{w} \\rVert^2}$, which is smaller.',
+          'The lengths add exactly when both arrows point the same way, or one of them is $\\mathbf{0}$: then the triangle is flat, with $\\mathbf{v} + \\mathbf{w}$ as long as the other two together. Perpendicular arrows give $\\sqrt{\\lVert \\mathbf{v} \\rVert^2 + \\lVert \\mathbf{w} \\rVert^2}$, which is smaller.',
       },
     },
   ],

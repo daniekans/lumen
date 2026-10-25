@@ -34,8 +34,10 @@ and scalars $c, d$:
 These are the familiar moves of algebra (regroup, reorder, expand, collect terms), so equations
 with vectors are solved the way equations with numbers are. For example,
 $2\mathbf{x} + \mathbf{v} = \mathbf{w}$ gives $\mathbf{x} = \frac{1}{2}(\mathbf{w} - \mathbf{v})$.
-The list matters later: in the unit Vector spaces, anything that obeys these eight rules
-(polynomials, functions) counts as a vector, and everything proved from the rules applies to it.
+The list matters later. In the unit Vector spaces, a set of objects (polynomials, functions) is a
+vector space when adding two of them and scaling one always gives another object of the set, and
+these eight rules hold. Its objects are then called vectors, and everything proved from the rules
+applies to them.
 
 There is no rule for multiplying two vectors here. Products of vectors (the dot product, and in
 $\mathbb{R}^3$ the cross product) come later, and they behave differently from these operations.
@@ -85,6 +87,18 @@ $$
 This is the distance formula of coordinate geometry, written once for every $n$. With data rows
 as vectors it measures how different two rows are, which is how a nearest-neighbor search
 compares them.
+
+The components of a data row are often in different units, and then the largest numbers decide
+the distance. Take houses as (area in m², bedrooms): $A = (120, 3)$, $B = (125, 1)$ and
+$C = (100, 3)$. Then $d(A, B) = \sqrt{29} \approx 5.4$ and $d(A, C) = 20$, so $B$ counts as the
+nearer house, although it has two bedrooms fewer. If areas in the data spread by about $30$ m² and
+bedroom counts by about $1$, dividing each component by its spread puts both on one scale:
+$A = (4, 3)$, $B \approx (4.17, 1)$, $C \approx (3.33, 3)$. Now $d(A, B) \approx 2.0$ and
+$d(A, C) \approx 0.67$, and $C$ is the nearer one. This is standardization: subtract each
+column's mean (which moves every row by the same vector, so distances do not change) and divide by
+its standard deviation (which changes them). Probability and statistics defines the standard
+deviation; here what matters is that a distance is only as meaningful as the units of its
+components.
 
 ## The triangle inequality
 

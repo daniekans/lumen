@@ -22,6 +22,11 @@ other line is that span <StepLink step="shifted-span">moved by</StepLink> $\math
 description is not unique: any point of the line can be the starting point, and any nonzero
 multiple of $\mathbf{v}$ can be the direction.
 
+Read $t$ as time and the line is motion at constant velocity. A drone that starts at
+$\mathbf{p} = (2, -1, 0)$ (in km) and flies with velocity $\mathbf{v} = (-1, 2, 1)$ (in km per
+minute) is at $\mathbf{p} + t\mathbf{v}$ after $t$ minutes: at $(0, 3, 2)$ after $2$ minutes, the
+point tested above. Its speed is $\lVert \mathbf{v} \rVert = \sqrt{6} \approx 2.45$ km per minute.
+
 ## Planes
 
 With two directions that are not parallel, <C c="blue">$\mathbf{v}$</C>
@@ -49,9 +54,22 @@ $$
 \mathbf{n} \cdot (\mathbf{x} - \mathbf{p}) = 0.
 $$
 
-The converse holds as well: the vectors orthogonal to $\mathbf{n}$ form exactly the plane
-spanned by $\mathbf{v}$ and $\mathbf{w}$, so a point that satisfies the equation is on the
-plane. <StepLink step="normal">Drag</StepLink> $\mathbf{x}$ to see the dot product stay $0$.
+In the visualization, <StepLink step="normal">drag</StepLink> $\mathbf{x}$ to see the dot product
+stay $0$.
+
+The converse holds as well: a point that satisfies the equation is on the plane. Suppose
+$\mathbf{u} = \mathbf{x} - \mathbf{p}$ has $\mathbf{n} \cdot \mathbf{u} = 0$ but is not in the span
+of $\mathbf{v}$ and $\mathbf{w}$. Then $\mathbf{v}$, $\mathbf{w}$, $\mathbf{u}$ do not lie in one
+plane through the origin, so they span all of space (Span and independence), and
+$\mathbf{n} = a\mathbf{v} + b\mathbf{w} + c\mathbf{u}$ for some weights. Dotting with $\mathbf{n}$,
+
+$$
+\mathbf{n} \cdot \mathbf{n} = a\,(\mathbf{n} \cdot \mathbf{v}) + b\,(\mathbf{n} \cdot \mathbf{w}) + c\,(\mathbf{n} \cdot \mathbf{u}) = 0,
+$$
+
+so $\lVert \mathbf{n} \rVert = 0$ and $\mathbf{n} = \mathbf{0}$, which a normal vector is not. So
+$\mathbf{u}$ is in the span and $\mathbf{x}$ is on the plane: the equation describes the plane
+exactly.
 
 ## One equation
 
@@ -71,6 +89,22 @@ directions orthogonal to $\mathbf{n}$ that are not parallel.
 In the plane $\mathbb{R}^2$ the same equation $n_1 x + n_2 y = d$ is a line, with $\mathbf{n}$
 perpendicular to it. In space one equation gives a plane, so a line in space needs either the
 parametric form or two equations (two planes that meet in it).
+
+## A decision boundary
+
+The exam model of the dot product item scores a student $\mathbf{x} = (\text{hours studied},
+\text{hours slept})$ with $s = \mathbf{w} \cdot \mathbf{x} + b$, where $\mathbf{w} = (0.5, 0.3)$ and
+$b = -4$, and predicts a pass when $s > 0$. The students with score exactly $0$ satisfy
+
+$$
+0.5x + 0.3y = 4,
+$$
+
+a line with normal $\mathbf{w}$. It splits the plane in two: on the side $\mathbf{w}$ points to the
+score is positive, on the other side negative. With $n$ features the boundary
+$\mathbf{w} \cdot \mathbf{x} + b = 0$ is the same equation in $\mathbb{R}^n$, a flat set called a
+hyperplane, and the weights of a linear classifier are its normal vector. Logistic regression and
+support vector machines, in Machine Learning, draw boundaries of this kind.
 
 ## Planes through the origin
 

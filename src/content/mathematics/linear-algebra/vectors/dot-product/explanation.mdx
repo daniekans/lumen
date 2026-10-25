@@ -27,6 +27,36 @@ $$
 \mathbf{v} \cdot \mathbf{v} = \lVert \mathbf{v} \rVert^2.
 $$
 
+## A weighted sum
+
+Multiply and add is how a total is computed from amounts and rates. A basket with $2$ kg of apples,
+$0.5$ kg of cheese and $3$ kg of potatoes is the vector $\mathbf{q} = (2, 0.5, 3)$, and prices of
+$3$, $12$ and $1$ euros per kg are $\mathbf{p} = (3, 12, 1)$. The bill is
+
+$$
+\mathbf{q} \cdot \mathbf{p} = 2 \cdot 3 + 0.5 \cdot 12 + 3 \cdot 1 = 15 \text{ euros}.
+$$
+
+Each product is kg times euros per kg, so every term is in euros and the terms can be added.
+
+The same sum scores data. A model that predicts whether a student passes an exam from
+$\mathbf{x} = (\text{hours studied}, \text{hours slept})$ can give each feature a weight and add a
+constant $b$:
+
+$$
+s = \mathbf{w} \cdot \mathbf{x} + b.
+$$
+
+With $\mathbf{w} = (0.5, 0.3)$ and $b = -4$, a student with $\mathbf{x} = (6, 7)$ scores
+$3 + 2.1 - 4 = 1.1$, and a positive score predicts a pass. Each weight says how much its feature
+counts, and its sign says in which direction. This is what one neuron of a neural network computes
+before its activation function; a layer computes several such sums at once, which the next unit
+writes as $W\mathbf{x} + \mathbf{b}$, a matrix times a vector plus a vector.
+
+With $\mathbf{v}$ fixed, the function $\mathbf{w} \mapsto \mathbf{v} \cdot \mathbf{w}$ respects
+adding and scaling (the rules above), so it is linear. The unit Orthogonality shows the converse:
+every linear function from $\mathbb{R}^n$ to the numbers is a dot product with one fixed vector.
+
 ## Shadow times length
 
 In the plane and in space the same number has a picture. Drop a perpendicular from the tip of
@@ -131,3 +161,9 @@ the <StepLink step="similarity">example</StepLink>, a long and a short sports ar
 $(8, 2)$ and $(3, 1)$ of the words "match" and "election". Their dot product is $26$ and their
 lengths are $\sqrt{68}$ and $\sqrt{10}$, so the similarity is $\frac{26}{\sqrt{680}} \approx 0.997$:
 the same topic, at different lengths. Search over embeddings ranks documents this way.
+
+Many embedding models return unit vectors, of length $1$. Then both lengths in the formula are $1$
+and the cosine similarity is the dot product itself, so a search only multiplies and adds. For unit
+vectors the distance agrees with it too:
+$\lVert \mathbf{q} - \mathbf{d} \rVert^2 = 1 - 2\,\mathbf{q} \cdot \mathbf{d} + 1 = 2 - 2\cos\theta$,
+so the nearest vectors are the most similar ones.

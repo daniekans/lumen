@@ -155,7 +155,7 @@ export const problems = defineProblems([
         solution = parallel
           ? [`$${vector(w)}$ is a multiple of $${vector(v)}$: they span only a line. Not a basis.`]
           : [
-              `Matching components of $${vector(v)}$ and $${vector(w)}$ do not share one ratio, so neither is a multiple of the other: they are independent.`,
+              `$${v[0]!} \\cdot ${paren(w[1]!)} - ${paren(v[1]!)} \\cdot ${paren(w[0]!)} = ${det([v, w])} \\ne 0$. This number, $v_1 w_2 - v_2 w_1$, is $0$ exactly when one vector is a multiple of the other, so they are independent.`,
               'Two independent vectors span the plane: a basis.',
             ]
       } else if (shape === '3-in-3') {

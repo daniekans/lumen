@@ -4,7 +4,7 @@ export const meta = defineItem({
   kind: 'explore',
   title: 'The dot product',
   summary:
-    'Multiply matching components and add: one number that measures how much two vectors point the same way. It equals the shadow of one vector on the other times the other length, and the lengths times the cosine of the angle, so a zero dot product means perpendicular. Cosine similarity compares feature vectors this way.',
+    "Multiply matching components and add: one number that measures how much two vectors point the same way. It equals the shadow of one vector on the other times the other length, and the lengths times the cosine of the angle, so for nonzero vectors a zero dot product means perpendicular. As a weighted sum it computes a bill or a model's score, and cosine similarity compares feature vectors with it.",
   tags: [
     'dot product',
     'inner product',
@@ -12,6 +12,7 @@ export const meta = defineItem({
     'angle between vectors',
     'orthogonal',
     'cosine similarity',
+    'weighted sum',
     'Cauchy-Schwarz inequality',
     'triangle inequality',
   ],
@@ -35,19 +36,19 @@ export const meta = defineItem({
       id: 'angle',
       title: 'The angle',
       caption:
-        'The shadow of $\\mathbf{w}$ is $\\lVert \\mathbf{w} \\rVert \\cos\\theta$, so $\\mathbf{v} \\cdot \\mathbf{w} = \\lVert \\mathbf{v} \\rVert \\lVert \\mathbf{w} \\rVert \\cos\\theta$. As $\\mathbf{w}$ turns, the sign follows the angle: positive below $90^\\circ$, negative above.',
+        'For nonzero vectors, the shadow of $\\mathbf{w}$ is $\\lVert \\mathbf{w} \\rVert \\cos\\theta$, so $\\mathbf{v} \\cdot \\mathbf{w} = \\lVert \\mathbf{v} \\rVert \\lVert \\mathbf{w} \\rVert \\cos\\theta$. As $\\mathbf{w}$ turns, the sign follows the angle: positive below $90^\\circ$, negative above.',
     },
     {
       id: 'orthogonal',
       title: 'Perpendicular',
       caption:
-        'At $90^\\circ$ the shadow is a point and $\\mathbf{v} \\cdot \\mathbf{w} = 0$. Here $(3, 1) \\cdot (-1, 3) = -3 + 3 = 0$: a zero dot product is the test for perpendicular, or orthogonal, vectors.',
+        'At $90^\\circ$ the shadow is a point and $\\mathbf{v} \\cdot \\mathbf{w} = 0$. Here $(3, 1) \\cdot (-1, 3) = -3 + 3 = 0$: for nonzero vectors, a zero dot product is the test for perpendicular, or orthogonal, vectors.',
     },
     {
       id: 'bound',
       title: 'Never more than the lengths',
       caption:
-        'A shadow is never longer than the vector, so $\\lvert \\mathbf{v} \\cdot \\mathbf{w} \\rvert \\le \\lVert \\mathbf{v} \\rVert \\lVert \\mathbf{w} \\rVert$, with equality only when one is a multiple of the other. This is the Cauchy-Schwarz inequality.',
+        'A shadow is never longer than the vector, so $\\lvert \\mathbf{v} \\cdot \\mathbf{w} \\rvert \\le \\lVert \\mathbf{v} \\rVert \\lVert \\mathbf{w} \\rVert$, with equality exactly when one is a multiple of the other. This is the Cauchy-Schwarz inequality.',
     },
     {
       id: 'similarity',

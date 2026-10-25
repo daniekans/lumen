@@ -81,3 +81,27 @@ basis, and their unique weights are coordinates (Basis and coordinates, later in
 always a combination of three independent ones, so four vectors of $\mathbb{R}^3$ are always
 dependent; the unit Vector spaces and change of basis proves the general fact, that more than $n$
 vectors in $\mathbb{R}^n$ are dependent.
+
+## Columns that add nothing
+
+A data table with $m$ rows gives each column as a vector in $\mathbb{R}^m$, one component per row.
+Dependence among columns is common:
+
+| rent | utilities | total | weekday | weekend | constant |
+| ---- | --------- | ----- | ------- | ------- | -------- |
+| 900  | 120       | 1020  | 1       | 0       | 1        |
+| 750  | 90        | 840   | 0       | 1       | 1        |
+| 1100 | 150       | 1250  | 1       | 0       | 1        |
+
+The column total is rent plus utilities. The columns weekday and weekend encode one category with a
+1 in the matching column (one-hot encoding), so they add up to the constant column of ones that a
+model uses for its intercept $b$. Both are combinations equal to $\mathbf{0}$ with weights not all
+zero, so the columns are dependent.
+
+A linear model that predicts from these columns is a combination of them, and its weights are
+unique only when the columns are independent, by the argument above. With total, rent and utilities
+all present, adding $1$ to the weight of total and subtracting $1$ from the weights of rent and
+utilities gives exactly the same predictions. In statistics this is called multicollinearity, and
+it makes fitted weights meaningless or unstable. The fix follows from the span: remove a column that
+is a combination of the others (total, or one of the one-hot columns), and nothing that the model
+can predict is lost.
