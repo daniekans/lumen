@@ -8,7 +8,8 @@ Outline, threads and unit plans for Linear Algebra. Part of
 Outline approved by the owner on 2026-10-18, as drafted: eight units, the dot product in unit 1
 (revisited as duality in unit 7), and 3D from Vectors 6 on. The review decisions are at the end
 of the outline. Units are built in order; the Vectors unit (plan below) is done, its revision approved on
-2026-10-25, and the Linear maps and matrices unit plan (below) is drafted for the owner's review.
+2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 is built
+and waits for the owner's review.
 
 ## Depth and threads
 
@@ -42,7 +43,8 @@ Vectors 6, the first 3D item.
 Linear maps and matrices. Keep the visual (including `MatrixView`, which may move to `ui`), and
 revise text, steps and its two skills to fit the unit. The determinant part moves to Determinants.
 The folder `linear-transformations/` is renamed to `linear-maps/` (with a redirect). The item has its own
-Replay button in the dock, which the page's Replay (steps header) now covers; drop it then.
+Replay button in the dock, which the page's Replay (steps header) now covers; drop it then. (Done
+2026-10-25 in batch 1 of Linear maps and matrices.)
 
 ## Linear Algebra outline
 
@@ -363,10 +365,10 @@ vectors.
 
 | #   | Item                            | Kind       | Skills                                     | Content                                                                                                                                                                                                                                                               | Status |
 | --- | ------------------------------- | ---------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | linear-maps                     | explore    | linear-maps                                | A map moves every point; the two rules drawn (sum of images is image of sum, scaled likewise); grid stays straight, parallel, evenly spaced, origin fixed; maps that fail: a shift, a bend ($x^2$), $T(\mathbf{0}) \ne \mathbf{0}$; a collapse that is still linear   | draft  |
-| 2   | matrix-transformations (legacy) | explore    | matrix-columns, linear-maps                | Revised: $\mathbf{x} = x\hat{\imath} + y\hat{\jmath}$ so $T(\mathbf{x}) = xT(\hat{\imath}) + yT(\hat{\jmath})$; the columns; reading a matrix from a picture and drawing one from a matrix; presets; determinant steps removed                                        | draft  |
-| 3   | matrix-vector-product           | lesson     | matrix-vector                              | $A\mathbf{x}$ as a combination of columns and as row dot products, $m \times n$ shapes ($\mathbb{R}^n \to \mathbb{R}^m$), $I$, linearity of $A\mathbf{x}$ proved, a $1 \times n$ matrix as $\mathbf{w} \cdot \mathbf{x}$, a layer $W\mathbf{x} + \mathbf{b}$ (affine) | draft  |
-| 4   | practice-matrix-vector          | practice   | linear-maps, matrix-columns, matrix-vector | Products (2D, 3D, non-square), matrix from a described map, image from images of a basis, is this map linear (find the failing rule's witness), nutrients and store totals, a layer's output                                                                          | draft  |
+| 1   | linear-maps                     | explore    | linear-maps                                | A map moves every point; the two rules drawn (sum of images is image of sum, scaled likewise); grid stays straight, parallel, evenly spaced, origin fixed; maps that fail: a shift, a bend ($x^2$), $T(\mathbf{0}) \ne \mathbf{0}$; a collapse that is still linear   | built  |
+| 2   | matrix-transformations (legacy) | explore    | matrix-columns, linear-maps                | Revised: $\mathbf{x} = x\hat{\imath} + y\hat{\jmath}$ so $T(\mathbf{x}) = xT(\hat{\imath}) + yT(\hat{\jmath})$; the columns; reading a matrix from a picture and drawing one from a matrix; presets; determinant steps removed                                        | built  |
+| 3   | matrix-vector-product           | lesson     | matrix-vector                              | $A\mathbf{x}$ as a combination of columns and as row dot products, $m \times n$ shapes ($\mathbb{R}^n \to \mathbb{R}^m$), $I$, linearity of $A\mathbf{x}$ proved, a $1 \times n$ matrix as $\mathbf{w} \cdot \mathbf{x}$, a layer $W\mathbf{x} + \mathbf{b}$ (affine) | built  |
+| 4   | practice-matrix-vector          | practice   | linear-maps, matrix-columns, matrix-vector | Products (2D, 3D, non-square), matrix from a described map, image from images of a basis, is this map linear (find the failing rule's witness), nutrients and store totals, a layer's output                                                                          | built  |
 | 5   | gallery-of-maps                 | explore    | standard-maps                              | Rotation by $\theta$ (columns from the unit circle), reflection across a line, shear, scaling, projection onto a line; what each keeps (lengths, angles, areas, orientation) and loses                                                                                | draft  |
 | 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | draft  |
 | 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | draft  |
@@ -401,6 +403,29 @@ vectors.
 **Batches.** 1: items 1 to 4, with the folder rename and redirects, the legacy revision (and
 Vectors revision item 6), the `matrix` answer kind and `matN.ts`. 2: items 5 to 8. 3: items 9 to
 12 (3D). Each batch is one session.
+
+**Batch 1 (built 2026-10-25, for review).** `linear-maps` (7 steps: a map moves the grid, sums,
+multiples, the picture of the rules, a shift by $(0.5, 1.5)$, the bend
+$(x, y) \mapsto (x, y + \frac{x^2}{4})$, a projection that is still linear; a map and a rule
+picker; the gap of a failing rule in red). The kit gained `WarpedGrid` (any map, sampled) for
+the maps that bend. `matrix-transformations` revised: 6 steps (the basis, where it lands, reading
+a matrix from a picture, drawing one column at a time, italic type as the shear
+$\begin{bmatrix} 1 & 0.25 \\ 0 & 1 \end{bmatrix}$ on a letter F, presets rotate, reflect, scale,
+project); determinant steps, readouts, the area toggle and the own Replay button removed;
+`MatrixView` moved to `ui/molecules` for any shape. `matrix-vector-product` (lesson, 7 steps with
+checks: columns, rows with $\mathbf{r}_i \cdot \mathbf{x}$ on the axes, the food mix with
+grams, a $2 \times 3$ matrix with three column sliders, $I$, a one-row matrix as level lines of
+the exam score, a layer $W\mathbf{x} + \mathbf{b}$ sending $\mathbf{0}$ to $\mathbf{b}$;
+the explanation proves $A\mathbf{x}$ is linear, adds a price table, and homogeneous
+coordinates). `practice-matrix-vector` has 13 generators: products (square and not), shapes,
+matrix from a formula, from the images of the basis or from words (rotations, reflections,
+projections), images from the basis, images and the matrix from two other vectors (determinant
+$\pm 1$, so weights are whole), which map is linear (choice), $T(2\mathbf{u}) - 2T(\mathbf{u})$
+as a witness, nutrients, store totals, a layer. `matrix` answers are a grid of MathLive fields
+(`MatrixInput`); Tab moves between cells because the cells drop MathLive's Tab keybinding (its
+own focus move raced with a scripted one). `matN.ts` has products, transpose, powers and an
+exact rank. Skill `determinant` redirects to `determinants#determinant` (progress migration
+now follows a redirect for a whole skill key).
 
 **Review decisions (2026-10-25).**
 

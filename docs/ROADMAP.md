@@ -35,9 +35,9 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the Linear maps and matrices unit plan is approved
-(`plans/linear-algebra.md`, review decisions at the end of it). Build batch 1 (items 1 to 4, the folder rename, the legacy `matrix-transformations` revision
-including Vectors revision item 6, the `matrix` answer kind and `matN.ts`). The focus is
+**Suggested next session:** Linear maps and matrices batch 1 is built (`plans/linear-algebra.md`,
+"Batch 1"). Collect the owner's review of it, then build batch 2 (items 5 to 8: the gallery of
+maps, composition, matrix multiplication and its practice). The focus is
 Mathematics and Machine Learning; Data Engineering continues only on request, and its next step
 is outlining the Distributed processing unit.
 
@@ -125,15 +125,15 @@ practice (typing, small functions, clear names), since the owner cares about it.
 Items built before the course plans, outside any unit plan. Each is revised when its unit is built
 (see `plans/calculus.md`, Legacy items). Every other item's status is in its unit plan.
 
-| Path                                                                     | Kind       | Status | Notes                                                         |
-| ------------------------------------------------------------------------ | ---------- | ------ | ------------------------------------------------------------- |
-| mathematics/calculus-1/derivatives/checkpoint                            | checkpoint | done   | Six problems; rebuilt in Derivatives batch 3                  |
-| mathematics/calculus-1/integrals/riemann-sums                            | explore    | done   | Empty space below the x-axis at some sizes                    |
-| mathematics/linear-algebra/linear-transformations/matrix-transformations | explore    | done   | Zoomable (`TransformedGrid`); `MatrixView` could move to `ui` |
-| mathematics/complex-numbers/arithmetic/complex-multiplication            | explore    | done   |                                                               |
-| machine-learning/neural-networks/foundations/forward-pass                | explore    | done   |                                                               |
-| machine-learning/neural-networks/training/backpropagation                | explore    | done   |                                                               |
-| ai-engineering/retrieval/fundamentals/rag-pipeline                       | explore    | done   | Vector store view opens in a larger sheet                     |
+| Path                                                          | Kind       | Status | Notes                                                    |
+| ------------------------------------------------------------- | ---------- | ------ | -------------------------------------------------------- |
+| mathematics/calculus-1/derivatives/checkpoint                 | checkpoint | done   | Six problems; rebuilt in Derivatives batch 3             |
+| mathematics/calculus-1/integrals/riemann-sums                 | explore    | done   | Empty space below the x-axis at some sizes               |
+| mathematics/linear-algebra/linear-maps/matrix-transformations | explore    | done   | Revised 2026-10-25 as item 2 of Linear maps and matrices |
+| mathematics/complex-numbers/arithmetic/complex-multiplication | explore    | done   |                                                          |
+| machine-learning/neural-networks/foundations/forward-pass     | explore    | done   |                                                          |
+| machine-learning/neural-networks/training/backpropagation     | explore    | done   |                                                          |
+| ai-engineering/retrieval/fundamentals/rag-pipeline            | explore    | done   | Vector store view opens in a larger sheet                |
 
 ## Backlog
 

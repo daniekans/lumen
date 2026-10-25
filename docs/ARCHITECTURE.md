@@ -22,8 +22,9 @@ src/
                      Point3D, MathLabel3D, DropLines3D
     math-plot/       Grid, Axes, FunctionPlot, Path, Segment, Vector, Point, Arc, MathLabel, TextLabel,
                      AxisInterval (domains, ranges and solution sets on an axis), TransformedGrid
-                     (the grid of the plane under a 2x2 matrix, filling any view), SeriesPlot (a
-                     value over time with labeled axes, in its own Stage)
+                     (the grid of the plane under a 2x2 matrix, filling any view), WarpedGrid (the
+                     grid under any map, sampled, for maps that bend), SeriesPlot (a value over
+                     time with labeled axes, in its own Stage)
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
     table/           RelationTable (database tables with keys, NULLs and animated rows), tableLayout,
@@ -82,7 +83,7 @@ Pure logic lives in `src/lib/practice` so it could also run on a server:
 
 - `problems.ts`: a `ProblemGenerator` turns a seeded `Rng` into a `Problem` (prompt, answer, hints,
   worked solution, and the generated parameters as `data` for tests).
-- `answers.ts` and `check.ts`: answer kinds (`number`, `expression`, `list` (unordered), `vector` (ordered components, typed as `(3, -1)` or a column), `choice`, `self`) and the
+- `answers.ts` and `check.ts`: answer kinds (`number`, `expression`, `list` (unordered), `vector` (ordered components, typed as `(3, -1)` or a column), `matrix` (a grid of fields in the answer's shape, `MatrixInput`; the response is stored as `bmatrix` TeX and checked entry by entry, with each wrong entry marked), `choice`, `self`) and the
   checker. Expressions are equivalent when they agree at random sample points of their domain.
 - `texEval.ts`: a small parser and evaluator for the TeX that MathLive produces (fractions, roots,
   powers, implicit multiplication, functions, absolute values). It replaced Compute Engine, which
