@@ -15,7 +15,7 @@ pnpm, deployed to GitHub Pages (https://daniekans.github.io/lumen/, public repo 
    `LEARNING_PLATFORM.md` (content model, practice engine, curriculum, wish list) only when the
    task needs it, and `docs/HISTORY.md` almost never.
 4. Read `docs/ARCHITECTURE.md` before structural changes and `docs/ADDING_CONTENT.md` before writing
-   content.
+   content or a unit plan (its section 0 checks a plan against the owner's goals).
 5. When a task finishes, update the trackers (the unit plan in `docs/plans/`, the suggested order,
    and the "Suggested next session" in `docs/ROADMAP.md`) in the
    same commit series, so the next session sees the true state.

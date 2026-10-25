@@ -1,5 +1,25 @@
 # Adding content
 
+## 0. Plan a unit
+
+A unit plan (in `docs/plans/<course>.md`) is reviewed by the owner before the unit is built. Check
+it against the owner's goals in `DECISIONS.md` (Content plan), so later sessions do not drift:
+
+- [ ] Every rule is stated with its conditions; nothing taught now is taken back later
+      (introduce, then expand)
+- [ ] Each thread the outline marks (Leibniz notation, limits, linear approximation, duality, ...)
+      says what this unit adds to it, including the choice of variable where an equation is
+      differentiated or integrated
+- [ ] Real-world scenarios are named per item where they add meaning (a rate with units, a
+      physical reason, a data or ML link), in visualizations and in practice; "none" is a valid
+      answer for an item, decoration is not
+- [ ] Practice and the checkpoint reach mastery: varied problem types, problems in context, and a
+      proof where the unit has one
+
+When the last batch of a unit is built, self-review the whole unit against the same list and the
+plan before marking it done, and record the gaps found as a revision in the unit plan (as in
+"Revision after the batch 3 review" in `plans/calculus.md`).
+
 ## 1. Scaffold
 
 ```sh
