@@ -254,6 +254,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 - Surfaces are the most important next 3D feature (2026-10-18): Multivariable Calculus and many
   later units need them, in the same look and feel as the current visualizations.
 
+- Code views first (2026-11-01, the owner's request): Phase 6 starts with read-only code shown
+  in items of any area, no runnable code and no `code` item kind yet. Those ideas are kept, not
+  dropped. Plan in `plans/code-views.md`.
+
 ## Future direction (record, do not build yet)
 
 - Possibly a product for other learners: backend, accounts, premium tier. Keep the seams listed in

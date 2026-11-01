@@ -18,7 +18,7 @@ awaiting feedback), `done`.
 | 3     | Explore page: browse every exploration and lesson as a gallery, outside the course tree   | planned |
 | 4     | Pan and zoom on stages with axes, and a fullscreen mode                                   | done    |
 | 5     | 3D stages for multivariable calculus and linear algebra                                   | done    |
-| 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | idea    |
+| 6     | Code lessons: the math of an item as real code (NumPy, SymPy, Spark, ML libraries)        | planned |
 | 7     | Notation and glossary index: every symbol and term, linked to the item that introduces it | done    |
 | 8     | Internationalization groundwork: UI strings in one module (no translation yet)            | done    |
 | 9     | Light UI polish: distinct course and unit pages, matrix zoom, interactive readout panels  | done    |
@@ -37,7 +37,8 @@ of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** Linear maps and matrices batch 1 is built and its review applied
 (`plans/linear-algebra.md`, "Batch 1 review"). Build batch 2 (items 5 to 8: the gallery of maps,
-composition, matrix multiplication and its practice). The focus is
+composition, matrix multiplication and its practice). Alternatively, once the owner has
+reviewed `plans/code-views.md`, start code views batch 1. The focus is
 Mathematics and Machine Learning; Data Engineering continues only on request, and its next step
 is outlining the Distributed processing unit.
 
@@ -83,7 +84,12 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (idea, not planned yet)
+### Phase 6: Code lessons (planned: read-only code views first)
+
+Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (five
+batches: highlighted MDX blocks, a Code tab linked to steps, code on the stage, pilot content,
+snippet checks). The options below stay as the longer view; runnable cells and the `code` kind
+wait until the code views show what is worth running.
 
 Goal: show how the math of an item is applied in real code, so the "why" behind NumPy, SymPy,
 scikit-learn and deep learning code is not lost, and how data engineering ideas show up in real
