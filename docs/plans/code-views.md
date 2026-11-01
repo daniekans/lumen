@@ -1,33 +1,37 @@
 # Code views plan (Phase 6, first part)
 
 Plan for showing real code inside items, read-only. Part of [ROADMAP.md](../ROADMAP.md) (Phase 6).
-Drafted on 2026-11-01; waits for the owner's review.
+Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end).
 
 ## Status
 
-| Batch | What                                                          | Status |
-| ----- | ------------------------------------------------------------- | ------ |
-| 1     | Highlighted code blocks in every MDX file (Shiki, build time) | idea   |
-| 2     | The Code tab: `code.mdx` per item, blocks linked to steps     | idea   |
-| 3     | Code on the stage: `CodeLabel` and `CodeBlock` in the kit     | idea   |
-| 4     | Pilot content in three areas, then the owner's review         | idea   |
-| 5     | Snippet checks: Python blocks run in CI and outputs compared  | idea   |
+| Batch | What                                                                 | Status |
+| ----- | -------------------------------------------------------------------- | ------ |
+| 1     | Code model and highlighted blocks in every MDX file (build time)     | idea   |
+| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | idea   |
+| 3     | Code in the explanation pane: step peeks and the Code tab            | idea   |
+| 4     | Pilot content in three areas, then the owner's review                | idea   |
+| 5     | Opt-in snippet checks: marked Python blocks run in a separate CI job | idea   |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
 
 ## Scope
 
-- **In:** read-only code next to the visual it explains, in any area: NumPy and SymPy for
+- **In:** read-only code tied to the visual it explains, in any area: NumPy and SymPy for
   mathematics, NumPy from scratch plus PyTorch for machine learning, SQL and PySpark (with
   `EXPLAIN` output) for data engineering, Python for AI engineering.
 - **Kept for later, not discarded:** runnable cells (Pyodide, DuckDB-Wasm), a `code` item kind
   (notebook-style lessons with checked outputs). Both are described in `ROADMAP.md` (Phase 6).
-  Nothing in this plan should make them harder: code lives in plain fenced blocks with
-  metadata, which a runner can later pick up.
+  The code model below is built so they plug in without rework.
+- **Any code can be shown.** Nothing requires a snippet to run anywhere. Checks (batch 5) are an
+  opt-in safety net for the blocks that can run cheaply, never a gate on what is shown.
 - **Not a Python course.** Code shows the "why": each line maps to a symbol, a step or a shape
   on the stage. It models good practice (type hints, small functions, names that follow the
   math: `A`, `v`, `x_hat`), since the owner values it.
+- **Same look and feel.** Code features follow the rest of Lumen: clean, glass surfaces, smooth
+  transitions (highlights glide and fade, never jump), interactive where it helps (hover a name
+  to light its shape).
 
 ## What exists today
 
@@ -37,98 +41,120 @@ batch ends.
 - **Fenced code in MDX.** Explanations already allow fenced blocks (one in `outer-joins`), styled
   by `Prose.module.css` as plain monospace with no highlighting.
 - **Places to put things.** The explanation pane (steps, then the MDX explanation; it can be
-  resized and floated), `VizSheet` (a large glass panel over the stage), readout panels, the
-  control dock, `HtmlBox` for HTML on a stage.
+  resized and floated), `VizSheet`, readout panels, the control dock, `HtmlBox` for HTML on a
+  stage, and hover links between shapes and readouts (`useHighlight`, `hoverKey`).
 
 ## Design
 
-Three surfaces, one look. Every piece of code uses the same token colors, wherever it appears.
+### The code model (batch 1, the seam for later ideas)
+
+A snippet is data first, rendering second. One typed shape, in `src/lib/code/` (pure, tested):
+
+```ts
+interface CodeSnippet {
+  lang: CodeLang // 'python' | 'sql' | 'scala' | 'text' | ...
+  source: string // the exact code, always kept
+  title?: string
+  step?: string // linked step id
+  highlight?: readonly number[] // highlighted lines
+  colors?: Readonly<Record<string, VizColor>> // name -> stage color
+  hoverKeys?: Readonly<Record<string, string>> // name -> hoverKey of a shape
+  output?: string // printed output, shown after the code
+  check?: { env: string } // opt-in snippet check, batch 5
+}
+```
+
+- A remark plugin turns every MDX fence into a `<CodeView snippet={...} tokens={...} />` element:
+  the source is kept as a prop, next to the tokens Shiki produced at build time. Nothing is
+  flattened into HTML that a runner could not read back.
+- `CodeView` (in `src/ui`) is the one renderer for blocks in MDX, step peeks and the Code tab.
+  Runnable cells later add an optional action slot (Run, output area) and a `CodeRunner`
+  interface (`run(snippet) => Promise<RunResult>`, one per language: Pyodide for Python,
+  DuckDB-Wasm for SQL). No runner is built now; the interface is only written down here so
+  the props and data leave room for it.
+- The future `code` item kind reuses the same snippets and `CodeView`, in a notebook layout.
+- On the stage, `CodeBlock` takes the same `CodeSnippet` (with tokens from the in-house
+  tokenizers), so a snippet can move between pane and stage without changes.
 
 ### One code palette
 
 Token kinds: keyword, function (or call), string, number, comment, name, operator. Colors come
-from `vc` with a fixed meaning, the one `SqlLabel` already uses: keywords purple, calls teal,
-literals orange, names in the foreground, operators and comments muted. Define them once as CSS
-variables (`--code-keyword`, ...) in the theme tokens, so dark, light and paper each get them,
-and read the same values in `SqlLabel`, `CodeLabel` and the Shiki theme.
+from `vc` with the meaning `SqlLabel` already uses: keywords purple, calls teal, literals orange,
+names in the foreground, operators and comments muted. Defined once as CSS variables
+(`--code-keyword`, ...) for dark, light and paper, read by `SqlLabel`, `CodeLabel`, `CodeView`
+and the Shiki theme (Shiki's CSS-variables theme, so one build serves all three themes).
 
-### Surface 1: code blocks in MDX (batch 1)
+### Surface 1: blocks in MDX (batch 1)
 
-- **Highlighting at build time with Shiki** (`@shikijs/rehype` in the MDX pipeline of
-  `vite.config.ts`), using Shiki's CSS-variables theme mapped to the code palette. The output is
-  spans with classes or variables: no runtime JavaScript, all three themes from one build.
-  Languages loaded: `python`, `sql`, `scala`, `typescript`, `bash`, `json`, `yaml`, `text`. Watch
-  the size of explanation chunks (today about 9 kB gzipped each).
-- **Fence metadata,** parsed by one small pure function (`src/lib/code/fenceMeta.ts`, tested):
-  - `title="rotate.py"`: a caption bar.
-  - `{3-5}`: highlighted lines; the others stay at full contrast (dimming is for step links).
-  - `step=shear`: links the block to a step (used by the Code tab, batch 2).
-  - `colors="A=blue v=orange"`: names drawn in the color of their counterpart on the stage, the
-    code version of `<C c="blue">`. This ties `A @ v` to the blue matrix and the orange vector,
-    which is the point of the whole phase.
-  - `output`: a block that shows printed output (muted, no highlighting), placed after the
-    code it belongs to.
-- **`<CodeTabs>`** in MDX: the same idea in two libraries (NumPy | PyTorch, SQL | PySpark). The
-  chosen tab is remembered per browser and shared across items (same pattern as
-  `readoutSize.ts`).
-- A copy button on hover, labels from `msg`.
-- The existing SQL block in `outer-joins` gets highlighting for free.
+- Shiki at build time, no runtime JavaScript. Languages: `python`, `sql`, `scala`,
+  `typescript`, `bash`, `json`, `yaml`, `text`. Watch the size of explanation chunks (about
+  9 kB gzipped each today).
+- Fence metadata maps to the model: `title="rotate.py"`, `{3-5}`, `step=shear`,
+  `colors="A=blue v=orange"`, `hover="A=matrix v=vector"`, `check` or `check=numpy`. An output
+  block is a following fence marked `output`.
+- `<CodeTabs>`: the same idea in two libraries (NumPy | PyTorch, SQL | PySpark). The chosen
+  tab is remembered per browser and shared across items (pattern of `readoutSize.ts`); the
+  switch cross-fades.
+- A copy button on hover; labels from `msg`.
+- The SQL block in `outer-joins` gets highlighting for free.
 
-### Surface 2: the Code tab (batch 2)
-
-- **Content:** an optional `code.mdx` in the item folder, next to `explanation.mdx`. Prose between
-  the blocks is short ("`np.linalg.solve` never forms the inverse"). Same MDX components, same
-  Shiki pipeline. The registry globs it like the explanation and loads it lazily, so items
-  without code cost nothing. `Item.code` is the loader; `hasCode` is derived from it.
-- **Where it shows:** a second tab in the explanation pane, "Explanation | Code", only on items
-  with a `code.mdx`. The steps list stays above both tabs, so stepping works while reading code.
-  The pane's resize and float already give the code room. The open tab is in the URL like the
-  step (`?tab=code`, through `query.ts`) so a link can open it. A hotkey (`c`) switches tabs.
-- **Step links:** blocks with `step=` are highlighted when their step is active and the others
-  dim slightly; the active block scrolls into view; clicking a block's step badge goes to that
-  step. A block without `step=` is always at full contrast.
-- **Discovery:** a small code mark on item rows (unit page), in the item header, and later as a
-  filter on the Explore page (Phase 3).
-- `termUsesPlugin` scans `code.mdx` too, so `<Term>` works there and the glossary lists it.
-- Rejected alternatives: a `VizSheet` over the stage hides the visual the code explains; a split
-  of the stage area squeezes visualizations that are designed for the full width.
-
-### Surface 3: code on the stage (batch 3)
+### Surface 2: code on the stage (batch 2, the main tie to the visual)
 
 For code that is part of the picture: `A @ v` beside the vector, a Spark plan node with its
 PySpark line, a query whose clauses light up as rows move.
 
 - `src/lib/code/`: `tokenizePython` beside the moved `tokenizeSql`, both returning the shared
-  token kinds, with Vitest tests (joining tokens gives back the input, as the SQL test does).
+  token kinds, with Vitest tests (joining tokens gives back the input).
 - `CodeLabel` (SVG, one line, any language) generalizes `SqlLabel`; `SqlLabel` stays as a thin
   wrapper so the eight items do not change.
-- `CodeBlock` (HTML in an `HtmlBox`, several lines, glass surface): a highlighted line driven by
-  the step or an animated value, per-name colors as in surface 1. Lines fade, never jump.
-- In-house tokenizers, not Shiki at runtime: Shiki's runtime costs hundreds of kB, while a
-  stage needs one or two languages and a few lines.
+- `CodeBlock` (HTML in an `HtmlBox`, glass surface, several lines): the highlighted line follows
+  the step or an animated value, with a highlight bar that glides between lines; per-name
+  colors as in surface 1.
+- **Two-way hover:** hovering `A` in the code lights the matrix on the stage, and hovering the
+  matrix lights `A` in the code, through `useHighlight` and `hoverKeys`. Works in `CodeView` too.
+- In-house tokenizers, not Shiki at runtime: its runtime costs hundreds of kB, while a stage
+  needs one or two languages and a few lines.
 
-### Content rules (added to `ADDING_CONTENT.md` in batch 2)
+### Surface 3: code in the explanation pane (batch 3)
+
+- **Step peeks:** a step with linked code shows a small code button in the step list; it
+  expands the snippet under the caption with a smooth height transition. Code stays next to
+  the step it explains, without leaving the steps.
+- **The Code tab:** an optional `code.mdx` in the item folder (loaded lazily, like the
+  explanation; `Item.code` is the loader, `hasCode` derived) holds the item's full code
+  walkthrough. The pane gets a segmented control with icons and labels, "Explanation | Code",
+  shown only on items with code and styled so the two are clearly distinct (the Code tab in
+  monospace headings, with the code mark). The steps list stays above both tabs. Blocks with
+  `step=` are highlighted when their step is active (the others dim slightly) and scroll into
+  view. The tab is in the URL (`?tab=code`) and has a hotkey (`c`).
+- Step peeks read snippets from `code.mdx` by `step=`, so each snippet is written once.
+- **Discovery:** a code mark on item rows (unit page) and in the item header, later a filter on
+  the Explore page (Phase 3).
+- `termUsesPlugin` scans `code.mdx` too.
+
+### Content rules (added to `ADDING_CONTENT.md` in batch 3)
 
 - Python 3.12 with type hints; imports at the top of the first block of an item; names that
-  follow the math notation of the item; no line over about 72 characters (the pane is narrow).
-- Every output shown is real: computed, never typed by hand (batch 5 checks it).
-- A block maps to one step or one idea. Three to fifteen lines. Longer code belongs to the
+  follow the item's notation; lines up to about 72 characters (the pane is narrow).
+- Outputs come from real runs, never typed by hand. Run them locally when the block is not
+  checked in CI.
+- A block maps to one step or one idea, three to fifteen lines. Longer code belongs to the
   future `code` kind.
 - Data engineering shows what the engine does with the code: SQL or PySpark next to its plan
-  (`EXPLAIN` output as an `output` block), tied to the stage's partitions and shuffles.
-- Deep learning: the NumPy version first (where the math shows), PyTorch in a `CodeTabs` beside
-  it.
+  (`EXPLAIN` output as an output block), tied to the stage's partitions and shuffles.
+- Deep learning: the NumPy version first (where the math shows), PyTorch in a `CodeTabs`.
 
 ## Pilot content (batch 4)
 
-One item per area, chosen where the code says something the visual cannot:
+One item per area, where the code says something the visual cannot:
 
-1. **Linear algebra,** `linear-maps/matrix-vector-product`: `A @ v`, then the column view
+1. **Linear algebra,** `linear-maps/matrix-vector-product`: `A @ v`, the column view
    `v[0] * A[:, 0] + v[1] * A[:, 1]` and the row view with `np.dot`, each linked to its step,
-   `A` and `v` in their stage colors. Then `matrix-transformations` (applying `A` to a grid of
-   points as one product).
+   `A` and `v` in their stage colors, on the stage and in the pane. Then
+   `matrix-transformations` (a grid of points mapped as one product).
 2. **Machine learning,** `neural-networks/foundations/forward-pass`: a layer as
-   `sigma(W @ x + b)` in NumPy, PyTorch's `nn.Linear` in a tab beside it.
+   `sigma(W @ x + b)` in NumPy, PyTorch's `nn.Linear` in a tab. This item is a legacy pilot and
+   may be rebuilt later, so its code stays small and is easy to move.
 3. **Data engineering,** `partitioning-and-hashing/partitioning-by-key`: PySpark
    `repartition("key")` and `partitionBy`, SQL `DISTRIBUTE BY`, and the `Exchange hashpartitioning`
    line of the plan, linked to the shuffle step.
@@ -136,17 +162,30 @@ One item per area, chosen where the code says something the visual cannot:
 After the owner's review, code is added unit by unit as units are built or revised (Linear
 Algebra first, where almost every item has a NumPy counterpart).
 
-## Snippet checks (batch 5)
+## Snippet checks (batch 5, opt-in)
 
-- `scripts/check-code.mjs` extracts the `python` blocks of every `code.mdx` (in order, per item,
-  as one script), runs them with Python and NumPy, and compares each `output` block with what
-  was printed. Blocks that cannot run here (PyTorch, PySpark) are marked `norun`.
-- CI runs it with `actions/setup-python` and a pinned `requirements-code.txt`. Locally it runs
-  when Python is available and skips with a note otherwise.
-- This is the first step toward runnable cells: the same blocks, later run in the browser.
+- **Opt-in per block.** Only blocks marked `check` run; everything else (PySpark, PyTorch, Scala,
+  pseudo-code, fragments) is shown and never run. Checking a block is a choice for code that can run
+  cheaply, never a requirement for showing it.
+- **Environments by name.** `check` means the default environment (Python 3.12, NumPy, SymPy,
+  pinned in `code-envs/default.txt`). A heavier one (`check=torch`) can be added later as its
+  own file and job, if it is ever worth it; until then such blocks are verified by hand.
+- `scripts/check-code.mjs` collects the checked blocks of each item, in order, as one script per
+  item and environment, runs it, and compares each output block with what was printed.
+- **Separate, light CI job.** Its own workflow, triggered only when `code.mdx` files or the
+  script change (`paths:` filter), with the pip cache. It does not block the Pages deploy. Cost:
+  about 30 seconds to install NumPy and SymPy the first time (seconds once cached), then a few
+  milliseconds per block. Locally the script skips with a note when Python is missing.
+- The same checked blocks are the natural first candidates for runnable cells later.
 
-## Open questions for the owner
+## The owner's answers (2026-11-01)
 
-1. The Code tab inside the explanation pane (proposed) or another place?
-2. Python version and libraries to pin for snippet checks (proposed: 3.12, NumPy, SymPy).
-3. Pilot items: the three above, or others?
+1. The Code tab in the explanation pane is fine, provided it is visible and clearly distinct
+   from the explanation. It must not be the main point: code should be tied to the
+   visualizations, steps and lessons (hence the stage surface and step peeks come first).
+2. Python 3.12, NumPy and SymPy for the default environment.
+3. The three pilot items are fine; the ML item may be reworked later.
+4. Snippet checks must not limit what can be shown, nor make CI heavy (hence opt-in blocks,
+   named environments and a separate job).
+5. Build it so runnable cells and the `code` kind fit later without much rework (hence the
+   code model).

@@ -256,7 +256,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
 
 - Code views first (2026-11-01, the owner's request): Phase 6 starts with read-only code shown
   in items of any area, no runnable code and no `code` item kind yet. Those ideas are kept, not
-  dropped. Plan in `plans/code-views.md`.
+  dropped. Plan in `plans/code-views.md`. Code is tied to the visual (on the stage, linked
+  to steps, two-way hover), not only a separate tab. Any code may be shown: CI checks run only
+  on blocks marked `check`, in a separate light job, so PySpark or PyTorch snippets are never
+  blocked. Snippets are data (source kept next to build-time tokens) so runnable cells fit later.
 
 ## Future direction (record, do not build yet)
 
