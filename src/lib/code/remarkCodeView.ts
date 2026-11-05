@@ -1,5 +1,5 @@
 import { valueToEstree } from 'estree-util-value-to-estree'
-import type { Code, Parent, Root, RootContent } from 'mdast'
+import type { Code, Paragraph, Parent, PhrasingContent, Root, RootContent } from 'mdast'
 import type { MdxJsxFlowElement } from 'mdast-util-mdx-jsx'
 import { createCssVariablesTheme, createHighlighter, type Highlighter } from 'shiki'
 import type { VFile } from 'vfile'
@@ -59,7 +59,31 @@ interface Pending {
   snippet: CodeSnippet
   /** The `CodeTabs` the block sits in, numbered in order. */
   group?: number
+  lead?: string
 }
+
+/**
+ * A paragraph as one line of text for `RichText`: inline code keeps its backticks and math its
+ * dollars; emphasis, links and term tags keep only their text.
+ */
+const inlineText = (nodes: readonly PhrasingContent[]): string =>
+  nodes
+    .map((n) => {
+      const node = n as { type: string; value?: string; children?: PhrasingContent[] }
+      if (node.type === 'inlineCode') return '`' + node.value + '`'
+      if (node.type === 'inlineMath') return '$' + node.value + '$'
+      if (node.type === 'break') return ' '
+      if (node.children) return inlineText(node.children)
+      return node.value ?? ''
+    })
+    .join('')
+
+const leadOf = (node: RootContent | undefined) =>
+  node?.type === 'paragraph'
+    ? inlineText((node as Paragraph).children)
+        .replace(/\s+/g, ' ')
+        .trim()
+    : undefined
 
 const isTabs = (node: Parent) =>
   (node as { type: string }).type === 'mdxJsxFlowElement' &&
@@ -71,15 +95,22 @@ const convertChildren = (
   file: VFile,
   pending: Pending[],
   groups = { count: 0 },
+  parentLead?: string,
 ) => {
   const group = isTabs(parent) ? groups.count++ : undefined
   const children: RootContent[] = []
   let previous: Pending | undefined
+  // The node before the current one, for leads (output fences are skipped, not counted).
+  let before: RootContent | undefined
   for (const child of parent.children as RootContent[]) {
     if (child.type !== 'code') {
-      if ('children' in child) convertChildren(child as Parent, file, pending, groups)
+      if ('children' in child) {
+        const lead = isTabs(child as Parent) ? leadOf(before) : undefined
+        convertChildren(child as Parent, file, pending, groups, lead)
+      }
       children.push(child)
       previous = undefined
+      before = child
       continue
     }
     const code = child as Code
@@ -98,7 +129,14 @@ const convertChildren = (
       children: [],
       position: code.position,
     }
-    previous = { node, snippet, ...(group === undefined ? {} : { group }) }
+    const lead = group === undefined ? leadOf(before) : parentLead
+    previous = {
+      node,
+      snippet,
+      ...(group === undefined ? {} : { group }),
+      ...(lead ? { lead } : {}),
+    }
+    before = child
     pending.push(previous)
     children.push(node)
   }
@@ -141,15 +179,21 @@ export function remarkCodeView() {
     const pending: Pending[] = []
     convertChildren(tree, file, pending)
     const entries: CodeEntry[] = []
-    for (const { node, snippet, group } of pending) {
+    for (const { node, snippet, group, lead } of pending) {
       const tokens = await tokenize(snippet)
       node.attributes = [
         expressionAttribute('snippet', snippet),
         expressionAttribute('tokens', tokens),
       ] as MdxJsxFlowElement['attributes']
-      if (snippet.step) entries.push({ snippet, tokens, ...(group === undefined ? {} : { group }) })
+      if (snippet.step)
+        entries.push({
+          snippet,
+          tokens,
+          ...(group === undefined ? {} : { group }),
+          ...(lead ? { lead } : {}),
+        })
     }
-    // An item's code walkthrough also exports the snippets linked to steps, for step peeks.
+    // An item's code walkthrough also exports the snippets linked to steps, for the code panel.
     if (file.path?.endsWith(CODE_FILE)) tree.children.unshift(snippetsExport(entries))
   }
 }

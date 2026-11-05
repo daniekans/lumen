@@ -59,15 +59,15 @@ src/content/
   <area>/<course>/<unit>/<item>/meta.ts      defineItem({ kind, title, steps, skills, ... })
   <area>/<course>/<unit>/<item>/index.tsx    the visual
   <area>/<course>/<unit>/<item>/explanation.mdx
-  <area>/<course>/<unit>/<item>/code.mdx     optional: the Code tab of the explanation pane
+  <area>/<course>/<unit>/<item>/code.mdx     optional: the code panel on the stage
 ```
 
 `src/catalog/registry.ts` globs these files and `buildCatalog` (pure, unit tested) assembles the tree.
 Ids and URLs come from folder paths (`mathematics/calculus-1/derivatives/derivative-as-limit`). Each
 `index.tsx` and `explanation.mdx` is its own lazily loaded chunk. An optional `code.mdx` is one more
 (`Item.Code` renders it, `Item.loadCode` loads it, `Item.hasCode` marks it); besides the walkthrough
-it exports `snippets`, the blocks linked to steps (added by `remarkCodeView`), which the pane reads
-for step peeks. Broken entries are logged and
+it exports `snippets`, the blocks linked to steps with their leads (added by `remarkCodeView`),
+which the code panel reads (`useItemCode`). Broken entries are logged and
 skipped. Courses and units without items appear on course pages as planned and are hidden from the
 sidebar. `status: 'draft'` hides an item from production builds.
 
@@ -186,9 +186,20 @@ orbiting; its row highlights it fully (`useEmphasis`, `stage/highlight.ts`).
 The 3D primitives and the 2D `Vector` take hover keys; other 2D primitives get one when an item
 needs it. Names in `CodeLabel` and `CodeBlock` link the same way (`snippet.hoverKeys`).
 The item page wraps everything in a `HighlightScope`, and inside it `useHighlight()` returns the
-page's highlight, so the explanation pane shares it: the pane provides `CodeLinksContext`
-(`ui/molecules/codeLinks.ts`) and every `CodeView` in it (MDX blocks, `CodeTabs`, step peeks)
-links its names to the stage both ways. Only the code views re-render on a hover.
+page's highlight, so the explanation pane and the code panel share it: `CodeLinksProvider`
+(`ui/organisms`) provides `CodeLinksContext` (`ui/molecules/codeLinks.ts`), and every `CodeView`
+inside (MDX blocks, `CodeTabs`) links its names to the stage both ways. Only the code views
+re-render on a hover.
+
+Code surfaces: code that explains the visual lives in the **code panel** (`ui/organisms/CodePanel`),
+which the item page puts on the stage of items with `code.mdx` (beside the control dock, so items
+add nothing). It shows the active step's blocks and leads, sits above the dock in a corner
+(`codeCorner` in the meta, `bottom-left` by default), becomes a strip across the bottom when the
+stage is narrow (a `stage` container query in `VizLayout`), and stays in fullscreen. Open or closed
+is `codePanelOpen` in the UI store (closed until first opened, then remembered); `c` and the
+step rows' code buttons toggle it. "Whole file" renders `code.mdx` in a `VizSheet`, where
+`CodeLinks.onStep` gives each step block a button to its step. Code drawn inside the picture
+(`CodeLabel`, `CodeBlock`) is for code that is itself part of the drawing, which is rare.
 
 Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the
 same Stage container and read the same coordinates. Audio would be a service in `viz-kit` with a hook,

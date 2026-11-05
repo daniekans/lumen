@@ -35,10 +35,10 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Code views batch 6 (`plans/code-views.md`, "Code beside the
-visual"): the code panel on the stage replaces the Code tab and step peeks. The owner answered
-its two questions (closed on first visit, drop the Code tab). Then batch 7 (line
-focus that moves with steps and animations), then Linear maps and matrices batch 2
+**Suggested next session:** the owner's review of code views batch 6 (`plans/code-views.md`,
+"Batch 6 as built": the code panel on the stage replaced the Code tab and step peeks). Apply
+the review, then batch 7 (line focus that moves with steps and animations), then Linear maps
+and matrices batch 2
 (`plans/linear-algebra.md`, items 5 to 8) with a `code.mdx` per item. The focus is Mathematics
 and Machine Learning; Data Engineering continues only on request.
 
@@ -84,11 +84,12 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 5 done, 6 and 7 planned)
+### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 6 built, 7 planned)
 
-Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (five
+Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (seven
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,
-pilot content, opt-in snippet checks). The options below stay as the longer view; runnable cells and the `code` kind
+pilot content, opt-in snippet checks, then the code panel beside the visual, which replaced the
+tab and peeks, and line focus that moves with the visual). The options below stay as the longer view; runnable cells and the `code` kind
 wait until the code views show what is worth running.
 
 Goal: show how the math of an item is applied in real code, so the "why" behind NumPy, SymPy,

@@ -43,12 +43,20 @@ for (const theme of (process.env.THEMES ?? 'dark,light').split(',')) {
     viewport: { width: 1440, height: 900 },
     deviceScaleFactor: 1,
   })
-  await page.addInitScript((t) => {
-    localStorage.setItem(
-      'lumen:ui',
-      JSON.stringify({ state: { theme: t, sidebarOpen: true, asideOpen: true }, version: 0 }),
-    )
-  }, theme)
+  // UI='{"codePanelOpen":true}' adds stored UI state (here: the code panel open).
+  const extra = JSON.parse(process.env.UI ?? '{}')
+  await page.addInitScript(
+    ([t, more]) => {
+      localStorage.setItem(
+        'lumen:ui',
+        JSON.stringify({
+          state: { theme: t, sidebarOpen: true, asideOpen: true, ...more },
+          version: 0,
+        }),
+      )
+    },
+    [theme, extra],
+  )
   const errors = []
   page.on('pageerror', (e) => errors.push(e.message))
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))

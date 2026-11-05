@@ -22,7 +22,6 @@ import { vc } from '@/styles/viz-colors'
 import { LabeledSlider, MatrixView, Readout, ReadoutPanel, SegmentedControl } from '@/ui/molecules'
 import {
   Axes,
-  CodeLabel,
   Grid,
   MathLabel,
   numbersCodec,
@@ -70,10 +69,6 @@ const domains: Record<Scene, { x: [number, number]; y: [number, number] }> = {
   dot: { x: [-1, 11], y: [-1, 9] },
   layer: { x: [-5.5, 9], y: [-2.5, 8.5] },
 }
-
-/** Names in the code (stage and Code tab) in their shapes' colors, linked to them by hover. */
-const CODE_COLORS = { x: 'blue', Ax: 'teal', a1: 'green', a2: 'red' } as const
-const CODE_KEYS = { x: 'x', Ax: 'Ax', a1: 'a1', a2: 'a2' }
 
 const A: Mat2 = mat2(2, -1, 1, 1)
 /** Protein and carbs per serving, in units of 10 g, as in Vectors: food A = (2, 1), food B = (0.5, 2). */
@@ -392,17 +387,6 @@ export default function MatrixVectorProduct() {
                   offset={10}
                 />
               </>
-            )}
-            {(id === 'columns' || rowsStep) && (
-              <CodeLabel
-                at={[5.3, -2.1]}
-                align="end"
-                lang="python"
-                colors={CODE_COLORS}
-                hoverKeys={CODE_KEYS}
-              >
-                {rowsStep ? 'Ax = np.array([r1 @ x, r2 @ x])' : 'Ax = x[0] * a1 + x[1] * a2'}
-              </CodeLabel>
             )}
             {scene === 'plane' && <Point at={x} color={X_COLOR} onDrag={dragX} label="Tip of x" />}
           </>

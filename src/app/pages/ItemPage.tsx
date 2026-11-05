@@ -9,12 +9,13 @@ import { ease } from '@/styles/motion'
 import { IconButton, PortalContainerContext } from '@/ui/atoms'
 import { Breadcrumbs } from '@/ui/molecules'
 import {
+  CodePanel,
   ControlDock,
   ExplanationPane,
   FullscreenBar,
   LissajousMark,
   TopBar,
-  type PaneTab,
+  useItemCode,
 } from '@/ui/organisms'
 import { VizLayout } from '@/ui/templates'
 import {
@@ -44,10 +45,9 @@ export function ItemPage({ item }: { item: Item }) {
       steps.findIndex((s) => s.id === readQuery('step')),
     ),
   )
-  // The Code tab of the pane, when the item has one: ?tab=code.
-  const [tab, setTab] = useState<PaneTab>(() =>
-    item.hasCode && readQuery('tab') === 'code' ? 'code' : 'explanation',
-  )
+  const code = useItemCode(item)
+  const codeOpen = useUi((s) => s.codePanelOpen)
+  const setCodeOpen = useUi((s) => s.setCodePanelOpen)
   const [dock, setDock] = useState<HTMLDivElement | null>(null)
   const [urlParams] = useState(createUrlParams)
   const [activity] = useState(createActivity)
@@ -83,18 +83,18 @@ export function ItemPage({ item }: { item: Item }) {
     if (stepId) writeQuery('step', stepIndex === 0 ? null : stepId)
   }, [stepId, stepIndex])
 
+  // Links to the old Code tab (?tab=code) open the code panel instead.
   useEffect(() => {
-    if (item.hasCode) writeQuery('tab', tab === 'code' ? 'code' : null)
-  }, [item.hasCode, tab])
+    if (readQuery('tab') !== 'code') return
+    writeQuery('tab', null)
+    if (item.hasCode) useUi.getState().setCodePanelOpen(true)
+  }, [item.hasCode])
 
-  // `c` shows the Code tab (opening the pane if it is hidden), and goes back on a second press.
+  // `c` opens and closes the code panel.
   const toggleCode = useCallback(() => {
     if (!item.hasCode) return
     const ui = useUi.getState()
-    if (!ui.asideOpen) {
-      ui.toggleAside()
-      setTab('code')
-    } else setTab((t) => (t === 'code' ? 'explanation' : 'code'))
+    ui.setCodePanelOpen(!ui.codePanelOpen)
   }, [item.hasCode])
 
   useEffect(() => {
@@ -181,6 +181,18 @@ export function ItemPage({ item }: { item: Item }) {
               floating={
                 <>
                   <ControlDock ref={setDock} />
+                  {item.hasCode && (
+                    <CodePanel
+                      item={item}
+                      stepIndex={stepIndex}
+                      onStep={goToStep}
+                      entries={code.entries}
+                      codeSteps={code.codeSteps}
+                      open={codeOpen}
+                      onOpenChange={setCodeOpen}
+                      dock={dock}
+                    />
+                  )}
                   {fullscreen.active && (
                     <FullscreenBar
                       title={steps[stepIndex]?.title}
@@ -201,8 +213,9 @@ export function ItemPage({ item }: { item: Item }) {
                   stepIndex={stepIndex}
                   onStep={goToStep}
                   playback={playback}
-                  tab={tab}
-                  onTab={setTab}
+                  codeSteps={code.codeSteps}
+                  codeOpen={codeOpen}
+                  onCodeOpen={setCodeOpen}
                 />
               }
             />

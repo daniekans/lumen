@@ -20,6 +20,9 @@ interface UiState {
   settingsOpen: boolean
   /** Area shown in the sidebar tree. Follows navigation, and can be switched without navigating. */
   sidebarArea: string
+  /** The code panel on the stage of items with code. Closed until the learner opens it. */
+  codePanelOpen: boolean
+  setCodePanelOpen: (open: boolean) => void
   toggleTheme: () => void
   toggleSidebar: () => void
   toggleAside: () => void
@@ -79,11 +82,22 @@ export const useUi = create<UiState>()(
       setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
       setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
       setSidebarArea: (sidebarArea) => set({ sidebarArea }),
+      codePanelOpen: false,
+      setCodePanelOpen: (codePanelOpen) => set({ codePanelOpen }),
     }),
     {
       name: 'lumen:ui',
       storage: safeStorage,
-      partialize: ({ theme, sidebarOpen, asideOpen, asideMode, asideWidth, sidebarArea }) => ({
+      partialize: ({
+        theme,
+        sidebarOpen,
+        asideOpen,
+        asideMode,
+        asideWidth,
+        sidebarArea,
+        codePanelOpen,
+      }) => ({
+        codePanelOpen,
         sidebarArea,
         theme,
         sidebarOpen,

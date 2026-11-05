@@ -108,7 +108,6 @@ export const en = {
   item: {
     explanation: 'Explanation',
     code: 'Code',
-    paneTabs: 'Explanation or code',
     hasCode: 'Has a code walkthrough',
     showStepCode: 'Show the code of this step',
     hideStepCode: 'Hide the code',
@@ -158,6 +157,14 @@ export const en = {
     copyFailed: 'Could not copy',
     output: 'Output',
     versions: 'Versions of this code',
+    panel: 'Code of this step',
+    showPanel: 'Show the code',
+    hidePanel: 'Hide the code',
+    noStepCode: 'No code for this step.',
+    wholeFile: 'Whole file',
+    wholeFileTitle: 'Code walkthrough',
+    goToStep: (index: number, title: string) => `Go to step ${n(index)}: ${title}`,
+    stepLabel: (index: number) => `Step ${n(index)}`,
   },
 
   skills: {

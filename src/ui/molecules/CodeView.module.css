@@ -9,10 +9,41 @@
 }
 
 .title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
   padding: var(--space-2) var(--space-4);
   border-bottom: 1px solid var(--border);
   color: var(--fg-muted);
   font-size: var(--text-xs);
+}
+
+/* The step a block explains (whole-file view): a quiet chip that goes to the step. */
+.stepButton {
+  flex: none;
+  padding: 1px var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--fg-subtle);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.stepButton:hover,
+.stepButton:focus-visible {
+  border-color: var(--border-strong);
+  color: var(--fg);
+}
+
+.stepButton[aria-current='step'] {
+  border-color: color-mix(in srgb, var(--viz-yellow) 55%, var(--border));
+  color: var(--fg);
 }
 
 .body {
@@ -94,7 +125,7 @@
   padding-top: var(--space-1);
 }
 
-/* The Code tab: the block of the active step is marked, the others fade a little. */
+/* The whole-file view: the block of the active step is marked, the others fade a little. */
 .view {
   scroll-margin-block: var(--space-6);
   transition:

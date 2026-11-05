@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { classifyLine } from './classify'
 import { parseFence, parseLineRanges } from './fence'
-import type { Root } from 'mdast'
+import type { Root, RootContent } from 'mdast'
 import type { VFile } from 'vfile'
 import { remarkCodeView, tokenize } from './remarkCodeView'
 import { plainTokens, tokensToSource } from './snippet'
@@ -185,6 +185,38 @@ describe('remarkCodeView', () => {
     expect(count('step')).toBe(3)
     expect([count('a'), count('b')]).toEqual([1, 2])
     expect(count('group')).toBe(2)
+  })
+
+  it('gives a block the paragraph before it as its lead, and a CodeTabs its tabs', async () => {
+    const para = (...children: unknown[]) => ({ type: 'paragraph', children }) as RootContent
+    const t: Root = {
+      type: 'root',
+      children: [
+        para(
+          { type: 'text', value: 'Weigh the\ncolumns of ' },
+          { type: 'inlineCode', value: 'A' },
+          { type: 'text', value: ' by ' },
+          { type: 'inlineMath', value: 'x_1' },
+          { type: 'emphasis', children: [{ type: 'text', value: ' now' }] },
+        ),
+        fence('step=a'),
+        fence('step=c'),
+        para({ type: 'text', value: 'Two libraries.' }),
+        {
+          type: 'mdxJsxFlowElement',
+          name: 'CodeTabs',
+          attributes: [],
+          children: [fence('step=b tab=NumPy'), fence('step=b tab=PyTorch')],
+        },
+      ],
+    }
+    const file = { path: '/c/a/u/i/code.mdx', fail: () => {} } as unknown as VFile
+    await remarkCodeView()(t, file)
+    const json = exported(t)!
+    const count = (value: string) => json.split(`"value":"${value}"`).length - 1
+    expect(count('Weigh the columns of `A` by $x_1$ now')).toBe(1)
+    expect(count('Two libraries.')).toBe(2)
+    expect(count('lead')).toBe(3)
   })
 
   it('exports nothing from an explanation', async () => {

@@ -12,8 +12,8 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
 | 4     | Pilot content in three areas, then the owner's review               | done   |
 | 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done   |
-| 6     | The code panel: code beside the visual, step by step (replaces tab) | next   |
-| 7     | Code that moves with the visual: per-step and animated line focus   | idea   |
+| 6     | The code panel: code beside the visual, step by step (replaces tab) | review |
+| 7     | Code that moves with the visual: per-step and animated line focus   | next   |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -350,6 +350,39 @@ After batch 7, code is added unit by unit as units are built (Linear Algebra fir
 
 1. The panel is closed on the first visit to an item with code, and remembered once opened.
 2. The Code tab goes; the whole-file sheet replaces it.
+
+### Batch 6 as built (2026-11-05), waiting for the owner's review
+
+- **Leads.** `remarkCodeView` gives each step block of `code.mdx` the paragraph right before it
+  (or before its `CodeTabs`) as `CodeEntry.lead`: plain text where inline code keeps its
+  backticks and math its dollars, rendered with `RichText`. A heading in between means no lead.
+- **`CodePanel`** (`ui/organisms`), rendered by `ItemPage` beside the control dock for items
+  with `hasCode`. A glass panel, 24 rem wide, in `item.codeCorner` (default `bottom-left`), its
+  bottom above the dock (the dock's height is measured, so a two-row dock pushes it up). Header:
+  the code mark, "Whole file", collapse (`c`). Body: the step's leads and blocks (`CodeTabs`
+  stay tabs); content cross-fades by block, so steps sharing code (batch 7) keep it in place;
+  the height glides (`GlideHeight`, a measured height with a CSS transition) up to about half
+  the stage, then the code scrolls. Steps without code: "No code for this step." Collapsed, it
+  is a "Code" chip in the same corner. The panel hides while the sheet is open.
+- **State.** `codePanelOpen` in the persisted UI store (closed by default). `c` toggles it; the
+  step rows' code buttons (`StepList` `codeSteps`, `codeOpen`, `onCodeOpen`) select the step and
+  open it, or close it from the active row. `?tab=code` opens it and is removed from the URL.
+- **Whole file.** `code.mdx` in a `VizSheet` ("Code walkthrough"), headings in monospace. The
+  active step's block is marked and scrolls into view; each step block has a "Step n" chip
+  (`CodeLinks.onStep`, `stepInfo`) that goes to its step, with the sheet staying open.
+- **Layouts.** `VizLayout`'s stage is a named inline-size container (`container: stage / inline-size`); under
+  640 px the panel spans the bottom of the stage. Fullscreen keeps it (it is inside the stage).
+- **Removed:** the Code tab (segmented control, pane code loading, `PaneTab`), step peeks, and
+  the in-drawing `CodeLabel` of `matrix-vector-product`. `CodeLinksProvider` and `useItemCode`
+  moved out of the pane into `ui/organisms`.
+- `scripts/shoot.mjs` takes `UI='{"codePanelOpen":true}'` to shoot with stored UI state.
+- e2e: "the code panel follows the step, and the whole file goes to a step" and "old links to
+  the Code tab open the code panel".
+- **For the review:** on a stage narrowed by the open pane, the panel covers part of the drawing
+  (in `matrix-vector-product`, the lower-left quadrant). It is closable and the drawing does
+  not move, as planned. If that is too much, two options: move the drawing aside while the
+  panel is open (the stage gets an extra inset, so the drawing shrinks), or a smaller default
+  panel that grows on hover.
 
 ## Pilot content (batch 4)
 

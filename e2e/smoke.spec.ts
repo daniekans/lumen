@@ -228,25 +228,39 @@ test('theme toggle switches tokens', async ({ page }) => {
   await expect(html).not.toHaveAttribute('data-theme', before ?? '')
 })
 
-test('code tab follows the step, and a step peek shows its code', async ({ page }) => {
+test('the code panel follows the step, and the whole file goes to a step', async ({ page }) => {
   const errors = collectErrors(page)
   await page.goto('/mathematics/linear-algebra/linear-maps/matrix-vector-product')
-  const pane = page.locator('aside')
-  await pane.getByRole('radio', { name: 'Code' }).click()
-  await expect(page).toHaveURL(/[?&]tab=code/)
-  const columns = pane.locator('figure[data-step="columns"]').first()
-  await expect(columns).toBeVisible()
-  await expect(columns).toContainText('a1')
+  const panel = page.getByRole('region', { name: 'Code of this step' })
+  // Closed on a first visit; the chip opens it.
+  await expect(panel).toHaveCount(0)
+  await page.getByRole('button', { name: 'Show the code' }).click()
+  await expect(panel.locator('figure[data-step="columns"]')).toContainText('a1')
 
-  // The block of the active step scrolls into view when the step changes.
-  await pane.locator('ol > li > button', { hasText: 'Each entry from one row' }).click()
-  await expect(pane.locator('figure[data-step="rows"]')).toBeInViewport()
-
-  // The peek opens the step's code under its caption.
-  const row = pane.locator('ol > li', { hasText: 'Each entry from one row' })
+  // A step's code button selects the step; the panel follows.
+  const row = page.locator('aside ol > li', { hasText: 'Each entry from one row' })
   await row.getByRole('button', { name: 'Show the code of this step' }).click()
-  await expect(row.locator('figure[data-step="rows"]')).toBeVisible()
-  await row.getByRole('button', { name: 'Hide the code' }).click()
-  await expect(row.locator('figure[data-step="rows"]')).toHaveCount(0)
+  await expect(panel.locator('figure[data-step="rows"]')).toBeVisible()
+
+  // The whole file: each block's step label goes to its step.
+  await panel.getByRole('button', { name: 'Whole file' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Code walkthrough' })
+  await sheet.locator('figure[data-step="food"]').getByRole('button', { name: 'Step 3' }).click()
+  await expect(page).toHaveURL(/[?&]step=food/)
+  await page.keyboard.press('Escape')
+  await expect(panel.locator('figure[data-step="food"]')).toBeVisible()
+
+  // `c` closes it, and the choice is remembered.
+  await page.keyboard.press('c')
+  await expect(panel).toHaveCount(0)
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Show the code' })).toBeVisible()
+  await expect(panel).toHaveCount(0)
   expect(errors).toEqual([])
+})
+
+test('old links to the Code tab open the code panel', async ({ page }) => {
+  await page.goto('/mathematics/linear-algebra/linear-maps/matrix-vector-product?tab=code')
+  await expect(page.getByRole('region', { name: 'Code of this step' })).toBeVisible()
+  await expect(page).not.toHaveURL(/tab=code/)
 })

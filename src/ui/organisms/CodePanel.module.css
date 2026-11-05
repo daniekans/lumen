@@ -1,0 +1,187 @@
+/*
+ * The anchor spans one side of the stage, so the panel can grow up to it and then scroll. It lets
+ * pointer events through; only the panel and the chip take them.
+ */
+.anchor {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  width: min(24rem, calc(100% - 2 * var(--space-5)));
+  pointer-events: none;
+}
+
+.anchor > * {
+  pointer-events: auto;
+}
+
+.bottomLeft,
+.bottomRight {
+  top: var(--space-5);
+  bottom: calc(var(--space-5) + var(--dock-h, 0px) + var(--space-3));
+  justify-content: flex-end;
+}
+
+.topLeft,
+.topRight {
+  top: var(--space-5);
+  bottom: calc(var(--space-5) + var(--dock-h, 0px) + var(--space-3));
+  justify-content: flex-start;
+}
+
+.bottomLeft,
+.topLeft {
+  left: var(--space-5);
+  align-items: flex-start;
+}
+
+.bottomRight,
+.topRight {
+  right: var(--space-5);
+  align-items: flex-end;
+}
+
+.bottomLeft > * {
+  transform-origin: bottom left;
+}
+
+.bottomRight > * {
+  transform-origin: bottom right;
+}
+
+.topLeft > * {
+  transform-origin: top left;
+}
+
+.topRight > * {
+  transform-origin: top right;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* About half the stage, never under 14rem when the stage has room, then the code scrolls. */
+  max-height: min(100%, 30rem, max(14rem, 55%));
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 var(--space-1) 0 var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fg-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+}
+
+.actions {
+  display: inline-flex;
+  gap: 2px;
+}
+
+/* The height follows the content with a glide; past the panel's cap the content scrolls. */
+.glide {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: height var(--dur-base) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glide {
+    transition: none;
+  }
+}
+
+.content {
+  padding: var(--space-3);
+}
+
+.lead {
+  margin: 0 0 var(--space-2);
+  color: var(--fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+/* Blocks sit flush in the panel: a smaller font and tight margins. */
+.content figure {
+  margin: 0 0 var(--space-2);
+  font-size: 0.75rem;
+}
+
+.content > :last-child,
+.content figure:last-child {
+  margin-bottom: 0;
+}
+
+.empty {
+  margin: 0;
+  color: var(--fg-subtle);
+  font-size: var(--text-sm);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.chip:hover,
+.chip:focus-visible {
+  color: var(--fg);
+}
+
+/* The whole file: the walkthrough in the sheet, read as code (monospace headings). */
+.file {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-5) var(--space-6);
+}
+
+.file :global(h2),
+.file :global(h3) {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+
+/* A narrow stage: the panel becomes a sheet across the bottom. */
+@container stage (max-width: 640px) {
+  .anchor {
+    right: var(--space-3);
+    left: var(--space-3);
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .anchor .panel {
+    max-height: min(100%, 22rem);
+  }
+
+  .file {
+    padding: var(--space-3);
+  }
+}

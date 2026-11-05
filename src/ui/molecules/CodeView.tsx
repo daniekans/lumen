@@ -23,8 +23,26 @@ export interface CodeViewProps {
   onHoverKey?: CodeNameLinks['onHoverKey']
 }
 
-/** How long the step list takes to open a caption (`StepList`), before a block scrolls. */
+/** How long a step change takes to settle (the sheet and step list), before a block scrolls. */
 const SETTLE_MS = 360
+
+/** The step a block explains, as a button that goes to it (whole-file view only). */
+function StepButton({ stepId }: { stepId: string }) {
+  const { onStep, stepInfo, activeStep } = useCodeLinks()
+  const info = stepInfo?.(stepId)
+  if (!onStep || !info) return null
+  return (
+    <button
+      type="button"
+      className={styles.stepButton}
+      title={msg.code.goToStep(info.index, info.title)}
+      aria-current={activeStep === stepId ? 'step' : undefined}
+      onClick={() => onStep(stepId)}
+    >
+      {msg.code.stepLabel(info.index)}
+    </button>
+  )
+}
 
 /** Copies the snippet's exact source; the icon turns into a check for a moment. */
 function CopyButton({ source }: { source: string }) {
@@ -52,10 +70,10 @@ function CopyButton({ source }: { source: string }) {
 
 /**
  * A read-only block of code with the shared code palette: highlighted lines, names in their
- * stage colors, an optional output and a copy button. The one renderer for code in the pane:
- * the explanation and the Code tab (MDX fences become `<CodeView>` at build time) and step
- * peeks. In the Code tab, a block linked to the active step is marked and scrolls into view,
- * and the others dim a little.
+ * stage colors, an optional output and a copy button. The one renderer for code outside the
+ * drawing: the explanation (MDX fences become `<CodeView>` at build time) and the code panel.
+ * In the panel's whole-file view, a block linked to the active step is marked and scrolls into
+ * view, the others dim a little, and each block's step label goes to its step.
  */
 export function CodeView({
   snippet,
@@ -84,6 +102,7 @@ export function CodeView({
   }, [current])
   const highlighted = new Set(snippet.highlight)
   const title = hideTitle ? undefined : snippet.title
+  const stepButton = links.onStep && snippet.step && !hideTitle
   return (
     <figure
       ref={ref}
@@ -96,7 +115,12 @@ export function CodeView({
       data-lang={snippet.lang}
       data-step={snippet.step}
     >
-      {title && <figcaption className={styles.title}>{title}</figcaption>}
+      {(title || stepButton) && (
+        <figcaption className={styles.title}>
+          <span>{title}</span>
+          {stepButton && <StepButton stepId={snippet.step!} />}
+        </figcaption>
+      )}
       <div className={styles.body}>
         <pre className={styles.pre}>
           <code className={styles.code}>

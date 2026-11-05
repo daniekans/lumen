@@ -23,7 +23,7 @@ export interface CatalogSources {
   items: Record<string, ItemMeta>
   components: Record<string, Loader>
   explanations: Record<string, Loader>
-  /** code.mdx modules: the optional Code tab. */
+  /** code.mdx modules: the code panel and its whole-file view. */
   codes?: Record<string, CodeLoader>
   /** problems.ts modules of practice and checkpoint items. */
   problems?: Record<string, ProblemsLoader>

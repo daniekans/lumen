@@ -85,13 +85,18 @@ export const plainTokens = (source: string): CodeTokens =>
 
 /**
  * A snippet of an item's `code.mdx` with its tokens, as the file exports them (`snippets`), so
- * step peeks can show the code of a step without rendering the whole walkthrough. `group` is set
+ * the code panel can show the code of a step without rendering the whole walkthrough. `group` is set
  * on the blocks of one `CodeTabs`, the same number for each.
  */
 export interface CodeEntry {
   snippet: CodeSnippet
   tokens: CodeTokens
   group?: number
+  /**
+   * The paragraph right before the block (or its `CodeTabs`), as text where inline code keeps
+   * its backticks and math its dollars, so `RichText` can render it. The code panel shows it.
+   */
+  lead?: string
 }
 
 /** The file name of an item's code walkthrough. */

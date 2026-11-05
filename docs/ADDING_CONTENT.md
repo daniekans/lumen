@@ -158,21 +158,28 @@ Wrap two or more blocks in `<CodeTabs>` for the same idea in two libraries; each
 
 ### Code walkthrough (`code.mdx`, optional)
 
-An item may add `code.mdx` beside `explanation.mdx`: the Code tab of the explanation pane
-(`?tab=code`, hotkey `c`), marked with a code icon on the unit page and in the pane header. It is
-MDX like the explanation (same components, `<Term>` links count). Headings show in monospace.
+An item may add `code.mdx` beside `explanation.mdx`: it feeds the code panel on the stage (a
+"Code" chip that opens it, hotkey `c`) and is marked with a code icon on the unit page and in
+the pane header. It is MDX like the explanation (same components, `<Term>` links count). The
+panel's "Whole file" shows it in a sheet over the stage, headings in monospace.
 
-- Give a block `step=<id>` to tie it to a step. In the Code tab it is marked while its step is
-  active (the others fade) and scrolls into view; in the step list, that step gets a code button
-  that opens the block under the caption (a step peek). Write each block once, in `code.mdx`;
-  the peek reads it from there. Blocks of one `<CodeTabs>` stay tabs in the peek.
+- Give a block `step=<id>` to tie it to a step. The panel shows the active step's blocks; the
+  step's row gets a code button that opens the panel. Steps without a block show "No code for
+  this step". Blocks without `step=` appear only in the whole file. Blocks of one `<CodeTabs>`
+  stay tabs in the panel.
+- **Leads.** The paragraph right before a block (or before its `<CodeTabs>`) is the block's lead,
+  shown above it in the panel. Keep it to one or two sentences that say what the code does at
+  this step. Only inline code and `$math$` keep their formatting there; emphasis and links show
+  as plain text. A heading between the paragraph and the block means no lead.
+- `codeCorner` in `meta.ts` moves the panel when readouts sit at the bottom-left (the default).
 - Give names their stage colors (`colors=`) and hover keys (`hover=`, the shapes' `hoverKey`), so
-  hovering `A` in the pane lights the matrix and the other way around.
+  hovering `A` in the panel lights the matrix and the other way around.
 
 Content rules for code:
 
 - Python 3.12 with type hints; imports at the top of the first block; names that follow the
-  item's notation (`A`, `v`, `x_hat`); lines up to about 72 characters (the pane is narrow).
+  item's notation (`A`, `v`, `x_hat`); lines up to about 72 characters. The panel shows about
+  50 before a line scrolls sideways, so keep the lines that matter to a step short.
 - Outputs come from real runs, never typed by hand: `pnpm code /<item path>` runs the item's
   blocks in Docker (`code-envs/`: `default` with NumPy and SymPy, `torch`, `spark`) and prints
   each output; `--write` puts the outputs into the file, `--check` compares them. Python blocks

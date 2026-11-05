@@ -8,6 +8,8 @@ export const meta = defineItem({
   level: 'intro',
   skills: ['forward-pass'],
   order: 1,
+  // The input layer sits at the bottom-left.
+  codeCorner: 'bottom-right',
   steps: [
     {
       id: 'structure',

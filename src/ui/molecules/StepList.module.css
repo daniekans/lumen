@@ -119,21 +119,7 @@
   opacity: 1;
 }
 
-.peeking {
+.pressed {
   color: var(--fg);
   background: var(--surface-active);
-}
-
-.peek {
-  overflow: hidden;
-}
-
-.peekInner {
-  padding-top: var(--space-1);
-}
-
-/* Peeks sit in a narrow column: a smaller font and tighter margins than in the explanation. */
-.peekInner figure {
-  margin: var(--space-2) 0 0;
-  font-size: 0.75rem;
 }

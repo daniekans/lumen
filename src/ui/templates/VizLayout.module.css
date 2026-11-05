@@ -17,6 +17,8 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  /* Panels on the stage (the code panel) adapt to its width, not the window's. */
+  container: stage / inline-size;
 }
 
 .fullscreen {

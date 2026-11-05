@@ -31,7 +31,7 @@ const explanations = import.meta.glob<{ default: never }>(
   '../content/*/*/*/*/explanation.mdx',
 ) as Record<string, Loader>
 
-// The optional Code tab. Each file also exports `snippets` (see remarkCodeView).
+// The optional code walkthrough (code panel). Each file also exports `snippets` (see remarkCodeView).
 const codes = import.meta.glob<CodeModule>('../content/*/*/*/*/code.mdx')
 
 const problems = import.meta.glob<ProblemsModule>('../content/*/*/*/*/problems.ts')

@@ -104,7 +104,14 @@ export interface ItemMeta {
   status?: ItemStatus
   /** Checkpoints: how many problems one attempt contains. Defaults to 8. */
   problemCount?: number
+  /**
+   * Items with `code.mdx`: the stage corner of the code panel, when readouts sit in the default
+   * one (`bottom-left`).
+   */
+  codeCorner?: CodeCorner
 }
+
+export type CodeCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 
 interface NodeBase {
   /** Slash-separated path from the area, e.g. `mathematics/calculus-1`. */
@@ -136,7 +143,7 @@ export type LazyComponent = LazyExoticComponent<ComponentType>
 export type Loader = () => Promise<{ default: ComponentType }>
 export type ProblemsModule = { problems: readonly ProblemGenerator[] }
 export type ProblemsLoader = () => Promise<ProblemsModule>
-/** An item's `code.mdx`: the walkthrough, and the snippets linked to steps (for step peeks). */
+/** An item's `code.mdx`: the walkthrough, and the snippets linked to steps (for the code panel). */
 export type CodeModule = { default: ComponentType; snippets: readonly CodeEntry[] }
 export type CodeLoader = () => Promise<CodeModule>
 
