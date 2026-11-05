@@ -172,7 +172,9 @@ Content rules for code:
 - Python 3.12 with type hints; imports at the top of the first block; names that follow the
   item's notation (`A`, `v`, `x_hat`); lines up to about 72 characters (the pane is narrow).
 - Outputs come from real runs, never typed by hand. Run them locally when the block is not
-  checked in CI.
+  checked in CI. Heavy libraries (Spark, PyTorch) run in Docker images built or pulled once
+  (`spark:4.0.4-scala2.13-java17-python3-ubuntu` is already local); run all blocks of an item in
+  one container, in seconds. Never install a library on every run.
 - A block maps to one step or one idea, three to fifteen lines.
 - Data engineering shows what the engine does: SQL or PySpark next to its plan (`EXPLAIN` output
   as an output block), tied to the stage's partitions and shuffles.

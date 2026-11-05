@@ -260,6 +260,11 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   to steps, two-way hover), not only a separate tab. Any code may be shown: CI checks run only
   on blocks marked `check`, in a separate light job, so PySpark or PyTorch snippets are never
   blocked. Snippets are data (source kept next to build-time tokens) so runnable cells fit later.
+- Outputs of heavy libraries (2026-11-05): running Spark, PyTorch and similar tools locally to get
+  real outputs is fine, as long as it takes seconds, not minutes, so writing a lesson stays fast.
+  Use Docker images (the owner works this way in the `de-workbench` repo): an image is built or
+  pulled once, then all blocks of an item run in one container (Spark in Docker takes about 10 s,
+  JVM start included). Never install a library per run.
 
 ## Future direction (record, do not build yet)
 

@@ -35,13 +35,13 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Code views batch 4 is built and deployed (`plans/code-views.md`:
-`code.mdx` in matrix-vector product, forward pass and partitioning by key, an e2e check of the Code
-tab and a peek) and waits for the owner's review, including whether outputs of heavy libraries
-(PySpark, PyTorch) must come from local runs. After the review, apply the feedback, then code views
-batch 5 (opt-in snippet checks) or Linear maps and matrices batch 2 (`plans/linear-algebra.md`,
-items 5 to 8). The focus is Mathematics and Machine Learning; Data Engineering continues only on
-request.
+**Suggested next session:** Code views batch 4 is deployed and reviewed by the owner (heavy
+libraries may run locally in Docker if it takes seconds; `DECISIONS.md`). Next, code views batch 5
+(`plans/code-views.md`, "Snippet runner and checks"): `scripts/run-code.mjs` with Docker
+environments (`default`, `torch`, `spark`), the `env=` fence option, `--check` in a separate light
+CI job for the `default` environment, then re-run the three pilot items through it. Alternatively,
+Linear maps and matrices batch 2 (`plans/linear-algebra.md`, items 5 to 8). The focus is
+Mathematics and Machine Learning; Data Engineering continues only on request.
 
 ### Phase 3: Explore page
 

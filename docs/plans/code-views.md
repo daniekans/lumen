@@ -5,13 +5,13 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 
 ## Status
 
-| Batch | What                                                                 | Status |
-| ----- | -------------------------------------------------------------------- | ------ |
-| 1     | Code model and highlighted blocks in every MDX file (build time)     | done   |
-| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | done   |
-| 3     | Code in the explanation pane: step peeks and the Code tab            | done   |
-| 4     | Pilot content in three areas, then the owner's review                | review |
-| 5     | Opt-in snippet checks: marked Python blocks run in a separate CI job | idea   |
+| Batch | What                                                                | Status |
+| ----- | ------------------------------------------------------------------- | ------ |
+| 1     | Code model and highlighted blocks in every MDX file (build time)    | done   |
+| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done   |
+| 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
+| 4     | Pilot content in three areas, then the owner's review               | review |
+| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | idea   |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -229,9 +229,9 @@ PySpark line, a query whose clauses light up as rows move.
   levels), with a SQL tab. `repartition`, `DISTRIBUTE BY` and `Exchange hashpartitioning` belong
   to Hash partitioning instead.
 - e2e: "code tab follows the step, and a step peek shows its code" in `smoke.spec.ts`.
-- Open question for the owner: the rule "outputs come from real runs" means PySpark (with Java)
-  and PyTorch must be installed locally whenever such content is written. Options to decide at
-  review.
+- The owner's answer on heavy libraries (2026-11-05): local runs are fine if they take seconds;
+  use Docker images, as in the owner's `de-workbench` repo. Batch 5 now includes the runner that
+  makes this one command.
 
 ## Pilot content (batch 4)
 
@@ -251,7 +251,22 @@ One item per area, where the code says something the visual cannot:
 After the owner's review, code is added unit by unit as units are built or revised (Linear
 Algebra first, where almost every item has a NumPy counterpart).
 
-## Snippet checks (batch 5, opt-in)
+## Snippet runner and checks (batch 5)
+
+- **One runner for writing and checking.** `scripts/run-code.mjs <item path> [--env spark]`
+  collects an item's blocks of one environment, in order, as one script, runs it in that
+  environment's Docker image, and prints each block's output (with a marker between blocks), so
+  output blocks are pasted from a real run. With `--check` it compares the output blocks instead
+  and fails on a difference (CI uses this). Target: seconds per item.
+- **Environments as images** in `code-envs/<env>/`: `default` (Python 3.12, NumPy, SymPy; a
+  `Dockerfile` or the local Python when Docker is missing), `torch` (CPU wheel baked into the
+  image), `spark` (the official `spark` image, `spark-submit`). Images are built once and
+  reused; nothing is installed per run. Fences name their environment with `env=spark` (new
+  fence option) or by `check=<env>`; Python blocks default to `default`.
+- **Measured (2026-11-05):** the local `spark:4.0.4-scala2.13-java17-python3-ubuntu` image runs
+  the partitioning pilot's write and `explain` in about 10 s, JVM start included.
+
+The parts below still hold:
 
 - **Opt-in per block.** Only blocks marked `check` run; everything else (PySpark, PyTorch, Scala,
   pseudo-code, fragments) is shown and never run. Checking a block is a choice for code that can run
