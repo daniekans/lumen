@@ -234,7 +234,7 @@ test('the code panel follows the step, and the whole file goes to a step', async
   const panel = page.getByRole('region', { name: 'Code of this step' })
   // Closed on a first visit; the chip opens it.
   await expect(panel).toHaveCount(0)
-  await page.getByRole('button', { name: 'Show the code' }).click()
+  await page.getByRole('button', { name: 'Show the code', exact: true }).click()
   await expect(panel.locator('figure[data-step="columns"]')).toContainText('a1')
 
   // A step's code button selects the step; the panel follows.
@@ -254,7 +254,7 @@ test('the code panel follows the step, and the whole file goes to a step', async
   await page.keyboard.press('c')
   await expect(panel).toHaveCount(0)
   await page.reload()
-  await expect(page.getByRole('button', { name: 'Show the code' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Show the code', exact: true })).toBeVisible()
   await expect(panel).toHaveCount(0)
   expect(errors).toEqual([])
 })
