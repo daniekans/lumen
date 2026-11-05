@@ -59,11 +59,15 @@ src/content/
   <area>/<course>/<unit>/<item>/meta.ts      defineItem({ kind, title, steps, skills, ... })
   <area>/<course>/<unit>/<item>/index.tsx    the visual
   <area>/<course>/<unit>/<item>/explanation.mdx
+  <area>/<course>/<unit>/<item>/code.mdx     optional: the Code tab of the explanation pane
 ```
 
 `src/catalog/registry.ts` globs these files and `buildCatalog` (pure, unit tested) assembles the tree.
 Ids and URLs come from folder paths (`mathematics/calculus-1/derivatives/derivative-as-limit`). Each
-`index.tsx` and `explanation.mdx` is its own lazily loaded chunk. Broken entries are logged and
+`index.tsx` and `explanation.mdx` is its own lazily loaded chunk. An optional `code.mdx` is one more
+(`Item.Code` renders it, `Item.loadCode` loads it, `Item.hasCode` marks it); besides the walkthrough
+it exports `snippets`, the blocks linked to steps (added by `remarkCodeView`), which the pane reads
+for step peeks. Broken entries are logged and
 skipped. Courses and units without items appear on course pages as planned and are hidden from the
 sidebar. `status: 'draft'` hides an item from production builds.
 
@@ -73,7 +77,7 @@ Skills are declared per unit and referenced by items and problems.
 
 Glossary terms are declared per unit (`terms` in `unit.ts`) with a global id and the item that
 introduces them. Explanations mark a word with `<Term id="...">`, which opens the summary in a popover with a link to the entry. A Vite plugin
-(`src/catalog/termUsesPlugin.ts`) scans every `explanation.mdx` for those tags at build time and
+(`src/catalog/termUsesPlugin.ts`) scans every `explanation.mdx` and `code.mdx` for those tags at build time and
 exposes the map as `virtual:lumen/term-uses`, so the glossary page (`/glossary`) lists where each term
 is used without bundling MDX source. `buildCatalog` reports duplicate ids, unknown items and unknown
 links, and `registry.test.ts` fails on any catalog problem. Terms also appear in the command palette.
@@ -181,6 +185,10 @@ in the drawing only lights its readout row (`hint`), since planes are crossed al
 orbiting; its row highlights it fully (`useEmphasis`, `stage/highlight.ts`).
 The 3D primitives and the 2D `Vector` take hover keys; other 2D primitives get one when an item
 needs it. Names in `CodeLabel` and `CodeBlock` link the same way (`snippet.hoverKeys`).
+The item page wraps everything in a `HighlightScope`, and inside it `useHighlight()` returns the
+page's highlight, so the explanation pane shares it: the pane provides `CodeLinksContext`
+(`ui/molecules/codeLinks.ts`) and every `CodeView` in it (MDX blocks, `CodeTabs`, step peeks)
+links its names to the stage both ways. Only the code views re-render on a hover.
 
 Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the
 same Stage container and read the same coordinates. Audio would be a service in `viz-kit` with a hook,

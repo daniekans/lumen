@@ -9,7 +9,7 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | ----- | -------------------------------------------------------------------- | ------ |
 | 1     | Code model and highlighted blocks in every MDX file (build time)     | done   |
 | 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | done   |
-| 3     | Code in the explanation pane: step peeks and the Code tab            | idea   |
+| 3     | Code in the explanation pane: step peeks and the Code tab            | done   |
 | 4     | Pilot content in three areas, then the owner's review                | idea   |
 | 5     | Opt-in snippet checks: marked Python blocks run in a separate CI job | idea   |
 
@@ -185,6 +185,33 @@ PySpark line, a query whose clauses light up as rows move.
   over `CodeLabel`.
 - The 2D `Vector` takes `hoverKey` (emphasis, dimming and a hit target as in the 3D primitives),
   so `A @ v` can link to its arrow. Other 2D primitives get keys when an item needs them.
+
+### Batch 3 as built (2026-11-05)
+
+- **Lifted highlight.** `HighlightScope` (`viz-kit/stage/highlight.ts`) wraps the item page;
+  inside it `useHighlight()` returns the page's highlight instead of the item's own, so no item
+  changes. The pane reads it with `useHighlightScope()` and provides `CodeLinksContext`
+  (`ui/molecules/codeLinks.ts`); `CodeView` reads the context, so MDX blocks, `CodeTabs` and
+  peeks link both ways without props. Only code views re-render on hover.
+- **`code.mdx`.** Globbed lazily by the registry; `Item.Code`, `Item.loadCode`, `Item.hasCode`.
+  `remarkCodeView` adds `export const snippets` (the blocks with `step=`, with tokens and a
+  `group` number for blocks of one `CodeTabs`) to `code.mdx` files only. `termUsesPlugin`
+  scans `code.mdx` after the explanation.
+- **Code tab.** A `SegmentedControl` (now with icons) "Explanation | Code" under the steps, only
+  on items with code; content cross-fades; headings in monospace. `?tab=code`, hotkey `c` (opens
+  the pane when hidden). The block of the active step gets a yellow border and scrolls into view
+  (after the step list settles, smooth unless reduced motion); the others fade to 0.6.
+- **Step peeks.** Rows of steps with code get a code button (`StepList` props `codeSteps`,
+  `peekOpen`, `renderPeek`). One switch for all steps, so the code follows as steps change; the
+  peek opens under the caption with the caption's height transition. The pane loads `code.mdx`
+  on mount for items with code.
+- **Discovery.** A code icon after the title on unit page rows and a "Code" badge in the pane
+  header. The Explore page filter waits for Phase 3.
+- Fixed on the way: `CodeTabs` widened the block to its longest line (grid column now
+  `minmax(0, 1fr)`).
+- Checked with a temporary `code.mdx` on `vectors/basis-and-coordinates` (removed): hover from
+  a pane name dims the other arrows and lights the readout row. No item has `code.mdx` yet; batch
+  4 adds the first, and should add an e2e check of the Code tab and a peek.
 
 ## Pilot content (batch 4)
 

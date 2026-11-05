@@ -35,14 +35,13 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Linear maps and matrices batch 1 is built and its review applied
-(`plans/linear-algebra.md`, "Batch 1 review"). Build batch 2 (items 5 to 8: the gallery of maps,
-composition, matrix multiplication and its practice). Alternatively, continue code views with
-batch 3 (`plans/code-views.md`: step peeks, the Code tab with `code.mdx`, and lifting the
-highlight so pane code links to the stage); batches 1 (code model, MDX blocks) and 2 (`CodeLabel`,
-`CodeBlock`, two-way hover) are done. The focus is
-Mathematics and Machine Learning; Data Engineering continues only on request, and its next step
-is outlining the Distributed processing unit.
+**Suggested next session:** Code views batch 3 is built (`plans/code-views.md`: step peeks, the
+Code tab with `code.mdx`, the highlight lifted to the item page) and committed but not pushed.
+Next, code views batch 4: the pilot `code.mdx` in three items (matrix-vector product, forward
+pass, partitioning by key), an e2e check of the Code tab and a peek, then push, deploy and ask
+the owner to review. Alternatively, Linear maps and matrices batch 2 (`plans/linear-algebra.md`,
+items 5 to 8). The focus is Mathematics and Machine Learning; Data Engineering continues only on
+request, and its next step is outlining the Distributed processing unit.
 
 ### Phase 3: Explore page
 
@@ -86,7 +85,7 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (in progress: read-only code views, batches 1 and 2 done)
+### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 3 done)
 
 Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (five
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,

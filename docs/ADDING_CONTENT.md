@@ -152,7 +152,32 @@ language: `title="rotate.py"`, highlighted lines `{3-5}`, `step=shear`, names in
 `colors="A=blue v=orange"`, `hover="A=matrix"` (used from code views batch 2), `check` or
 `check=torch` (batch 5). A following fence in the language `output` is the block's printed output.
 Wrap two or more blocks in `<CodeTabs>` for the same idea in two libraries; each tab is labeled by
-`tab=NumPy` (or the title). Content rules for code come in code views batch 3.
+`tab=NumPy` (or the title).
+
+### Code walkthrough (`code.mdx`, optional)
+
+An item may add `code.mdx` beside `explanation.mdx`: the Code tab of the explanation pane
+(`?tab=code`, hotkey `c`), marked with a code icon on the unit page and in the pane header. It is
+MDX like the explanation (same components, `<Term>` links count). Headings show in monospace.
+
+- Give a block `step=<id>` to tie it to a step. In the Code tab it is marked while its step is
+  active (the others fade) and scrolls into view; in the step list, that step gets a code button
+  that opens the block under the caption (a step peek). Write each block once, in `code.mdx`;
+  the peek reads it from there. Blocks of one `<CodeTabs>` stay tabs in the peek.
+- Give names their stage colors (`colors=`) and hover keys (`hover=`, the shapes' `hoverKey`), so
+  hovering `A` in the pane lights the matrix and the other way around.
+
+Content rules for code:
+
+- Python 3.12 with type hints; imports at the top of the first block; names that follow the
+  item's notation (`A`, `v`, `x_hat`); lines up to about 72 characters (the pane is narrow).
+- Outputs come from real runs, never typed by hand. Run them locally when the block is not
+  checked in CI.
+- A block maps to one step or one idea, three to fifteen lines.
+- Data engineering shows what the engine does: SQL or PySpark next to its plan (`EXPLAIN` output
+  as an output block), tied to the stage's partitions and shuffles.
+- Deep learning: the NumPy version first (where the math shows), PyTorch in a `CodeTabs`.
+- Code shows the "why", not Python itself: each line maps to a symbol, a step or a shape.
 
 ## 5. Check
 
