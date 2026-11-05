@@ -45,27 +45,13 @@
   margin-bottom: var(--space-1);
 }
 
-.prose :global(code) {
+.prose :global(code:not([class])) {
   padding: 1px 5px;
   border-radius: 4px;
   background: var(--surface-active);
   color: var(--fg);
   font-family: var(--font-mono);
   font-size: 0.85em;
-}
-
-.prose :global(pre) {
-  margin: var(--space-3) 0 var(--space-4);
-  padding: var(--space-3) var(--space-4);
-  border-radius: 8px;
-  background: var(--surface-active);
-  overflow-x: auto;
-  line-height: 1.6;
-}
-
-.prose :global(pre code) {
-  padding: 0;
-  background: none;
 }
 
 .prose :global(.katex-display) {

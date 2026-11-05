@@ -21,6 +21,17 @@ export const vc = {
 
 export type VizColor = (typeof vc)[keyof typeof vc]
 
+/** The code palette, one color per token kind (`CodeTokenKind` in `@/lib/code`). */
+export const codeColor = {
+  keyword: 'var(--code-keyword)',
+  function: 'var(--code-function)',
+  string: 'var(--code-string)',
+  number: 'var(--code-number)',
+  comment: 'var(--code-comment)',
+  name: 'var(--code-name)',
+  operator: 'var(--code-operator)',
+} as const
+
 /** Semantic roles. Prefer these over raw hues when the meaning is the point. */
 export const role = {
   primary: vc.blue,

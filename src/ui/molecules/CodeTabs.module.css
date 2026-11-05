@@ -1,0 +1,33 @@
+.tabs {
+  margin: var(--space-3) 0 var(--space-4);
+}
+
+.bar {
+  margin-bottom: var(--space-2);
+}
+
+/* Panels share one grid cell, so the block keeps the height of the tallest and never jumps. */
+.panels {
+  display: grid;
+}
+
+.panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    visibility 0s linear var(--dur-base);
+}
+
+.active {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    visibility 0s;
+}
+
+.panel > figure {
+  margin: 0;
+}

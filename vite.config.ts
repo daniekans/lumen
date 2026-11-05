@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { defineConfig } from 'vite'
 import { termUses } from './src/catalog/termUsesPlugin.ts'
+import { remarkCodeView } from './src/lib/code/remarkCodeView.ts'
 import { texMacros } from './src/lib/texMacros.ts'
 
 // GitHub Pages serves the site from /lumen/. Locally it is served from the root.
@@ -18,7 +19,7 @@ export default defineConfig({
     {
       enforce: 'pre',
       ...mdx({
-        remarkPlugins: [remarkGfm, remarkMath],
+        remarkPlugins: [remarkGfm, remarkMath, remarkCodeView],
         rehypePlugins: [[rehypeKatex, { macros: texMacros() }]],
         providerImportSource: '@mdx-js/react',
       }),

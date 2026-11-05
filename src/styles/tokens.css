@@ -48,6 +48,19 @@
 
   /* Visualization palette (shared by all themes, tuned per theme below) */
   --viz-stroke-width: 2px;
+
+  /*
+   * Code palette: one meaning per token kind, the same in every theme, on the stage and in the
+   * explanation (keywords purple, calls teal, literals orange, names in the foreground,
+   * operators and comments muted). Read through `codeColor` in viz-colors.ts.
+   */
+  --code-keyword: var(--viz-purple);
+  --code-function: var(--viz-teal);
+  --code-string: var(--viz-orange);
+  --code-number: var(--viz-orange);
+  --code-comment: var(--fg-muted);
+  --code-name: var(--viz-fg);
+  --code-operator: var(--fg-muted);
 }
 
 :root,

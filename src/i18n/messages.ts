@@ -147,6 +147,14 @@ export const en = {
     scene3d: 'Drag to turn the view; arrow keys turn it, + and - zoom',
   },
 
+  code: {
+    copy: 'Copy code',
+    copied: 'Copied',
+    copyFailed: 'Could not copy',
+    output: 'Output',
+    versions: 'Versions of this code',
+  },
+
   skills: {
     resetToNew: 'Reset to new',
     /** Accessible name of a status picker: the skill and its status. */

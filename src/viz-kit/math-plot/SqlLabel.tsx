@@ -1,6 +1,6 @@
 import type { Vec2 } from '@/lib/math'
 import { tokenizeSql, type SqlTokenKind } from '@/lib/sql'
-import { vc } from '@/styles/viz-colors'
+import { codeColor } from '@/styles/viz-colors'
 import { useCoords } from '../stage'
 
 interface SqlLabelProps {
@@ -21,7 +21,7 @@ interface SqlLabelProps {
 export function SqlLabel({
   at,
   children,
-  literalColor = vc.orange,
+  literalColor = codeColor.string,
   size = 13,
   align = 'start',
   opacity = 1,
@@ -29,10 +29,10 @@ export function SqlLabel({
   const c = useCoords()
   const [x, y] = c.toPx(at)
   const fill: Record<SqlTokenKind, string> = {
-    keyword: vc.purple,
-    function: vc.teal,
-    other: vc.muted,
-    identifier: vc.fg,
+    keyword: codeColor.keyword,
+    function: codeColor.function,
+    other: codeColor.operator,
+    identifier: codeColor.name,
     string: literalColor,
     number: literalColor,
   }

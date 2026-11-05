@@ -1,0 +1,95 @@
+.view {
+  margin: var(--space-3) 0 var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.title {
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-size: var(--text-xs);
+}
+
+.body {
+  position: relative;
+}
+
+.pre {
+  margin: 0;
+  padding: var(--space-3) 0;
+  overflow-x: auto;
+  background: none;
+}
+
+/* At least as wide as the block, so a highlighted line's tint spans it, wider when lines are long. */
+.code {
+  display: inline-block;
+  min-width: 100%;
+  padding: 0;
+  background: none;
+  color: var(--code-name);
+  font: inherit;
+  white-space: pre;
+}
+
+.line {
+  display: block;
+  padding: 0 var(--space-4);
+  border-left: 2px solid transparent;
+  transition:
+    background-color var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out);
+}
+
+.highlighted {
+  border-left-color: var(--viz-yellow);
+  background: color-mix(in srgb, var(--viz-yellow) 10%, transparent);
+}
+
+/* The copy button shows on hover or focus; touch screens always show it. */
+.copy {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  opacity: 0;
+  background: var(--bg);
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.view:hover .copy,
+.copy:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .copy {
+    opacity: 1;
+  }
+}
+
+.output {
+  border-top: 1px dashed var(--border-strong);
+  color: var(--fg-muted);
+}
+
+.output .code {
+  padding: 0 var(--space-4);
+  color: var(--fg-muted);
+}
+
+.outputLabel {
+  display: block;
+  padding: var(--space-2) var(--space-4) 0;
+  color: var(--fg-subtle);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+}
+
+.output .pre {
+  padding-top: var(--space-1);
+}
