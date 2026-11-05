@@ -346,11 +346,10 @@ reviewed only when Data Engineering resumes.
 
 After batch 7, code is added unit by unit as units are built (Linear Algebra first).
 
-### Questions for the owner
+### The owner's answers (2026-11-05)
 
-1. Panel closed or open on the first visit to an item with code? (Plan: closed, remembered once
-   opened.)
-2. Removing the Code tab in favor of the whole-file sheet: fine?
+1. The panel is closed on the first visit to an item with code, and remembered once opened.
+2. The Code tab goes; the whole-file sheet replaces it.
 
 ## Pilot content (batch 4)
 

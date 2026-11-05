@@ -36,8 +36,8 @@ Storage and file formats). Content units continue after it as ongoing work, in t
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** Code views batch 6 (`plans/code-views.md`, "Code beside the
-visual"): the code panel on the stage replaces the Code tab and step peeks. First read the
-owner's answers to the two questions at the end of that section, if given. Then batch 7 (line
+visual"): the code panel on the stage replaces the Code tab and step peeks. The owner answered
+its two questions (closed on first visit, drop the Code tab). Then batch 7 (line
 focus that moves with steps and animations), then Linear maps and matrices batch 2
 (`plans/linear-algebra.md`, items 5 to 8) with a `code.mdx` per item. The focus is Mathematics
 and Machine Learning; Data Engineering continues only on request.
