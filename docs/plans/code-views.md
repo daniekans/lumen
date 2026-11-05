@@ -8,7 +8,7 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | Batch | What                                                                 | Status |
 | ----- | -------------------------------------------------------------------- | ------ |
 | 1     | Code model and highlighted blocks in every MDX file (build time)     | done   |
-| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | idea   |
+| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | done   |
 | 3     | Code in the explanation pane: step peeks and the Code tab            | idea   |
 | 4     | Pilot content in three areas, then the owner's review                | idea   |
 | 5     | Opt-in snippet checks: marked Python blocks run in a separate CI job | idea   |
@@ -163,6 +163,28 @@ PySpark line, a query whose clauses light up as rows move.
   registered in `mdxComponents`. The copy button copies `snippet.source`. Highlighted lines use
   the highlight hue (yellow) as a tint and a left bar. Output blocks show under a dashed rule.
 - Fence syntax is documented in `ADDING_CONTENT.md` (section 4).
+
+### Batch 2 as built (2026-11-05)
+
+- `src/lib/code/tokenize.ts`: `tokenizePython`, `tokenizeSql` (moved from `src/lib/sql.ts`, now
+  returning the shared kinds, with `--` comments) and `tokenizeCode(lang, source)`, which gives
+  one token list per line and plain text for languages without an in-house tokenizer. Python
+  splits dotted names (`np`, `linalg`, `norm` are separate tokens), marks calls and the names
+  after `def` and `class` as functions, and reads prefixed and triple-quoted strings. Tests in
+  `tokenize.test.ts` (joining tokens gives back the input).
+- `CodeTokenSpan` and `codeTokenStyle` in `src/ui/atoms`: one token in the palette, shared by
+  `CodeView` and the stage. A name with a hover key has a dotted underline and a tint while its
+  key is lit. `CodeView` takes `activeKey` and `onHoverKey`; nothing in the pane passes them yet,
+  since the pane sits outside the stage's `HighlightContext` (batch 3 lifts the highlight to the
+  item page so the Code tab and step peeks can link).
+- `src/viz-kit/code/`: `CodeLabel` (one line in SVG, any language, `colors`, `hoverKeys`,
+  `kindColors`) and `CodeBlock` (a glass panel in an `HtmlBox` hanging from `at`, with `align`;
+  `line` places the highlight bar, fractional values allowed, `null` hides it; `glide={false}`
+  when `line` is already animated; `dimOthers` fades the other lines; title and output as in
+  `CodeView`). Both read `HighlightContext` for two-way hover. `SqlLabel` is now a thin wrapper
+  over `CodeLabel`.
+- The 2D `Vector` takes `hoverKey` (emphasis, dimming and a hit target as in the 3D primitives),
+  so `A @ v` can link to its arrow. Other 2D primitives get keys when an item needs them.
 
 ## Pilot content (batch 4)
 

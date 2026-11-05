@@ -111,7 +111,11 @@ button appears for a step that does not move.
 - Step handlers can run again from the Replay button, so each one sets the state it starts from
   (as handlers already do when a step is revisited).
 - A line of SQL on a stage uses `<SqlLabel>` (pass `literalColor` when filter values have a
-  color in the item; the default is orange); other monospace text stays a `TextLabel`.
+  color in the item; the default is orange); a line of Python uses
+  `<CodeLabel lang="python">`; other monospace text stays a `TextLabel`.
+- Several lines of code on a stage use `<CodeBlock snippet={...} at={...} line={...} />`: `line`
+  follows the step, `colors` gives names their shapes' hues, and `hoverKeys` links names to
+  shapes with the same `hoverKey` (pass `highlight={hl}` to the stage).
 - Math goes in `src/lib` with a test.
 - If a piece could serve another item, add it to `src/viz-kit` (and export it from the folder's
   `index.ts`) instead of keeping it local.

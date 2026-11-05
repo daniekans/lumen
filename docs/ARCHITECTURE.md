@@ -5,13 +5,13 @@
 ```
 src/
   lib/             Pure TypeScript: math, neural networks, practice, relational operations (joins,
-                   keys), the code model (`code/`: snippets, fence metadata, token kinds, and the
-                   build-time remark plugin that turns MDX fences into `<CodeView>`). No React.
+                   keys), the code model (`code/`: snippets, fence metadata, token kinds, the
+                   in-house Python and SQL tokenizers, and the build-time remark plugin that turns MDX fences into `<CodeView>`). No React.
                    Unit tested.
   styles/          Design tokens (CSS), motion constants and the visualization palette.
   ui/              Application chrome, organized by atomic design:
     atoms/           Button, IconButton, Slider, Switch, Tooltip, Kbd, Badge, Tex, Divider,
-                     KindIcon, AreaIcon, ProgressRing, StatusDots, ResizeHandle
+                     KindIcon, AreaIcon, ProgressRing, StatusDots, ResizeHandle, CodeTokenSpan
     molecules/       LabeledSlider, SegmentedControl, ToggleField, Readout, StepList, StepCheckView,
                      StatusPicker, Sparkline, Breadcrumbs, CodeView, CodeTabs
     organisms/       Sidebar, TopBar, ExplanationPane, ControlDock, CommandPalette, SettingsDialog,
@@ -27,6 +27,8 @@ src/
                      (the grid of the plane under a 2x2 matrix, filling any view), WarpedGrid (the
                      grid under any map, sampled, for maps that bend), SeriesPlot (a value over
                      time with labeled axes, in its own Stage)
+    code/            CodeLabel (one line of code in SVG) and CodeBlock (several lines on a glass
+                     panel with a gliding highlight bar), both linked to shapes by hover
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry
     nn/              layoutNetwork, NeuralNet, weight and gradient edge encodings
     table/           RelationTable (database tables with keys, NULLs and animated rows), tableLayout,
@@ -177,7 +179,8 @@ Linked hover: `useHighlight()` in the item gives a `Highlight`; pass it to the s
 Hovering either side lights both and dims the other keyed shapes, except that hovering a plane
 in the drawing only lights its readout row (`hint`), since planes are crossed all the time while
 orbiting; its row highlights it fully (`useEmphasis`, `stage/highlight.ts`).
-The 3D primitives take hover keys; the 2D ones do not yet.
+The 3D primitives and the 2D `Vector` take hover keys; other 2D primitives get one when an item
+needs it. Names in `CodeLabel` and `CodeBlock` link the same way (`snippet.hoverKeys`).
 
 Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the
 same Stage container and read the same coordinates. Audio would be a service in `viz-kit` with a hook,
