@@ -110,3 +110,20 @@
   color: var(--fg-subtle);
   font-size: var(--text-xs);
 }
+
+.codeMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tabs {
+  margin-bottom: var(--space-4);
+}
+
+/* The Code tab reads as code: monospace headings, so it is never mistaken for the explanation. */
+.codeProse :global(h2),
+.codeProse :global(h3) {
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}

@@ -1,9 +1,11 @@
 import clsx from 'clsx'
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { scrollBehavior } from '@/styles/motion'
 import { msg } from '@/i18n'
 import type { CodeSnippet, CodeTokens } from '@/lib/code'
 import { CodeTokenSpan, IconButton, type CodeNameLinks } from '../atoms'
+import { useCodeLinks } from './codeLinks'
 import styles from './CodeView.module.css'
 
 export interface CodeViewProps {
@@ -13,10 +15,16 @@ export interface CodeViewProps {
   /** Hides the title, when a tab already shows it. */
   hideTitle?: boolean
   className?: string
-  /** Two-way hover with the stage: the lit hover key, and a callback when a name is hovered. */
+  /**
+   * Two-way hover with the stage: the lit hover key, and a callback when a name is hovered.
+   * Inside the explanation pane both come from `CodeLinksContext`.
+   */
   activeKey?: CodeNameLinks['activeKey']
   onHoverKey?: CodeNameLinks['onHoverKey']
 }
+
+/** How long the step list takes to open a caption (`StepList`), before a block scrolls. */
+const SETTLE_MS = 360
 
 /** Copies the snippet's exact source; the icon turns into a check for a moment. */
 function CopyButton({ source }: { source: string }) {
@@ -44,9 +52,10 @@ function CopyButton({ source }: { source: string }) {
 
 /**
  * A read-only block of code with the shared code palette: highlighted lines, names in their
- * stage colors, an optional output and a copy button. The one renderer for code in the
- * explanation (MDX fences become `<CodeView>` at build time), later also for step peeks and the
- * Code tab.
+ * stage colors, an optional output and a copy button. The one renderer for code in the pane:
+ * the explanation and the Code tab (MDX fences become `<CodeView>` at build time) and step
+ * peeks. In the Code tab, a block linked to the active step is marked and scrolls into view,
+ * and the others dim a little.
  */
 export function CodeView({
   snippet,
@@ -56,10 +65,37 @@ export function CodeView({
   activeKey,
   onHoverKey,
 }: CodeViewProps) {
+  const links = useCodeLinks()
+  const key = activeKey === undefined ? links.activeKey : activeKey
+  const onHover = onHoverKey ?? links.onHoverKey
+  const following = links.activeStep !== undefined && links.codeSteps?.has(links.activeStep)
+  const current = following && snippet.step === links.activeStep
+  const ref = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const el = ref.current
+    // A hidden tab of a CodeTabs scrolls nothing; its visible sibling does. The wait lets the
+    // step list settle (captions open and close), so the block lands where it ends up.
+    if (!current || !el || el.closest('[inert]')) return
+    const timer = window.setTimeout(
+      () => el.scrollIntoView({ block: 'nearest', behavior: scrollBehavior() }),
+      SETTLE_MS,
+    )
+    return () => window.clearTimeout(timer)
+  }, [current])
   const highlighted = new Set(snippet.highlight)
   const title = hideTitle ? undefined : snippet.title
   return (
-    <figure className={clsx(styles.view, className)} data-lang={snippet.lang}>
+    <figure
+      ref={ref}
+      className={clsx(
+        styles.view,
+        current && styles.current,
+        following && !current && styles.dimmed,
+        className,
+      )}
+      data-lang={snippet.lang}
+      data-step={snippet.step}
+    >
       {title && <figcaption className={styles.title}>{title}</figcaption>}
       <div className={styles.body}>
         <pre className={styles.pre}>
@@ -75,8 +111,8 @@ export function CodeView({
                     token={token}
                     colors={snippet.colors}
                     hoverKeys={snippet.hoverKeys}
-                    activeKey={activeKey}
-                    onHoverKey={onHoverKey}
+                    activeKey={key}
+                    onHoverKey={onHover}
                   />
                 ))}
                 {'\n'}

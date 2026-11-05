@@ -5,7 +5,14 @@ import { createCssVariablesTheme, createHighlighter, type Highlighter } from 'sh
 import type { VFile } from 'vfile'
 import { classifyLine } from './classify.ts'
 import { parseFence } from './fence.ts'
-import { CODE_LANGS, type CodeSnippet, type CodeTokens, plainTokens } from './snippet.ts'
+import {
+  CODE_FILE,
+  CODE_LANGS,
+  type CodeEntry,
+  type CodeSnippet,
+  type CodeTokens,
+  plainTokens,
+} from './snippet.ts'
 
 /*
  * A remark plugin (build time only) that turns every fenced block in MDX into
@@ -50,15 +57,27 @@ const expressionAttribute = (name: string, value: unknown) => ({
 interface Pending {
   node: MdxJsxFlowElement
   snippet: CodeSnippet
+  /** The `CodeTabs` the block sits in, numbered in order. */
+  group?: number
 }
 
+const isTabs = (node: Parent) =>
+  (node as { type: string }).type === 'mdxJsxFlowElement' &&
+  (node as MdxJsxFlowElement).name === 'CodeTabs'
+
 /** Replaces the fences among a parent's children, attaching output fences to the block before. */
-const convertChildren = (parent: Parent, file: VFile, pending: Pending[]) => {
+const convertChildren = (
+  parent: Parent,
+  file: VFile,
+  pending: Pending[],
+  groups = { count: 0 },
+) => {
+  const group = isTabs(parent) ? groups.count++ : undefined
   const children: RootContent[] = []
   let previous: Pending | undefined
   for (const child of parent.children as RootContent[]) {
     if (child.type !== 'code') {
-      if ('children' in child) convertChildren(child as Parent, file, pending)
+      if ('children' in child) convertChildren(child as Parent, file, pending, groups)
       children.push(child)
       previous = undefined
       continue
@@ -79,23 +98,58 @@ const convertChildren = (parent: Parent, file: VFile, pending: Pending[]) => {
       children: [],
       position: code.position,
     }
-    previous = { node, snippet }
+    previous = { node, snippet, ...(group === undefined ? {} : { group }) }
     pending.push(previous)
     children.push(node)
   }
   parent.children = children
 }
 
+/** `export const snippets = [...]`, as an MDX ESM node. */
+const snippetsExport = (entries: readonly CodeEntry[]) =>
+  ({
+    type: 'mdxjsEsm',
+    value: '',
+    data: {
+      estree: {
+        type: 'Program',
+        sourceType: 'module',
+        body: [
+          {
+            type: 'ExportNamedDeclaration',
+            specifiers: [],
+            source: null,
+            declaration: {
+              type: 'VariableDeclaration',
+              kind: 'const',
+              declarations: [
+                {
+                  type: 'VariableDeclarator',
+                  id: { type: 'Identifier', name: 'snippets' },
+                  init: valueToEstree(entries),
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  }) as unknown as RootContent
+
 export function remarkCodeView() {
   return async (tree: Root, file: VFile) => {
     const pending: Pending[] = []
     convertChildren(tree, file, pending)
-    for (const { node, snippet } of pending) {
+    const entries: CodeEntry[] = []
+    for (const { node, snippet, group } of pending) {
       const tokens = await tokenize(snippet)
       node.attributes = [
         expressionAttribute('snippet', snippet),
         expressionAttribute('tokens', tokens),
       ] as MdxJsxFlowElement['attributes']
+      if (snippet.step) entries.push({ snippet, tokens, ...(group === undefined ? {} : { group }) })
     }
+    // An item's code walkthrough also exports the snippets linked to steps, for step peeks.
+    if (file.path?.endsWith(CODE_FILE)) tree.children.unshift(snippetsExport(entries))
   }
 }

@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import {
+  createContext,
+  createElement,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
 
 /**
  * Linked hover between the drawing and the readouts. A visualization creates one with
@@ -19,7 +27,7 @@ export interface Highlight {
   bind: (key: string) => { highlighted: boolean; onHoverChange: (on: boolean) => void }
 }
 
-export const useHighlight = (): Highlight => {
+const useOwnHighlight = (): Highlight => {
   const [active, setActive] = useState<string | null>(null)
   const [hint, setHintState] = useState<string | null>(null)
   const set = useCallback((key: string | null) => setActive(key), [])
@@ -40,6 +48,29 @@ export const useHighlight = (): Highlight => {
 }
 
 export const HighlightContext = createContext<Highlight | null>(null)
+
+/** The item page's highlight, shared by the visualization and the code in the explanation pane. */
+const HighlightScopeContext = createContext<Highlight | null>(null)
+
+/**
+ * A visualization's highlight. Inside a `HighlightScope` (the item page) it is the page's one, so
+ * code in the explanation pane links to the stage both ways; elsewhere it is the caller's own.
+ */
+export const useHighlight = (): Highlight => {
+  const own = useOwnHighlight()
+  return useContext(HighlightScopeContext) ?? own
+}
+
+/** The page's highlight, or null outside a `HighlightScope`. For readers outside the stage. */
+export const useHighlightScope = () => useContext(HighlightScopeContext)
+
+/**
+ * Lifts the highlight to the item page. The state lives here, so a hover re-renders only the
+ * components that read it, not the page.
+ */
+export function HighlightScope({ children }: { children: ReactNode }) {
+  return createElement(HighlightScopeContext.Provider, { value: useOwnHighlight() }, children)
+}
 
 /** How strongly to draw a shape: emphasized when its key is active, faded when another is. */
 export type Emphasis = 'normal' | 'on' | 'dim'

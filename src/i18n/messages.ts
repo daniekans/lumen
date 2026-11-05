@@ -107,6 +107,11 @@ export const en = {
 
   item: {
     explanation: 'Explanation',
+    code: 'Code',
+    paneTabs: 'Explanation or code',
+    hasCode: 'Has a code walkthrough',
+    showStepCode: 'Show the code of this step',
+    hideStepCode: 'Hide the code',
     resizeExplanation: 'Resize explanation',
     dock: 'Dock to the side',
     float: 'Float over the stage',

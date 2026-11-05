@@ -65,6 +65,17 @@ describe('buildCatalog', () => {
     expect(c.areas[1]!.courses).toEqual([])
   })
 
+  it('attaches the optional code walkthrough', () => {
+    const loadCode = async () => ({ default: () => null, snippets: [] })
+    const c = buildCatalog(
+      sources({ codes: { '../content/math/calc/limits/b/code.mdx': loadCode } }),
+    )
+    const [a, b] = c.items
+    expect(a).toMatchObject({ hasCode: false, Code: undefined })
+    expect(b).toMatchObject({ hasCode: true, loadCode })
+    expect(b!.Code).toBeDefined()
+  })
+
   it('reports and skips broken entries', () => {
     const problems: string[] = []
     const c = buildCatalog(

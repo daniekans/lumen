@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { ArrowRight, Check } from 'lucide-react'
+import { ArrowRight, Check, CodeXml } from 'lucide-react'
 import { Link } from 'react-router'
 import { getCourse, getUnit, type Item, type ItemKind, type Unit } from '@/catalog'
 import { msg } from '@/i18n'
@@ -63,7 +63,14 @@ export function UnitPage({ unit }: { unit: Unit }) {
             <KindIcon kind={item.kind} size={15} />
           </span>
           <span className={styles.body}>
-            <span className={styles.title}>{item.title}</span>
+            <span className={styles.title}>
+              {item.title}
+              {item.hasCode && (
+                <span className={page.codeMark} title={msg.item.hasCode}>
+                  <CodeXml size={13} aria-label={msg.item.hasCode} />
+                </span>
+              )}
+            </span>
             <span className={styles.description}>
               <RichText>{item.summary}</RichText>
             </span>

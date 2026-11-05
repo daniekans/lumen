@@ -9,6 +9,8 @@
 /* Panels share one grid cell, so the block keeps the height of the tallest and never jumps. */
 .panels {
   display: grid;
+  /* minmax keeps long lines scrolling inside the block instead of widening it. */
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .panel {

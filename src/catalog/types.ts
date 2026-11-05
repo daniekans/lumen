@@ -1,4 +1,5 @@
 import type { ComponentType, LazyExoticComponent } from 'react'
+import type { CodeEntry } from '@/lib/code'
 import type { ProblemGenerator } from '@/lib/practice/problems'
 
 /*
@@ -135,6 +136,9 @@ export type LazyComponent = LazyExoticComponent<ComponentType>
 export type Loader = () => Promise<{ default: ComponentType }>
 export type ProblemsModule = { problems: readonly ProblemGenerator[] }
 export type ProblemsLoader = () => Promise<ProblemsModule>
+/** An item's `code.mdx`: the walkthrough, and the snippets linked to steps (for step peeks). */
+export type CodeModule = { default: ComponentType; snippets: readonly CodeEntry[] }
+export type CodeLoader = () => Promise<CodeModule>
 
 export interface Item extends Omit<ItemMeta, 'kind'>, NodeBase {
   type: 'item'
@@ -146,6 +150,11 @@ export interface Item extends Omit<ItemMeta, 'kind'>, NodeBase {
   skillKeys: readonly string[]
   Component: LazyComponent
   Explanation?: LazyComponent
+  /** The Code tab: the item's code walkthrough (`code.mdx`), when it has one. */
+  Code?: LazyComponent
+  /** Loads `code.mdx` (the same chunk as `Code`), for the snippets linked to steps. */
+  loadCode?: CodeLoader
+  hasCode: boolean
   /** Starts fetching the component chunk without rendering it. */
   preload: () => Promise<unknown>
   /** Practice and checkpoint items: their problem generators. */

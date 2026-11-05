@@ -155,3 +155,11 @@
   border-bottom: 0;
   background: var(--surface);
 }
+
+/* An item with a code walkthrough (code.mdx). */
+.codeMark {
+  display: inline-flex;
+  margin-left: var(--space-2);
+  color: var(--fg-subtle);
+  vertical-align: -1px;
+}

@@ -70,3 +70,17 @@ export const tokensToSource = (tokens: CodeTokens) =>
 /** Plain-text tokens (one per line, in the foreground color), for `text` blocks. */
 export const plainTokens = (source: string): CodeTokens =>
   source.split('\n').map((line) => (line ? [{ kind: 'name' as const, text: line }] : []))
+
+/**
+ * A snippet of an item's `code.mdx` with its tokens, as the file exports them (`snippets`), so
+ * step peeks can show the code of a step without rendering the whole walkthrough. `group` is set
+ * on the blocks of one `CodeTabs`, the same number for each.
+ */
+export interface CodeEntry {
+  snippet: CodeSnippet
+  tokens: CodeTokens
+  group?: number
+}
+
+/** The file name of an item's code walkthrough. */
+export const CODE_FILE = 'code.mdx'

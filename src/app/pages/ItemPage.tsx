@@ -8,7 +8,14 @@ import { useUi } from '@/state/ui'
 import { ease } from '@/styles/motion'
 import { IconButton, PortalContainerContext } from '@/ui/atoms'
 import { Breadcrumbs } from '@/ui/molecules'
-import { ControlDock, ExplanationPane, FullscreenBar, LissajousMark, TopBar } from '@/ui/organisms'
+import {
+  ControlDock,
+  ExplanationPane,
+  FullscreenBar,
+  LissajousMark,
+  TopBar,
+  type PaneTab,
+} from '@/ui/organisms'
 import { VizLayout } from '@/ui/templates'
 import {
   createActivity,
@@ -19,6 +26,7 @@ import {
   writeQuery,
   type VizRuntimeValue,
 } from '@/viz-kit/runtime'
+import { HighlightScope } from '@/viz-kit/stage'
 import { crumbsFor } from '../crumbs'
 import { ErrorBoundary } from '@/ui/organisms'
 import { isTyping } from '../useGlobalHotkeys'
@@ -35,6 +43,10 @@ export function ItemPage({ item }: { item: Item }) {
       0,
       steps.findIndex((s) => s.id === readQuery('step')),
     ),
+  )
+  // The Code tab of the pane, when the item has one: ?tab=code.
+  const [tab, setTab] = useState<PaneTab>(() =>
+    item.hasCode && readQuery('tab') === 'code' ? 'code' : 'explanation',
   )
   const [dock, setDock] = useState<HTMLDivElement | null>(null)
   const [urlParams] = useState(createUrlParams)
@@ -72,6 +84,20 @@ export function ItemPage({ item }: { item: Item }) {
   }, [stepId, stepIndex])
 
   useEffect(() => {
+    if (item.hasCode) writeQuery('tab', tab === 'code' ? 'code' : null)
+  }, [item.hasCode, tab])
+
+  // `c` shows the Code tab (opening the pane if it is hidden), and goes back on a second press.
+  const toggleCode = useCallback(() => {
+    if (!item.hasCode) return
+    const ui = useUi.getState()
+    if (!ui.asideOpen) {
+      ui.toggleAside()
+      setTab('code')
+    } else setTab((t) => (t === 'code' ? 'explanation' : 'code'))
+  }, [item.hasCode])
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // A focused 3D stage uses the arrow keys to turn the view and marks them handled.
       if (e.defaultPrevented) return
@@ -79,10 +105,11 @@ export function ItemPage({ item }: { item: Item }) {
       if (e.key === 'ArrowRight') setStepIndex((i) => Math.min(steps.length - 1, i + 1))
       else if (e.key === 'ArrowLeft') setStepIndex((i) => Math.max(0, i - 1))
       else if (e.key === 'f') toggleFullscreen()
+      else if (e.key === 'c') toggleCode()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [steps.length, toggleFullscreen])
+  }, [steps.length, toggleFullscreen, toggleCode])
 
   const runtime = useMemo<VizRuntimeValue>(
     () => ({ steps, stepIndex, goToStep, dock, urlParams, activity }),
@@ -91,88 +118,97 @@ export function ItemPage({ item }: { item: Item }) {
 
   return (
     <CurrentItemContext.Provider value={item}>
-      <VizRuntimeContext.Provider value={runtime}>
-        {/* Tooltips portal into the stage area in fullscreen, since the rest of the page is hidden. */}
-        <PortalContainerContext value={fullscreen.active ? stageArea : undefined}>
-          <VizLayout
-            topBar={
-              <TopBar
-                actions={
-                  <>
-                    {next && (
-                      <Link
-                        to={next.path}
-                        className={styles.next}
-                        onPointerEnter={() => void next.preload()}
+      {/* One highlight for the stage and the pane, so code in the pane links to the shapes. */}
+      <HighlightScope>
+        <VizRuntimeContext.Provider value={runtime}>
+          {/* Tooltips portal into the stage area in fullscreen, since the rest of the page is hidden. */}
+          <PortalContainerContext value={fullscreen.active ? stageArea : undefined}>
+            <VizLayout
+              topBar={
+                <TopBar
+                  actions={
+                    <>
+                      {next && (
+                        <Link
+                          to={next.path}
+                          className={styles.next}
+                          onPointerEnter={() => void next.preload()}
+                        >
+                          {msg.common.next(next.title)}
+                        </Link>
+                      )}
+                      <IconButton
+                        label={msg.item.fullscreen}
+                        shortcut="F"
+                        onClick={fullscreen.enter}
                       >
-                        {msg.common.next(next.title)}
-                      </Link>
-                    )}
-                    <IconButton label={msg.item.fullscreen} shortcut="F" onClick={fullscreen.enter}>
-                      <Maximize size={16} />
-                    </IconButton>
-                    <IconButton
-                      label={asideOpen ? msg.item.hideExplanation : msg.item.showExplanation}
-                      shortcut="]"
-                      onClick={toggleAside}
+                        <Maximize size={16} />
+                      </IconButton>
+                      <IconButton
+                        label={asideOpen ? msg.item.hideExplanation : msg.item.showExplanation}
+                        shortcut="]"
+                        onClick={toggleAside}
+                      >
+                        {asideOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+                      </IconButton>
+                    </>
+                  }
+                >
+                  <Breadcrumbs items={crumbsFor(item)} />
+                </TopBar>
+              }
+              stage={
+                <motion.div
+                  className={styles.fill}
+                  data-print-flow
+                  initial={{ opacity: 0, scale: 0.985 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, ease: ease.out }}
+                >
+                  <ErrorBoundary>
+                    <Suspense
+                      fallback={
+                        <div className={styles.loading}>
+                          <LissajousMark size={40} />
+                        </div>
+                      }
                     >
-                      {asideOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-                    </IconButton>
-                  </>
-                }
-              >
-                <Breadcrumbs items={crumbsFor(item)} />
-              </TopBar>
-            }
-            stage={
-              <motion.div
-                className={styles.fill}
-                data-print-flow
-                initial={{ opacity: 0, scale: 0.985 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, ease: ease.out }}
-              >
-                <ErrorBoundary>
-                  <Suspense
-                    fallback={
-                      <div className={styles.loading}>
-                        <LissajousMark size={40} />
-                      </div>
-                    }
-                  >
-                    <Viz />
-                  </Suspense>
-                </ErrorBoundary>
-              </motion.div>
-            }
-            floating={
-              <>
-                <ControlDock ref={setDock} />
-                {fullscreen.active && (
-                  <FullscreenBar
-                    title={steps[stepIndex]?.title}
-                    index={stepIndex}
-                    count={steps.length}
-                    onStep={goToStep}
-                    onExit={fullscreen.exit}
-                    playback={playback}
-                  />
-                )}
-              </>
-            }
-            stageRef={setStageArea}
-            fullscreen={fullscreen.active}
-            aside={
-              <ExplanationPane
-                entry={item}
-                stepIndex={stepIndex}
-                onStep={goToStep}
-                playback={playback}
-              />
-            }
-          />
-        </PortalContainerContext>
-      </VizRuntimeContext.Provider>
+                      <Viz />
+                    </Suspense>
+                  </ErrorBoundary>
+                </motion.div>
+              }
+              floating={
+                <>
+                  <ControlDock ref={setDock} />
+                  {fullscreen.active && (
+                    <FullscreenBar
+                      title={steps[stepIndex]?.title}
+                      index={stepIndex}
+                      count={steps.length}
+                      onStep={goToStep}
+                      onExit={fullscreen.exit}
+                      playback={playback}
+                    />
+                  )}
+                </>
+              }
+              stageRef={setStageArea}
+              fullscreen={fullscreen.active}
+              aside={
+                <ExplanationPane
+                  entry={item}
+                  stepIndex={stepIndex}
+                  onStep={goToStep}
+                  playback={playback}
+                  tab={tab}
+                  onTab={setTab}
+                />
+              }
+            />
+          </PortalContainerContext>
+        </VizRuntimeContext.Provider>
+      </HighlightScope>
     </CurrentItemContext.Provider>
   )
 }

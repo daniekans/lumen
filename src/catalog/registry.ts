@@ -2,13 +2,13 @@ import { lazy } from 'react'
 import termUses from 'virtual:lumen/term-uses'
 import { areas } from '@/content/areas'
 import { buildCatalog } from './build'
-import type { CourseMeta, ItemMeta, Loader, ProblemsModule, UnitMeta } from './types'
+import type { CodeModule, CourseMeta, ItemMeta, Loader, ProblemsModule, UnitMeta } from './types'
 
 /*
  * Content is discovered from the folder structure under src/content:
  *   <area>/<course>/course.ts
  *   <area>/<course>/<unit>/unit.ts
- *   <area>/<course>/<unit>/<item>/{meta.ts, index.tsx, explanation.mdx}
+ *   <area>/<course>/<unit>/<item>/{meta.ts, index.tsx, explanation.mdx, code.mdx}
  * Metadata is bundled eagerly (it is tiny). Components and explanations are separate chunks.
  */
 const courses = import.meta.glob<CourseMeta>('../content/*/*/course.ts', {
@@ -31,6 +31,9 @@ const explanations = import.meta.glob<{ default: never }>(
   '../content/*/*/*/*/explanation.mdx',
 ) as Record<string, Loader>
 
+// The optional Code tab. Each file also exports `snippets` (see remarkCodeView).
+const codes = import.meta.glob<CodeModule>('../content/*/*/*/*/code.mdx')
+
 const problems = import.meta.glob<ProblemsModule>('../content/*/*/*/*/problems.ts')
 
 /** Problems found while building the catalog. A test keeps this empty. */
@@ -43,6 +46,7 @@ export const catalog = buildCatalog({
   items,
   components,
   explanations,
+  codes,
   problems,
   termUses,
   practiceLoader: () => import('@/practice/PracticeItem'),

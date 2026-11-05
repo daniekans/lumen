@@ -93,3 +93,25 @@
 .output .pre {
   padding-top: var(--space-1);
 }
+
+/* The Code tab: the block of the active step is marked, the others fade a little. */
+.view {
+  scroll-margin-block: var(--space-6);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    border-color var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-slow) var(--ease-out);
+}
+
+.current {
+  border-color: color-mix(in srgb, var(--viz-yellow) 55%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--viz-yellow) 25%, transparent);
+}
+
+.dimmed {
+  opacity: 0.6;
+}
+
+.dimmed:hover {
+  opacity: 1;
+}

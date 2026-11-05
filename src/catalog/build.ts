@@ -2,6 +2,7 @@ import type {
   Area,
   AreaMeta,
   CatalogNode,
+  CodeLoader,
   Course,
   CourseMeta,
   Item,
@@ -22,6 +23,8 @@ export interface CatalogSources {
   items: Record<string, ItemMeta>
   components: Record<string, Loader>
   explanations: Record<string, Loader>
+  /** code.mdx modules: the optional Code tab. */
+  codes?: Record<string, CodeLoader>
   /** problems.ts modules of practice and checkpoint items. */
   problems?: Record<string, ProblemsLoader>
   /** Wraps a loader into a renderable component (React.lazy in the app). */
@@ -71,6 +74,7 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
     new Map(Object.entries(m).map(([p, load]) => [split(p).dir, load]))
   const components = byDir(src.components)
   const explanations = byDir(src.explanations)
+  const codes = new Map(Object.entries(src.codes ?? {}).map(([p, load]) => [split(p).dir, load]))
   const problemSets = new Map(
     Object.entries(src.problems ?? {}).map(([p, load]) => [split(p).dir, load]),
   )
@@ -105,6 +109,7 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
     if (!explanation && (kind === 'explore' || kind === 'lesson')) {
       problem(`${kind} item ${dir} has no explanation.mdx`)
     }
+    const loadCode = codes.get(dir)
     const [a, c, u] = parts
     const unitId = `${a}/${c}/${u}`
     const item: Item = {
@@ -118,6 +123,9 @@ export const buildCatalog = (src: CatalogSources): Catalog => {
       skillKeys: (meta.skills ?? []).map((s) => `${unitId}#${s}`),
       Component: src.lazy(load),
       Explanation: explanation && src.lazy(explanation),
+      Code: loadCode && src.lazy(loadCode),
+      loadCode,
+      hasCode: loadCode !== undefined,
       preload: load,
       loadProblems,
     }

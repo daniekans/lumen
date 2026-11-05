@@ -92,3 +92,48 @@
   font-size: var(--text-sm);
   line-height: 1.55;
 }
+
+/* The code button of a step with linked code, over the row's right end. Quiet until the row
+   is hovered or active. */
+.withCode {
+  padding-right: 36px;
+}
+
+.codeSlot {
+  position: absolute;
+  top: 3px;
+  right: var(--space-1);
+}
+
+.codeToggle {
+  color: var(--fg-subtle);
+  opacity: 0.6;
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.entry:hover .codeToggle,
+.active .codeToggle,
+.codeToggle:focus-visible {
+  opacity: 1;
+}
+
+.peeking {
+  color: var(--fg);
+  background: var(--surface-active);
+}
+
+.peek {
+  overflow: hidden;
+}
+
+.peekInner {
+  padding-top: var(--space-1);
+}
+
+/* Peeks sit in a narrow column: a smaller font and tighter margins than in the explanation. */
+.peekInner figure {
+  margin: var(--space-2) 0 0;
+  font-size: 0.75rem;
+}

@@ -20,3 +20,9 @@ export const spring = {
   /** Visual elements that should settle softly. */
   soft: { type: 'spring', stiffness: 140, damping: 22 },
 } as const
+
+/** Smooth scrolling, unless the learner asks for reduced motion. */
+export const scrollBehavior = (): ScrollBehavior =>
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    ? 'auto'
+    : 'smooth'

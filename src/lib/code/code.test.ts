@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { classifyLine } from './classify'
 import { parseFence, parseLineRanges } from './fence'
-import { tokenize } from './remarkCodeView'
+import type { Root } from 'mdast'
+import type { VFile } from 'vfile'
+import { remarkCodeView, tokenize } from './remarkCodeView'
 import { plainTokens, tokensToSource } from './snippet'
 
 describe('parseFence', () => {
@@ -126,5 +128,57 @@ describe('tokenizing with Shiki', () => {
 
   it('keeps plain text as it is', () => {
     expect(tokensToSource(plainTokens('a\n\nb'))).toBe('a\n\nb')
+  })
+})
+
+describe('remarkCodeView', () => {
+  const fence = (meta: string | null, value = 'x = 1') => ({
+    type: 'code' as const,
+    lang: 'python',
+    meta,
+    value,
+  })
+  const tree = (): Root => ({
+    type: 'root',
+    children: [
+      fence('step=a'),
+      fence(null),
+      {
+        type: 'mdxJsxFlowElement',
+        name: 'CodeTabs',
+        attributes: [],
+        children: [fence('step=b tab=NumPy'), fence('step=b tab=PyTorch')],
+      },
+    ],
+  })
+  const run = async (path: string) => {
+    const t = tree()
+    const file = {
+      path,
+      fail: (m: string) => {
+        throw new Error(m)
+      },
+    } as unknown as VFile
+    await remarkCodeView()(t, file)
+    return t
+  }
+  const exported = (t: Root) => {
+    const esm = t.children[0] as unknown as { type: string; data: { estree: unknown } }
+    return esm.type === 'mdxjsEsm' ? JSON.stringify(esm.data.estree) : undefined
+  }
+
+  it('exports the step snippets of a code walkthrough, with their tabs group', async () => {
+    const json = exported(await run('/c/a/u/i/code.mdx'))!
+    expect(json).toContain('"name":"snippets"')
+    // Three step blocks: one alone, two in the first CodeTabs (group 0). The block without a
+    // step is left out.
+    const count = (value: string) => json.split(`"value":"${value}"`).length - 1
+    expect(count('step')).toBe(3)
+    expect([count('a'), count('b')]).toEqual([1, 2])
+    expect(count('group')).toBe(2)
+  })
+
+  it('exports nothing from an explanation', async () => {
+    expect(exported(await run('/c/a/u/i/explanation.mdx'))).toBeUndefined()
   })
 })
