@@ -142,6 +142,14 @@ Link the first mention of a term defined elsewhere (another item or unit) with
 them in practice and checkpoint explanations too. Keep a word before the tag on its line and do not
 start a list item with it (Prettier splits the paragraph).
 
+Fenced code blocks are highlighted at build time (`python`, `sql`, `scala`, `typescript`, `bash`,
+`json`, `yaml`, `text`; an unknown language or option fails the build). Options go after the
+language: `title="rotate.py"`, highlighted lines `{3-5}`, `step=shear`, names in stage colors
+`colors="A=blue v=orange"`, `hover="A=matrix"` (used from code views batch 2), `check` or
+`check=torch` (batch 5). A following fence in the language `output` is the block's printed output.
+Wrap two or more blocks in `<CodeTabs>` for the same idea in two libraries; each tab is labeled by
+`tab=NumPy` (or the title). Content rules for code come in code views batch 3.
+
 ## 5. Check
 
 - [ ] Every hue from `vc` and with a meaning (see `DESIGN.md`, Palette rules)

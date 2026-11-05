@@ -37,8 +37,9 @@ of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
 **Suggested next session:** Linear maps and matrices batch 1 is built and its review applied
 (`plans/linear-algebra.md`, "Batch 1 review"). Build batch 2 (items 5 to 8: the gallery of maps,
-composition, matrix multiplication and its practice). Alternatively, start code views batch 1
-(`plans/code-views.md`, reviewed by the owner). The focus is
+composition, matrix multiplication and its practice). Alternatively, continue code views with
+batch 2 (`plans/code-views.md`: `tokenizePython`, `CodeLabel`, `CodeBlock`, two-way hover); batch
+1 (the code model, highlighted MDX blocks, `CodeTabs`) is done. The focus is
 Mathematics and Machine Learning; Data Engineering continues only on request, and its next step
 is outlining the Distributed processing unit.
 
@@ -84,7 +85,7 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (planned: read-only code views first)
+### Phase 6: Code lessons (in progress: read-only code views, batch 1 done)
 
 Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (five
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,

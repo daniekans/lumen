@@ -7,7 +7,7 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 
 | Batch | What                                                                 | Status |
 | ----- | -------------------------------------------------------------------- | ------ |
-| 1     | Code model and highlighted blocks in every MDX file (build time)     | idea   |
+| 1     | Code model and highlighted blocks in every MDX file (build time)     | done   |
 | 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | idea   |
 | 3     | Code in the explanation pane: step peeks and the Code tab            | idea   |
 | 4     | Pilot content in three areas, then the owner's review                | idea   |
@@ -143,6 +143,26 @@ PySpark line, a query whose clauses light up as rows move.
 - Data engineering shows what the engine does with the code: SQL or PySpark next to its plan
   (`EXPLAIN` output as an output block), tied to the stage's partitions and shuffles.
 - Deep learning: the NumPy version first (where the math shows), PyTorch in a `CodeTabs`.
+
+### Batch 1 as built (2026-11-05)
+
+- `src/lib/code/`: `snippet.ts` (`CodeSnippet`, `CodeLang`, `CodeTokenKind`, `CodeTokens`),
+  `fence.ts` (`parseFence`: fence language and metadata to a snippet, or an error that fails the
+  build), `classify.ts` (Shiki tokens to the shared kinds), `remarkCodeView.ts` (the build-time
+  plugin, imported only by `vite.config.ts`), tests in `code.test.ts`.
+- Tokens are stored as kinds, not colors: `{ kind, text }` per token, one list per line, the
+  same shape the in-house tokenizers will return in batch 2. Shiki runs with its CSS-variables
+  theme only to learn each token's kind; runs it leaves in the foreground are split again so
+  every name is its own token (per-name colors and hover links need that). Shiki stays out of
+  the client bundle.
+- `colors` holds hue names (`'blue'`), resolved through `vc` by the renderer, since `src/lib`
+  does not depend on styles. `tab=` was added for `CodeTabs` labels.
+- Palette: `--code-keyword` ... `--code-operator` in `tokens.css` (one definition, read through
+  `codeColor` in `viz-colors.ts`); `SqlLabel` uses it.
+- `CodeView` and `CodeTabs` in `src/ui/molecules` (with `codeTab.ts` for the remembered tab),
+  registered in `mdxComponents`. The copy button copies `snippet.source`. Highlighted lines use
+  the highlight hue (yellow) as a tint and a left bar. Output blocks show under a dashed rule.
+- Fence syntax is documented in `ADDING_CONTENT.md` (section 4).
 
 ## Pilot content (batch 4)
 

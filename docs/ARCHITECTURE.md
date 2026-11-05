@@ -5,13 +5,15 @@
 ```
 src/
   lib/             Pure TypeScript: math, neural networks, practice, relational operations (joins,
-                   keys). No React. Unit tested.
+                   keys), the code model (`code/`: snippets, fence metadata, token kinds, and the
+                   build-time remark plugin that turns MDX fences into `<CodeView>`). No React.
+                   Unit tested.
   styles/          Design tokens (CSS), motion constants and the visualization palette.
   ui/              Application chrome, organized by atomic design:
     atoms/           Button, IconButton, Slider, Switch, Tooltip, Kbd, Badge, Tex, Divider,
                      KindIcon, AreaIcon, ProgressRing, StatusDots, ResizeHandle
     molecules/       LabeledSlider, SegmentedControl, ToggleField, Readout, StepList, StepCheckView,
-                     StatusPicker, Sparkline, Breadcrumbs
+                     StatusPicker, Sparkline, Breadcrumbs, CodeView, CodeTabs
     organisms/       Sidebar, TopBar, ExplanationPane, ControlDock, CommandPalette, SettingsDialog,
                      CourseCard, ...
     templates/       AppShell, VizLayout, DocumentLayout
