@@ -10,7 +10,7 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 1     | Code model and highlighted blocks in every MDX file (build time)     | done   |
 | 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes         | done   |
 | 3     | Code in the explanation pane: step peeks and the Code tab            | done   |
-| 4     | Pilot content in three areas, then the owner's review                | idea   |
+| 4     | Pilot content in three areas, then the owner's review                | review |
 | 5     | Opt-in snippet checks: marked Python blocks run in a separate CI job | idea   |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
@@ -212,6 +212,26 @@ PySpark line, a query whose clauses light up as rows move.
 - Checked with a temporary `code.mdx` on `vectors/basis-and-coordinates` (removed): hover from
   a pane name dims the other arrows and lights the readout row. No item has `code.mdx` yet; batch
   4 adds the first, and should add an e2e check of the Code tab and a peek.
+
+### Batch 4 as built (2026-11-05)
+
+- `code.mdx` in the three pilot items, every block tied to a step, outputs from real runs
+  (Python 3.12, NumPy 2.5, PyTorch 2.15 CPU, PySpark 4.3 on Java 21, in a scratch environment).
+- `matrix-vector-product`: columns, rows, food, shapes, identity, one row, a layer, homogeneous
+  coordinates. `x`, `Ax`, `a1`, `a2`, `w`, `b` carry their stage colors and hover keys; the
+  arrows got matching `hoverKey`s. On the stage, a `CodeLabel` under the plot shows the line of
+  the step in the columns and rows steps.
+- `forward-pass`: weights, one neuron, then the forward loop in NumPy and `nn.Sequential` in a
+  PyTorch tab (the NumPy weights copied in, so both print the same output).
+- `partitioning-by-key`: the item is about `partitionBy` on disk and pruning, not shuffles, so
+  the code follows it: the folder listing, the path column, and the scan node of
+  `explain("formatted")` (`PartitionFilters` for `day`, only `PushedFilters` for `city`, both
+  levels), with a SQL tab. `repartition`, `DISTRIBUTE BY` and `Exchange hashpartitioning` belong
+  to Hash partitioning instead.
+- e2e: "code tab follows the step, and a step peek shows its code" in `smoke.spec.ts`.
+- Open question for the owner: the rule "outputs come from real runs" means PySpark (with Java)
+  and PyTorch must be installed locally whenever such content is written. Options to decide at
+  review.
 
 ## Pilot content (batch 4)
 
