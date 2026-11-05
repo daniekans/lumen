@@ -3,3 +3,4 @@
 export * from './snippet'
 export * from './fence'
 export * from './classify'
+export * from './tokenize'

@@ -1,0 +1,17 @@
+/* A name linked to a shape: a dotted underline invites hovering; lit while its shape is. */
+.linked {
+  border-radius: 3px;
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  text-underline-offset: 3px;
+  cursor: default;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.active {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 18%, transparent);
+  text-decoration-color: transparent;
+}

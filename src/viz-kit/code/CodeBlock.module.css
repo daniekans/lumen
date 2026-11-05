@@ -1,0 +1,52 @@
+.block {
+  position: relative;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  line-height: var(--code-line);
+  white-space: pre;
+}
+
+.title {
+  padding: var(--space-1) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-size: var(--text-xs);
+}
+
+.body {
+  position: relative;
+  padding: var(--space-2) 0;
+}
+
+/* The highlight bar sits under the text and glides between lines. */
+.bar {
+  position: absolute;
+  top: var(--space-2);
+  right: 0;
+  left: 0;
+  height: var(--code-line);
+  border-left: 2px solid var(--viz-yellow);
+  background: color-mix(in srgb, var(--viz-yellow) 12%, transparent);
+  pointer-events: none;
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+
+.still {
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.line {
+  position: relative;
+  display: block;
+  padding: 0 var(--space-3);
+  min-height: var(--code-line);
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.output {
+  padding: var(--space-1) var(--space-3) var(--space-2);
+  border-top: 1px dashed var(--border-strong);
+  color: var(--fg-muted);
+}

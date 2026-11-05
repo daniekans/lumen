@@ -3,6 +3,7 @@
  * deep paths, so internals can be reorganized freely.
  */
 export * from './anim'
+export * from './code'
 export * from './graph'
 export * from './interaction/useDrag'
 export * from './math-plot'

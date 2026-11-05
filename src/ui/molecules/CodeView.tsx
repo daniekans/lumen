@@ -2,9 +2,8 @@ import clsx from 'clsx'
 import { Check, Copy } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { msg } from '@/i18n'
-import type { CodeSnippet, CodeToken, CodeTokens } from '@/lib/code'
-import { codeColor, vc } from '@/styles/viz-colors'
-import { IconButton } from '../atoms'
+import type { CodeSnippet, CodeTokens } from '@/lib/code'
+import { CodeTokenSpan, IconButton, type CodeNameLinks } from '../atoms'
 import styles from './CodeView.module.css'
 
 export interface CodeViewProps {
@@ -14,16 +13,9 @@ export interface CodeViewProps {
   /** Hides the title, when a tab already shows it. */
   hideTitle?: boolean
   className?: string
-}
-
-const tokenStyle = (token: CodeToken, snippet: CodeSnippet) => {
-  const hue = token.kind === 'name' ? snippet.colors?.[token.text] : undefined
-  if (hue) return { color: vc[hue], fontWeight: 600 }
-  return {
-    color: codeColor[token.kind],
-    fontWeight: token.kind === 'keyword' ? 600 : undefined,
-    fontStyle: token.kind === 'comment' ? ('italic' as const) : undefined,
-  }
+  /** Two-way hover with the stage: the lit hover key, and a callback when a name is hovered. */
+  activeKey?: CodeNameLinks['activeKey']
+  onHoverKey?: CodeNameLinks['onHoverKey']
 }
 
 /** Copies the snippet's exact source; the icon turns into a check for a moment. */
@@ -56,7 +48,14 @@ function CopyButton({ source }: { source: string }) {
  * explanation (MDX fences become `<CodeView>` at build time), later also for step peeks and the
  * Code tab.
  */
-export function CodeView({ snippet, tokens, hideTitle, className }: CodeViewProps) {
+export function CodeView({
+  snippet,
+  tokens,
+  hideTitle,
+  className,
+  activeKey,
+  onHoverKey,
+}: CodeViewProps) {
   const highlighted = new Set(snippet.highlight)
   const title = hideTitle ? undefined : snippet.title
   return (
@@ -71,9 +70,14 @@ export function CodeView({ snippet, tokens, hideTitle, className }: CodeViewProp
                 className={clsx(styles.line, highlighted.has(i + 1) && styles.highlighted)}
               >
                 {line.map((token, k) => (
-                  <span key={k} style={tokenStyle(token, snippet)}>
-                    {token.text}
-                  </span>
+                  <CodeTokenSpan
+                    key={k}
+                    token={token}
+                    colors={snippet.colors}
+                    hoverKeys={snippet.hoverKeys}
+                    activeKey={activeKey}
+                    onHoverKey={onHoverKey}
+                  />
                 ))}
                 {'\n'}
               </span>
