@@ -22,6 +22,7 @@ import { vc } from '@/styles/viz-colors'
 import { LabeledSlider, MatrixView, Readout, ReadoutPanel, SegmentedControl } from '@/ui/molecules'
 import {
   Axes,
+  CodeLabel,
   Grid,
   MathLabel,
   numbersCodec,
@@ -69,6 +70,10 @@ const domains: Record<Scene, { x: [number, number]; y: [number, number] }> = {
   dot: { x: [-1, 11], y: [-1, 9] },
   layer: { x: [-5.5, 9], y: [-2.5, 8.5] },
 }
+
+/** Names in the code (stage and Code tab) in their shapes' colors, linked to them by hover. */
+const CODE_COLORS = { x: 'blue', Ax: 'teal', a1: 'green', a2: 'red' } as const
+const CODE_KEYS = { x: 'x', Ax: 'Ax', a1: 'a1', a2: 'a2' }
 
 const A: Mat2 = mat2(2, -1, 1, 1)
 /** Protein and carbs per serving, in units of 10 g, as in Vectors: food A = (2, 1), food B = (0.5, 2). */
@@ -336,17 +341,17 @@ export default function MatrixVectorProduct() {
         {columnsScene && (
           <>
             {id === 'identity' && <TransformedGrid m={m} opacity={0.12} />}
-            <Vector to={m.i} color={C1} width={2} opacity={0.5} />
-            <Vector to={m.j} color={C2} width={2} opacity={0.5} />
-            <Vector to={part1} color={C1} />
-            <Vector from={part1} to={Ax} color={C2} />
+            <Vector to={m.i} color={C1} width={2} opacity={0.5} hoverKey="a1" />
+            <Vector to={m.j} color={C2} width={2} opacity={0.5} hoverKey="a2" />
+            <Vector to={part1} color={C1} hoverKey="a1" />
+            <Vector from={part1} to={Ax} color={C2} hoverKey="a2" />
             {scene === 'plane' && (
               <>
-                <Vector to={x} color={X_COLOR} />
+                <Vector to={x} color={X_COLOR} hoverKey="x" />
                 <MathLabel at={x} tex="\mathbf{x}" color={X_COLOR} anchor="se" offset={8} />
               </>
             )}
-            <Vector to={Ax} color={OUT_COLOR} />
+            <Vector to={Ax} color={OUT_COLOR} hoverKey="Ax" />
             <MathLabel at={m.i} tex="\mathbf{a}_1" color={C1} anchor="se" offset={8} />
             <MathLabel at={m.j} tex="\mathbf{a}_2" color={C2} anchor="nw" offset={8} />
             <MathLabel
@@ -387,6 +392,17 @@ export default function MatrixVectorProduct() {
                   offset={10}
                 />
               </>
+            )}
+            {(id === 'columns' || rowsStep) && (
+              <CodeLabel
+                at={[5.3, -2.1]}
+                align="end"
+                lang="python"
+                colors={CODE_COLORS}
+                hoverKeys={CODE_KEYS}
+              >
+                {rowsStep ? 'Ax = np.array([r1 @ x, r2 @ x])' : 'Ax = x[0] * a1 + x[1] * a2'}
+              </CodeLabel>
             )}
             {scene === 'plane' && <Point at={x} color={X_COLOR} onDrag={dragX} label="Tip of x" />}
           </>
@@ -446,9 +462,9 @@ export default function MatrixVectorProduct() {
               width={2}
               opacity={0.8}
             />
-            <Vector to={W} color={W_COLOR} />
+            <Vector to={W} color={W_COLOR} hoverKey="w" />
             <MathLabel at={W} tex="\mathbf{w}" color={W_COLOR} anchor="se" offset={6} />
-            <Vector to={x} color={X_COLOR} />
+            <Vector to={x} color={X_COLOR} hoverKey="x" />
             <MathLabel
               at={x}
               tex={`\\mathbf{w} \\cdot \\mathbf{x} = ${fmtShort(wx, 2)}`}
@@ -468,7 +484,7 @@ export default function MatrixVectorProduct() {
 
         {scene === 'layer' && (
           <>
-            <Vector to={x} color={X_COLOR} />
+            <Vector to={x} color={X_COLOR} hoverKey="x" />
             <MathLabel at={x} tex="\mathbf{x}" color={X_COLOR} anchor="ne" offset={8} />
             {phase > 0.02 && (
               <>
@@ -485,7 +501,7 @@ export default function MatrixVectorProduct() {
             )}
             {shift > 0.02 && (
               <>
-                <Vector from={Wx} to={layerAt(x, phase)} color={B_COLOR} width={2} />
+                <Vector from={Wx} to={layerAt(x, phase)} color={B_COLOR} width={2} hoverKey="b" />
                 <Vector to={layerAt(x, phase)} color={OUT_COLOR} />
                 <MathLabel
                   at={layerAt(x, phase)}
@@ -495,7 +511,7 @@ export default function MatrixVectorProduct() {
                   offset={8}
                   opacity={shift}
                 />
-                <Vector to={scale(B, shift)} color={B_COLOR} />
+                <Vector to={scale(B, shift)} color={B_COLOR} hoverKey="b" />
                 <Point at={scale(B, shift)} color={B_COLOR} r={4} coords={false} />
                 <MathLabel
                   at={scale(B, shift)}

@@ -1,0 +1,87 @@
+The network of the stage in NumPy: sizes $3, 4, 4, 2$ and sigmoid activations. The weights are
+random here too, from NumPy's generator, so the numbers differ from the stage.
+
+## Weights and biases
+
+One matrix per pair of adjacent layers. Row $j$ of `W` holds the weights into neuron $j$, so a
+layer of $n$ neurons fed by $m$ has `W` of shape `(n, m)`:
+
+```python title="network.py" step=weights
+import numpy as np
+
+rng = np.random.default_rng(4)
+sizes = [3, 4, 4, 2]
+Ws = [rng.normal(0, 1, (n, m)) for m, n in zip(sizes, sizes[1:])]
+bs = [rng.normal(0, 0.5, n) for n in sizes[1:]]
+print([W.shape for W in Ws])
+```
+
+```output
+[(4, 3), (4, 4), (2, 4)]
+```
+
+## One neuron
+
+A weighted sum plus a bias, then the sigmoid:
+
+```python title="neuron.py" step=neuron
+def sigma(z: np.ndarray) -> np.ndarray:
+    return 1 / (1 + np.exp(-z))
+
+
+x = np.array([0.3, 0.8, 0.55])
+w, b = Ws[0][0], bs[0][0]  # neuron 1 of hidden layer 1
+z = w @ x + b
+print(round(z, 3), round(sigma(z), 3))
+```
+
+```output
+1.059 0.743
+```
+
+## Layer by layer
+
+`W @ a + b` computes every neuron of a layer at once, and each layer feeds the next. PyTorch's
+`nn.Linear` stores the same `W` and `b`; with the NumPy weights copied in, it gives the same
+output.
+
+<CodeTabs>
+
+```python title="forward.py" tab=NumPy step=forward
+def forward(x: np.ndarray) -> np.ndarray:
+    a = x
+    for W, b in zip(Ws, bs):
+        a = sigma(W @ a + b)
+    return a
+
+
+y_hat = forward(x)
+print(y_hat.round(3))
+```
+
+```output
+[0.478 0.285]
+```
+
+```python title="forward_torch.py" tab=PyTorch step=forward
+import torch
+from torch import nn
+
+net = nn.Sequential(
+    nn.Linear(3, 4), nn.Sigmoid(),
+    nn.Linear(4, 4), nn.Sigmoid(),
+    nn.Linear(4, 2), nn.Sigmoid(),
+)
+with torch.no_grad():
+    for layer, W, b in zip(net[::2], Ws, bs):
+        layer.weight.copy_(torch.from_numpy(W))
+        layer.bias.copy_(torch.from_numpy(b))
+    y_hat = net(torch.tensor(x, dtype=torch.float32))
+print(y_hat.round(decimals=3))
+```
+
+```output
+tensor([0.4780, 0.2850])
+```
+
+</CodeTabs>

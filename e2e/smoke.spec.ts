@@ -227,3 +227,26 @@ test('theme toggle switches tokens', async ({ page }) => {
   await page.keyboard.press('t')
   await expect(html).not.toHaveAttribute('data-theme', before ?? '')
 })
+
+test('code tab follows the step, and a step peek shows its code', async ({ page }) => {
+  const errors = collectErrors(page)
+  await page.goto('/mathematics/linear-algebra/linear-maps/matrix-vector-product')
+  const pane = page.locator('aside')
+  await pane.getByRole('radio', { name: 'Code' }).click()
+  await expect(page).toHaveURL(/[?&]tab=code/)
+  const columns = pane.locator('figure[data-step="columns"]').first()
+  await expect(columns).toBeVisible()
+  await expect(columns).toContainText('a1')
+
+  // The block of the active step scrolls into view when the step changes.
+  await pane.locator('ol > li > button', { hasText: 'Each entry from one row' }).click()
+  await expect(pane.locator('figure[data-step="rows"]')).toBeInViewport()
+
+  // The peek opens the step's code under its caption.
+  const row = pane.locator('ol > li', { hasText: 'Each entry from one row' })
+  await row.getByRole('button', { name: 'Show the code of this step' }).click()
+  await expect(row.locator('figure[data-step="rows"]')).toBeVisible()
+  await row.getByRole('button', { name: 'Hide the code' }).click()
+  await expect(row.locator('figure[data-step="rows"]')).toHaveCount(0)
+  expect(errors).toEqual([])
+})

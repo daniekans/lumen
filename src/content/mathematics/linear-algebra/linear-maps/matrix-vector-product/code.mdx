@@ -1,0 +1,131 @@
+In NumPy, `A @ x` is the matrix-vector product. The blocks below compute it the two ways of the
+lesson and check that both give `A @ x`. Hover a name to light its arrow on the stage.
+
+## By columns
+
+`A[:, 0]` is the first column. Weight each column by its entry of `x` and add:
+
+```python title="columns.py" step=columns colors="x=blue Ax=teal a1=green a2=red" hover="x=x Ax=Ax a1=a1 a2=a2"
+import numpy as np
+
+A = np.array([[2.0, -1.0],
+              [1.0, 1.0]])
+x = np.array([1.5, 1.0])
+
+a1, a2 = A[:, 0], A[:, 1]  # the columns
+Ax = x[0] * a1 + x[1] * a2
+print(Ax)
+print(A @ x)
+```
+
+```output
+[2.  2.5]
+[2.  2.5]
+```
+
+## By rows
+
+Unpacking a matrix gives its rows. Each entry of the product is one dot product:
+
+```python title="rows.py" step=rows colors="x=blue" hover="x=x"
+r1, r2 = A  # the rows
+print(np.dot(r1, x), np.dot(r2, x))
+```
+
+```output
+2.0 2.5
+```
+
+Both loops are inside `A @ x`. NumPy computes it with compiled code, so write `A @ x` and keep the
+two readings for thinking about it.
+
+## A table of data
+
+Foods in the columns, nutrients in the rows, servings in the vector:
+
+```python title="food.py" step=food
+food = np.array([[20.0, 5.0],    # protein, g per serving
+                 [10.0, 20.0]])  # carbs
+servings = np.array([1.5, 1.0])  # of A and of B
+print(food @ servings)
+```
+
+```output
+[35. 35.]
+```
+
+## Shapes
+
+A $2 \times 3$ matrix takes a vector with three entries and returns two. With two entries,
+NumPy refuses:
+
+```python title="shapes.py" step=shapes
+A3 = np.array([[1.0, -1.0, 0.5],
+               [0.5, 1.0, 1.5]])
+x3 = np.array([1.0, 1.0, 1.0])
+print(A3.shape, x3.shape, (A3 @ x3).shape)
+print(A3 @ x3)
+A3 @ x  # ValueError: size 2 is different from 3
+```
+
+```output
+(2, 3) (3,) (2,)
+[0.5 3. ]
+```
+
+## The identity
+
+```python title="identity.py" step=identity colors="x=blue" hover="x=x"
+I = np.eye(2)
+print(I @ x)
+```
+
+```output
+[1.5 1. ]
+```
+
+## One row
+
+A dot product with fixed weights is a matrix with one row. NumPy treats a flat vector `w` as
+that row, or you can make the $1 \times 2$ shape explicit:
+
+```python title="score.py" step=dot colors="w=orange x=blue" hover="w=w x=x"
+w = np.array([0.5, 0.3])  # weights on hours studied, slept
+x = np.array([6.0, 7.0])
+print(w @ x)                # a dot product
+print(w.reshape(1, 2) @ x)  # the same, as a 1 x 2 matrix
+```
+
+```output
+5.1
+[5.1]
+```
+
+## A layer
+
+Each row of `W` is one neuron. Adding `b` shifts every output, so the origin no longer stays put:
+
+```python title="layer.py" step=layer colors="x=blue b=yellow" hover="x=x b=b"
+W = np.array([[0.5, 0.3],
+              [-0.2, 0.4]])
+b = np.array([-4.0, -1.0])
+print(W @ x + b)
+print(W @ np.zeros(2) + b)  # 0 lands on b: not linear
+```
+
+```output
+[1.1 0.6]
+[-4. -1.]
+```
+
+With one more coordinate the shift becomes part of the matrix (homogeneous coordinates):
+
+```python title="homogeneous.py" colors="x=blue b=yellow"
+Wb = np.block([[W, b[:, None]],
+               [np.zeros((1, 2)), np.ones((1, 1))]])
+print(Wb @ np.append(x, 1.0))
+```
+
+```output
+[1.1 0.6 1. ]
+```
