@@ -11,7 +11,9 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done   |
 | 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
 | 4     | Pilot content in three areas, then the owner's review               | done   |
-| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | review |
+| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done   |
+| 6     | The code panel: code beside the visual, step by step (replaces tab) | next   |
+| 7     | Code that moves with the visual: per-step and animated line focus   | idea   |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -266,6 +268,90 @@ PySpark line, a query whose clauses light up as rows move.
   Times after the images exist: default 0.2 to 0.7 s, torch 1.7 s, spark 10.4 s.
 - Not done: SQL in the default environment (DuckDB would fit), Scala blocks.
 
+## Code beside the visual (batches 6 and 7)
+
+Planned on 2026-11-05 after the owner's review of batches 4 and 5. Supersedes the first idea for
+batch 6 (a pinned step header in the Code tab), since the Code tab goes away.
+
+### What the review found
+
+- **The Code tab is read after the fact.** A learner goes through the steps on the stage, then
+  would have to go through them again in the tab. The tab and the steps share one scroll area,
+  so following a step scrolls the steps out of view and the learner scrolls back up for each
+  step.
+- **Code drawn inside the picture looks out of place** (the `CodeLabel` under the plot in
+  `matrix-vector-product`). It moves with the drawing and competes with the shapes.
+- **Step peeks** are the closest to the goal (code at the step, while on the step), but they
+  live in the narrow pane, under captions, behind a toggle, and they push the step list down.
+- The goal (the owner's words): code that is handy and blends with the visual, in a fixed, clean
+  box of its own, available at each step, instead of a separate section that stays mostly hidden.
+  Code is still not the main point (answer 1 below): it supports the visual and can be closed.
+
+### The design
+
+**One surface for code: the code panel.** A glass panel docked to the stage, not part of the
+drawing, owned by the item page (like the pane), so items need no code to get it.
+
+- **What it shows:** the snippet of the active step, read from `code.mdx` by `step=` (as peeks
+  do today), with its lead (the paragraph right before the block in `code.mdx`, one or two
+  sentences) and its output. `CodeTabs` stay tabs inside it. Two-way hover with the stage works
+  as now (`CodeLinksContext`).
+- **Where:** a fixed spot on the stage, bottom-left above the control dock by default; an item
+  can pick another corner (`codeCorner` in its meta) when its readouts sit there. Width about
+  26 rem, height fits the snippet up to a cap, then the code scrolls inside the panel. On a
+  narrow screen it becomes a sheet at the bottom of the stage. In fullscreen it stays (it should
+  look good in recorded lessons).
+- **How it opens:** a "Code" button on the stage (with the code mark, hotkey `c`) and the code
+  button on each step row that has code. Open or closed is remembered per browser across items
+  (pattern of `codeTab.ts`). Collapsing leaves a small chip with the code mark. The panel is
+  closed on a learner's first visit, and the step buttons and the stage button make code easy
+  to find (to confirm with the owner, see the questions below).
+- **Steps without code:** the panel stays where it is and shows a quiet "No code for this step"
+  line, so it does not jump in and out while stepping. Blocks with no `step=` appear only in the
+  whole-file view.
+- **Motion:** when the step changes, the content cross-fades and the height glides (motion
+  tokens); the stage does not move.
+- **The whole file:** a "Whole file" button in the panel opens `code.mdx` in a `VizSheet`, in
+  order with its prose, the active step's block marked. Clicking a block's step label goes to
+  that step. This replaces the Code tab: the steps stay in the pane, untouched, so the scroll
+  problem goes away.
+
+**Removed:** the Code tab (segmented control, `?tab=code`, the pane's code loading), step peeks
+(`StepList` props `codeSteps`, `peekOpen`, `renderPeek`) and the in-drawing `CodeLabel` of
+`matrix-vector-product`. `?tab=code` in old links opens the panel instead. The code mark on unit
+page rows and the pane header stays. `CodeLabel` and `CodeBlock` stay in the kit for code that
+is itself part of the picture (rare); the eight Data Engineering items with `SqlLabel` are
+reviewed only when Data Engineering resumes.
+
+**Batch 7, code that moves with the visual** (the 3Blue1Brown part):
+
+- **Per-step focus in one block:** a block can serve several steps with a different highlighted
+  part each, `step="columns rows" focus="columns=6-7 rows=8"`, so stepping keeps the code in
+  place and the highlight bar glides between lines, instead of swapping blocks.
+- **Animated focus:** `useCodeFocus(line)` lets an item drive the highlight from its animation
+  (fractional lines glide, as `CodeBlock` already allows): in the columns step the bar sits on
+  `x[0] * a1` while the first column scales, then on `x[1] * a2`. Names in the focused line glow
+  with their shapes for that moment (the hover link, driven by the item).
+- Applied to the three pilots and written into `ADDING_CONTENT.md` (when to give a step focus,
+  when an animation should drive it).
+
+### Order of work
+
+1. Batch 6: the panel (with the stage button, step buttons, `c`, memory, narrow and fullscreen
+   layouts), the whole-file sheet, removal of the tab and peeks, `?tab=code` compatibility,
+   the three pilots checked in both themes, e2e rewritten ("the code panel follows the step").
+   Docs: this plan, `ARCHITECTURE.md` (surfaces), `ADDING_CONTENT.md` (leads, `codeCorner`).
+2. Batch 7: `focus=` and `useCodeFocus`, applied to the pilots. If batch 6 runs short, its
+   first part (per-step `focus=`) moves into batch 6.
+
+After batch 7, code is added unit by unit as units are built (Linear Algebra first).
+
+### Questions for the owner
+
+1. Panel closed or open on the first visit to an item with code? (Plan: closed, remembered once
+   opened.)
+2. Removing the Code tab in favor of the whole-file sheet: fine?
+
 ## Pilot content (batch 4)
 
 One item per area, where the code says something the visual cannot:
@@ -314,6 +400,12 @@ The parts below still hold:
   about 30 seconds to install NumPy and SymPy the first time (seconds once cached), then a few
   milliseconds per block. Locally the script skips with a note when Python is missing.
 - The same checked blocks are the natural first candidates for runnable cells later.
+
+## The owner's answers (2026-11-05, batch 5 review)
+
+- The one added line in `prune.py` (registering the `sales` view for SQL) is fine.
+- PyTorch and Spark checks stay local; CI checks only the `default` environment.
+- `output excerpt` was explained with an example; no change asked.
 
 ## The owner's answers (2026-11-01)
 

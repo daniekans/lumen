@@ -35,11 +35,12 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Code views batch 5 (the snippet runner, `pnpm code`, and the code
-check job) is deployed and waits for the owner's review (`plans/code-views.md`). After it, Linear
-maps and matrices batch 2 (`plans/linear-algebra.md`, items 5 to 8), adding `code.mdx` to each
-item as it is built. The focus is Mathematics and Machine Learning; Data Engineering continues
-only on request.
+**Suggested next session:** Code views batch 6 (`plans/code-views.md`, "Code beside the
+visual"): the code panel on the stage replaces the Code tab and step peeks. First read the
+owner's answers to the two questions at the end of that section, if given. Then batch 7 (line
+focus that moves with steps and animations), then Linear maps and matrices batch 2
+(`plans/linear-algebra.md`, items 5 to 8) with a `code.mdx` per item. The focus is Mathematics
+and Machine Learning; Data Engineering continues only on request.
 
 ### Phase 3: Explore page
 
@@ -83,7 +84,7 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 4 done, 5 in review)
+### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 5 done, 6 and 7 planned)
 
 Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (five
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,

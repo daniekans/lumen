@@ -265,6 +265,10 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   Use Docker images (the owner works this way in the `de-workbench` repo): an image is built or
   pulled once, then all blocks of an item run in one container (Spark in Docker takes about 10 s,
   JVM start included). Never install a library per run.
+- Code beside the visual (2026-11-05, after reviewing the first code views): code sits in a
+  fixed, clean panel of its own on the stage, shown at the active step, not drawn inside the
+  picture and not in a separate section read after the steps. The Code tab and step peeks give
+  way to it (`plans/code-views.md`, batches 6 and 7).
 
 ## Future direction (record, do not build yet)
 
