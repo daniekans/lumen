@@ -6,7 +6,7 @@ random here too, from NumPy's generator, so the numbers differ from the stage.
 One matrix per pair of adjacent layers. Row $j$ of `W` holds the weights into neuron $j$, so a
 layer of $n$ neurons fed by $m$ has `W` of shape `(n, m)`:
 
-```python title="network.py" step=weights
+```python title="network.py" step=weights check
 import numpy as np
 
 rng = np.random.default_rng(4)
@@ -24,7 +24,7 @@ print([W.shape for W in Ws])
 
 A weighted sum plus a bias, then the sigmoid:
 
-```python title="neuron.py" step=neuron
+```python title="neuron.py" step=neuron check
 def sigma(z: np.ndarray) -> np.ndarray:
     return 1 / (1 + np.exp(-z))
 
@@ -47,7 +47,7 @@ output.
 
 <CodeTabs>
 
-```python title="forward.py" tab=NumPy step=forward
+```python title="forward.py" tab=NumPy step=forward check
 def forward(x: np.ndarray) -> np.ndarray:
     a = x
     for W, b in zip(Ws, bs):
@@ -63,7 +63,7 @@ print(y_hat.round(3))
 [0.478 0.285]
 ```
 
-```python title="forward_torch.py" tab=PyTorch step=forward
+```python title="forward_torch.py" tab=PyTorch step=forward check=torch
 import torch
 from torch import nn
 

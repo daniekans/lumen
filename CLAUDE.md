@@ -105,3 +105,5 @@ with a short prompt the owner can paste into a clean session to continue (see `d
 3. `BASE_URL=http://localhost:5199 node scripts/sweep-controls.mjs /<item path> ...` moves every
    slider to both ends on every step and fails on console errors (duplicate keys, crashes).
 4. `pnpm e2e` (builds and serves a production build) before pushing.
+5. Items with `code.mdx`: `pnpm code /<item path> --check` runs the blocks in their Docker images
+   (`code-envs/`; images build once on first use) and compares the output blocks.

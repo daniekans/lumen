@@ -149,8 +149,10 @@ start a list item with it (Prettier splits the paragraph).
 Fenced code blocks are highlighted at build time (`python`, `sql`, `scala`, `typescript`, `bash`,
 `json`, `yaml`, `text`; an unknown language or option fails the build). Options go after the
 language: `title="rotate.py"`, highlighted lines `{3-5}`, `step=shear`, names in stage colors
-`colors="A=blue v=orange"`, `hover="A=matrix"` (used from code views batch 2), `check` or
-`check=torch` (batch 5). A following fence in the language `output` is the block's printed output.
+`colors="A=blue v=orange"`, `hover="A=matrix"`, `env=spark` (where `pnpm code` runs it),
+`check` (checked; CI checks the `default` environment) or `check=torch` (both), and
+`raises=ValueError` for a block that fails on purpose. A following fence in the language `output`
+is the block's printed output; `output excerpt` shows only some of its lines, in order.
 Wrap two or more blocks in `<CodeTabs>` for the same idea in two libraries; each tab is labeled by
 `tab=NumPy` (or the title).
 
@@ -171,10 +173,11 @@ Content rules for code:
 
 - Python 3.12 with type hints; imports at the top of the first block; names that follow the
   item's notation (`A`, `v`, `x_hat`); lines up to about 72 characters (the pane is narrow).
-- Outputs come from real runs, never typed by hand. Run them locally when the block is not
-  checked in CI. Heavy libraries (Spark, PyTorch) run in Docker images built or pulled once
-  (`spark:4.0.4-scala2.13-java17-python3-ubuntu` is already local); run all blocks of an item in
-  one container, in seconds. Never install a library on every run.
+- Outputs come from real runs, never typed by hand: `pnpm code /<item path>` runs the item's
+  blocks in Docker (`code-envs/`: `default` with NumPy and SymPy, `torch`, `spark`) and prints
+  each output; `--write` puts the outputs into the file, `--check` compares them. Python blocks
+  run in `default` unless `env=` says otherwise; SQL blocks run only with `env=spark`. Mark a
+  block `check` when it runs in its environment; leave fragments and pseudo-code unmarked.
 - A block maps to one step or one idea, three to fifteen lines.
 - Data engineering shows what the engine does: SQL or PySpark next to its plan (`EXPLAIN` output
   as an output block), tied to the stage's partitions and shuffles.

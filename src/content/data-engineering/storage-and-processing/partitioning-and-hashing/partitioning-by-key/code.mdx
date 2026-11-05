@@ -3,7 +3,7 @@ scan node of `explain("formatted")`, without the folder's full path.
 
 ## The table
 
-```python title="sales.py" step=table
+```python title="sales.py" step=table check=spark
 import os
 
 from pyspark.sql import SparkSession
@@ -26,7 +26,7 @@ sales = spark.createDataFrame(rows, "day int, city string, amount int")
 `partitionBy` on the writer turns each value of the column into a folder. `coalesce(1)` keeps one
 file per folder, as on the stage. `_SUCCESS` (and its checksum) marks a finished write.
 
-```python title="partition.py" step=partition
+```python title="partition.py" step=partition check=spark
 sales.coalesce(1).write.partitionBy("day").parquet("sales")
 print(sorted(os.listdir("sales")))
 ```
@@ -40,7 +40,7 @@ print(sorted(os.listdir("sales")))
 The file inside `day=2` has no `day` column. Reading the table from its root adds it back from
 the folder names:
 
-```python title="path.py" step=path
+```python title="path.py" step=path check=spark
 print(spark.read.parquet("sales/day=2").columns)
 print(spark.read.parquet("sales").columns)
 ```
@@ -57,29 +57,30 @@ and lists only `day=2`. The same plan comes from SQL.
 
 <CodeTabs>
 
-```python title="prune.py" tab=PySpark step=prune
+```python title="prune.py" tab=PySpark step=prune check=spark
 sales = spark.read.parquet("sales")
+sales.createOrReplaceTempView("sales")  # the name SQL reads
 sales.where(F.col("day") == 2).explain("formatted")
 ```
 
-```output
+```output excerpt
 (1) Scan parquet
-Output [3]: [city#0, amount#1, day#2]
+Output [3]: [city#8, amount#9, day#10]
 Batched: true
-PartitionFilters: [isnotnull(day#2), (day#2 = 2)]
+PartitionFilters: [isnotnull(day#10), (day#10 = 2)]
 ReadSchema: struct<city:string,amount:int>
 ```
 
-```sql title="prune.sql" tab=SQL step=prune
+```sql title="prune.sql" tab=SQL step=prune check=spark
 EXPLAIN FORMATTED
 SELECT * FROM sales WHERE day = 2;
 ```
 
-```output
+```output excerpt
 (1) Scan parquet
-Output [3]: [city#0, amount#1, day#2]
+Output [3]: [city#8, amount#9, day#10]
 Batched: true
-PartitionFilters: [isnotnull(day#2), (day#2 = 2)]
+PartitionFilters: [isnotnull(day#10), (day#10 = 2)]
 ReadSchema: struct<city:string,amount:int>
 ```
 
@@ -91,13 +92,13 @@ A filter on `city` has no `PartitionFilters`. It is pushed into the Parquet read
 (`PushedFilters`), where row-group statistics may skip data, but every folder is listed and
 every file's footer is read.
 
-```python title="other.py" step=other-column
+```python title="other.py" step=other-column check=spark
 sales.where(F.col("city") == "OSL").explain("formatted")
 ```
 
-```output
+```output excerpt
 (1) Scan parquet
-Output [3]: [city#0, amount#1, day#2]
+Output [3]: [city#8, amount#9, day#10]
 Batched: true
 PushedFilters: [IsNotNull(city), EqualTo(city,OSL)]
 ReadSchema: struct<city:string,amount:int>
@@ -107,18 +108,18 @@ ReadSchema: struct<city:string,amount:int>
 
 Two columns nest the folders, and now the city filter prunes too:
 
-```python title="two_levels.py" step=two-levels
+```python title="two_levels.py" step=two-levels check=spark
 sales.coalesce(1).write.partitionBy("day", "city").parquet("sales2")
 print(sorted(os.listdir("sales2/day=2")))
 by_city = spark.read.parquet("sales2").where(F.col("city") == "OSL")
 by_city.explain("formatted")
 ```
 
-```output
+```output excerpt
 ['city=LIS', 'city=OSL', 'city=REC']
 (1) Scan parquet
-Output [3]: [amount#4, day#5, city#6]
+Output [3]: [amount#17, day#18, city#19]
 Batched: true
-PartitionFilters: [isnotnull(city#6), (city#6 = OSL)]
+PartitionFilters: [isnotnull(city#19), (city#19 = OSL)]
 ReadSchema: struct<amount:int>
 ```

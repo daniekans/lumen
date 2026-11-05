@@ -35,13 +35,11 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Code views batch 4 is deployed and reviewed by the owner (heavy
-libraries may run locally in Docker if it takes seconds; `DECISIONS.md`). Next, code views batch 5
-(`plans/code-views.md`, "Snippet runner and checks"): `scripts/run-code.mjs` with Docker
-environments (`default`, `torch`, `spark`), the `env=` fence option, `--check` in a separate light
-CI job for the `default` environment, then re-run the three pilot items through it. Alternatively,
-Linear maps and matrices batch 2 (`plans/linear-algebra.md`, items 5 to 8). The focus is
-Mathematics and Machine Learning; Data Engineering continues only on request.
+**Suggested next session:** Code views batch 5 (the snippet runner, `pnpm code`, and the code
+check job) is deployed and waits for the owner's review (`plans/code-views.md`). After it, Linear
+maps and matrices batch 2 (`plans/linear-algebra.md`, items 5 to 8), adding `code.mdx` to each
+item as it is built. The focus is Mathematics and Machine Learning; Data Engineering continues
+only on request.
 
 ### Phase 3: Explore page
 
@@ -85,7 +83,7 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 3 done)
+### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 4 done, 5 in review)
 
 Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (five
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,

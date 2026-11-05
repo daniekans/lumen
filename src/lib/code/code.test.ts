@@ -21,7 +21,7 @@ describe('parseFence', () => {
         step: 'shear',
         colors: { A: 'blue', v: 'orange' },
         hoverKeys: { A: 'matrix' },
-        check: { env: 'default' },
+        check: true,
       },
     })
   })
@@ -29,13 +29,18 @@ describe('parseFence', () => {
   it('defaults to text and names the check environment', () => {
     expect(parseFence(null, 'check=torch tab=PyTorch')).toEqual({
       kind: 'code',
-      snippet: { lang: 'text', check: { env: 'torch' }, tab: 'PyTorch' },
+      snippet: { lang: 'text', check: true, env: 'torch', tab: 'PyTorch' },
+    })
+    expect(parseFence('python', 'env=spark raises=ValueError')).toEqual({
+      kind: 'code',
+      snippet: { lang: 'python', env: 'spark', raises: 'ValueError' },
     })
   })
 
   it('recognizes output blocks', () => {
-    expect(parseFence('output', null)).toEqual({ kind: 'output' })
-    expect(parseFence('text', 'output')).toEqual({ kind: 'output' })
+    expect(parseFence('output', null)).toEqual({ kind: 'output', excerpt: false })
+    expect(parseFence('text', 'output')).toEqual({ kind: 'output', excerpt: false })
+    expect(parseFence('output', 'excerpt')).toEqual({ kind: 'output', excerpt: true })
   })
 
   it('reports mistakes', () => {
@@ -46,6 +51,10 @@ describe('parseFence', () => {
       ['python', '{4-2}'],
       ['python', 'titel="x"'],
       ['python', 'step'],
+      ['python', 'env'],
+      ['python', 'env=cuda'],
+      ['python', 'env=spark check=torch'],
+      ['python', 'raises'],
     ] as const) {
       expect(parseFence(lang, meta).kind).toBe('error')
     }

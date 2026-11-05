@@ -1,12 +1,23 @@
-import { CODE_HUES, type CodeHue, type CodeLang, type CodeSnippet, isCodeLang } from './snippet.ts'
+import {
+  CODE_ENVS,
+  CODE_HUES,
+  type CodeHue,
+  type CodeLang,
+  type CodeSnippet,
+  isCodeEnv,
+  isCodeLang,
+} from './snippet.ts'
 
 /*
  * Fence metadata to the code model. A fence such as
  *
  *   ```python title="rotate.py" {3-5} step=shear colors="A=blue v=orange" hover="A=matrix" check
  *
- * gives a snippet without its source. A fence in the language `output` (or marked `output`) is
- * the printed output of the block before it. Errors name the problem, so a typo fails the build
+ * gives a snippet without its source. `env=spark` names the environment `scripts/run-code.mjs`
+ * runs the block in, `check=torch` both names it and marks the block as checked, and
+ * `raises=ValueError` names an exception the block raises on purpose. A fence in the language
+ * `output` (or marked `output`) is the printed output of the block before it; `output excerpt`
+ * shows only some of the printed lines, in order. Errors name the problem, so a typo fails the build
  * instead of being ignored.
  */
 
@@ -21,7 +32,7 @@ const ALIASES: Readonly<Record<string, CodeLang>> = {
 }
 
 export type FenceInfo =
-  | { kind: 'output' }
+  | { kind: 'output'; excerpt: boolean }
   | { kind: 'code'; snippet: Omit<CodeSnippet, 'source'> }
   | { kind: 'error'; message: string }
 
@@ -59,7 +70,7 @@ export const parseFence = (
   const rawLang = (lang ?? 'text').toLowerCase()
   const parts = [...(meta ?? '').matchAll(PART)]
   if (rawLang === 'output' || parts.some((p) => p[0] === 'output')) {
-    return { kind: 'output' }
+    return { kind: 'output', excerpt: parts.some((p) => p[0] === 'excerpt') }
   }
   const resolved = ALIASES[rawLang] ?? rawLang
   if (!isCodeLang(resolved)) return { kind: 'error', message: `unknown code language "${rawLang}"` }
@@ -97,8 +108,25 @@ export const parseFence = (
         snippet.hoverKeys = pairs
         break
       }
-      case 'check':
-        snippet.check = { env: value ?? 'default' }
+      case 'env':
+      case 'check': {
+        if (value === undefined && key === 'env')
+          return { kind: 'error', message: '"env" needs a value' }
+        if (key === 'check') snippet.check = true
+        if (value === undefined) break
+        if (!isCodeEnv(value))
+          return {
+            kind: 'error',
+            message: `unknown environment "${value}" (use ${CODE_ENVS.join(', ')})`,
+          }
+        if (snippet.env && snippet.env !== value)
+          return { kind: 'error', message: `two environments, "${snippet.env}" and "${value}"` }
+        snippet.env = value
+        break
+      }
+      case 'raises':
+        if (!value) return { kind: 'error', message: '"raises" needs a value' }
+        snippet.raises = value
         break
       default:
         return { kind: 'error', message: `unknown fence option "${whole}"` }

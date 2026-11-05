@@ -10,8 +10,8 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 1     | Code model and highlighted blocks in every MDX file (build time)    | done   |
 | 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done   |
 | 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
-| 4     | Pilot content in three areas, then the owner's review               | review |
-| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | idea   |
+| 4     | Pilot content in three areas, then the owner's review               | done   |
+| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | review |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -232,6 +232,39 @@ PySpark line, a query whose clauses light up as rows move.
 - The owner's answer on heavy libraries (2026-11-05): local runs are fine if they take seconds;
   use Docker images, as in the owner's `de-workbench` repo. Batch 5 now includes the runner that
   makes this one command.
+
+### Batch 5 as built (2026-11-05)
+
+- `scripts/run-code.mjs` (`pnpm code <item path>`): each MDX file of an item runs as one script
+  per environment, blocks in order in one namespace, inside the environment's Docker image
+  (`docker run -i`, the script on stdin, no mounts). A small Python driver captures each block's
+  printed output and returns JSON after a marker, so Spark's logs do not mix in. It prints each
+  block's output and `same`, `DIFFERS` or `NO OUTPUT BLOCK`; `--write` rewrites differing output
+  blocks; `--check` runs only `check` blocks and fails on a difference; `--env`, `--local` (the
+  local `python3`, default environment only), `--all`. Fence parsing reuses `parseFence` (Node 24
+  strips the types).
+- Environments in `code-envs/<env>/` (build context `code-envs/`): `default` (Python 3.12.15,
+  NumPy 2.5.4, SymPy 1.14.0, pinned in `default/requirements.txt`), `torch` (the default
+  packages plus the CPU wheel of PyTorch 2.15.0; a `torch` run also runs the file's `default`
+  blocks, so a PyTorch tab can reuse NumPy names), `spark`
+  (`spark:4.0.4-scala2.13-java17-python3-ubuntu`, Python 3.10, `spark-submit` with the UI off).
+  Images are tagged `lumen-code-<env>:<hash of the env files>` and built on first use, so a
+  change to a requirements file rebuilds once.
+- Fence options: `env=<env>` names the environment (validated against `CODE_ENVS`); `check`
+  marks a block as checked and `check=<env>` does both; `raises=ValueError` for a block that
+  raises on purpose (the shapes block). `output excerpt` shows some of the printed lines, in
+  order (Spark plans without `Location` and the codegen nodes). SQL blocks with `env=spark` run
+  through `spark.sql` (an `EXPLAIN` prints its plan), so the SQL tab of the partitioning pilot
+  now runs too; `prune.py` registers the `sales` view for it. The model changed from
+  `check?: { env }` to `env`, `check` and `raises`.
+- CI: `.github/workflows/code-check.yml`, its own workflow, only when MDX, the runner, the fence
+  parser or `code-envs/default` change. `setup-python` with the pip cache, then
+  `run-code.mjs --all --check --env default --local`. Under `CI` a skipped run fails.
+- Pilots re-run: every block of the three items is marked `check` (`check=torch`,
+  `check=spark` for the heavy ones). NumPy and PyTorch outputs matched; the Spark plans changed
+  only in attribute ids (`#8` instead of `#0`, since one session now runs all blocks), updated.
+  Times after the images exist: default 0.2 to 0.7 s, torch 1.7 s, spark 10.4 s.
+- Not done: SQL in the default environment (DuckDB would fit), Scala blocks.
 
 ## Pilot content (batch 4)
 

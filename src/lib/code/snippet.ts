@@ -29,6 +29,14 @@ export const CODE_HUES = ['blue', 'yellow', 'teal', 'red', 'green', 'purple', 'o
 
 export type CodeHue = (typeof CODE_HUES)[number]
 
+/** Docker environments of `scripts/run-code.mjs` (`code-envs/<env>/`). */
+export const CODE_ENVS = ['default', 'torch', 'spark'] as const
+
+export type CodeEnv = (typeof CODE_ENVS)[number]
+
+export const isCodeEnv = (env: string): env is CodeEnv =>
+  (CODE_ENVS as readonly string[]).includes(env)
+
 /** The token kinds of the shared code palette (`--code-<kind>` in `tokens.css`). */
 export type CodeTokenKind =
   'keyword' | 'function' | 'string' | 'number' | 'comment' | 'name' | 'operator'
@@ -59,8 +67,12 @@ export interface CodeSnippet {
   hoverKeys?: Readonly<Record<string, string>>
   /** Printed output, shown after the code. */
   output?: string
-  /** Opt-in snippet check in CI (batch 5); `env` names the environment. */
-  check?: { env: string }
+  /** Where `scripts/run-code.mjs` runs the block (Python blocks default to `default`). */
+  env?: CodeEnv
+  /** Checked by `run-code.mjs --check` (CI checks the `default` environment). */
+  check?: boolean
+  /** The exception the block raises on purpose, such as `ValueError`. */
+  raises?: string
 }
 
 /** Joins the tokens back into the source (the inverse of tokenizing). */
