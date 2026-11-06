@@ -19,6 +19,12 @@
   font-size: var(--text-xs);
 }
 
+.stepButtons {
+  display: flex;
+  flex: none;
+  gap: var(--space-1);
+}
+
 /* The step a block explains (whole-file view): a quiet chip that goes to the step. */
 .stepButton {
   flex: none;
@@ -59,27 +65,58 @@
 
 /* At least as wide as the block, so a highlighted line's tint spans it, wider when lines are long. */
 .code {
+  position: relative;
   display: inline-block;
   min-width: 100%;
   padding: 0;
   background: none;
   color: var(--code-name);
   font: inherit;
+  line-height: var(--code-line);
   white-space: pre;
+  --code-line: 1.6em;
 }
 
+/* Lines paint over the focus bars (positioned elements paint in order). */
 .line {
+  position: relative;
   display: block;
   padding: 0 var(--space-4);
-  border-left: 2px solid transparent;
-  transition:
-    background-color var(--dur-base) var(--ease-out),
-    border-color var(--dur-base) var(--ease-out);
 }
 
-.highlighted {
-  border-left-color: var(--viz-yellow);
+/*
+ * The highlight: a bar with a left rule and a tint behind a run of lines, placed in line heights.
+ * When the focus moves (a step that shares the block, or a driven line) it glides there.
+ */
+.bar {
+  position: absolute;
+  top: calc(var(--from) * var(--code-line));
+  right: 0;
+  left: 0;
+  height: calc(var(--count) * var(--code-line));
+  border-left: 2px solid var(--viz-yellow);
   background: color-mix(in srgb, var(--viz-yellow) 10%, transparent);
+  transition:
+    top var(--dur-slow) var(--ease-in-out),
+    height var(--dur-slow) var(--ease-in-out),
+    opacity var(--dur-base) var(--ease-out);
+}
+
+@starting-style {
+  .bar {
+    opacity: 0;
+  }
+}
+
+/* Driven by an animation, the bar follows each frame; a transition would lag behind. */
+.driven {
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition: none;
+  }
 }
 
 /* The copy button shows on hover or focus; touch screens always show it. */

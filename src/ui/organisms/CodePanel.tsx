@@ -16,7 +16,7 @@ import { msg } from '@/i18n'
 import type { CodeEntry } from '@/lib/code'
 import { ease } from '@/styles/motion'
 import surfaces from '@/styles/surfaces.module.css'
-import { VizSheet } from '@/viz-kit/stage'
+import { useCodeFocusLine, VizSheet } from '@/viz-kit/stage'
 import { IconButton, RichText, Tooltip } from '../atoms'
 import { CodeTabs, CodeView } from '../molecules'
 import styles from './CodePanel.module.css'
@@ -58,20 +58,30 @@ function useHeight(el: HTMLElement | null) {
   return el ? height : 0
 }
 
-/** The code of one step: its blocks in order, the blocks of one `CodeTabs` as tabs again. */
-function StepCode({ entries }: { entries: readonly CodeEntry[] }) {
+/**
+ * The code of one step: its blocks in order, the blocks of one `CodeTabs` as tabs again. The
+ * first block follows the line the visualization drives (`useCodeFocus`); reading it here keeps
+ * the per-frame updates inside the step's few blocks, not the panel.
+ */
+function StepCode({ entries, step }: { entries: readonly CodeEntry[]; step: string }) {
+  const driven = useCodeFocusLine()
+  const view = (e: CodeEntry, key: number, first: boolean) => (
+    <CodeView
+      key={key}
+      snippet={e.snippet}
+      tokens={e.tokens}
+      step={step}
+      line={first ? driven : null}
+    />
+  )
   const shown = new Set<number>()
   return entries.map((e, i) => {
-    if (e.group === undefined) return <CodeView key={i} snippet={e.snippet} tokens={e.tokens} />
+    if (e.group === undefined) return view(e, i, i === 0)
     if (shown.has(e.group)) return null
     shown.add(e.group)
     return (
       <CodeTabs key={i}>
-        {entries
-          .filter((g) => g.group === e.group)
-          .map((g, k) => (
-            <CodeView key={k} snippet={g.snippet} tokens={g.tokens} />
-          ))}
+        {entries.filter((g) => g.group === e.group).map((g, k) => view(g, k, i === 0 && k === 0))}
       </CodeTabs>
     )
   })
@@ -114,7 +124,7 @@ export function CodePanel({
   const dockHeight = useHeight(dock)
   const steps = useMemo(() => item.steps ?? [], [item])
   const stepId = steps[stepIndex]?.id
-  const mine = entries?.filter((e) => e.snippet.step === stepId) ?? []
+  const mine = (stepId && entries?.filter((e) => e.snippet.steps?.includes(stepId))) || []
   // Steps that share their code keep it in place; anything else cross-fades.
   const contentKey = mine.length ? entries!.indexOf(mine[0]!) : entries ? 'none' : 'loading'
   const corner = item.codeCorner ?? 'bottom-left'
@@ -198,7 +208,7 @@ export function CodePanel({
                             <RichText>{lead}</RichText>
                           </p>
                         ))}
-                        <StepCode entries={mine} />
+                        <StepCode entries={mine} step={stepId!} />
                       </CodeLinksProvider>
                     ) : (
                       entries && <p className={styles.empty}>{msg.code.noStepCode}</p>

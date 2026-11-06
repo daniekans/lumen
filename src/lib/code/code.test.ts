@@ -4,7 +4,7 @@ import { parseFence, parseLineRanges } from './fence'
 import type { Root, RootContent } from 'mdast'
 import type { VFile } from 'vfile'
 import { remarkCodeView, tokenize } from './remarkCodeView'
-import { plainTokens, tokensToSource } from './snippet'
+import { focusLines, plainTokens, tokensToSource } from './snippet'
 
 describe('parseFence', () => {
   it('reads every option', () => {
@@ -18,7 +18,7 @@ describe('parseFence', () => {
         lang: 'python',
         title: 'rotate.py',
         highlight: [1, 3, 4],
-        step: 'shear',
+        steps: ['shear'],
         colors: { A: 'blue', v: 'orange' },
         hoverKeys: { A: 'matrix' },
         check: true,
@@ -35,6 +35,24 @@ describe('parseFence', () => {
       kind: 'code',
       snippet: { lang: 'python', env: 'spark', raises: 'ValueError' },
     })
+  })
+
+  it('ties a block to several steps, with lines per step', () => {
+    const info = parseFence('python', 'step="columns rows" {1} focus="columns=6-7 rows=8,10"')
+    expect(info).toEqual({
+      kind: 'code',
+      snippet: {
+        lang: 'python',
+        steps: ['columns', 'rows'],
+        highlight: [1],
+        focus: { columns: [6, 7], rows: [8, 10] },
+      },
+    })
+    if (info.kind !== 'code') return
+    const snippet = { ...info.snippet, source: '' }
+    expect(focusLines(snippet, 'rows')).toEqual([8, 10])
+    expect(focusLines(snippet, 'other')).toEqual([1])
+    expect(focusLines(snippet)).toEqual([1])
   })
 
   it('recognizes output blocks', () => {
@@ -55,6 +73,10 @@ describe('parseFence', () => {
       ['python', 'env=cuda'],
       ['python', 'env=spark check=torch'],
       ['python', 'raises'],
+      ['python', 'step=""'],
+      ['python', 'step=a focus="b=2"'],
+      ['python', 'step=a focus="a=0"'],
+      ['python', 'step=a focus=""'],
     ] as const) {
       expect(parseFence(lang, meta).kind).toBe('error')
     }
@@ -182,7 +204,7 @@ describe('remarkCodeView', () => {
     // Three step blocks: one alone, two in the first CodeTabs (group 0). The block without a
     // step is left out.
     const count = (value: string) => json.split(`"value":"${value}"`).length - 1
-    expect(count('step')).toBe(3)
+    expect(count('steps')).toBe(3)
     expect([count('a'), count('b')]).toEqual([1, 2])
     expect(count('group')).toBe(2)
   })

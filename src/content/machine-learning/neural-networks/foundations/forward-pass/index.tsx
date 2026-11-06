@@ -1,6 +1,6 @@
 import { Play, RotateCcw } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { fmt, lerp } from '@/lib/math'
+import { clamp, fmt, lerp } from '@/lib/math'
 import { createMLP, forward } from '@/lib/nn'
 import { vc } from '@/styles/viz-colors'
 import { Button, Divider, IconButton, Tex } from '@/ui/atoms'
@@ -13,9 +13,11 @@ import {
   Overlay,
   Stage,
   TextLabel,
+  useCodeFocus,
   useCoords,
   useSequence,
   useStepEffect,
+  useVizStep,
   VizControls,
   weightEdge,
   type NetworkLayout,
@@ -40,6 +42,13 @@ export default function ForwardPass() {
   const seq = useSequence()
 
   const pass = useMemo(() => forward(NET, input), [input])
+  const { id: stepId } = useVizStep()
+
+  // While a pass runs in the forward step, the code panel follows the loop of forward.py: the
+  // bar waits on `for` (line 3) and glides into the body (line 4) as each layer's signal travels.
+  useCodeFocus(
+    stepId === 'forward' && seq.running ? 3 + (pulse ? clamp(pulse.t * 2, 0, 1) : 0) : null,
+  )
   const active = hovered ?? focus
 
   const runForward = () => {

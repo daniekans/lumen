@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   add,
   apply,
+  clamp,
   column,
   dot,
   fmtPoint,
@@ -31,9 +32,11 @@ import {
   Stage,
   TextLabel,
   TransformedGrid,
+  useCodeFocus,
   useSequence,
   useStepEffect,
   useStepStart,
+  type SequenceContext,
   type StepRun,
   useVizParam,
   useVizStep,
@@ -127,36 +130,58 @@ export default function MatrixVectorProduct() {
   const [x3, setX3] = useVizParam('x3', { a: 1, b: 1, c: 1 }, xyz)
   const [m, setM] = useState<Mat2>(id === 'identity' ? identity : A)
   const [phase, setPhase] = useState(2)
+  /** The column picture built up: 0 to 1 grows x1 a1, 1 to 2 adds x2 a2; 2 is the whole product. */
+  const [build, setBuild] = useState(2)
   const seq = useSequence()
 
   const x: Vec2 = [xp.x, xp.y]
   const start = useStepStart({ x, m })
 
-  /** Moves x and the matrix to their targets for the step; no sequence when nothing moves. */
-  const goTo = (run: StepRun, toX: Vec2, toM: Mat2) => {
-    const from = start(run)
+  /** Tweens x and the matrix from `from` to their targets, or sets them when nothing moves. */
+  const move = (
+    tween: SequenceContext['tween'],
+    from: { x: Vec2; m: Mat2 },
+    toX: Vec2,
+    toM: Mat2,
+  ) => {
     const sameX = from.x[0] === toX[0] && from.x[1] === toX[1]
     if (sameX && sameMat(from.m, toM)) {
       setXp({ x: toX[0], y: toX[1] })
       setM(toM)
-      return
+      return Promise.resolve()
     }
-    void seq.run(({ tween }) =>
-      tween(0, 1, {
-        duration: 1.3,
-        onUpdate: (t) => {
-          setXp({
-            x: from.x[0] + (toX[0] - from.x[0]) * t,
-            y: from.x[1] + (toX[1] - from.x[1]) * t,
-          })
-          setM(lerpMat(from.m, toM, t))
-        },
-      }),
-    )
+    return tween(0, 1, {
+      duration: 1.3,
+      onUpdate: (t) => {
+        setXp({
+          x: from.x[0] + (toX[0] - from.x[0]) * t,
+          y: from.x[1] + (toX[1] - from.x[1]) * t,
+        })
+        setM(lerpMat(from.m, toM, t))
+      },
+    })
+  }
+
+  /** Moves x and the matrix to their targets for the step, with the whole product drawn. */
+  const goTo = (run: StepRun, toX: Vec2, toM: Mat2) => {
+    const from = start(run)
+    setBuild(2)
+    void seq.run(({ tween }) => move(tween, from, toX, toM))
   }
 
   useStepEffect({
-    columns: (run) => goTo(run, [1.5, 1], A),
+    // The product built term by term, as the code adds it up (the code panel follows the line).
+    columns: (run) => {
+      const from = start(run)
+      setBuild(0)
+      void seq.run(async ({ tween, wait }) => {
+        await move(tween, from, [1.5, 1], A)
+        await wait(0.4)
+        await tween(0, 1, { duration: 1.1, onUpdate: setBuild })
+        await wait(0.3)
+        await tween(1, 2, { duration: 1.1, onUpdate: setBuild })
+      })
+    },
     rows: (run) => goTo(run, [1.5, 1], A),
     food: (run) => goTo(run, [1.5, 1], FOOD),
     shapes: () => {
@@ -187,12 +212,24 @@ export default function MatrixVectorProduct() {
 
   const dragX = (p: Vec2) => {
     seq.cancel()
+    setBuild(2)
     setXp({ x: snap(p[0]), y: snap(p[1]) })
   }
 
   const columnsScene = scene === 'plane' || scene === 'food'
   const Ax = apply(m, x)
-  const part1 = scale(m.i, x[0])
+  const part1 = scale(m.i, x[0] * clamp(build, 0, 1))
+  const part2 = add(part1, scale(m.j, x[1] * clamp(build - 1, 0, 1)))
+  const built = build >= 2
+
+  // The code panel follows the animations: in the columns step the bar sits on the line that adds
+  // the term being drawn (lines 8 and 9 of product.py), in the layer step it glides from `W @ x`
+  // to `+ b` (lines 4 and 5 of layer.py) as the plane moves, then slides.
+  const buildLine = id === 'columns' && seq.running ? 8 + clamp(build - 1, 0, 1) : null
+  const layerLine = id === 'layer' && seq.running ? 4 + clamp(phase - 1, 0, 1) : null
+  useCodeFocus(buildLine ?? layerLine, {
+    key: buildLine !== null ? (build < 1 ? 'a1' : 'a2') : phase > 1 ? 'b' : null,
+  })
   const rowsStep = id === 'rows'
   const rows = toRows(m)
 
@@ -339,23 +376,25 @@ export default function MatrixVectorProduct() {
             <Vector to={m.i} color={C1} width={2} opacity={0.5} hoverKey="a1" />
             <Vector to={m.j} color={C2} width={2} opacity={0.5} hoverKey="a2" />
             <Vector to={part1} color={C1} hoverKey="a1" />
-            <Vector from={part1} to={Ax} color={C2} hoverKey="a2" />
+            {build > 1 && <Vector from={part1} to={part2} color={C2} hoverKey="a2" />}
             {scene === 'plane' && (
               <>
                 <Vector to={x} color={X_COLOR} hoverKey="x" />
                 <MathLabel at={x} tex="\mathbf{x}" color={X_COLOR} anchor="se" offset={8} />
               </>
             )}
-            <Vector to={Ax} color={OUT_COLOR} hoverKey="Ax" />
+            {built && <Vector to={Ax} color={OUT_COLOR} hoverKey="Ax" />}
             <MathLabel at={m.i} tex="\mathbf{a}_1" color={C1} anchor="se" offset={8} />
             <MathLabel at={m.j} tex="\mathbf{a}_2" color={C2} anchor="nw" offset={8} />
-            <MathLabel
-              at={Ax}
-              tex={scene === 'food' ? 'A\\mathbf{x}\\text{ (meal)}' : 'A\\mathbf{x}'}
-              color={OUT_COLOR}
-              anchor="ne"
-              offset={8}
-            />
+            {built && (
+              <MathLabel
+                at={Ax}
+                tex={scene === 'food' ? 'A\\mathbf{x}\\text{ (meal)}' : 'A\\mathbf{x}'}
+                color={OUT_COLOR}
+                anchor="ne"
+                offset={8}
+              />
+            )}
             {scene === 'food' && (
               <>
                 <TextLabel at={[6.6, -0.4]} align="end">

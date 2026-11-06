@@ -23,32 +23,25 @@ sales = spark.createDataFrame(rows, "day int, city string, amount int")
 
 ## Split by day
 
-`partitionBy` on the writer turns each value of the column into a folder. `coalesce(1)` keeps one
-file per folder, as on the stage. `_SUCCESS` (and its checksum) marks a finished write.
+`partitionBy` on the writer turns each value of the column into a folder, and `coalesce(1)` keeps
+one file per folder, as on the stage. The value moves into the path: the file inside `day=2` has
+no `day` column, and reading the table from its root adds it back from the folder names.
 
-```python title="partition.py" step=partition check=spark
+```python title="partition.py" step="partition path" focus="partition=1-2 path=4-5" check=spark
 sales.coalesce(1).write.partitionBy("day").parquet("sales")
 print(sorted(os.listdir("sales")))
-```
 
-```output
-['._SUCCESS.crc', '_SUCCESS', 'day=1', 'day=2', 'day=3', 'day=4']
-```
-
-## The value moves into the path
-
-The file inside `day=2` has no `day` column. Reading the table from its root adds it back from
-the folder names:
-
-```python title="path.py" step=path check=spark
 print(spark.read.parquet("sales/day=2").columns)
 print(spark.read.parquet("sales").columns)
 ```
 
 ```output
+['._SUCCESS.crc', '_SUCCESS', 'day=1', 'day=2', 'day=3', 'day=4']
 ['city', 'amount']
 ['city', 'amount', 'day']
 ```
+
+`_SUCCESS` (and its checksum) marks a finished write.
 
 ## Pruning
 

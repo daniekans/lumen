@@ -27,7 +27,7 @@ import {
   writeQuery,
   type VizRuntimeValue,
 } from '@/viz-kit/runtime'
-import { HighlightScope } from '@/viz-kit/stage'
+import { CodeFocusScope, HighlightScope } from '@/viz-kit/stage'
 import { crumbsFor } from '../crumbs'
 import { ErrorBoundary } from '@/ui/organisms'
 import { isTyping } from '../useGlobalHotkeys'
@@ -120,107 +120,110 @@ export function ItemPage({ item }: { item: Item }) {
     <CurrentItemContext.Provider value={item}>
       {/* One highlight for the stage and the pane, so code in the pane links to the shapes. */}
       <HighlightScope>
-        <VizRuntimeContext.Provider value={runtime}>
-          {/* Tooltips portal into the stage area in fullscreen, since the rest of the page is hidden. */}
-          <PortalContainerContext value={fullscreen.active ? stageArea : undefined}>
-            <VizLayout
-              topBar={
-                <TopBar
-                  actions={
-                    <>
-                      {next && (
-                        <Link
-                          to={next.path}
-                          className={styles.next}
-                          onPointerEnter={() => void next.preload()}
+        {/* The code line an item drives from its animation, read by the code panel. */}
+        <CodeFocusScope>
+          <VizRuntimeContext.Provider value={runtime}>
+            {/* Tooltips portal into the stage area in fullscreen, since the rest of the page is hidden. */}
+            <PortalContainerContext value={fullscreen.active ? stageArea : undefined}>
+              <VizLayout
+                topBar={
+                  <TopBar
+                    actions={
+                      <>
+                        {next && (
+                          <Link
+                            to={next.path}
+                            className={styles.next}
+                            onPointerEnter={() => void next.preload()}
+                          >
+                            {msg.common.next(next.title)}
+                          </Link>
+                        )}
+                        <IconButton
+                          label={msg.item.fullscreen}
+                          shortcut="F"
+                          onClick={fullscreen.enter}
                         >
-                          {msg.common.next(next.title)}
-                        </Link>
-                      )}
-                      <IconButton
-                        label={msg.item.fullscreen}
-                        shortcut="F"
-                        onClick={fullscreen.enter}
+                          <Maximize size={16} />
+                        </IconButton>
+                        <IconButton
+                          label={asideOpen ? msg.item.hideExplanation : msg.item.showExplanation}
+                          shortcut="]"
+                          onClick={toggleAside}
+                        >
+                          {asideOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
+                        </IconButton>
+                      </>
+                    }
+                  >
+                    <Breadcrumbs items={crumbsFor(item)} />
+                  </TopBar>
+                }
+                stage={
+                  <motion.div
+                    className={styles.fill}
+                    data-print-flow
+                    initial={{ opacity: 0, scale: 0.985 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6, ease: ease.out }}
+                  >
+                    <ErrorBoundary>
+                      <Suspense
+                        fallback={
+                          <div className={styles.loading}>
+                            <LissajousMark size={40} />
+                          </div>
+                        }
                       >
-                        <Maximize size={16} />
-                      </IconButton>
-                      <IconButton
-                        label={asideOpen ? msg.item.hideExplanation : msg.item.showExplanation}
-                        shortcut="]"
-                        onClick={toggleAside}
-                      >
-                        {asideOpen ? <PanelRightClose size={16} /> : <PanelRightOpen size={16} />}
-                      </IconButton>
-                    </>
-                  }
-                >
-                  <Breadcrumbs items={crumbsFor(item)} />
-                </TopBar>
-              }
-              stage={
-                <motion.div
-                  className={styles.fill}
-                  data-print-flow
-                  initial={{ opacity: 0, scale: 0.985 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, ease: ease.out }}
-                >
-                  <ErrorBoundary>
-                    <Suspense
-                      fallback={
-                        <div className={styles.loading}>
-                          <LissajousMark size={40} />
-                        </div>
-                      }
-                    >
-                      <Viz />
-                    </Suspense>
-                  </ErrorBoundary>
-                </motion.div>
-              }
-              floating={
-                <>
-                  <ControlDock ref={setDock} />
-                  {item.hasCode && (
-                    <CodePanel
-                      item={item}
-                      stepIndex={stepIndex}
-                      onStep={goToStep}
-                      entries={code.entries}
-                      codeSteps={code.codeSteps}
-                      open={codeOpen}
-                      onOpenChange={setCodeOpen}
-                      dock={dock}
-                    />
-                  )}
-                  {fullscreen.active && (
-                    <FullscreenBar
-                      title={steps[stepIndex]?.title}
-                      index={stepIndex}
-                      count={steps.length}
-                      onStep={goToStep}
-                      onExit={fullscreen.exit}
-                      playback={playback}
-                    />
-                  )}
-                </>
-              }
-              stageRef={setStageArea}
-              fullscreen={fullscreen.active}
-              aside={
-                <ExplanationPane
-                  entry={item}
-                  stepIndex={stepIndex}
-                  onStep={goToStep}
-                  playback={playback}
-                  codeSteps={code.codeSteps}
-                  codeOpen={codeOpen}
-                  onCodeOpen={setCodeOpen}
-                />
-              }
-            />
-          </PortalContainerContext>
-        </VizRuntimeContext.Provider>
+                        <Viz />
+                      </Suspense>
+                    </ErrorBoundary>
+                  </motion.div>
+                }
+                floating={
+                  <>
+                    <ControlDock ref={setDock} />
+                    {item.hasCode && (
+                      <CodePanel
+                        item={item}
+                        stepIndex={stepIndex}
+                        onStep={goToStep}
+                        entries={code.entries}
+                        codeSteps={code.codeSteps}
+                        open={codeOpen}
+                        onOpenChange={setCodeOpen}
+                        dock={dock}
+                      />
+                    )}
+                    {fullscreen.active && (
+                      <FullscreenBar
+                        title={steps[stepIndex]?.title}
+                        index={stepIndex}
+                        count={steps.length}
+                        onStep={goToStep}
+                        onExit={fullscreen.exit}
+                        playback={playback}
+                      />
+                    )}
+                  </>
+                }
+                stageRef={setStageArea}
+                fullscreen={fullscreen.active}
+                aside={
+                  <ExplanationPane
+                    entry={item}
+                    stepIndex={stepIndex}
+                    onStep={goToStep}
+                    playback={playback}
+                    codeSteps={code.codeSteps}
+                    codeOpen={codeOpen}
+                    onCodeOpen={setCodeOpen}
+                  />
+                }
+              />
+            </PortalContainerContext>
+          </VizRuntimeContext.Provider>
+        </CodeFocusScope>
       </HighlightScope>
     </CurrentItemContext.Provider>
   )

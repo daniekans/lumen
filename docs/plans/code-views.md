@@ -12,8 +12,8 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
 | 4     | Pilot content in three areas, then the owner's review               | done   |
 | 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done   |
-| 6     | The code panel: code beside the visual, step by step (replaces tab) | review |
-| 7     | Code that moves with the visual: per-step and animated line focus   | next   |
+| 6     | The code panel: code beside the visual, step by step (replaces tab) | done   |
+| 7     | Code that moves with the visual: per-step and animated line focus   | review |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -351,7 +351,7 @@ After batch 7, code is added unit by unit as units are built (Linear Algebra fir
 1. The panel is closed on the first visit to an item with code, and remembered once opened.
 2. The Code tab goes; the whole-file sheet replaces it.
 
-### Batch 6 as built (2026-11-05), waiting for the owner's review
+### Batch 6 as built (2026-11-05), approved by the owner on 2026-11-06
 
 - **Leads.** `remarkCodeView` gives each step block of `code.mdx` the paragraph right before it
   (or before its `CodeTabs`) as `CodeEntry.lead`: plain text where inline code keeps its
@@ -383,6 +383,39 @@ After batch 7, code is added unit by unit as units are built (Linear Algebra fir
   not move, as planned. If that is too much, two options: move the drawing aside while the
   panel is open (the stage gets an extra inset, so the drawing shrinks), or a smaller default
   panel that grows on hover.
+
+The owner approved batch 6 as built (2026-11-06), including the panel covering part of the
+drawing on a narrow stage; neither of the two options above is needed.
+
+### Batch 7 as built (2026-11-06), waiting for the owner's review
+
+- **Model.** `CodeSnippet.step` became `steps` (`step="columns rows"` in the fence), and `focus`
+  holds lines per step (`focus="columns=7-9 rows=12-13"`); a focus on a step the block does not
+  list fails the build. `focusLines(snippet, step)` gives the step's lines, else `highlight`.
+- **The bar.** `CodeView` draws the highlight as one bar per run of lines (left rule and tint,
+  placed in line heights), keyed by index, so a new focus glides (`--dur-slow`, none under
+  reduced motion) instead of switching line tints. Focused lines carry `data-focus`. In the
+  panel the bar scrolls into view when it moves (after its glide), never on the first render.
+  The panel's content keeps its key across steps that share a block, so only the bar moves; the
+  whole-file view gives such a block one step chip per step.
+- **`useCodeFocus(line, { key })`** (`viz-kit/stage/codeFocus.ts`): an item drives the line of
+  its step's first block; fractional values glide frame by frame (no CSS transition then), null
+  hands back to the step's focus. The value lives in a store under `CodeFocusScope` (item page),
+  read by the panel's `StepCode`. `key` sets the page highlight for that moment (code names and
+  the shape glow, others dim) only when the learner is not hovering, and clears it after.
+- **Pilots.** `matrix-vector-product`: the columns and rows blocks are one `product.py`
+  (`Ax = x[0] * a1` then `Ax += x[1] * a2`); entering the columns step now builds the column
+  picture term by term (x1 a1 grows, then x2 a2, then `Ax` appears), with the bar on the line of
+  the term and `a1`, then `a2`, lit; the layer step's bar glides from `Wx = W @ x` to
+  `out = Wx + b` as the plane moves, then slides (with `b` lit). `forward-pass`: during a pass
+  the bar waits on `for` and slides into the loop body as each layer's signal travels.
+  `partitioning-by-key`: the write and the read of the path are one `partition.py` over the
+  `partition` and `path` steps. Outputs re-run (`layer.py` changed).
+- e2e: the code panel test checks that the highlight moves inside the shared block.
+- **For the review:** the new build-up animation in the columns step (the visual changed a
+  little: the terms appear one after the other on entering the step, a drag shows the whole
+  product at once), and the glow during driven focus, which dims the other shapes as a hover
+  does. If the dimming is too strong, the glow can light only the code names and readout rows.
 
 ## Pilot content (batch 4)
 

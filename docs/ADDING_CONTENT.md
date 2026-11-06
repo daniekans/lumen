@@ -148,7 +148,8 @@ start a list item with it (Prettier splits the paragraph).
 
 Fenced code blocks are highlighted at build time (`python`, `sql`, `scala`, `typescript`, `bash`,
 `json`, `yaml`, `text`; an unknown language or option fails the build). Options go after the
-language: `title="rotate.py"`, highlighted lines `{3-5}`, `step=shear`, names in stage colors
+language: `title="rotate.py"`, highlighted lines `{3-5}`, `step=shear` (or `step="columns rows"`),
+lines per step `focus="columns=7-9 rows=12-13"`, names in stage colors
 `colors="A=blue v=orange"`, `hover="A=matrix"`, `env=spark` (where `pnpm code` runs it),
 `check` (checked; CI checks the `default` environment) or `check=torch` (both), and
 `raises=ValueError` for a block that fails on purpose. A following fence in the language `output`
@@ -167,6 +168,20 @@ panel's "Whole file" shows it in a sheet over the stage, headings in monospace.
   step's row gets a code button that opens the panel. Steps without a block show "No code for
   this step". Blocks without `step=` appear only in the whole file. Blocks of one `<CodeTabs>`
   stay tabs in the panel.
+- **One block over several steps.** When consecutive steps read parts of one program, give the
+  block every step (`step="columns rows"`) and each step its lines (`focus="columns=7-9
+rows=12-13"`, else the block's `{n}` applies). The block stays in place and the highlight
+  glides to the step's lines. Use it when the steps are views of the same code (two readings of
+  one product, a write and the read that follows); keep separate blocks when the code changes.
+  A shared block has one lead, so write it for all its steps.
+- **Code that follows an animation.** When a step animates something the code does term by term
+  (a sum built up, a loop over layers, a map then a shift), the item drives the highlight with
+  `useCodeFocus(line, { key })` from `@/viz-kit`: `line` is 1-based in the step's first block,
+  fractional values glide, null hands the highlight back to the block. Derive it from the
+  animation's value while `seq.running`, so it follows the motion and lets go when the motion
+  ends. `key` lights a hover key for that moment (the names in the code and the shape glow
+  together; a learner's hover wins). Write the line numbers in a comment next to the call, since
+  they must match `code.mdx`. Examples: `matrix-vector-product` (columns, layer), `forward-pass`.
 - **Leads.** The paragraph right before a block (or before its `<CodeTabs>`) is the block's lead,
   shown above it in the panel. Keep it to one or two sentences that say what the code does at
   this step. Only inline code and `$math$` keep their formatting there; emphasis and links show

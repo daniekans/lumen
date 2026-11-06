@@ -185,7 +185,7 @@ export function remarkCodeView() {
         expressionAttribute('snippet', snippet),
         expressionAttribute('tokens', tokens),
       ] as MdxJsxFlowElement['attributes']
-      if (snippet.step)
+      if (snippet.steps)
         entries.push({
           snippet,
           tokens,

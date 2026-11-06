@@ -228,19 +228,23 @@ test('theme toggle switches tokens', async ({ page }) => {
   await expect(html).not.toHaveAttribute('data-theme', before ?? '')
 })
 
-test('the code panel follows the step, and the whole file goes to a step', async ({ page }) => {
+test('the code panel follows the step, its highlight moves, and the whole file goes to a step', async ({
+  page,
+}) => {
   const errors = collectErrors(page)
   await page.goto('/mathematics/linear-algebra/linear-maps/matrix-vector-product')
   const panel = page.getByRole('region', { name: 'Code of this step' })
   // Closed on a first visit; the chip opens it.
   await expect(panel).toHaveCount(0)
   await page.getByRole('button', { name: 'Show the code', exact: true }).click()
-  await expect(panel.locator('figure[data-step="columns"]')).toContainText('a1')
+  // One block serves the columns and rows steps; the highlight moves inside it.
+  const product = panel.locator('figure[data-step="columns rows"]')
+  await expect(product.locator('[data-focus]').last()).toHaveText('Ax += x[1] * a2')
 
   // A step's code button selects the step; the panel follows.
   const row = page.locator('aside ol > li', { hasText: 'Each entry from one row' })
   await row.getByRole('button', { name: 'Show the code of this step' }).click()
-  await expect(panel.locator('figure[data-step="rows"]')).toBeVisible()
+  await expect(product.locator('[data-focus]').first()).toHaveText('r1, r2 = A  # the rows')
 
   // The whole file: each block's step label goes to its step.
   await panel.getByRole('button', { name: 'Whole file' }).click()

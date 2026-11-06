@@ -198,7 +198,12 @@ add nothing). It shows the active step's blocks and leads, sits above the dock i
 stage is narrow (a `stage` container query in `VizLayout`), and stays in fullscreen. Open or closed
 is `codePanelOpen` in the UI store (closed until first opened, then remembered); `c` and the
 step rows' code buttons toggle it. "Whole file" renders `code.mdx` in a `VizSheet`, where
-`CodeLinks.onStep` gives each step block a button to its step. Code drawn inside the picture
+`CodeLinks.onStep` gives each step block a button to its step. The highlight of a `CodeView` is a
+bar per run of lines, placed in line heights, so it glides when the lines change: a block tied to
+several steps (`snippet.steps`) highlights `focus[step]` (`focusLines`), and an item can drive the
+line from its animation with `useCodeFocus` (`viz-kit/stage/codeFocus.ts`). The driven line lives
+in a small store under `CodeFocusScope` (the item page), read by the panel's step code with
+`useSyncExternalStore`, so a frame re-renders only those few views. Code drawn inside the picture
 (`CodeLabel`, `CodeBlock`) is for code that is itself part of the drawing, which is rare.
 
 Future renderers (a canvas layer for particles, WebGL for shaded surfaces) mount inside the

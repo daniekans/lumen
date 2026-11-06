@@ -13,7 +13,8 @@ import {
  *
  *   ```python title="rotate.py" {3-5} step=shear colors="A=blue v=orange" hover="A=matrix" check
  *
- * gives a snippet without its source. `env=spark` names the environment `scripts/run-code.mjs`
+ * gives a snippet without its source. `step="columns rows"` ties one block to several steps, and
+ * `focus="columns=6-7 rows=8"` highlights other lines in each of them. `env=spark` names the environment `scripts/run-code.mjs`
  * runs the block in, `check=torch` both names it and marks the block as checked, and
  * `raises=ValueError` names an exception the block raises on purpose. A fence in the language
  * `output` (or marked `output`) is the printed output of the block before it; `output excerpt`
@@ -89,10 +90,28 @@ export const parseFence = (
     switch (key) {
       case 'title':
       case 'tab':
-      case 'step':
         if (!value) return { kind: 'error', message: `"${key}" needs a value` }
         snippet[key] = value
         break
+      case 'step': {
+        const steps = value?.trim().split(/\s+/).filter(Boolean)
+        if (!steps?.length) return { kind: 'error', message: '"step" needs a value' }
+        snippet.steps = [...new Set(steps)]
+        break
+      }
+      case 'focus': {
+        const pairs = value === undefined ? undefined : parsePairs(value)
+        if (!pairs || !Object.keys(pairs).length)
+          return { kind: 'error', message: `bad focus "${whole}"` }
+        const focus: Record<string, number[]> = {}
+        for (const [step, spec] of Object.entries(pairs)) {
+          const lines = parseLineRanges(spec)
+          if (!lines) return { kind: 'error', message: `bad line range "${spec}" in focus` }
+          focus[step] = lines
+        }
+        snippet.focus = focus
+        break
+      }
       case 'colors': {
         const pairs = value === undefined ? undefined : parsePairs(value)
         if (!pairs) return { kind: 'error', message: `bad colors "${whole}"` }
@@ -132,5 +151,8 @@ export const parseFence = (
         return { kind: 'error', message: `unknown fence option "${whole}"` }
     }
   }
+  const stray = Object.keys(snippet.focus ?? {}).find((s) => !snippet.steps?.includes(s))
+  if (stray !== undefined)
+    return { kind: 'error', message: `focus names "${stray}", which is not in "step"` }
   return { kind: 'code', snippet }
 }

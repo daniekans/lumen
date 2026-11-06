@@ -20,7 +20,7 @@ export function useItemCode(item: Item) {
   }, [item])
   const entries = loaded?.id === item.id ? loaded.entries : undefined
   const codeSteps = useMemo(
-    () => new Set(entries?.flatMap((e) => (e.snippet.step ? [e.snippet.step] : []))),
+    () => new Set(entries?.flatMap((e) => e.snippet.steps ?? [])),
     [entries],
   )
   return { entries, codeSteps }

@@ -57,10 +57,18 @@ export interface CodeSnippet {
   title?: string
   /** The label of this snippet's tab inside `CodeTabs` (falls back to the title). */
   tab?: string
-  /** The id of the step this snippet explains. */
-  step?: string
+  /**
+   * The ids of the steps this snippet explains (`step=columns`, or `step="columns rows"` for a
+   * block that stays in place over several steps).
+   */
+  steps?: readonly string[]
   /** Highlighted lines, 1-based. */
   highlight?: readonly number[]
+  /**
+   * Highlighted lines per step (`focus="columns=6-7 rows=8"`), replacing `highlight` while that
+   * step is active, so the highlight moves through one block as the steps change.
+   */
+  focus?: Readonly<Record<string, readonly number[]>>
   /** Names drawn in a stage color, such as `{ A: 'blue' }`. */
   colors?: Readonly<Record<string, CodeHue>>
   /** Names linked to a shape's `hoverKey`, such as `{ A: 'matrix' }`. */
@@ -98,6 +106,10 @@ export interface CodeEntry {
    */
   lead?: string
 }
+
+/** The lines to highlight while `step` is active: its `focus`, or else the block's `highlight`. */
+export const focusLines = (snippet: CodeSnippet, step?: string): readonly number[] =>
+  (step === undefined ? undefined : snippet.focus?.[step]) ?? snippet.highlight ?? []
 
 /** The file name of an item's code walkthrough. */
 export const CODE_FILE = 'code.mdx'
