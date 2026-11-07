@@ -5,15 +5,18 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 
 ## Status
 
-| Batch | What                                                                | Status |
-| ----- | ------------------------------------------------------------------- | ------ |
-| 1     | Code model and highlighted blocks in every MDX file (build time)    | done   |
-| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done   |
-| 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
-| 4     | Pilot content in three areas, then the owner's review               | done   |
-| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done   |
-| 6     | The code panel: code beside the visual, step by step (replaces tab) | done   |
-| 7     | Code that moves with the visual: per-step and animated line focus   | done   |
+| Batch | What                                                                | Status  |
+| ----- | ------------------------------------------------------------------- | ------- |
+| 1     | Code model and highlighted blocks in every MDX file (build time)    | done    |
+| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done    |
+| 3     | Code in the explanation pane: step peeks and the Code tab           | done    |
+| 4     | Pilot content in three areas, then the owner's review               | done    |
+| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done    |
+| 6     | The code panel: code beside the visual, step by step (replaces tab) | done    |
+| 7     | Code that moves with the visual: per-step and animated line focus   | done    |
+| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | next    |
+| 9     | Code for existing items: Calculus 1 (18)                            | planned |
+| 10    | Code for existing items: Data Engineering (16)                      | planned |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -420,6 +423,105 @@ drawing on a narrow stage; neither of the two options above is needed.
 The owner approved batch 7 as built (2026-11-06), the build-up in the columns step and the
 dimming during driven focus included. Code views are done; code is now added unit by unit, from
 Linear maps and matrices batch 2 on.
+
+## Code for existing items (batches 8 to 10)
+
+Decided with the owner on 2026-11-07. Items built before the code views have no `code.mdx`. They
+get one in three batches, one session each, with the owner's review after each, before the
+suggested order goes on to Probability. Each walkthrough follows `ADDING_CONTENT.md` (Code
+walkthrough) as items built since then do: blocks tied to steps (`step=`, `focus=`), names in stage
+colors with hover keys, `useCodeFocus` where a step animates something the code does term by
+term, outputs from real runs (`pnpm code <path> --write`), `check` on every block that runs.
+Small fixes found in an item on the way (wording, a label) are fine; redesigns are not part of
+these batches and go to the plan as notes for the owner.
+
+The item lists say what each walkthrough should show, as a starting point. When a step has no
+useful code, leave it without a block ("No code for this step"); not every step needs one.
+
+**Skipped:** the pre-calculus refreshers (Functions, Algebra essentials, Polynomial and rational,
+Exponential and logarithmic, Trigonometry; about 22 items) and `rag-pipeline` (AI Engineering).
+Code adds little to factoring or radicals, and the code views are not a Python course. A small
+block can still be added to a refresher later when it helps (compound interest in `the-number-e`,
+`np.log` bases in `logarithms`). Practice and checkpoint items have no walkthrough.
+
+### Batch 8: Linear Algebra and Machine Learning (11 items)
+
+NumPy first, SymPy where exact values matter.
+
+| Item                                     | The code shows                                                                                                                                     |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| vectors/vectors                          | Arrays as vectors, `v + w`, `c * v`, `w - v`; rows of a table and their mean (`X.mean(axis=0)`)                                                    |
+| vectors/linear-combinations              | `a * v + b * w`; the weights that reach $\mathbf{u}$ with `np.linalg.solve` on the columns $\mathbf{v}$, $\mathbf{w}$; parallel: a singular matrix |
+| vectors/vector-algebra (lesson)          | The eight rules checked on arrays, `np.linalg.norm`, unit vectors, distance, the triangle inequality                                               |
+| vectors/dot-product                      | `v @ w`, the angle from `np.arccos`, projection, cosine similarity of feature vectors (and `np.clip` against rounding)                             |
+| vectors/span-and-independence            | `np.linalg.matrix_rank` on stacked vectors, the dependence relation from SymPy `nullspace()`                                                       |
+| vectors/lines-and-planes (lesson)        | Points of $\mathbf{p} + t\mathbf{v}$, the normal by `np.cross`, normal form, where a line meets a plane                                            |
+| vectors/basis-and-coordinates            | Coordinates in a basis with `np.linalg.solve(B, x)`, back again with `B @ c`                                                                       |
+| linear-maps/linear-maps                  | The two rules checked numerically for a linear map, a shift and a bend (the witness $T(2\mathbf{u}) - 2T(\mathbf{u})$)                             |
+| linear-maps/matrix-transformations       | A matrix from where $\hat{\imath}$, $\hat{\jmath}$ land (`np.column_stack`), the italic shear applied to the letter's points                       |
+| neural-networks/training/backpropagation | Gradients by the chain rule in NumPy, layer by layer, then PyTorch autograd (`env=torch`, `CodeTabs`) giving the same numbers                      |
+
+Also in this batch, `complex-numbers/arithmetic/complex-multiplication`: Python's `complex`
+(`z * w`, `abs`, `cmath.phase`) and multiplication as a rotation and scaling, the same as a
+$2 \times 2$ matrix acting on $(a, b)$.
+
+### Batch 9: Calculus 1 (18 items)
+
+SymPy for exact limits and derivatives, NumPy for the numbers the stage shows. A thread worth
+showing across the batch: floating point. A difference quotient with $h$ too small loses digits,
+so `h = 1e-12` is worse than `h = 1e-6`.
+
+| Item                                      | The code shows                                                                                                    |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| limits/approaching-a-value                | A table of $f(x)$ as $x \to a$ from both sides (NumPy), then `sympy.limit`                                        |
+| limits/one-sided-and-infinite             | `limit(f, x, a, '+')` and `'-'`, `oo`; values blowing up near a vertical asymptote                                |
+| limits/limit-laws (lesson)                | The laws checked with SymPy on the lesson's examples; cancelling a factor (`cancel`, `factor`)                    |
+| limits/squeeze-and-standard-limits        | $\frac{\sin x}{x}$ and the squeeze bounds in NumPy; `limit(sin(x)/x, x, 0)`; floating point near 0                |
+| limits/continuity                         | Checking continuity at a point: value, both one-sided limits; `sympy.calculus.util.continuous_domain`             |
+| limits/growth-rates (lesson)              | Ratios such as $\frac{x^{10}}{e^x}$ for growing $x$, `limit(..., oo)`, where floating point overflows             |
+| limits/epsilon-delta                      | Given $\varepsilon$, find a working $\delta$ numerically and check it on a grid of points                         |
+| limits/epsilon-delta-proofs (lesson)      | The proof's $\delta$ as a function, checked by sampling (a test, not a proof; the text says so)                   |
+| derivatives/derivative-as-limit (lesson)  | Difference quotients for shrinking $h$, the floating-point floor, `sympy.diff`                                    |
+| derivatives/derivative-function           | `np.gradient` on samples next to the exact derivative; `diff` then `lambdify`                                     |
+| derivatives/power-and-sum-rules           | `diff` term by term; the rules as code that differentiates a polynomial's coefficient list                        |
+| derivatives/product-and-quotient-rules    | `diff(f*g)` against $f'g + fg'$ with SymPy `simplify`                                                             |
+| derivatives/chain-rule                    | `diff(f(g(x)))` against $f'(g(x))g'(x)$; the forward-mode view: carrying a value and its derivative through steps |
+| derivatives/exp-log-and-trig-derivatives  | `diff` of $e^x$, $\ln x$, $\sin x$; the slope of $e^x$ equal to its value, numerically                            |
+| derivatives/implicit-and-inverse (lesson) | `idiff` for implicit derivatives (in $x$ and in $y$), the inverse function's derivative                           |
+| derivatives/motion (lesson)               | Position samples to velocity and acceleration with `np.gradient`; SymPy for the exact ones                        |
+| derivatives/related-rates (lesson)        | The ladder, cone and balloon: differentiate the relation in $t$ with SymPy, then substitute                       |
+
+Also `integrals/riemann-sums` (legacy): left, right and midpoint sums as `np.sum(f(x) * dx)`, the
+error shrinking with $n$, and `sympy.integrate` for the exact area.
+
+### Batch 10: Data Engineering (16 items)
+
+Spark SQL and PySpark in the `spark` environment with real `EXPLAIN` output (the partitioning
+pilot is the model), plain SQL where a tab is enough. Parquet internals need `pyarrow`: add it to
+the Spark image (or a small `arrow` environment) at the start of the batch, keeping the rule that
+an image is built once and all blocks of an item run in one container.
+
+| Item                                                      | The code shows                                                                                        |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| relational-model-and-joins/tables-as-relations            | A DataFrame as a set of rows with a schema; `distinct`, keys as a uniqueness check                    |
+| relational-model-and-joins/keys-and-references            | Primary and foreign keys; finding orphan references with a `left_anti` join                           |
+| relational-model-and-joins/joins-as-products              | `crossJoin` then a filter equals the inner join; the plan Spark picks (`EXPLAIN`)                     |
+| relational-model-and-joins/outer-joins                    | Left, right and full joins on the stage's tables, nulls where no match                                |
+| relational-model-and-joins/join-row-counts (lesson)       | Row counts from key multiplicities (`groupBy().count()` on both sides), checked against the join      |
+| storage-and-file-formats/row-vs-columnar                  | Writing CSV and Parquet, reading one column: bytes read, `EXPLAIN` with `ReadSchema` (column pruning) |
+| storage-and-file-formats/encodings                        | Dictionary and run-length encoding by hand, then the encodings pyarrow reports for each column chunk  |
+| storage-and-file-formats/parquet-anatomy                  | `pyarrow.parquet` metadata: row groups, column chunks, min and max statistics                         |
+| storage-and-file-formats/entropy-and-compression (lesson) | Entropy of a column in Python, compressed sizes per codec                                             |
+| storage-and-file-formats/scan-cost (lesson)               | Predicate pushdown and row-group skipping: `PushedFilters` in the plan, row groups read               |
+| partitioning-and-hashing/hash-partitioning                | `repartition(n, col)` and `spark_partition_id()`; the hash and modulo the stage draws                 |
+| partitioning-and-hashing/rehashing                        | How many keys move when $n$ changes under modulo hashing, counted in Python                           |
+| partitioning-and-hashing/consistent-hashing               | A small hash ring in Python: keys moved when a node joins, compared with modulo                       |
+| partitioning-and-hashing/bucketed-joins                   | `bucketBy` tables and the join plan without an `Exchange` (shuffle), compared with unbucketed         |
+| partitioning-and-hashing/sizing-partitions (lesson)       | Partition count from data size and target file size; `spark.sql.files.maxPartitionBytes`              |
+| partitioning-and-hashing/skew (lesson)                    | Rows per partition for a skewed key, salting the key, AQE's skew join in the plan                     |
+
+Keep each block short; Spark setup (session, sample data) goes in the first block of an item and
+later blocks reuse it, as the pilot does.
 
 ## Pilot content (batch 4)
 

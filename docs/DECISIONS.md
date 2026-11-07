@@ -269,6 +269,11 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   fixed, clean panel of its own on the stage, shown at the active step, not drawn inside the
   picture and not in a separate section read after the steps. The Code tab and step peeks give
   way to it (`plans/code-views.md`, batches 6 and 7).
+- Code for existing items (2026-11-07, the owner's request): items built before the code views
+  get a `code.mdx` in three batches, one session each, before Probability: Linear Algebra and
+  Machine Learning, Calculus 1, Data Engineering (included on request). The pre-calculus
+  refreshers and `rag-pipeline` are skipped, since code adds little there. Plan in
+  `plans/code-views.md` (batches 8 to 10).
 
 ## Future direction (record, do not build yet)
 

@@ -38,8 +38,9 @@ of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 **Suggested next session:** the owner's review of Linear maps and matrices batch 3
 (`plans/linear-algebra.md`, "Batch 3 (built 2026-11-07, for review)": `maps-in-3d`,
 `kernel-and-image-preview`, `practice-maps`, `checkpoint`). Apply the review, which closes the
-unit; then step 13 of the suggested order (outline Probability and Statistics, for review). The
-focus is Mathematics and Machine Learning; Data Engineering continues only on request.
+unit; then step 13 of the suggested order: code for existing items, batch 8 (Linear Algebra
+and Machine Learning, `plans/code-views.md`, "Code for existing items"). Batches 9 (Calculus 1)
+and 10 (Data Engineering) follow in their own sessions, then Probability and Statistics.
 
 ### Phase 3: Explore page
 
@@ -83,7 +84,7 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 7 built)
+### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 7 built; 8 to 10 add code to existing items)
 
 Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (seven
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,
