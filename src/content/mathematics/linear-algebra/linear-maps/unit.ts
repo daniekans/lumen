@@ -15,6 +15,14 @@ export const unit = defineUnit({
       id: 'matrix-vector',
       title: 'Multiply a matrix and a vector, by columns and by rows, and read shapes',
     },
+    {
+      id: 'standard-maps',
+      title: 'Write and recognize rotations, reflections, shears, scalings and projections',
+    },
+    {
+      id: 'matrix-multiplication',
+      title: 'Multiply matrices, compose maps, and use powers, the identity and transposes',
+    },
   ],
   terms: [
     {
@@ -56,6 +64,38 @@ export const unit = defineUnit({
       summary:
         'A linear map followed by a shift by $\\mathbf{b}$. When $\\mathbf{b} \\ne \\mathbf{0}$ it is not linear, since it moves the origin. A layer of a neural network, before its activation, is affine.',
       introducedIn: 'matrix-vector-product',
+    },
+    {
+      id: 'rotation-matrix',
+      title: 'Rotation matrix',
+      tex: 'R_\\theta = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{bmatrix}',
+      summary:
+        'The matrix of the rotation of the plane by $\\theta$ counterclockwise. Its columns are where $\\hat{\\imath}$ and $\\hat{\\jmath}$ land on the unit circle. It keeps lengths, angles, areas and orientation.',
+      introducedIn: 'gallery-of-maps',
+    },
+    {
+      id: 'projection-matrix',
+      title: 'Projection matrix',
+      tex: 'P\\mathbf{x} = \\frac{\\mathbf{u} \\cdot \\mathbf{x}}{\\mathbf{u} \\cdot \\mathbf{u}}\\,\\mathbf{u}',
+      summary:
+        'The matrix of the orthogonal projection onto the line along $\\mathbf{u}$: each vector goes to the foot of its perpendicular on the line. Its entries are $\\frac{u_iu_j}{\\mathbf{u} \\cdot \\mathbf{u}}$, and projecting twice gives the same as once.',
+      introducedIn: 'gallery-of-maps',
+    },
+    {
+      id: 'matrix-product',
+      title: 'Matrix product',
+      tex: 'AB = \\begin{bmatrix} A\\mathbf{b}_1 & \\cdots & A\\mathbf{b}_p \\end{bmatrix}',
+      summary:
+        'For an $m \\times n$ matrix $A$ and an $n \\times p$ matrix $B$: the $m \\times p$ matrix of the map "first $B$, then $A$". Its column $j$ is $A$ times column $j$ of $B$, and its entry $(i, j)$ is row $i$ of $A$ dotted with column $j$ of $B$.',
+      introducedIn: 'composition',
+    },
+    {
+      id: 'transpose',
+      title: 'Transpose',
+      tex: 'A^T',
+      summary:
+        'The matrix $A$ with rows and columns swapped: entry $(i, j)$ of $A^T$ is entry $(j, i)$ of $A$. An $m \\times n$ matrix has an $n \\times m$ transpose, and $(AB)^T = B^TA^T$.',
+      introducedIn: 'matrix-multiplication',
     },
   ],
 })

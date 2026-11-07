@@ -1,0 +1,177 @@
+NumPy's `A @ B` multiplies matrices. The blocks below compute the product the two ways of the
+lesson, then check the rules (shapes, grouping, powers, transposes) on real arrays.
+
+## Column by column, then row times column
+
+The same `A` and `B` as on the stage. The first loop builds `AB` from `A` times each column of
+`B`; the second fills each entry from a row of `A` and a column of `B`:
+
+```python title="product.py" step="columns entries" focus="columns=9-10 entries=12-15" check
+import numpy as np
+
+A = np.array([[1.0, 2.0, 0.0],
+              [-1.0, 1.0, 3.0]])
+B = np.array([[2.0, 1.0],
+              [0.0, -1.0],
+              [1.0, 3.0]])
+
+C = np.column_stack([A @ B[:, j] for j in range(2)])
+print(C)  # column j is A times column j of B
+
+for i in range(2):
+    for j in range(2):
+        C[i, j] = A[i, :] @ B[:, j]  # row i, column j
+print(C)
+print(A @ B)
+```
+
+```output
+[[ 2. -1.]
+ [ 1.  7.]]
+[[ 2. -1.]
+ [ 1.  7.]]
+[[ 2. -1.]
+ [ 1.  7.]]
+```
+
+## Shapes
+
+`A` is $2 \times 3$ and `B` is $3 \times 2$, so `A @ B` is $2 \times 2$ and `B @ A` is
+$3 \times 3$: both exist, with different shapes. When the inner sizes differ, NumPy refuses:
+
+```python title="shapes.py" step=shapes check raises=ValueError
+print((A @ B).shape, (B @ A).shape)
+A @ A  # ValueError: 3 columns, but 2 rows
+```
+
+```output
+(2, 2) (3, 3)
+```
+
+## Associativity
+
+Grouping does not matter, up to rounding (`allclose` compares with a tolerance):
+
+```python title="grouping.py" step=associativity check
+M = np.array([[0.0, 1.0],
+              [1.0, 1.0]])
+print(np.allclose((A @ B) @ M, A @ (B @ M)))
+```
+
+```output
+True
+```
+
+## The identity and powers
+
+`np.eye(n)` is $I$; `matrix_power` multiplies a matrix by itself `k` times:
+
+```python title="powers.py" step=powers check
+print(np.array_equal(A @ np.eye(3), A), np.array_equal(np.eye(2) @ A, A))
+
+c = s = np.sqrt(0.5)  # cos and sin of 45 degrees
+R = np.array([[c, -s], [s, c]])
+print(np.round(np.linalg.matrix_power(R, 2), 3) + 0.0)  # a quarter turn
+print(np.round(np.linalg.matrix_power(R, 8), 3) + 0.0)  # back to I
+```
+
+```output
+True True
+[[ 0. -1.]
+ [ 1.  0.]]
+[[1. 0.]
+ [0. 1.]]
+```
+
+## The transpose
+
+`A.T` swaps rows and columns. The transpose of a product reverses the order, and moving `A`
+across a dot product turns it into `A.T`:
+
+```python title="transpose.py" step=transpose check
+print(A.T.shape)
+print(np.array_equal((A @ B).T, B.T @ A.T))
+
+x, y = np.array([1.0, -2.0]), np.array([3.0, 0.5, 2.0])
+print(x @ (A @ y), (A.T @ x) @ y)
+```
+
+```output
+(3, 2)
+True
+-3.0 -3.0
+```
+
+## A product as a join
+
+Only the nonzero quantities are stored, as rows (store, product, quantity). Joining on the
+product and summing per store and measure is the matrix product:
+
+<CodeTabs>
+
+```sql title="totals.sql" tab=SQL step=join env=spark check=spark
+WITH q AS (SELECT * FROM VALUES
+    (1, 'apples', 10), (1, 'rice', 3),
+    (2, 'cheese', 2), (2, 'rice', 5) AS t(store, product, qty)),
+  p AS (SELECT * FROM VALUES
+    ('apples', 'price', 0.5), ('apples', 'kg', 0.2),
+    ('cheese', 'price', 4.0), ('cheese', 'kg', 0.25),
+    ('rice', 'price', 2.0), ('rice', 'kg', 1.0)
+    AS t(product, measure, value))
+SELECT q.store, p.measure, SUM(q.qty * p.value) AS total
+FROM q JOIN p ON q.product = p.product
+GROUP BY q.store, p.measure
+ORDER BY q.store, p.measure;
+```
+
+```output
++-----+-------+-----+
+|store|measure|total|
++-----+-------+-----+
+|1    |kg     |5.00 |
+|1    |price  |11.00|
+|2    |kg     |5.50 |
+|2    |price  |18.00|
++-----+-------+-----+
+```
+
+```python title="totals.py" tab=Python step=join check
+q = [(0, 0, 10), (0, 2, 3), (1, 1, 2), (1, 2, 5)]  # nonzero only
+p = [(0, 0, 0.5), (0, 1, 0.2), (1, 0, 4.0), (1, 1, 0.25),
+     (2, 0, 2.0), (2, 1, 1.0)]
+totals = np.zeros((2, 2))  # store by measure (price, kg)
+for store, prod, qty in q:
+    for prod2, measure, value in p:
+        if prod == prod2:  # the join condition
+            totals[store, measure] += qty * value  # the SUM
+print(totals)
+```
+
+```output
+[[11.   5. ]
+ [18.   5.5]]
+```
+
+</CodeTabs>
+
+Rows of the form (row, column, value) are how sparse matrices are stored (the COO format): a
+table with millions of products per store, almost all zero, keeps only what was sold.
+
+## Two layers are one
+
+Without an activation, two layers are one matrix. With a ReLU between them they are not:
+
+```python title="layers.py" step=layers check
+W1 = np.array([[1.0, 0.5], [-0.5, 1.0], [2.0, 0.0]])
+W2 = np.array([[0.5, -1.0, 0.25], [1.0, 0.5, -0.5]])
+x = np.array([1.0, -2.0])
+print(W2 @ (W1 @ x), (W2 @ W1) @ x)
+
+relu = lambda v: np.maximum(v, 0.0)
+print(W2 @ relu(W1 @ x))  # differs: the ReLU zeroes an entry
+```
+
+```output
+[ 3.   -2.25] [ 3.   -2.25]
+[ 0.5 -1. ]
+```

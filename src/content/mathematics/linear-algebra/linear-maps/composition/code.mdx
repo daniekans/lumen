@@ -1,0 +1,73 @@
+In NumPy, `@` between two matrices is the matrix product, the matrix of one map after the other.
+The blocks below apply the two maps one at a time and then as one matrix.
+
+## Two maps and their product
+
+`y` is $B\mathbf{x}$ and `z` is $A(B\mathbf{x})$; `A @ B` does both moves at once. Then each
+column of `A @ B` is `A` times the same column of `B`:
+
+```python title="compose.py" step="twice columns" focus="twice=9-12 columns=14-16" colors="x=blue y=yellow z=teal" hover="x=x y=y z=z" check
+import numpy as np
+
+B = np.array([[1.0, 1.0],   # the shear: first
+              [0.0, 1.0]])
+A = np.array([[0.0, -1.0],  # the quarter turn: second
+              [1.0, 0.0]])
+x = np.array([1.0, 1.0])
+
+y = B @ x  # first B
+z = A @ y  # then A
+print(y, z)
+print((A @ B) @ x)  # one matrix for both
+
+AB = A @ B
+print(AB[:, 0], A @ B[:, 0])  # column 1: A b1
+print(AB[:, 1], A @ B[:, 1])  # column 2: A b2
+```
+
+```output
+[2. 1.] [-1.  2.]
+[-1.  2.]
+[0. 1.] [0. 1.]
+[-1.  1.] [-1.  1.]
+```
+
+## The order
+
+`A @ B` means first `B`; `B @ A` means first `A`:
+
+```python title="order.py" step=order check
+print(A @ B)  # shear, then rotate
+print(B @ A)  # rotate, then shear
+print(np.array_equal(A @ B, B @ A))
+```
+
+```output
+[[ 0. -1.]
+ [ 1.  1.]]
+[[ 1. -1.]
+ [ 1.  0.]]
+False
+```
+
+## Rotations commute
+
+A turn by `a` after a turn by `b` is a turn by `a + b`, in either order. The products agree up to
+rounding, so the check uses `np.allclose`:
+
+```python title="rotations.py" step=commute check
+def rotation(theta: float) -> np.ndarray:
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s], [s, c]])
+
+a, b = np.radians(60), np.radians(45)
+print(np.allclose(rotation(a) @ rotation(b),
+                  rotation(b) @ rotation(a)))
+print(np.allclose(rotation(a) @ rotation(b),
+                  rotation(a + b)))
+```
+
+```output
+True
+True
+```

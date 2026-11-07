@@ -1,0 +1,76 @@
+Each map of the gallery is a function that builds its matrix from its parameter. The columns are
+where $\hat{\imath}$ and $\hat{\jmath}$ land, as on the stage.
+
+## The five maps
+
+One file for the five maps; each step highlights its own. `x` is the vector $(2, 1)$:
+
+```python title="maps.py" step="rotation reflection shear scaling projection" focus="rotation=5-8 reflection=10-13 shear=15-17 scaling=19-21 projection=23-26" colors="x=blue" hover="x=x" check
+import numpy as np
+np.set_printoptions(precision=3, suppress=True)
+x = np.array([2.0, 1.0])
+
+def rotation(theta: float) -> np.ndarray:
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s], [s, c]])
+print(rotation(np.pi / 2) @ x)  # a quarter turn
+
+def reflection(phi: float) -> np.ndarray:  # line at phi
+    c, s = np.cos(2 * phi), np.sin(2 * phi)
+    return np.array([[c, s], [s, -c]])
+print(reflection(np.pi / 4) @ x)  # across y = x
+
+def shear(k: float) -> np.ndarray:
+    return np.array([[1.0, k], [0.0, 1.0]])
+print(shear(0.5) @ x)
+
+def scaling(sx: float, sy: float) -> np.ndarray:
+    return np.array([[sx, 0.0], [0.0, sy]])
+print(scaling(2.0, 0.5) @ x)
+
+def projection(u: np.ndarray) -> np.ndarray:  # onto u
+    return np.outer(u, u) / (u @ u)  # entries u_i u_j
+ground = np.array([1.0, 0.0])
+print(projection(ground) @ x)  # the shadow at noon
+```
+
+```output
+[-1.  2.]
+[1. 2.]
+[2.5 1. ]
+[4.  0.5]
+[2. 0.]
+```
+
+`np.outer(u, u)` is the $2 \times 2$ table of the products $u_iu_j$. Dividing by $\mathbf{u} \cdot \mathbf{u}$
+makes the length of `u` irrelevant: any vector along the line gives the same projection.
+
+## What each map keeps
+
+A map keeps every length exactly when the images of $\hat{\imath}$ and $\hat{\jmath}$ have length
+$1$ and meet at a right angle. It keeps every angle when they have equal lengths and meet at a
+right angle. Here `cos` is the cosine of the angle between them:
+
+```python title="keeps.py" step=keeps check
+def keeps(A: np.ndarray) -> tuple[float, float, float]:
+    i, j = A[:, 0], A[:, 1]  # where i-hat and j-hat land
+    li, lj = np.linalg.norm(i), np.linalg.norm(j)
+    return li, lj, i @ j / (li * lj)  # lengths, cos
+
+for name, A in [("rotation", rotation(np.pi / 6)),
+                ("reflection", reflection(np.pi / 4)),
+                ("shear", shear(0.5)),
+                ("scaling", scaling(2.0, 0.5)),
+                ("projection", projection(x))]:
+    print(f"{name:10}", np.round(keeps(A), 3))
+```
+
+```output
+rotation   [1. 1. 0.]
+reflection [1. 1. 0.]
+shear      [1.    1.118 0.447]
+scaling    [2.  0.5 0. ]
+projection [0.894 0.447 1.   ]
+```
+
+A projection's two columns point along the same line (`cos` is $1$): the square is flattened.

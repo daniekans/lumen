@@ -1,11 +1,7 @@
 import { column, matVec, type MatN } from '@/lib/math'
 import { defineProblems, tex, type Rng } from '@/lib/practice'
 
-const { num, paren, sum, vector } = tex
-
-/** A matrix as TeX, entries through `num`. */
-const bmatrix = (rows: MatN) =>
-  `\\begin{bmatrix} ${rows.map((r) => r.map((v) => num(v)).join(' & ')).join(' \\\\ ')} \\end{bmatrix}`
+const { bmatrix, num, paren, sum, vector } = tex
 
 /** A column vector as TeX. */
 const col = (v: readonly number[]) => bmatrix(v.map((x) => [x]))

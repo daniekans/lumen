@@ -68,6 +68,10 @@ export const num = (v: number, maxDen = 16) => {
 export const vector = (values: readonly number[], maxDen = 16) =>
   `(${values.map((v) => num(v, maxDen)).join(', ')})`
 
+/** A matrix as TeX, row by row, each entry through `num`. */
+export const bmatrix = (rows: readonly (readonly number[])[], maxDen = 16) =>
+  `\\begin{bmatrix} ${rows.map((r) => r.map((v) => num(v, maxDen)).join(' & ')).join(' \\\\ ')} \\end{bmatrix}`
+
 /** The square root of a whole number in simplest form: 12 -> '2\\sqrt{3}', 9 -> '3'. */
 export const root = (n: number) => {
   const [outside, inside] = simplifySqrt(n)

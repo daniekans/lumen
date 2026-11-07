@@ -1,0 +1,28 @@
+Problems on the <Term id="matrix-product">matrix product</Term>, the standard maps of the plane
+and the <Term id="transpose">transpose</Term>.
+
+## Answers
+
+- A matrix answer is a grid of boxes in the shape of the matrix. Type one number per box; Tab moves
+  to the next box. Exact values such as $\frac{\sqrt{3}}{2}$ or $\frac{2}{5}$ can be typed as
+  they are.
+- Angles are in degrees, and counts such as the smallest power are whole numbers.
+
+## Formulas
+
+For an $m \times n$ matrix $A$ and an $n \times p$ matrix $B$, $AB$ is $m \times p$, its column
+$j$ is $A\mathbf{b}_j$, and
+
+$$
+(AB)_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}.
+$$
+
+The matrix of "first $F$, then $G$" is $GF$. $(AB)^T = B^TA^T$.
+
+| Map                                                                             | Matrix                                                                                                |
+| ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| <Term id="rotation-matrix">Rotation</Term> by $\theta$                          | $\begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$                   |
+| <Term id="projection-matrix">Projection</Term> onto the line along $\mathbf{u}$ | $\frac{1}{\mathbf{u} \cdot \mathbf{u}}\begin{bmatrix} u_1^2 & u_1u_2 \\ u_1u_2 & u_2^2 \end{bmatrix}$ |
+| Reflection across that line                                                     | $2P - I$                                                                                              |
+| Shear keeping $\hat{\imath}$                                                    | $\begin{bmatrix} 1 & k \\ 0 & 1 \end{bmatrix}$                                                        |
+| Scaling                                                                         | $\begin{bmatrix} s_x & 0 \\ 0 & s_y \end{bmatrix}$                                                    |

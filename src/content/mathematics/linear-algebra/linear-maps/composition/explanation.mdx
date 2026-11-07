@@ -1,0 +1,66 @@
+Doing one <Term id="linear-transformation">linear map</Term> and then another moves the plane
+twice. The result is again a linear map, so it has a matrix. This item finds that matrix from
+the two given ones and shows that the order of the two maps matters.
+
+## One map after another
+
+In the <StepLink step="twice">first step</StepLink>, $B$ sends $\mathbf{x}$ to $B\mathbf{x}$, then $A$
+sends that to $A(B\mathbf{x})$. Like the <Term id="composition">composition</Term> of functions,
+the map applied first is written on the right. The composite keeps combinations, because each
+map does:
+
+$$
+A\big(B(a\mathbf{u} + b\mathbf{v})\big) = A\big(aB\mathbf{u} + bB\mathbf{v}\big) = a\,A(B\mathbf{u}) + b\,A(B\mathbf{v}).
+$$
+
+So it is linear, and its matrix is fixed by where $\hat{\imath}$ and $\hat{\jmath}$ end up.
+
+## The product of two matrices
+
+The <Term id="matrix-product">matrix product</Term> $AB$ is defined as the matrix of "first $B$,
+then $A$", so that $(AB)\mathbf{x} = A(B\mathbf{x})$ for every $\mathbf{x}$.
+Its <StepLink step="columns">columns</StepLink> follow from the basis: $B$ sends $\hat{\imath}$ to
+its first column $\mathbf{b}_1$, and $A$ sends that to $A\mathbf{b}_1$. Likewise for
+$\hat{\jmath}$. So
+
+$$
+AB = A\begin{bmatrix} \mathbf{b}_1 & \mathbf{b}_2 \end{bmatrix} = \begin{bmatrix} A\mathbf{b}_1 & A\mathbf{b}_2 \end{bmatrix}.
+$$
+
+With the shear and the quarter turn of the stage:
+
+$$
+A = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}, \quad
+B = \begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}, \quad
+AB = \begin{bmatrix} 0 & -1 \\ 1 & 1 \end{bmatrix},
+$$
+
+since $A\mathbf{b}_1 = A(1, 0) = (0, 1)$ and $A\mathbf{b}_2 = A(1, 1) = (-1, 1)$. Each column of
+$AB$ is a matrix times a vector, which the earlier lesson computes. The next lesson reads the
+same product entry by entry.
+
+## The order matters
+
+The map <StepLink step="order">shear then rotate</StepLink> is $AB$; rotate then shear is $BA$:
+
+$$
+AB = \begin{bmatrix} 0 & -1 \\ 1 & 1 \end{bmatrix}, \qquad
+BA = \begin{bmatrix} 1 & -1 \\ 1 & 0 \end{bmatrix}.
+$$
+
+They differ, so in general $AB \ne BA$. Photo editing shows the same thing: rotating a square picture a
+quarter turn and then stretching it sideways gives a wide picture, while stretching first and then
+rotating gives a tall one.
+
+## When the order does not matter
+
+Some pairs commute. <StepLink step="commute">Two rotations</StepLink> do: turning by $\beta$ and
+then by $\alpha$ turns by $\alpha + \beta$, and so does the other order:
+
+$$
+R_\alpha R_\beta = R_\beta R_\alpha = R_{\alpha + \beta}.
+$$
+
+Other pairs that commute: any matrix with the identity, $AI = IA = A$, and a matrix with its own
+powers, $AA^2 = A^2A = A^3$ (where $A^2 = AA$). Two scalings along the axes also commute.
+Commuting is a property of a particular pair, not a rule to rely on.

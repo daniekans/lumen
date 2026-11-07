@@ -26,7 +26,8 @@ src/
                      AxisInterval (domains, ranges and solution sets on an axis), TransformedGrid
                      (the grid of the plane under a 2x2 matrix, filling any view), WarpedGrid (the
                      grid under any map, sampled, for maps that bend), SeriesPlot (a value over
-                     time with labeled axes, in its own Stage)
+                     time with labeled axes, in its own Stage), MatrixCells (a matrix drawn in
+                     stage units, with tinted rows, columns and cells, for product layouts)
     code/            CodeLabel (one line of code in SVG) and CodeBlock (several lines on a glass
                      panel with a gliding highlight bar), both linked to shapes by hover
     graph/           DiagramNode, DiagramEdge, Packet, connector geometry

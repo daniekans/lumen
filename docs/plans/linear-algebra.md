@@ -8,8 +8,9 @@ Outline, threads and unit plans for Linear Algebra. Part of
 Outline approved by the owner on 2026-10-18, as drafted: eight units, the dot product in unit 1
 (revisited as duality in unit 7), and 3D from Vectors 6 on. The review decisions are at the end
 of the outline. Units are built in order; the Vectors unit (plan below) is done, its revision approved on
-2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 is built
-and waits for the owner's review.
+2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 was
+reviewed on 2026-10-25, and batch 2 (items 5 to 8, each with a code walkthrough) is built and
+waits for the owner's review.
 
 ## Depth and threads
 
@@ -369,10 +370,10 @@ vectors.
 | 2   | matrix-transformations (legacy) | explore    | matrix-columns, linear-maps                | Revised: $\mathbf{x} = x\hat{\imath} + y\hat{\jmath}$ so $T(\mathbf{x}) = xT(\hat{\imath}) + yT(\hat{\jmath})$; the columns; reading a matrix from a picture and drawing one from a matrix; presets; determinant steps removed                                        | built  |
 | 3   | matrix-vector-product           | lesson     | matrix-vector                              | $A\mathbf{x}$ as a combination of columns and as row dot products, $m \times n$ shapes ($\mathbb{R}^n \to \mathbb{R}^m$), $I$, linearity of $A\mathbf{x}$ proved, a $1 \times n$ matrix as $\mathbf{w} \cdot \mathbf{x}$, a layer $W\mathbf{x} + \mathbf{b}$ (affine) | built  |
 | 4   | practice-matrix-vector          | practice   | linear-maps, matrix-columns, matrix-vector | Products (2D, 3D, non-square), matrix from a described map, image from images of a basis, is this map linear (find the failing rule's witness), nutrients and store totals, a layer's output                                                                          | built  |
-| 5   | gallery-of-maps                 | explore    | standard-maps                              | Rotation by $\theta$ (columns from the unit circle), reflection across a line, shear, scaling, projection onto a line; what each keeps (lengths, angles, areas, orientation) and loses                                                                                | draft  |
-| 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | draft  |
-| 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | draft  |
-| 8   | practice-matrix-products        | practice   | standard-maps, matrix-multiplication       | Products and shapes, powers of a rotation, composing described maps (rotate then reflect), matrices of standard maps, transposes, a product from a table join                                                                                                         | draft  |
+| 5   | gallery-of-maps                 | explore    | standard-maps                              | Rotation by $\theta$ (columns from the unit circle), reflection across a line, shear, scaling, projection onto a line; what each keeps (lengths, angles, areas, orientation) and loses                                                                                | built  |
+| 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | built  |
+| 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | built  |
+| 8   | practice-matrix-products        | practice   | standard-maps, matrix-multiplication       | Products and shapes, powers of a rotation, composing described maps (rotate then reflect), matrices of standard maps, transposes, a product from a table join                                                                                                         | built  |
 | 9   | maps-in-3d                      | explore    | maps-in-3d                                 | $3 \times 3$ maps on a 3D grid; rotations about the axes; non-square maps: $\mathbb{R}^3 \to \mathbb{R}^2$ (the stage's own orthographic camera) and $\mathbb{R}^2 \to \mathbb{R}^3$ (a sheet placed in space)                                                        | draft  |
 | 10  | kernel-and-image-preview        | explore    | kernel-and-image                           | What a map sends to $\mathbf{0}$ (a subspace) and what it reaches (the span of the columns); rank as the dimension of the image; collapse in 2D and 3D; inputs that differ by a kernel vector share an output                                                         | draft  |
 | 11  | practice-maps                   | practice   | maps-in-3d, kernel-and-image               | 3D rotation and projection matrices, kernel vectors (find one), image dimension (rank), is $\mathbf{b}$ reachable, short proofs (kernel and image are subspaces, $T(\mathbf{0}) = \mathbf{0}$)                                                                        | draft  |
@@ -438,6 +439,35 @@ $T(\mathbf{x})$ confirmed. `matrix-vector-product`, layer step: the grid starts 
 by $W$, then shifts by $\mathbf{b}$, with a stage picker ($\mathbf{x}$, $W\mathbf{x}$,
 $W\mathbf{x} + \mathbf{b}$). Kit-wide: a draggable `Point` carries a thin ring in its color
 (`DESIGN.md`, Layout).
+
+**Batch 2 (built 2026-11-06, for review).** Every item has a `code.mdx` (NumPy; the join also in
+Spark SQL), outputs from real runs. `gallery-of-maps` (6 steps: rotation, reflection, shear,
+scaling, projection, what each keeps): each map plays from the plain plane (a rotation turns, the
+others blend, so a reflection passes through the flat mirror line half way); a slider per map;
+a "Map" panel names the matrix ($R_\theta$, $F$, $S$, $D$, $P$) and reads lengths, angles, the
+area factor and orientation live from the columns (no determinant named); projection with a
+draggable $\mathbf{x}$ and the noon shadow on the ground; $F = 2P - I$ in the explanation. Its
+code is one `maps.py` over the five steps (per-step `focus=`). `composition` (4 steps): the
+plane moved by the shear $B$, then the quarter turn $A$, with $\mathbf{x}$, $B\mathbf{x}$
+(yellow), $A(B\mathbf{x})$ (teal) and the code bar driven by the animation (`y = B @ x`, then
+`z = A @ y`); the columns of $AB$ as $A\mathbf{b}_j$ with draggable columns of $B$; $AB \ne BA$
+with the other order's letter dashed; two rotations commute (sliders $\alpha$, $\beta$).
+`matrix-multiplication` (lesson, 8 steps, 6 checks) on a product layout (B above, A left, AB
+where rows and columns meet), drawn by the new kit piece `MatrixCells`: column by column, entry
+by entry (with the dot product written out), shapes with $m, n, p$ sliders, associativity as a
+chain $\mathbf{x} \to C \to B \to A$ with either grouping boxed, powers of the $45^\circ$
+rotation, the transpose as a fold of the whole layout across its diagonal (so
+$(AB)^T = B^TA^T$ is seen), the store join (sparse $Q$ with dots for zeros, the SQL on the
+stage), and two layers as one. `practice-matrix-products`: 11 generators (products square and
+not, one entry, shapes, rotation powers in three forms, composites of described maps, standard
+maps including projections and reflections across lines along whole vectors, transposes,
+$B^TA^T$, totals from a join of sparse tables, two layers as one), each verified independently
+(maps applied to points, projections checked by perpendicularity). `tex.bmatrix` moved into
+`src/lib/practice`.
+
+**For the review:** the gallery's readouts call the area factor "× 1.5" without naming the
+determinant (the next unit does); the lesson's visual is a diagram of matrices rather than the
+plane except for powers.
 
 **Review decisions (2026-10-25).**
 

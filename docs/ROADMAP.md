@@ -35,11 +35,12 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the owner's review of code views batch 7 (`plans/code-views.md`,
-"Batch 7 as built": one block over several steps with `focus=`, and `useCodeFocus` driving the
-highlight from animations). Apply the review, then Linear maps and matrices batch 2
-(`plans/linear-algebra.md`, items 5 to 8) with a `code.mdx` per item. The focus is Mathematics
-and Machine Learning; Data Engineering continues only on request.
+**Suggested next session:** the owner's review of Linear maps and matrices batch 2
+(`plans/linear-algebra.md`, "Batch 2 (built 2026-11-06, for review)": `gallery-of-maps`,
+`composition`, `matrix-multiplication`, `practice-matrix-products`, each with a code
+walkthrough). Apply the review, then batch 3 (items 9 to 12, 3D maps, kernel and image, practice
+and the checkpoint) with a `code.mdx` per explore and lesson item. The focus is Mathematics and
+Machine Learning; Data Engineering continues only on request.
 
 ### Phase 3: Explore page
 

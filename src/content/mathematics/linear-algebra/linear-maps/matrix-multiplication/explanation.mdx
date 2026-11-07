@@ -1,0 +1,141 @@
+The <Term id="matrix-product">matrix product</Term> $AB$ is the matrix of "first $B$, then
+$A$". This lesson computes it two ways, works out which shapes can be multiplied, and derives
+the rules (grouping, identity, powers, transpose) from the meaning of the product rather than
+from index manipulation. Two applications close it: a sparse product as a SQL join, and stacked
+layers of a neural network.
+
+## Column by column
+
+For an $m \times n$ matrix $A$ and an $n \times p$ matrix $B$ with columns
+$\mathbf{b}_1, \ldots, \mathbf{b}_p$:
+
+$$
+AB = A\begin{bmatrix} \mathbf{b}_1 & \cdots & \mathbf{b}_p \end{bmatrix} = \begin{bmatrix} A\mathbf{b}_1 & \cdots & A\mathbf{b}_p \end{bmatrix}.
+$$
+
+Each column is a <Term id="matrix-vector-product">matrix times a vector</Term>, so it is a
+combination of the columns of $A$ with the entries of $\mathbf{b}_j$ as weights.
+On the <StepLink step="columns">stage</StepLink>, $B$ sits above the product and each column of $B$ fills
+the column of $AB$ below it.
+
+## Row times column
+
+Reading $A\mathbf{b}_j$ by rows gives one entry at a time. Entry $(i, j)$ of $AB$ is row $i$ of $A$
+dotted with column $j$ of $B$:
+
+$$
+(AB)_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \cdots + a_{in}b_{nj} = \sum_{k=1}^{n} a_{ik}b_{kj}.
+$$
+
+With $A$ to the left of the product and $B$ above it, as on
+the <StepLink step="entries">stage</StepLink>, row $i$ and column $j$ meet exactly at entry $(i, j)$.
+For the matrices there:
+
+$$
+\begin{bmatrix} 1 & 2 & 0 \\ -1 & 1 & 3 \end{bmatrix}
+\begin{bmatrix} 2 & 1 \\ 0 & -1 \\ 1 & 3 \end{bmatrix}
+= \begin{bmatrix} 2 & -1 \\ 1 & 7 \end{bmatrix},
+$$
+
+where, for example, entry $(2, 2)$ is $(-1)(1) + (1)(-1) + (3)(3) = 7$.
+
+## Shapes
+
+$AB$ is defined when the inner sizes agree, and then
+
+$$
+(m \times n)(n \times p) = m \times p.
+$$
+
+The <StepLink step="shapes">reason</StepLink>: $B$ maps $\mathbb{R}^p$ to $\mathbb{R}^n$, and
+$A$ takes vectors of $\mathbb{R}^n$, so $A$ can follow $B$. In row terms, a row of $A$ and a
+column of $B$ must have the same length to be dotted. Even when both $AB$ and $BA$ exist, they can
+have different shapes: a $2 \times 3$ times a $3 \times 2$ is $2 \times 2$, the other order
+$3 \times 3$.
+
+## Associativity
+
+$(AB)C$ is "first $C$, then $AB$", that is $C$, then $B$, then $A$. $A(BC)$ is "first $BC$, then
+$A$": also $C$, then $B$, then $A$. The two are the same map, so
+
+$$
+(AB)C = A(BC),
+$$
+
+and the product of three matrices can be written $ABC$ without parentheses. No index
+manipulation is needed: <StepLink step="associativity">both groupings</StepLink> send
+$\mathbf{x}$ through the same three maps in the same order. Grouping is free; the order of the
+factors is not ($AB \ne BA$ in general).
+
+## The identity and powers
+
+The <Term id="identity-matrix">identity matrix</Term> moves nothing, so doing it before or after
+$A$ changes nothing: $AI = IA = A$ (with $I$ of the right size on each side). For a square
+matrix, $A^k = A A \cdots A$ ($k$ factors) applies $A$ $k$ times, and $A^0 = I$. Associativity
+makes $A^k$ well defined, and $A^jA^k = A^{j + k}$.
+
+The <StepLink step="powers">rotation</StepLink> $R$ by $45^\circ$ gives $R^k$, the rotation by
+$k \cdot 45^\circ$, so $R^8 = I$: eight eighth turns make a full turn.
+
+## The transpose
+
+The <Term id="transpose">transpose</Term> $A^T$ has the rows of $A$ as its columns:
+$(A^T)_{ij} = A_{ji}$, and an $m \times n$ matrix has an $n \times m$ transpose. For products,
+
+$$
+(AB)^T = B^TA^T.
+$$
+
+Entry $(i, j)$ of $(AB)^T$ is entry $(j, i)$ of $AB$: row $j$ of $A$ dotted with column $i$ of
+$B$. That is row $i$ of $B^T$ dotted with column $j$ of $A^T$, which is entry $(i, j)$ of
+$B^TA^T$. The <StepLink step="transpose">fold</StepLink> on the stage shows the same thing: the
+layout mirrored across its diagonal puts $B^T$ on the left and $A^T$ on top.
+
+A second rule, checked by writing both sides as sums: for $\mathbf{x}$ in $\mathbb{R}^m$ and
+$\mathbf{y}$ in $\mathbb{R}^n$,
+
+$$
+\mathbf{x} \cdot (A\mathbf{y}) = (A^T\mathbf{x}) \cdot \mathbf{y},
+$$
+
+since both equal $\sum_{i, j} x_i a_{ij} y_j$. The code walkthrough checks it on numbers. The
+geometric meaning of the transpose comes in the unit on orthogonality, which builds on this rule.
+
+## A product as a join
+
+Quantities sold form a matrix $Q$ (stores by products), and prices and weights a matrix $P$
+(products by measures). Then $QP$ holds each store's totals:
+
+$$
+Q = \begin{bmatrix} 10 & 0 & 3 \\ 0 & 2 & 5 \end{bmatrix}, \quad
+P = \begin{bmatrix} 0.5 & 0.2 \\ 4 & 0.25 \\ 2 & 1 \end{bmatrix}, \quad
+QP = \begin{bmatrix} 11 & 5 \\ 18 & 5.5 \end{bmatrix}.
+$$
+
+Store 1 takes in 11 dollars for 5 kg of goods. In a database, most of $Q$ is zero (a store sells a
+small share of all products), so it is kept as rows (store, product, quantity) with only the
+nonzero entries: the COO format of sparse matrices. The <StepLink step="join">product</StepLink>
+then becomes a join on the shared index and a sum:
+
+```sql
+SELECT q.store, p.measure, SUM(q.qty * p.value)
+FROM q JOIN p ON q.product = p.product
+GROUP BY q.store, p.measure
+```
+
+The join pairs $q_{ik}$ with $p_{kj}$ for the same product $k$, and the sum over $k$ is the sum in
+$(QP)_{ij} = \sum_k q_{ik}p_{kj}$. Zero entries never meet, which is why sparse products are fast.
+
+## Two layers are one
+
+A layer computes $W\mathbf{x}$ (plus a bias, left out here). Two
+linear <StepLink step="layers">layers</StepLink> in a row compute
+
+$$
+W_2(W_1\mathbf{x}) = (W_2W_1)\mathbf{x},
+$$
+
+so a single layer with the matrix $W_2W_1$ does the same. Stacking linear layers adds no power.
+With biases the same holds for <Term id="affine-map">affine maps</Term>: the composite is again
+affine. A neural network puts a nonlinear activation, such as $\operatorname{ReLU}(t) = \max(t, 0)$,
+between layers, and that is what lets depth compute functions a single layer cannot.
