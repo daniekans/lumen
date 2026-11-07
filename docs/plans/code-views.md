@@ -13,7 +13,7 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 4     | Pilot content in three areas, then the owner's review               | done   |
 | 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done   |
 | 6     | The code panel: code beside the visual, step by step (replaces tab) | done   |
-| 7     | Code that moves with the visual: per-step and animated line focus   | review |
+| 7     | Code that moves with the visual: per-step and animated line focus   | done   |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -387,7 +387,7 @@ After batch 7, code is added unit by unit as units are built (Linear Algebra fir
 The owner approved batch 6 as built (2026-11-06), including the panel covering part of the
 drawing on a narrow stage; neither of the two options above is needed.
 
-### Batch 7 as built (2026-11-06), waiting for the owner's review
+### Batch 7 as built (2026-11-06), approved by the owner on 2026-11-06
 
 - **Model.** `CodeSnippet.step` became `steps` (`step="columns rows"` in the fence), and `focus`
   holds lines per step (`focus="columns=7-9 rows=12-13"`); a focus on a step the block does not
@@ -416,6 +416,10 @@ drawing on a narrow stage; neither of the two options above is needed.
   little: the terms appear one after the other on entering the step, a drag shows the whole
   product at once), and the glow during driven focus, which dims the other shapes as a hover
   does. If the dimming is too strong, the glow can light only the code names and readout rows.
+
+The owner approved batch 7 as built (2026-11-06), the build-up in the columns step and the
+dimming during driven focus included. Code views are done; code is now added unit by unit, from
+Linear maps and matrices batch 2 on.
 
 ## Pilot content (batch 4)
 
