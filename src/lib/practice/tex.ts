@@ -129,3 +129,25 @@ export const tables = (...specs: readonly TableSpec[]) => {
     )
     .join(' \\qquad ')
 }
+
+const SQRT3_2 = Math.sqrt(3) / 2
+
+/**
+ * A number as TeX that also knows the cosines and sines of the special angles:
+ * 0.866... -> '\\frac{\\sqrt{3}}{2}', 0.707... -> '\\frac{\\sqrt{2}}{2}', else as `num`.
+ */
+export const trig = (v: number) => {
+  if (Math.abs(v - SQRT3_2) < 1e-9) return '\\frac{\\sqrt{3}}{2}'
+  if (Math.abs(v + SQRT3_2) < 1e-9) return '-\\frac{\\sqrt{3}}{2}'
+  if (Math.abs(v - Math.SQRT1_2) < 1e-9) return '\\frac{\\sqrt{2}}{2}'
+  if (Math.abs(v + Math.SQRT1_2) < 1e-9) return '-\\frac{\\sqrt{2}}{2}'
+  return num(v)
+}
+
+/** A matrix as TeX with `trig` entries, for rotations by special angles. */
+export const trigMatrix = (rows: readonly (readonly number[])[]) =>
+  `\\begin{bmatrix} ${rows.map((r) => r.map(trig).join(' & ')).join(' \\\\ ')} \\end{bmatrix}`
+
+/** Entries within 1e-12 of a whole number rounded there (cos 90° is 6e-17), and -0 made 0. */
+export const cleanMatrix = (a: readonly (readonly number[])[]) =>
+  a.map((r) => r.map((v) => (Math.abs(v - Math.round(v)) < 1e-12 ? Math.round(v) + 0 : v)))

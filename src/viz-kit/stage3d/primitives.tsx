@@ -517,7 +517,16 @@ const AXES: readonly { dir: Vec3; label: string }[] = [
  * The three coordinate axes with whole-number ticks up to `extent` and their names. The lines go
  * on past the ticks and fade out, since the axes have no end.
  */
-export function Axes3D({ extent = 4, ticks = true }: { extent?: number; ticks?: boolean }) {
+export function Axes3D({
+  extent = 4,
+  ticks = true,
+  labels,
+}: {
+  extent?: number
+  ticks?: boolean
+  /** Names of the three axes when they are not x, y and z (weights w1, w2, w3, say). */
+  labels?: readonly [string, string, string]
+}) {
   const { project, cue } = useProjection()
   const ks = Array.from({ length: 2 * extent + 1 }, (_, i) => i - extent).filter((k) => k !== 0)
   // The fade starts just past the last tick and takes FADE units.
@@ -525,7 +534,8 @@ export function Axes3D({ extent = 4, ticks = true }: { extent?: number; ticks?: 
   const reach = extent + 0.4 + FADE
   return (
     <g pointerEvents="none">
-      {AXES.map(({ dir, label }) => {
+      {AXES.map(({ dir, label: own }, n) => {
+        const label = labels?.[n] ?? own
         const [dx, dy] = project(dir)
         const len = Math.hypot(dx, dy)
         // A tick is a short mark across the axis as it appears on screen.

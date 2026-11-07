@@ -1,7 +1,7 @@
 import { matMul, matPow, transpose, type MatN } from '@/lib/math'
 import { defineProblems, tex, type Rng } from '@/lib/practice'
 
-const { bmatrix, num, paren, vector } = tex
+const { bmatrix, cleanMatrix, num, paren, trig, trigMatrix, vector } = tex
 
 /** Entries flattened into problem data: { A0_0: 2, A0_1: -1, ... }, with the shape. */
 const flatMat = (name: string, a: MatN) => ({
@@ -93,20 +93,6 @@ const DESCRIBED: readonly { words: string; m: number[][] }[] = [
   },
 ]
 
-const SQRT3_2 = Math.sqrt(3) / 2
-
-/** cos and sin of the special angles as TeX. */
-const trig = (v: number) => {
-  if (Math.abs(v - SQRT3_2) < 1e-9) return '\\frac{\\sqrt{3}}{2}'
-  if (Math.abs(v + SQRT3_2) < 1e-9) return '-\\frac{\\sqrt{3}}{2}'
-  if (Math.abs(v - Math.SQRT1_2) < 1e-9) return '\\frac{\\sqrt{2}}{2}'
-  if (Math.abs(v + Math.SQRT1_2) < 1e-9) return '-\\frac{\\sqrt{2}}{2}'
-  return num(v)
-}
-
-const trigMatrix = (rows: MatN) =>
-  `\\begin{bmatrix} ${rows.map((r) => r.map(trig).join(' & ')).join(' \\\\ ')} \\end{bmatrix}`
-
 const rotationRows = (deg: number) => {
   const t = (deg * Math.PI) / 180
   const [c, s] = [Math.cos(t), Math.sin(t)]
@@ -116,9 +102,7 @@ const rotationRows = (deg: number) => {
   ]
 }
 
-/** Entries within 1e-12 of a whole number or a simple fraction, rounded there (cos 90° is 6e-17). */
-const clean = (a: MatN) =>
-  a.map((r) => r.map((v) => (Math.abs(v - Math.round(v)) < 1e-12 ? Math.round(v) + 0 : v)))
+const clean = cleanMatrix
 
 const gcd = (a: number, b: number): number => (b === 0 ? Math.abs(a) : gcd(b, a % b))
 

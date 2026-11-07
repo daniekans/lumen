@@ -1,0 +1,128 @@
+In NumPy a map between spaces of any size is a 2D array with one row per output and one column
+per input. `A.shape` is $(m, n)$ for a map from $\mathbb{R}^n$ to $\mathbb{R}^m$.
+
+## Space to space
+
+The columns are where $\hat{\imath}$, $\hat{\jmath}$ and $\hat{k}$ land, so `np.column_stack` builds
+the matrix from them, and `A @ x` combines them with the components of `x`:
+
+```python title="columns.py" step=columns colors="a1=green a2=red a3=purple" check
+import numpy as np
+np.set_printoptions(precision=3, suppress=True)
+
+a1 = np.array([1.5, 0.0, 0.0])  # where i-hat lands
+a2 = np.array([0.5, 1.0, 0.0])  # where j-hat lands
+a3 = np.array([0.0, 0.5, 1.0])  # where k-hat lands
+A = np.column_stack([a1, a2, a3])
+print(A)
+
+x = np.array([1.0, 2.0, 2.0])
+print(A @ x, 1 * a1 + 2 * a2 + 2 * a3)
+```
+
+```output
+[[1.5 0.5 0. ]
+ [0.  1.  0.5]
+ [0.  0.  1. ]]
+[2.5 3.  2. ] [2.5 3.  2. ]
+```
+
+## Rotations about the axes
+
+One function for the three axes: a $1$ for the axis that stays, the plane's rotation in the other
+two coordinates, taken in the cyclic order $x \to y \to z$:
+
+```python title="rotations.py" step="yaw axes" focus="yaw=1-9 axes=11-14" check
+def rotation(axis: int, theta: float) -> np.ndarray:
+    c, s = np.cos(theta), np.sin(theta)
+    p, q = (axis + 1) % 3, (axis + 2) % 3  # the turning pair
+    R = np.eye(3)
+    R[p, p], R[p, q], R[q, p], R[q, q] = c, -s, s, c
+    return R
+
+yaw = rotation(2, np.radians(90))  # about z
+print(yaw @ np.array([1.0, 0.0, 0.0]))  # i-hat to j-hat
+
+Ry = rotation(1, np.radians(90))  # about y: z toward x
+print(Ry @ np.array([0.0, 0.0, 1.0]))  # k-hat to i-hat
+Rx = rotation(0, np.radians(90))
+print(np.allclose(Rx @ Ry, Ry @ Rx))  # the order matters
+```
+
+```output
+[0. 1. 0.]
+[1. 0. 0.]
+False
+```
+
+For the $y$-axis the turning pair is $(z, x)$, which puts the $-\sin\theta$ in the bottom-left
+corner of $R_y$, where the explanation has it.
+
+## Space to the plane
+
+Dropping the height is a $2 \times 3$ matrix. Its third column is zero, so $\hat{k}$ lands on the
+origin:
+
+```python title="flatten.py" step=flatten colors="x=blue" hover="x=x" check
+D = np.array([[1.0, 0.0, 0.0],
+              [0.0, 1.0, 0.0]])
+x = np.array([1.0, 1.5, 2.0])
+print(D.shape, D @ x)
+print(D @ np.array([0.0, 0.0, 1.0]))  # k-hat
+```
+
+```output
+(2, 3) [1.  1.5]
+[0. 0.]
+```
+
+## The stage's own matrix
+
+The camera's right and up directions, from its two angles, are the rows of `P`. They are unit
+vectors at a right angle, so `P @ P.T` is the $2 \times 2$ identity:
+
+```python title="camera.py" step=camera colors="x=blue" hover="x=x" check
+def camera_matrix(azimuth: float, elevation: float) -> np.ndarray:
+    ca, sa = np.cos(azimuth), np.sin(azimuth)
+    ce, se = np.cos(elevation), np.sin(elevation)
+    right = np.array([-sa, ca, 0.0])
+    up = np.array([-se * ca, -se * sa, ce])
+    return np.vstack([right, up])
+
+P = camera_matrix(0.55, 0.38)  # the home view
+print(P)
+print(P @ x)  # where x is drawn
+print(P @ P.T)
+```
+
+```output
+[[-0.523  0.853  0.   ]
+ [-0.316 -0.194  0.929]]
+[0.756 1.25 ]
+[[1. 0.]
+ [0. 1.]]
+```
+
+## The plane into space
+
+A $3 \times 2$ matrix places the plane in space. Every output is a combination of the two columns,
+so it is perpendicular to their cross product, the normal of the sheet:
+
+```python title="embed.py" step=embed colors="a1=green a2=red" check
+a1 = np.array([1.0, 0.0, 0.8])
+a2 = np.array([0.0, 1.0, 0.6])
+A = np.column_stack([a1, a2])
+print(A.shape)
+
+n = np.cross(a1, a2)  # normal of the sheet
+for s, t in [(1.0, 0.0), (2.0, -1.0), (-0.5, 3.0)]:
+    y = A @ np.array([s, t])
+    print(y, round(float(n @ y), 12))
+```
+
+```output
+(3, 2)
+[1.  0.  0.8] 0.0
+[ 2. -1.  1.] 0.0
+[-0.5  3.   1.4] 0.0
+```

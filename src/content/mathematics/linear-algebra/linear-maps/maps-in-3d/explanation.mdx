@@ -1,0 +1,95 @@
+Everything in this unit so far works in any dimension. A <Term id="linear-transformation">linear map</Term>
+from $\mathbb{R}^n$ to $\mathbb{R}^m$ is fixed by where the $n$ standard basis vectors land,
+and those $n$ images, each with $m$ components, are the columns of an
+$m \times n$ <Term id="matrix">matrix</Term>. This item looks at three cases: space to space, space to the plane
+and the plane to space.
+
+## Space to space
+
+In the <StepLink step="columns">first step</StepLink> a $3 \times 3$ matrix moves all of space.
+Write $\mathbf{x} = x\hat{\imath} + y\hat{\jmath} + z\hat{k}$; linearity gives
+
+$$
+A\mathbf{x} = x\,\mathbf{a}_1 + y\,\mathbf{a}_2 + z\,\mathbf{a}_3,
+$$
+
+where $\mathbf{a}_1$, $\mathbf{a}_2$, $\mathbf{a}_3$ are the images of the basis, the columns. The
+unit cube, the points with $0 \le x, y, z \le 1$, lands on the box (a parallelepiped) with edges
+$\mathbf{a}_1$, $\mathbf{a}_2$, $\mathbf{a}_3$. The grid lines of space stay straight, parallel
+and evenly spaced. When the three columns lie in one plane, the box is flat and space collapses
+onto that plane; the next item looks at what such a map loses.
+
+## Rotations about the axes
+
+A <StepLink step="yaw">turn about the $z$-axis</StepLink> by $\theta$ keeps $\hat{k}$ and turns
+the floor as the plane's <Term id="rotation-matrix">rotation</Term> does. The direction of positive
+$\theta$ follows the right-hand rule: with the thumb along the positive axis, the fingers curl
+the way the turn goes. Seen from above, that is counterclockwise, as in the plane. A drone that
+changes its heading, its yaw, turns this way.
+
+$$
+R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+The <StepLink step="axes">other two axes</StepLink> work the same way: a $1$ for the axis that stays,
+and the plane's rotation in the other two coordinates, in the cyclic order $x \to y \to z \to x$:
+
+$$
+R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}, \qquad
+R_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}.
+$$
+
+The signs in $R_y$ look swapped, but they follow the same rule. About the $y$-axis the turn goes
+from $z$ toward $x$ (the cyclic order), so a quarter turn sends $\hat{k}$ to $\hat{\imath}$ and
+$\hat{\imath}$ to $-\hat{k}$. Reading the columns of $R_y$ at $\theta = 90^\circ$ confirms it:
+the first column is $(0, 0, -1)$ and the third is $(1, 0, 0)$.
+
+Rotations about different axes do not commute in general: in space, $R_xR_y \ne R_yR_x$. Turn a
+book a quarter turn about one axis and then about another, then try the other order.
+
+## Space to the plane
+
+A map from $\mathbb{R}^3$ to $\mathbb{R}^2$ has a $2 \times 3$ matrix: three columns, the images of
+$\hat{\imath}$, $\hat{\jmath}$, $\hat{k}$, each a vector of the plane. Dropping the height, in
+the <StepLink step="flatten">fourth step</StepLink>, is
+
+$$
+D = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}, \qquad D\begin{bmatrix} x \\ y \\ z \end{bmatrix} = \begin{bmatrix} x \\ y \end{bmatrix}.
+$$
+
+Its third column is $\mathbf{0}$: $\hat{k}$ lands on the origin, and so does the whole $z$-axis.
+The output lives in $\mathbb{R}^2$; the stage draws that plane as the floor so that both fit in
+one picture. Compare the <Term id="projection-matrix">projection</Term> onto the floor inside
+space, a $3 \times 3$ matrix with a zero third row: the same points, but its outputs are still
+vectors of $\mathbb{R}^3$.
+
+## The stage's own matrix
+
+Every 3D stage in Lumen is a <StepLink step="camera">$2 \times 3$ matrix</StepLink>. The camera
+has two unit vectors in space, $\mathbf{r}$ pointing right on the screen and $\mathbf{u}$ pointing
+up, at a right angle to each other. A point $\mathbf{x}$ is drawn at
+
+$$
+P\mathbf{x} = \begin{bmatrix} \mathbf{r} \cdot \mathbf{x} \\ \mathbf{u} \cdot \mathbf{x} \end{bmatrix}, \qquad
+P = \begin{bmatrix} \mathbf{r}^T \\ \mathbf{u}^T \end{bmatrix},
+$$
+
+the row picture of a matrix times a vector. This is an orthographic projection: it drops the
+component toward the viewer, as $D$ drops the height. Because $P$ is linear, parallel lines in
+space stay parallel on the screen and equal steps stay equal, which is why the grids here look
+the way they do. Orbiting the view changes $\mathbf{r}$ and $\mathbf{u}$, so it changes $P$.
+
+## The plane into space
+
+A map from $\mathbb{R}^2$ to $\mathbb{R}^3$ has a $3 \times 2$ matrix: two columns, each a vector of
+space. In the <StepLink step="embed">last step</StepLink>,
+
+$$
+A = \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 0.8 & 0.6 \end{bmatrix}, \qquad
+A\begin{bmatrix} s \\ t \end{bmatrix} = s\begin{bmatrix} 1 \\ 0 \\ 0.8 \end{bmatrix} + t\begin{bmatrix} 0 \\ 1 \\ 0.6 \end{bmatrix}.
+$$
+
+Every output is a combination of the two columns, so the plane lands on
+their <Term id="span">span</Term>: a plane through the origin when the columns are independent, a line
+when they are parallel. This is the parametric form of a plane from the Vectors unit, read as a map.
+Two inputs cannot fill space: the outputs of a $3 \times 2$ matrix always lie in a plane or less.

@@ -108,6 +108,9 @@ button appears for a step that does not move.
   - A step that needs an exact view (edge on, from above) passes `sway={false}` and drives the
     camera; offer such views to the learner too with `views` (`edgeOnCamera(normal, azimuth)`).
   - `Pulse3D` (or `Pulse` in 2D) marks a moment: `when={uInPlane}`, `when={dot === 0}`.
+  - A matrix moving space: `MappedGrid3D m={rows}` draws the lattice (or, for a $3 \times 2$
+    matrix, the plane's grid as a sheet) and `Cell3D` the image of the unit cube. `Axes3D`
+    takes `labels` when the axes are not $x$, $y$, $z$ (weights, say).
 - Step handlers can run again from the Replay button, so each one sets the state it starts from
   (as handlers already do when a step is revisited).
 - A line of SQL on a stage uses `<SqlLabel>` (pass `literalColor` when filter values have a

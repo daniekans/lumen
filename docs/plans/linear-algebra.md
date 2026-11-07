@@ -9,8 +9,8 @@ Outline approved by the owner on 2026-10-18, as drafted: eight units, the dot pr
 (revisited as duality in unit 7), and 3D from Vectors 6 on. The review decisions are at the end
 of the outline. Units are built in order; the Vectors unit (plan below) is done, its revision approved on
 2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 was
-reviewed on 2026-10-25, and batch 2 (items 5 to 8, each with a code walkthrough) is built and
-waits for the owner's review.
+reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) approved on
+2026-11-07, and batch 3 (items 9 to 12) is built and waits for the owner's review.
 
 ## Depth and threads
 
@@ -366,18 +366,18 @@ vectors.
 
 | #   | Item                            | Kind       | Skills                                     | Content                                                                                                                                                                                                                                                               | Status |
 | --- | ------------------------------- | ---------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| 1   | linear-maps                     | explore    | linear-maps                                | A map moves every point; the two rules drawn (sum of images is image of sum, scaled likewise); grid stays straight, parallel, evenly spaced, origin fixed; maps that fail: a shift, a bend ($x^2$), $T(\mathbf{0}) \ne \mathbf{0}$; a collapse that is still linear   | built  |
-| 2   | matrix-transformations (legacy) | explore    | matrix-columns, linear-maps                | Revised: $\mathbf{x} = x\hat{\imath} + y\hat{\jmath}$ so $T(\mathbf{x}) = xT(\hat{\imath}) + yT(\hat{\jmath})$; the columns; reading a matrix from a picture and drawing one from a matrix; presets; determinant steps removed                                        | built  |
-| 3   | matrix-vector-product           | lesson     | matrix-vector                              | $A\mathbf{x}$ as a combination of columns and as row dot products, $m \times n$ shapes ($\mathbb{R}^n \to \mathbb{R}^m$), $I$, linearity of $A\mathbf{x}$ proved, a $1 \times n$ matrix as $\mathbf{w} \cdot \mathbf{x}$, a layer $W\mathbf{x} + \mathbf{b}$ (affine) | built  |
-| 4   | practice-matrix-vector          | practice   | linear-maps, matrix-columns, matrix-vector | Products (2D, 3D, non-square), matrix from a described map, image from images of a basis, is this map linear (find the failing rule's witness), nutrients and store totals, a layer's output                                                                          | built  |
-| 5   | gallery-of-maps                 | explore    | standard-maps                              | Rotation by $\theta$ (columns from the unit circle), reflection across a line, shear, scaling, projection onto a line; what each keeps (lengths, angles, areas, orientation) and loses                                                                                | built  |
-| 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | built  |
-| 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | built  |
-| 8   | practice-matrix-products        | practice   | standard-maps, matrix-multiplication       | Products and shapes, powers of a rotation, composing described maps (rotate then reflect), matrices of standard maps, transposes, a product from a table join                                                                                                         | built  |
-| 9   | maps-in-3d                      | explore    | maps-in-3d                                 | $3 \times 3$ maps on a 3D grid; rotations about the axes; non-square maps: $\mathbb{R}^3 \to \mathbb{R}^2$ (the stage's own orthographic camera) and $\mathbb{R}^2 \to \mathbb{R}^3$ (a sheet placed in space)                                                        | draft  |
-| 10  | kernel-and-image-preview        | explore    | kernel-and-image                           | What a map sends to $\mathbf{0}$ (a subspace) and what it reaches (the span of the columns); rank as the dimension of the image; collapse in 2D and 3D; inputs that differ by a kernel vector share an output                                                         | draft  |
-| 11  | practice-maps                   | practice   | maps-in-3d, kernel-and-image               | 3D rotation and projection matrices, kernel vectors (find one), image dimension (rank), is $\mathbf{b}$ reachable, short proofs (kernel and image are subspaces, $T(\mathbf{0}) = \mathbf{0}$)                                                                        | draft  |
-| 12  | checkpoint                      | checkpoint | all                                        | Problems from items 4, 8 and 11 plus a self-graded proof: a composition of linear maps is linear, so $AB$ is its matrix                                                                                                                                               | draft  |
+| 1   | linear-maps                     | explore    | linear-maps                                | A map moves every point; the two rules drawn (sum of images is image of sum, scaled likewise); grid stays straight, parallel, evenly spaced, origin fixed; maps that fail: a shift, a bend ($x^2$), $T(\mathbf{0}) \ne \mathbf{0}$; a collapse that is still linear   | done   |
+| 2   | matrix-transformations (legacy) | explore    | matrix-columns, linear-maps                | Revised: $\mathbf{x} = x\hat{\imath} + y\hat{\jmath}$ so $T(\mathbf{x}) = xT(\hat{\imath}) + yT(\hat{\jmath})$; the columns; reading a matrix from a picture and drawing one from a matrix; presets; determinant steps removed                                        | done   |
+| 3   | matrix-vector-product           | lesson     | matrix-vector                              | $A\mathbf{x}$ as a combination of columns and as row dot products, $m \times n$ shapes ($\mathbb{R}^n \to \mathbb{R}^m$), $I$, linearity of $A\mathbf{x}$ proved, a $1 \times n$ matrix as $\mathbf{w} \cdot \mathbf{x}$, a layer $W\mathbf{x} + \mathbf{b}$ (affine) | done   |
+| 4   | practice-matrix-vector          | practice   | linear-maps, matrix-columns, matrix-vector | Products (2D, 3D, non-square), matrix from a described map, image from images of a basis, is this map linear (find the failing rule's witness), nutrients and store totals, a layer's output                                                                          | done   |
+| 5   | gallery-of-maps                 | explore    | standard-maps                              | Rotation by $\theta$ (columns from the unit circle), reflection across a line, shear, scaling, projection onto a line; what each keeps (lengths, angles, areas, orientation) and loses                                                                                | done   |
+| 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | done   |
+| 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | done   |
+| 8   | practice-matrix-products        | practice   | standard-maps, matrix-multiplication       | Products and shapes, powers of a rotation, composing described maps (rotate then reflect), matrices of standard maps, transposes, a product from a table join                                                                                                         | done   |
+| 9   | maps-in-3d                      | explore    | maps-in-3d                                 | $3 \times 3$ maps on a 3D grid; rotations about the axes; non-square maps: $\mathbb{R}^3 \to \mathbb{R}^2$ (the stage's own orthographic camera) and $\mathbb{R}^2 \to \mathbb{R}^3$ (a sheet placed in space)                                                        | built  |
+| 10  | kernel-and-image-preview        | explore    | kernel-and-image                           | What a map sends to $\mathbf{0}$ (a subspace) and what it reaches (the span of the columns); rank as the dimension of the image; collapse in 2D and 3D; inputs that differ by a kernel vector share an output                                                         | built  |
+| 11  | practice-maps                   | practice   | maps-in-3d, kernel-and-image               | 3D rotation and projection matrices, kernel vectors (find one), image dimension (rank), is $\mathbf{b}$ reachable, short proofs (kernel and image are subspaces, $T(\mathbf{0}) = \mathbf{0}$)                                                                        | built  |
+| 12  | checkpoint                      | checkpoint | all                                        | Problems from items 4, 8 and 11 plus a self-graded proof: a composition of linear maps is linear, so $AB$ is its matrix                                                                                                                                               | built  |
 
 **Real scenarios** (only where they add meaning):
 
@@ -468,6 +468,32 @@ $B^TA^T$, totals from a join of sparse tables, two layers as one), each verified
 **For the review:** the gallery's readouts call the area factor "× 1.5" without naming the
 determinant (the next unit does); the lesson's visual is a diagram of matrices rather than the
 plane except for powers.
+
+**Batch 2 review (2026-11-07):** approved as built, no changes.
+
+**Batch 3 (built 2026-11-07, for review).** Code walkthroughs for both explorations (NumPy and
+SymPy, outputs from real runs). `maps-in-3d` (6 steps): a $3 \times 3$ map with draggable columns
+moving a lattice of space and the unit cube (new kit pieces `MappedGrid3D` and `Cell3D`), a drone's
+yaw about $z$, rotations about $x$, $y$, $z$ with a picker (the right-hand rule and the signs of
+$R_y$ explained), dropping the height as a $2 \times 3$ matrix (space falls onto the floor drawn as
+$\mathbb{R}^2$), the stage's own camera matrix $P$ with rows $\mathbf{r}$, $\mathbf{u}$ shown live
+while orbiting, and a $3 \times 2$ embedding with draggable columns. `kernel-and-image-preview`
+(6 steps, 2D then 3D): the plane collapsing onto the image line, the kernel line squashed to the
+origin, inputs on a line parallel to the kernel sharing one output ($t$ slider, draggable
+$\mathbf{x}$), ranks 3, 2, 1 in space with image and kernel drawn, a slanted shadow
+($\mathbf{d} = (-0.5, 1, -1)$, kernel along the light), and redundant features (weights
+$\mathbf{w} + t(1, 1, -1)$, predictions fixed; `Axes3D` gained `labels`). Terms `subspace`,
+`kernel`, `image`, `rank`. `practice-maps`: 10 generators (3D rotation matrices, a vector turned
+about an axis, non-square maps, from where to where, kernel vectors with a fixed last component,
+rank 1 to 3, reachable or not, kernel or image of described maps, same predictions, four short
+proofs), each verified independently (Rodrigues' formula, ranks from minors). The checkpoint has
+16 problems: 5 from each practice set and the composition proof. `src/lib/math/mat3.ts`
+(`rotationAbout`, `apply3`, `lerpMatN`); `trig`, `trigMatrix` and `cleanMatrix` moved into
+`tex` in `src/lib/practice`.
+
+**For the review:** the kernel item's dimension count ("kernel plus image is 3") is stated for
+its examples and promised in general for Systems and inverses; the camera step shows $P$ only in
+that step (sway off so $P$ stays readable).
 
 **Review decisions (2026-10-25).**
 

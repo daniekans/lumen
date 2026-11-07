@@ -1,0 +1,127 @@
+SymPy works with exact numbers, so it finds a kernel and an image without rounding: `nullspace()`
+returns a basis of the kernel and `columnspace()` a basis of the image. NumPy then checks the two
+scenarios.
+
+## Image and rank
+
+The columns of $A$ lie on one line, so the image has a basis of one vector and the rank is $1$:
+
+```python title="image.py" step=image check
+import numpy as np
+from sympy import Matrix, Rational
+
+A = Matrix([[1, 2],
+            [Rational(1, 2), 1]])
+print(A.columnspace())  # a basis of the image
+print(A.rank())
+```
+
+```output
+[Matrix([
+[  1],
+[1/2]])]
+1
+```
+
+## The kernel
+
+`nullspace()` solves $A\mathbf{x} = \mathbf{0}$ exactly. SymPy scales its answer so that the
+last free component is $1$, which gives $(-2, 1)$, a multiple of the stage's $(2, -1)$:
+
+```python title="kernel.py" step=kernel check
+k = A.nullspace()[0]
+print(k.T, (A * k).T)
+```
+
+```output
+Matrix([[-2, 1]]) Matrix([[0, 0]])
+```
+
+## Same output
+
+Adding any multiple of a kernel vector leaves the output where it was:
+
+```python title="same.py" step=same-output colors="x=blue" check
+x = Matrix([Rational(1, 2), 1])
+for t in [0, 1, Rational(-1, 2)]:
+    print((A * (x + t * k)).T)
+```
+
+```output
+Matrix([[5/2, 5/4]])
+Matrix([[5/2, 5/4]])
+Matrix([[5/2, 5/4]])
+```
+
+## Rank in space
+
+The three matrices of the picker, with the rank and a basis of each kernel:
+
+```python title="rank.py" step=rank check
+half = Rational(1, 2)
+for A3 in [Matrix([[1, 0, half], [0, 1, half], [0, 0, 1]]),
+           Matrix([[1, 0, 1], [0, 1, 1], [half, half, 1]]),
+           Matrix([[1, 1, 1], [half, half, half],
+                   [half, half, half]])]:
+    kernel = [list(v) for v in A3.nullspace()]
+    print(A3.rank(), kernel)
+```
+
+```output
+3 []
+2 [[-1, -1, 1]]
+1 [[-1, 1, 0], [-1, 0, 1]]
+```
+
+The kernel and image dimensions add to $3$ each time. `[-1, -1, 1]` is $-(1, 1, -1)$, the same line.
+
+## A shadow
+
+The shadow map sends the light's direction to $\mathbf{0}$, and every point of a ray to the same
+shadow:
+
+```python title="shadow.py" step=shadow check
+d = np.array([-0.5, 1.0, -1.0])  # the light, pointing down
+S = np.eye(3) - np.outer(d, [0.0, 0.0, 1.0]) / d[2]
+print(S)
+print(S @ d)
+
+x = np.array([1.0, -1.0, 2.0])
+for t in [0.0, 0.4, 0.8]:
+    print(S @ (x + t * d))  # the same shadow
+```
+
+```output
+[[ 1.   0.  -0.5]
+ [ 0.   1.   1. ]
+ [ 0.   0.   0. ]]
+[0. 0. 0.]
+[0. 1. 0.]
+[0. 1. 0.]
+[0. 1. 0.]
+```
+
+## Redundant features
+
+The total column is the sum of the other two, so `X` has rank $2$ and two different weight
+vectors give the same predictions:
+
+```python title="features.py" step=features check
+X = np.array([[2, 1, 3],   # class, home, total hours
+              [1, 3, 4],
+              [3, 2, 5],
+              [0, 2, 2]], dtype=float)
+print(np.linalg.matrix_rank(X))
+
+w = np.array([0.5, 0.5, 1.0])
+w2 = w + 0.8 * np.array([1.0, 1.0, -1.0])
+print(w2, X @ w, X @ w2)
+```
+
+```output
+2
+[1.3 1.3 0.2] [4.5 6.  7.5 3. ] [4.5 6.  7.5 3. ]
+```
+
+`np.linalg.matrix_rank` counts the directions with floating point (from the singular values,
+which the last unit of the course explains), so it uses a tolerance where SymPy is exact.

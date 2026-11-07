@@ -1,0 +1,32 @@
+Problems on maps of space and between spaces of different sizes, then on what a matrix
+loses and reaches: its <Term id="kernel">kernel</Term>, its <Term id="image">image</Term>
+and its <Term id="rank">rank</Term>.
+
+## Answers
+
+- A matrix answer is a grid of boxes in the shape of the matrix. Exact values such as
+  $\frac{\sqrt{3}}{2}$ can be typed as they are.
+- Type a vector as its components in order: $(3, -1, 2)$.
+- Proofs are graded by you: write the argument on paper, then compare it with the solution.
+
+## Formulas
+
+An $m \times n$ matrix is a map from $\mathbb{R}^n$ to $\mathbb{R}^m$, with the images of the
+standard basis as its columns. Rotations by $\theta$ about the axes, counterclockwise when seen from
+the positive end of the axis:
+
+$$
+R_x = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}, \quad
+R_y = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}, \quad
+R_z = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}.
+$$
+
+$$
+\ker A = \{\mathbf{x} : A\mathbf{x} = \mathbf{0}\}, \qquad
+\operatorname{im} A = \operatorname{span}\{\mathbf{a}_1, \ldots, \mathbf{a}_n\}, \qquad
+\operatorname{rank} A = \dim \operatorname{im} A.
+$$
+
+A dependence among the columns, $c_1\mathbf{a}_1 + \cdots + c_n\mathbf{a}_n = \mathbf{0}$, is a
+kernel vector $(c_1, \ldots, c_n)$. Two inputs have the same output exactly when they differ by a
+kernel vector.

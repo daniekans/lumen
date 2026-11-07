@@ -23,6 +23,14 @@ export const unit = defineUnit({
       id: 'matrix-multiplication',
       title: 'Multiply matrices, compose maps, and use powers, the identity and transposes',
     },
+    {
+      id: 'maps-in-3d',
+      title: 'Write 3D rotations and maps between spaces of different sizes',
+    },
+    {
+      id: 'kernel-and-image',
+      title: 'Find kernel vectors, the image and the rank of a map',
+    },
   ],
   terms: [
     {
@@ -96,6 +104,37 @@ export const unit = defineUnit({
       summary:
         'The matrix $A$ with rows and columns swapped: entry $(i, j)$ of $A^T$ is entry $(j, i)$ of $A$. An $m \\times n$ matrix has an $n \\times m$ transpose, and $(AB)^T = B^TA^T$.',
       introducedIn: 'matrix-multiplication',
+    },
+    {
+      id: 'subspace',
+      title: 'Subspace',
+      summary:
+        'A set of vectors that contains $\\mathbf{0}$ and every sum and multiple of its vectors. In space: the origin alone, a line or a plane through the origin, or all of space.',
+      introducedIn: 'kernel-and-image-preview',
+    },
+    {
+      id: 'kernel',
+      title: 'Kernel',
+      tex: '\\ker A',
+      summary:
+        'The inputs a linear map sends to $\\mathbf{0}$: all $\\mathbf{x}$ with $A\\mathbf{x} = \\mathbf{0}$. A subspace of the input space. Two inputs have the same output exactly when they differ by a kernel vector. Also called the null space.',
+      introducedIn: 'kernel-and-image-preview',
+    },
+    {
+      id: 'image',
+      title: 'Image',
+      tex: '\\operatorname{im} A',
+      summary:
+        'The outputs a linear map can reach: all $A\\mathbf{x}$. It is the span of the columns of $A$, a subspace of the output space. Also called the column space.',
+      introducedIn: 'kernel-and-image-preview',
+    },
+    {
+      id: 'rank',
+      title: 'Rank',
+      tex: '\\operatorname{rank} A',
+      summary:
+        'The dimension of the image of $A$: the number of independent directions it can reach, which is the largest number of independent columns of $A$.',
+      introducedIn: 'kernel-and-image-preview',
     },
   ],
 })

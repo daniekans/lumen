@@ -1,0 +1,116 @@
+A <Term id="linear-transformation">linear map</Term> can lose information: it may squash a whole
+direction to the origin, and then it cannot reach every output. Two sets describe this, the
+kernel (what is lost) and the image (what is reached). This item is a first look; Systems and
+inverses computes both by elimination.
+
+## The image
+
+The <Term id="image">image</Term> of a matrix $A$ is the set of all its outputs $A\mathbf{x}$. Since
+$A\mathbf{x} = x_1\mathbf{a}_1 + \cdots + x_n\mathbf{a}_n$, the outputs are exactly the
+combinations of the columns:
+
+$$
+\operatorname{im} A = \operatorname{span}\{\mathbf{a}_1, \ldots, \mathbf{a}_n\}.
+$$
+
+In the <StepLink step="image">first step</StepLink>,
+
+$$
+A = \begin{bmatrix} 1 & 2 \\ 0.5 & 1 \end{bmatrix}, \qquad \mathbf{a}_2 = 2\mathbf{a}_1,
+$$
+
+so every combination of the columns lies on the line through $(2, 1)$, and the plane lands on
+that line. The <Term id="rank">rank</Term> of $A$ is the dimension of its image: here $1$. A
+$2 \times 2$ matrix whose columns are independent has rank $2$ and reaches the whole plane.
+
+## The kernel
+
+The <Term id="kernel">kernel</Term> of $A$ is the set of inputs sent to $\mathbf{0}$:
+
+$$
+\ker A = \{\mathbf{x} : A\mathbf{x} = \mathbf{0}\}.
+$$
+
+It always contains $\mathbf{0}$. A dependence among the columns gives more: in
+the <StepLink step="kernel">second step</StepLink>, $2\mathbf{a}_1 - \mathbf{a}_2 = \mathbf{0}$ says
+that $A(2, -1) = \mathbf{0}$, and every multiple $s(2, -1)$ goes to $\mathbf{0}$ too. A vector in
+the kernel is a list of weights that combine the columns to $\mathbf{0}$, the same redundancy
+that <Term id="linear-dependence">dependence</Term> describes in the Vectors unit.
+
+## Same output, kernel apart
+
+Two inputs have the <StepLink step="same-output">same output</StepLink> exactly when they differ
+by a kernel vector, since
+
+$$
+A\mathbf{x} = A\mathbf{y} \iff A(\mathbf{x} - \mathbf{y}) = \mathbf{0} \iff \mathbf{x} - \mathbf{y} \in \ker A.
+$$
+
+So the inputs that land on one output form a copy of the kernel shifted to pass through
+$\mathbf{x}$: here a line parallel to $(2, -1)$. When the kernel is only $\mathbf{0}$, different
+inputs always have different outputs, and nothing is lost.
+
+## Both are subspaces
+
+The kernel and the image are each a <Term id="subspace">subspace</Term>: a set that contains
+$\mathbf{0}$ and every sum and multiple of its vectors. For the kernel: $A\mathbf{0} = \mathbf{0}$,
+and if $A\mathbf{u} = \mathbf{0}$ and $A\mathbf{v} = \mathbf{0}$ then
+$A(a\mathbf{u} + b\mathbf{v}) = aA\mathbf{u} + bA\mathbf{v} = \mathbf{0}$. For the image: it is a
+span, and a span contains $\mathbf{0}$ and the combinations of its vectors. In the plane a
+subspace is the origin, a line through it or the whole plane; in space it can also be a plane
+through the origin.
+
+## Rank in space
+
+In <StepLink step="rank">space</StepLink>, the three matrices of the picker have rank $3$, $2$ and
+$1$:
+
+$$
+\begin{bmatrix} 1 & 0 & 0.5 \\ 0 & 1 & 0.5 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
+\begin{bmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \\ 0.5 & 0.5 & 1 \end{bmatrix}, \qquad
+\begin{bmatrix} 1 & 1 & 1 \\ 0.5 & 0.5 & 0.5 \\ 0.5 & 0.5 & 0.5 \end{bmatrix}.
+$$
+
+| Rank | Image (what is reached)            | Kernel (what is lost)       |
+| ---- | ---------------------------------- | --------------------------- |
+| $3$  | all of space                       | only $\mathbf{0}$           |
+| $2$  | the plane of the first two columns | the line along $(1, 1, -1)$ |
+| $1$  | the line along $(1, 0.5, 0.5)$     | the plane $x + y + z = 0$   |
+
+For rank $2$ the third column is the sum of the first two, so $\mathbf{a}_1 + \mathbf{a}_2 - \mathbf{a}_3 = \mathbf{0}$
+puts $(1, 1, -1)$ in the kernel. For rank $1$ the three columns are equal, so any weights that add
+to $0$ give $\mathbf{0}$. In each case the dimensions of the kernel and the image add up to $3$,
+the number of inputs: the more a map loses, the less it reaches. Systems and inverses proves that
+this holds for every matrix.
+
+## A shadow
+
+A <StepLink step="shadow">shadow</StepLink> on flat ground is a linear map. With sunlight along
+$\mathbf{d} = (-0.5, 1, -1)$, a point $\mathbf{x}$ moves along $\mathbf{d}$ until it reaches the
+floor: $S\mathbf{x} = \mathbf{x} - \frac{x_3}{d_3}\mathbf{d}$, which is
+
+$$
+S = \begin{bmatrix} 1 & 0 & -0.5 \\ 0 & 1 & 1 \\ 0 & 0 & 0 \end{bmatrix}.
+$$
+
+The kernel is the line along $\mathbf{d}$ (since $S\mathbf{d} = \mathbf{d} - \mathbf{d} = \mathbf{0}$),
+and every point on one ray of light has the same shadow. The image is the floor, so the rank is
+$2$. A shadow cannot tell how high a point was; that is the information in the kernel. This is
+the oblique shadow of the gallery item; at noon, with $\mathbf{d}$ straight down, it is the
+orthogonal <Term id="projection-matrix">projection</Term> onto the floor.
+
+## Redundant features
+
+A <StepLink step="features">data table</StepLink> $X$ with one row per student and the columns
+class hours, home hours and total hours has a column that is the sum of the other two. A linear
+model predicts $X\mathbf{w}$, one score per row, with a weight per column. Since
+$X(1, 1, -1) = \mathbf{0}$,
+
+$$
+X\big(\mathbf{w} + t(1, 1, -1)\big) = X\mathbf{w} \quad \text{for every } t,
+$$
+
+so a whole line of weight vectors makes exactly the same predictions, and the data cannot say
+which one is right. This is the multicollinearity of the Vectors unit, seen as a kernel. A
+fitting method has to add a rule to pick one weight vector, such as dropping the redundant column;
+the Machine Learning courses return to this.
