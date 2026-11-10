@@ -10,7 +10,8 @@ Outline approved by the owner on 2026-10-18, as drafted: eight units, the dot pr
 of the outline. Units are built in order; the Vectors unit (plan below) is done, its revision approved on
 2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 was
 reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) approved on
-2026-11-07, and batch 3 (items 9 to 12) is built and waits for the owner's review.
+2026-11-07, and batch 3 (items 9 to 12) approved on 2026-11-09 without changes, which closes the
+unit.
 
 ## Depth and threads
 
@@ -374,10 +375,10 @@ vectors.
 | 6   | composition                     | explore    | matrix-multiplication                      | One map after another (the legacy backlog item): the grid moved twice, the product's columns as $A$ applied to $B$'s columns; $AB \ne BA$ shown with a rotation and a shear; two rotations commute                                                                    | done   |
 | 7   | matrix-multiplication           | lesson     | matrix-multiplication                      | Column by column, row times column, shapes, associativity from composition (no index pushing), $I$, powers, transpose rules; sparse $AB$ as a join and a group by; two linear layers are one                                                                          | done   |
 | 8   | practice-matrix-products        | practice   | standard-maps, matrix-multiplication       | Products and shapes, powers of a rotation, composing described maps (rotate then reflect), matrices of standard maps, transposes, a product from a table join                                                                                                         | done   |
-| 9   | maps-in-3d                      | explore    | maps-in-3d                                 | $3 \times 3$ maps on a 3D grid; rotations about the axes; non-square maps: $\mathbb{R}^3 \to \mathbb{R}^2$ (the stage's own orthographic camera) and $\mathbb{R}^2 \to \mathbb{R}^3$ (a sheet placed in space)                                                        | built  |
-| 10  | kernel-and-image-preview        | explore    | kernel-and-image                           | What a map sends to $\mathbf{0}$ (a subspace) and what it reaches (the span of the columns); rank as the dimension of the image; collapse in 2D and 3D; inputs that differ by a kernel vector share an output                                                         | built  |
-| 11  | practice-maps                   | practice   | maps-in-3d, kernel-and-image               | 3D rotation and projection matrices, kernel vectors (find one), image dimension (rank), is $\mathbf{b}$ reachable, short proofs (kernel and image are subspaces, $T(\mathbf{0}) = \mathbf{0}$)                                                                        | built  |
-| 12  | checkpoint                      | checkpoint | all                                        | Problems from items 4, 8 and 11 plus a self-graded proof: a composition of linear maps is linear, so $AB$ is its matrix                                                                                                                                               | built  |
+| 9   | maps-in-3d                      | explore    | maps-in-3d                                 | $3 \times 3$ maps on a 3D grid; rotations about the axes; non-square maps: $\mathbb{R}^3 \to \mathbb{R}^2$ (the stage's own orthographic camera) and $\mathbb{R}^2 \to \mathbb{R}^3$ (a sheet placed in space)                                                        | done   |
+| 10  | kernel-and-image-preview        | explore    | kernel-and-image                           | What a map sends to $\mathbf{0}$ (a subspace) and what it reaches (the span of the columns); rank as the dimension of the image; collapse in 2D and 3D; inputs that differ by a kernel vector share an output                                                         | done   |
+| 11  | practice-maps                   | practice   | maps-in-3d, kernel-and-image               | 3D rotation and projection matrices, kernel vectors (find one), image dimension (rank), is $\mathbf{b}$ reachable, short proofs (kernel and image are subspaces, $T(\mathbf{0}) = \mathbf{0}$)                                                                        | done   |
+| 12  | checkpoint                      | checkpoint | all                                        | Problems from items 4, 8 and 11 plus a self-graded proof: a composition of linear maps is linear, so $AB$ is its matrix                                                                                                                                               | done   |
 
 **Real scenarios** (only where they add meaning):
 
@@ -471,7 +472,7 @@ plane except for powers.
 
 **Batch 2 review (2026-11-07):** approved as built, no changes.
 
-**Batch 3 (built 2026-11-07, for review).** Code walkthroughs for both explorations (NumPy and
+**Batch 3 (built 2026-11-07, approved 2026-11-09 without changes).** Code walkthroughs for both explorations (NumPy and
 SymPy, outputs from real runs). `maps-in-3d` (6 steps): a $3 \times 3$ map with draggable columns
 moving a lattice of space and the unit cube (new kit pieces `MappedGrid3D` and `Cell3D`), a drone's
 yaw about $z$, rotations about $x$, $y$, $z$ with a picker (the right-hand rule and the signs of
