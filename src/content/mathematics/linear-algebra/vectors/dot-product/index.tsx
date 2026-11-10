@@ -268,7 +268,7 @@ export default function DotProduct() {
             <>
               <Segment from={[0, 0]} to={v} extend color={vc.muted} width={1} dash="3 6" />
               <Segment from={w} to={proj} color={vc.muted} width={1.5} dash="4 5" />
-              <Vector to={proj} color={shadowColor} width={5} opacity={0.75} />
+              <Vector to={proj} color={shadowColor} width={5} opacity={0.75} hoverKey="proj" />
               <MathLabel
                 at={proj}
                 tex="\text{shadow}"
@@ -297,8 +297,8 @@ export default function DotProduct() {
               <MathLabel at={fromPolar(1.05, angle(v) + turn / 2)} tex="\theta" size={14} />
             </>
           )}
-          <Vector to={v} color={V_COLOR} />
-          <Vector to={w} color={W_COLOR} />
+          <Vector to={v} color={V_COLOR} hoverKey="v" />
+          <Vector to={w} color={W_COLOR} hoverKey="w" />
           {showAngle && <Pulse at={[0, 0]} when={isOrthogonal} />}
           <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
           <Point at={w} color={W_COLOR} onDrag={dragW} label="Tip of w" />
@@ -316,6 +316,7 @@ export default function DotProduct() {
                 color={i === best ? V_COLOR : vc.muted}
                 width={i === best ? 3 : 2}
                 opacity={i === best ? 1 : 0.7}
+                hoverKey="D"
               />
               <MathLabel
                 at={doc.at}
@@ -326,7 +327,7 @@ export default function DotProduct() {
               />
             </g>
           ))}
-          <Vector to={q} color={W_COLOR} />
+          <Vector to={q} color={W_COLOR} hoverKey="q" />
           <Point at={q} color={W_COLOR} onDrag={dragQ} label="Tip of the query q" />
           <MathLabel at={q} tex="\mathbf{q}" color={W_COLOR} anchor="se" offset={10} />
           <TextLabel at={[9.6, -0.5]} align="end" color={vc.muted}>

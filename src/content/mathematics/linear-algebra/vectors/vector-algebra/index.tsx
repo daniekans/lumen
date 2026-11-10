@@ -249,9 +249,9 @@ export default function VectorAlgebra() {
             <Segment from={[0, v[1]]} to={[0, vw[1]]} color={W_COLOR} width={5} opacity={0.7} />
             <Segment from={vw} to={[vw[0], 0]} color={vc.muted} width={1} dash="3 5" />
             <Segment from={vw} to={[0, vw[1]]} color={vc.muted} width={1} dash="3 5" />
-            <Vector to={v} color={V_COLOR} />
-            <Vector from={v} to={vw} color={W_COLOR} />
-            <Vector to={vw} color={SUM_COLOR} />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
+            <Vector from={v} to={vw} color={W_COLOR} hoverKey="w" />
+            <Vector to={vw} color={SUM_COLOR} hoverKey="sum" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <Point at={vw} color={W_COLOR} onDrag={(p) => dragW(sub(p, v))} label="Tip of w" />
             <MathLabel at={scale(v, 0.5)} tex="\mathbf{v}" color={V_COLOR} anchor="se" offset={8} />
@@ -343,7 +343,7 @@ export default function VectorAlgebra() {
               offset={8}
               color={vc.muted}
             />
-            <Vector to={v} color={V_COLOR} />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <MathLabel
               at={scale(v, 0.5)}
@@ -358,8 +358,8 @@ export default function VectorAlgebra() {
         {id === 'scaled-length' && (
           <>
             <Segment from={[0, 0]} to={v} extend color={vc.muted} width={1} dash="3 6" />
-            <Vector to={scale(v, c)} color={SUM_COLOR} width={5} opacity={0.75} />
-            <Vector to={v} color={V_COLOR} />
+            <Vector to={scale(v, c)} color={SUM_COLOR} width={5} opacity={0.75} hoverKey="cv" />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="nw" offset={10} />
             <MathLabel
@@ -375,8 +375,8 @@ export default function VectorAlgebra() {
         {id === 'unit-vector' && (
           <>
             <Arc r={1} from={0} to={2 * Math.PI} color={vc.muted} width={1.5} />
-            <Vector to={v} color={V_COLOR} />
-            {lv > 1e-9 && <Vector to={normalize(v)} color={SUM_COLOR} width={4} />}
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
+            {lv > 1e-9 && <Vector to={normalize(v)} color={SUM_COLOR} width={4} hoverKey="v_hat" />}
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="se" offset={10} />
             {lv > 1e-9 && (
@@ -394,9 +394,9 @@ export default function VectorAlgebra() {
         {id === 'distance' && (
           <>
             {legs(v, w, vc.muted)}
-            <Vector to={v} color={V_COLOR} width={2} opacity={0.6} />
-            <Vector to={w} color={W_COLOR} width={2} opacity={0.6} />
-            <Vector from={v} to={w} color={SUM_COLOR} />
+            <Vector to={v} color={V_COLOR} width={2} opacity={0.6} hoverKey="v" />
+            <Vector to={w} color={W_COLOR} width={2} opacity={0.6} hoverKey="w" />
+            <Vector from={v} to={w} color={SUM_COLOR} hoverKey="diff" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <Point at={w} color={W_COLOR} onDrag={dragW} label="Tip of w" />
             <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="se" offset={10} />
@@ -413,9 +413,9 @@ export default function VectorAlgebra() {
 
         {id === 'triangle' && (
           <>
-            <Vector to={v} color={V_COLOR} />
-            <Vector from={v} to={vw} color={W_COLOR} />
-            <Vector to={vw} color={SUM_COLOR} />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
+            <Vector from={v} to={vw} color={W_COLOR} hoverKey="w" />
+            <Vector to={vw} color={SUM_COLOR} hoverKey="sum" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <Point at={vw} color={W_COLOR} onDrag={(p) => dragW(sub(p, v))} label="Tip of w" />
             <MathLabel at={scale(v, 0.5)} tex="\mathbf{v}" color={V_COLOR} anchor="se" offset={8} />

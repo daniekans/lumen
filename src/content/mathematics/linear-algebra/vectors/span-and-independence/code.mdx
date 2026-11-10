@@ -1,0 +1,100 @@
+The span of a few vectors is a line, a plane or all of space, and the rank of the matrix with
+those vectors as rows says which: `np.linalg.matrix_rank` returns 1, 2 or 3. For a dependent
+set, SymPy finds the weights that give $\mathbf{0}$. The blocks below use the vectors of the
+stage. Hover a name to light its arrow.
+
+## One vector
+
+The multiples `a * v` lie on one line through the origin, and a stack of one nonzero vector has
+rank 1. Floating point keeps a sign on zero, so $-1.5 \cdot 0$ prints as `-0.`, which equals 0:
+
+```python title="line.py" step=one colors="v=blue" hover="v=v" check
+import numpy as np
+import sympy as sp
+
+v = np.array([1.0, 2.0, 0.0])
+for a in [-1.5, 1.0, 1.5]:
+    print(a * v)
+print(np.linalg.matrix_rank(np.vstack([v])))
+```
+
+```output
+[-1.5 -3.  -0. ]
+[1. 2. 0.]
+[1.5 3.  0. ]
+1
+```
+
+## Two vectors
+
+`a * v + b * w` reaches a plane. `np.vstack` puts the vectors in the rows of one matrix, and
+rank 2 means they are not parallel:
+
+```python title="plane.py" step=two colors="v=blue w=yellow combo=teal" hover="v=v w=w combo=combo" check
+w = np.array([-1.0, 0.0, 2.0])
+a, b = 1.0, 0.5
+combo = a * v + b * w
+print(combo)
+print(np.linalg.matrix_rank(np.vstack([v, w])))
+```
+
+```output
+[0.5 2.  1. ]
+2
+```
+
+## A third vector in the plane
+
+`u = v + w` adds a row but not a dimension: the rank stays 2, so the span is still the plane.
+
+```python title="in_plane.py" step=in-plane colors="v=blue w=yellow" hover="v=v w=w u=u" check
+u = v + w
+print(u)
+print(np.linalg.matrix_rank(np.vstack([v, w, u])))
+```
+
+```output
+[0. 2. 2.]
+2
+```
+
+## The weights that give zero
+
+The null space of the matrix with columns `v`, `w`, `u` holds the weights $(c_1, c_2, c_3)$ with
+$c_1\mathbf{v} + c_2\mathbf{w} + c_3\mathbf{u} = \mathbf{0}$. SymPy computes it exactly:
+
+```python title="relation.py" step=redundant colors="v=blue w=yellow" hover="v=v w=w u=u" check
+cols = np.column_stack([v, w, u]).astype(int)
+M = sp.Matrix(cols)  # exact integers
+print(M.nullspace())
+print(v + w - u)  # the loop closes
+```
+
+```output
+[Matrix([
+[-1],
+[-1],
+[ 1]])]
+[0. 0. 0.]
+```
+
+The weights come out as $(-1, -1, 1)$, the same relation $\mathbf{v} + \mathbf{w} - \mathbf{u} = \mathbf{0}$
+with every sign flipped.
+
+## Out of the plane
+
+Lifted off the plane, `u` brings the rank to 3. The span is all of space, and the null space is
+empty: only zero weights give $\mathbf{0}$.
+
+```python title="space.py" step=space colors="v=blue w=yellow" hover="v=v w=w u=u" check
+u = np.array([2.0, -1.0, 2.0])
+print(np.linalg.matrix_rank(np.vstack([v, w, u])))
+cols = np.column_stack([v, w, u]).astype(int)
+M = sp.Matrix(cols)  # exact integers
+print(M.nullspace())
+```
+
+```output
+3
+[]
+```

@@ -1,0 +1,135 @@
+In NumPy a line or a plane is a starting point and one or two direction arrays, and its points
+come from `p + t * v`. The normal comes from `np.cross`, and the equation of the plane is one dot
+product. The blocks below use the line and the plane of the stage. Hover a name to light its
+arrow.
+
+## A point and a direction
+
+Each `t` gives one point of the line. To test a point, solve for `t` with one component and
+check all three:
+
+```python title="line.py" step=line colors="v=blue point=teal" hover="v=v point=point" check
+import numpy as np
+
+p = np.array([2.0, -1.0, 0.0])
+v = np.array([-1.0, 2.0, 1.0])
+t = 1.0
+point = p + t * v
+print(point)
+
+target = np.array([0.0, 3.0, 2.0])
+t = (target[0] - p[0]) / v[0]  # first component
+print(t, np.allclose(p + t * v, target))
+```
+
+```output
+[1. 1. 1.]
+2.0 True
+```
+
+## A shifted span
+
+With `p` at the origin the points are the multiples of `v`. Another point of the line with
+another multiple of `v` traces the same line, here back to `p`:
+
+```python title="shifted.py" step=shifted-span colors="v=blue" hover="v=v" check
+print(0.0 + 1.0 * v)  # p = 0: the span of v
+
+q = np.array([0.0, 3.0, 2.0])  # on the line, t = 2
+u = -2 * v                     # parallel to v
+print(u, q + 1.0 * u)          # at p again
+```
+
+```output
+[-1.  2.  1.]
+[ 2. -4. -2.] [ 2. -1.  0.]
+```
+
+## A point and two directions
+
+The plane needs two parameters, `s` and `t`:
+
+```python title="plane.py" step=plane colors="v=blue w=yellow point=teal" hover="v=v w=w point=point" check
+p = np.array([2.0, 0.0, 2.0])
+v = np.array([2.0, -1.0, 0.0])
+w = np.array([0.0, 1.0, -1.0])
+s, t = 1.0, 2.0
+point = p + s * v + t * w
+print(point)
+```
+
+```output
+[4. 1. 0.]
+```
+
+## The normal vector
+
+`np.cross(v, w)` returns a vector orthogonal to both, so to every arrow `x - p` in the plane:
+
+```python title="normal.py" step=normal colors="v=blue w=yellow n=orange x=teal" hover="v=v w=w n=n x=x" check
+n = np.cross(v, w)
+print(n, n @ v, n @ w)
+
+x = p - 0.5 * v + w  # a point of the plane
+print(x, n @ (x - p))
+```
+
+```output
+[1. 2. 2.] 0.0 0.0
+[1.  1.5 1. ] 0.0
+```
+
+## One equation
+
+`d = n @ p` is the right side of $x + 2y + 2z = d$. A point is on the plane exactly when
+`n @ point` equals `d`:
+
+```python title="equation.py" step=equation colors="n=orange x=teal" hover="n=n x=x" check
+d = n @ p
+print(d)
+print(n @ x == d)  # x is on the plane
+print(n @ np.array([1.0, 1.0, 1.0]) == d)
+```
+
+```output
+6.0
+True
+False
+```
+
+## Planes through the origin
+
+With `d = 0` the equation holds at the origin, and every combination `s * v + t * w` satisfies
+it: the plane is the span of `v` and `w`.
+
+```python title="origin.py" step=through-origin colors="v=blue w=yellow n=orange" hover="v=v w=w n=n" check
+print(n @ np.zeros(3) == 0.0)
+rng = np.random.default_rng(0)
+for s, t in rng.normal(size=(3, 2)):
+    print(np.isclose(n @ (s * v + t * w), 0.0))
+```
+
+```output
+True
+True
+True
+True
+```
+
+## Where a line meets a plane
+
+Put the line's points into the equation: $\mathbf{n} \cdot (\mathbf{p} + t\mathbf{v}) = d$ is one
+equation in $t$, with a solution when $\mathbf{n} \cdot \mathbf{v} \ne 0$ (the line is not
+parallel to the plane). Here the line of the first steps meets $x + 2y + 2z = 6$:
+
+```python title="meet.py" colors="n=orange" check
+p_line = np.array([2.0, -1.0, 0.0])
+v_line = np.array([-1.0, 2.0, 1.0])
+t = (d - n @ p_line) / (n @ v_line)
+hit = p_line + t * v_line
+print(t, hit, n @ hit)
+```
+
+```output
+1.2 [0.8 1.4 1.2] 6.0
+```

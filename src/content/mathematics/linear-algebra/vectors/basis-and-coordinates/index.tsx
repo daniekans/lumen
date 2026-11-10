@@ -229,6 +229,7 @@ export default function BasisAndCoordinates() {
     <Stage
       zoomable
       domain={{ x: [-4, 6], y: [-2.5, 5.5] }}
+      highlight={hl}
       ariaLabel="A vector and its coordinates in a basis of the plane"
       overlay={
         <Overlay corner="top-left">
@@ -237,23 +238,27 @@ export default function BasisAndCoordinates() {
               label={standard ? '$\\hat{\\imath}$' : '$\\mathbf{b}_1$'}
               value={fmtPoint(m.i)}
               color={B1_COLOR}
+              {...hl.bind('b1')}
             />
             <Readout
               label={standard ? '$\\hat{\\jmath}$' : '$\\mathbf{b}_2$'}
               value={fmtPoint(m.j)}
               color={B2_COLOR}
+              {...hl.bind('b2')}
             />
             <Readout
               label="$\mathbf{x}$"
               value={fmtPoint(x)}
               color={X_COLOR}
               hint="The components of $\mathbf{x}$: its coordinates in the standard basis."
+              {...hl.bind('x')}
             />
             <Readout
               label={coordsLabel}
               value={c ? fmtPoint(c) : 'none'}
               color={X_COLOR}
               hint="The weights with $c_1\mathbf{b}_1 + c_2\mathbf{b}_2 = \mathbf{x}$, drawn tip to tail."
+              {...hl.bind('path')}
             />
             {!standard && (
               <Readout
@@ -275,23 +280,24 @@ export default function BasisAndCoordinates() {
 
       {c && p1 && (
         <>
-          <Vector to={p1} color={B1_COLOR} width={2} opacity={0.5} />
+          <Vector to={p1} color={B1_COLOR} width={2} opacity={0.5} hoverKey="path" />
           <Vector
             from={p1}
             to={add(p1, scale(m.j, c[1]))}
             color={B2_COLOR}
             width={2}
             opacity={0.5}
+            hoverKey="path"
           />
         </>
       )}
 
-      <Vector to={x} color={X_COLOR} />
+      <Vector to={x} color={X_COLOR} hoverKey="x" />
       <Point at={x} color={X_COLOR} onDrag={standard ? undefined : dragX} label="Tip of x" />
       <MathLabel at={x} tex="\mathbf{x}" color={X_COLOR} anchor="ne" offset={10} />
 
-      <Vector to={m.i} color={B1_COLOR} />
-      <Vector to={m.j} color={B2_COLOR} />
+      <Vector to={m.i} color={B1_COLOR} hoverKey="b1" />
+      <Vector to={m.j} color={B2_COLOR} hoverKey="b2" />
       <Point
         at={m.i}
         color={B1_COLOR}

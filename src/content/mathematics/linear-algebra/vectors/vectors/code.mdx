@@ -1,0 +1,100 @@
+In NumPy a vector is a one-dimensional array, and `+` and `*` work component by component, the
+same as the rules in the explanation. The blocks below use the vectors of the stage. Hover a name
+to light its arrow.
+
+## An array is a vector
+
+`v` holds the two components of the arrow. Wherever the tail is, tip minus tail gives the same
+two numbers:
+
+```python title="vector.py" step="arrow same-vector" focus="arrow=3-4 same-vector=6-8" colors="v=blue" hover="v=v" check
+import numpy as np
+
+v = np.array([3.0, 1.0])  # 3 right, 1 up
+print(v, v.shape)
+
+tail = np.array([-1.0, 2.5])
+tip = tail + v
+print(tip - tail)  # v again
+```
+
+```output
+[3. 1.] (2,)
+[3. 1.]
+```
+
+## Adding
+
+`v + w` adds the components in pairs. The other order gives the same array:
+
+```python title="add.py" step="add order" focus="add=1-3 order=5-6" colors="v=blue w=yellow v_plus_w=teal" hover="v=v w=w v_plus_w=sum" check
+w = np.array([1.0, 2.0])
+v_plus_w = v + w  # tip to tail
+print(v_plus_w)
+
+print(w + v)
+print(np.array_equal(v + w, w + v))
+```
+
+```output
+[4. 3.]
+[4. 3.]
+True
+```
+
+## Scaling
+
+`c * v` multiplies every component by `c`. A negative `c` flips the signs, and `0` gives the
+zero vector:
+
+```python title="scale.py" step=scale colors="v=blue cv=teal" hover="v=v cv=cv" check
+for c in [2.0, -1.0, 1.5, 0.0]:
+    cv = c * v
+    print(c, cv)
+```
+
+```output
+2.0 [6. 2.]
+-1.0 [-3. -1.]
+1.5 [4.5 1.5]
+0.0 [0. 0.]
+```
+
+## Subtracting
+
+`w - v` is the arrow from the tip of `v` to the tip of `w`: adding it to `v` gives `w` back.
+
+```python title="subtract.py" step=subtract colors="v=blue w=yellow w_minus_v=teal" hover="v=v w=w w_minus_v=diff" check
+w_minus_v = w - v
+print(w_minus_v)
+print(v + w_minus_v)  # w
+print(w + (-1) * v)   # the same difference
+```
+
+```output
+[-2.  1.]
+[1. 2.]
+[-2.  1.]
+```
+
+## Rows of a table
+
+A two-dimensional array stacks the students' rows, one vector each. `X.mean(axis=0)` averages
+down the columns, which is adding the rows and scaling by $\frac{1}{3}$:
+
+```python title="table.py" step=table colors="r_bar=teal" hover="r_bar=mean" check
+X = np.array([[2.0, 8.0],   # study h, sleep h
+              [5.0, 6.0],
+              [8.0, 7.0]])
+print(X[1])  # the row r2
+
+r_bar = X.mean(axis=0)
+print(r_bar)
+print((X[0] + X[1] + X[2]) / 3)
+```
+
+```output
+[5. 6.]
+[5. 7.]
+[5. 7.]
+```

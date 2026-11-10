@@ -24,6 +24,7 @@ import {
   Stage,
   TransformedGrid,
   useAnimatedValue,
+  useHighlight,
   useSequence,
   useStepEffect,
   useVizStep,
@@ -87,6 +88,7 @@ export default function MatrixTransformations() {
   const [showX, setShowX] = useState(true)
   const [showLetter, setShowLetter] = useState(false)
   const seq = useSequence()
+  const hl = useHighlight()
 
   const xOpacity = useAnimatedValue(showX ? 1 : 0, { duration: 0.5 })
   const letterOpacity = useAnimatedValue(showLetter ? 1 : 0, { duration: 0.5 })
@@ -179,6 +181,7 @@ export default function MatrixTransformations() {
       <Stage
         domain={{ x: [-4.5, 4.5], y: [-3.2, 3.2] }}
         ariaLabel="The plane transformed by a 2 by 2 matrix"
+        highlight={hl}
         zoomable
         overlay={
           <Overlay corner="top-left">
@@ -189,14 +192,25 @@ export default function MatrixTransformations() {
                 colors={[I_COLOR, J_COLOR]}
                 label="Matrix A"
               />
-              <Readout label="$T(\hat{\imath})$, column 1" value={fmtPoint(m.i)} color={I_COLOR} />
-              <Readout label="$T(\hat{\jmath})$, column 2" value={fmtPoint(m.j)} color={J_COLOR} />
+              <Readout
+                label="$T(\hat{\imath})$, column 1"
+                value={fmtPoint(m.i)}
+                color={I_COLOR}
+                {...hl.bind('i')}
+              />
+              <Readout
+                label="$T(\hat{\jmath})$, column 2"
+                value={fmtPoint(m.j)}
+                color={J_COLOR}
+                {...hl.bind('j')}
+              />
               {showX && (
                 <Readout
                   label={moved ? '$T(\\mathbf{x})$' : '$\\mathbf{x}$'}
                   value={fmtPoint(Ax)}
                   color={moved ? OUT_COLOR : X_COLOR}
                   hint="$2$ times column 1 plus $1$ times column 2."
+                  {...hl.bind('x')}
                 />
               )}
             </ReadoutPanel>
@@ -234,7 +248,7 @@ export default function MatrixTransformations() {
           <g style={{ opacity: xOpacity }}>
             <Path points={[[0, 0], xPart]} color={I_COLOR} width={2} dash="5 6" opacity={0.8} />
             <Path points={[xPart, Ax]} color={J_COLOR} width={2} dash="5 6" opacity={0.8} />
-            <Vector to={Ax} color={moved ? OUT_COLOR : X_COLOR} width={2.5} />
+            <Vector to={Ax} color={moved ? OUT_COLOR : X_COLOR} width={2.5} hoverKey="x" />
             <MathLabel
               at={Ax}
               tex={moved ? 'T(\\mathbf{x})' : '\\mathbf{x}'}
@@ -245,8 +259,8 @@ export default function MatrixTransformations() {
           </g>
         )}
 
-        <Vector to={m.i} color={I_COLOR} />
-        <Vector to={m.j} color={J_COLOR} />
+        <Vector to={m.i} color={I_COLOR} hoverKey="i" />
+        <Vector to={m.j} color={J_COLOR} hoverKey="j" />
         <Point
           at={m.i}
           color={I_COLOR}

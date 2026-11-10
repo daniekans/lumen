@@ -1,0 +1,108 @@
+In NumPy a linear combination is one line, `a * v + b * w`. Finding the weights that reach a
+point is a system of two equations, which `np.linalg.solve` answers when the vectors are not
+parallel. The blocks use the vectors of the stage; hover a name to light its arrow.
+
+## Two vectors, two weights
+
+Scale each vector by its weight and add. These are the weights where the first animation stops:
+
+```python title="combination.py" step=weights colors="v=blue w=yellow av=blue bw=yellow comb=teal" hover="v=v w=w av=av bw=bw comb=comb" check
+import numpy as np
+
+v = np.array([2.0, 1.0])
+w = np.array([-1.0, 2.0])
+
+a, b = 1.5, -0.5
+av = a * v
+bw = b * w
+comb = av + bw
+print(av, bw, comb)
+```
+
+```output
+[3.  1.5] [ 0.5 -1. ] [3.5 0.5]
+```
+
+## Finding the weights
+
+Put `v` and `w` side by side as the columns of a matrix. Then $a\mathbf{v} + b\mathbf{w} = \mathbf{u}$
+is the system `M @ [a, b] == u`, and `np.linalg.solve` returns the weights:
+
+```python title="solve.py" step=target colors="v=blue w=yellow" hover="v=v w=w" check
+u = np.array([3.0, 4.0])
+M = np.column_stack([v, w])  # columns v and w
+print(M)
+
+a, b = np.linalg.solve(M, u)
+print(a, b)
+print(a * v + b * w)  # u
+```
+
+```output
+[[ 2. -1.]
+ [ 1.  2.]]
+2.0 1.0
+[3. 4.]
+```
+
+## Every point, one pair
+
+Any target has exactly one pair of weights, whole or not. The number the elimination divides by,
+$v_1 w_2 - v_2 w_1$, is the determinant of `M`:
+
+```python title="grid.py" step=grid check
+for target in [(-3.5, 2.0), (1.0, 0.0), (0.3, -1.7)]:
+    a, b = np.linalg.solve(M, np.array(target))
+    print(target, "->", np.round([a, b], 3))
+
+print(v[0] * w[1] - v[1] * w[0])
+print(np.linalg.det(M))
+```
+
+```output
+(-3.5, 2.0) -> [-1.   1.5]
+(1.0, 0.0) -> [ 0.4 -0.2]
+(0.3, -1.7) -> [-0.22 -0.74]
+5.0
+5.000000000000001
+```
+
+## Parallel vectors
+
+With $\mathbf{w} = -\frac{1}{2}\mathbf{v}$ the determinant is $0$. Every combination is a
+multiple of `v`, and `solve` refuses, since $\mathbf{u}$ is out of reach:
+
+```python title="parallel.py" step=parallel colors="v=blue w_par=yellow" hover="v=v w_par=w" check raises=LinAlgError
+w_par = -0.5 * v
+M_par = np.column_stack([v, w_par])
+print(np.linalg.det(M_par))
+
+a, b = -1.0, 2.0
+print(a * v + b * w_par, (a - b / 2) * v)
+
+np.linalg.solve(M_par, u)  # LinAlgError
+```
+
+```output
+0.0
+[-4. -2.] [-4. -2.]
+```
+
+## Mixing two foods
+
+Each food is the vector of grams per serving, so a meal is a combination of the two. The
+servings for $35$ g of each come from `solve`; a meal outside the wedge needs a negative amount:
+
+```python title="meal.py" step=mix colors="food_A=blue food_B=yellow" hover="food_A=v food_B=w" check
+food_A = np.array([20.0, 10.0])  # protein, carbs (g)
+food_B = np.array([5.0, 20.0])
+foods = np.column_stack([food_A, food_B])
+
+print(np.linalg.solve(foods, [35.0, 35.0]))
+print(np.linalg.solve(foods, [5.0, 40.0]))  # a < 0
+```
+
+```output
+[1.5 1. ]
+[-0.28571429  2.14285714]
+```

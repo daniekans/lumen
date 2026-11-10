@@ -15,8 +15,10 @@ import {
   SeriesPlot,
   Stage,
   TextLabel,
+  useCodeFocus,
   useSequence,
   useStepEffect,
+  useVizStep,
   VizControls,
   VizSheet,
   weightEdge,
@@ -31,6 +33,8 @@ const LAYOUT = layoutNetwork(SIZES, { width: 760, height: 400, radius: 26 })
 const LAYER_NAMES = ['input', 'hidden 1', 'hidden 2', 'output']
 /** `gradFrom = NONE` hides all gradients. Lower values mean the error has travelled further back. */
 const NONE = L + 1
+/** The line of backward.py each `gradFrom` reaches (indexed by gradFrom, 0 to L). */
+const BACKWARD_LINE = [5, 4, 2, 1]
 
 const lossOf = (net: MLP) => mseLoss(forward(net, INPUT).a[L]!, TARGET)
 
@@ -44,6 +48,22 @@ export default function Backpropagation() {
   const [expanded, setExpanded] = useState(false)
   const [history, setHistory] = useState(() => [lossOf(initialNet())])
   const seq = useSequence()
+  const { id: stepId } = useVizStep()
+
+  // While a step's animation runs, the code panel follows it. forward.py: x on line 5, then a1,
+  // a2 and y_hat on lines 8, 10 and 12 as each layer lights up. backward.py: dW3 (line 1) and
+  // delta2 (2), then dW2 and delta1 (3, 4), then dW1 (5) as the gradients travel back.
+  useCodeFocus(
+    !seq.running
+      ? null
+      : stepId === 'predict'
+        ? reveal <= 1
+          ? 5
+          : 4 + 2 * Math.min(reveal, L + 1)
+        : stepId === 'backward' && gradFrom <= L
+          ? BACKWARD_LINE[gradFrom]!
+          : null,
+  )
 
   const pass = useMemo(() => forward(net, INPUT), [net])
   const grads = useMemo(() => backward(net, pass, TARGET), [net, pass])

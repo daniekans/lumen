@@ -1,0 +1,107 @@
+Python has complex numbers built in: `1j` is $i$, `abs` gives the length and `cmath.phase` the
+angle in radians. The blocks use the stage's starting values $z = 2 + i$ and $w = 1 + i$.
+
+## Numbers as arrows
+
+A complex number stores its real and imaginary parts, the arrow's coordinates. Its length and
+angle come from `abs` and `cmath.phase`:
+
+```python title="arrows.py" step=numbers colors="z=blue w=yellow" hover="z=z w=w" check
+import cmath
+import math
+
+
+def deg(c: complex) -> float:
+    return round(math.degrees(cmath.phase(c)), 1)
+
+
+z = 2 + 1j
+w = 1 + 1j
+print(z.real, z.imag)
+print(round(abs(z), 3), deg(z))
+print(round(abs(w), 3), deg(w))
+```
+
+```output
+2.0 1.0
+2.236 26.6
+1.414 45.0
+```
+
+## Rotate by arg w
+
+Multiplying by `u`, the number of length 1 with the angle of `w`, only turns the arrow: the
+length stays $|z|$ and the angle grows by $\arg w$.
+
+```python title="rotate.py" step=rotate colors="z=blue w=yellow" hover="z=z w=w" check
+u = cmath.rect(1, cmath.phase(w))  # w / |w|
+turned = z * u
+print(round(abs(turned), 3), deg(turned))
+print(deg(z) + deg(w))
+```
+
+```output
+2.236 71.6
+71.6
+```
+
+## Scale by |w|
+
+Stretching the turned arrow by $|w|$ gives $zw$, the same as one multiplication up to rounding
+in the last digit:
+
+```python title="scale.py" step=scale colors="z=blue w=yellow zw=teal" hover="z=z w=w zw=zw" check
+zw = z * w
+print(zw, turned * abs(w))
+print(cmath.isclose(zw, turned * abs(w)))
+print(round(abs(zw), 3), round(abs(z) * abs(w), 3))
+print(deg(zw), deg(z) + deg(w))
+```
+
+```output
+(1+3j) (1.0000000000000002+3j)
+True
+3.162 3.162
+71.6 71.6
+```
+
+## The algebra
+
+With $z = a + bi$ and $w = c + di$, `z * w` computes $(ac - bd) + (ad + bc)\,i$. Both parts are
+linear in $(a, b)$:
+
+```python title="algebra.py" step=plane colors="z=blue w=yellow" hover="z=z w=w" check
+a, b = z.real, z.imag
+c, d = w.real, w.imag
+re = a * c - b * d
+im = a * d + b * c
+print(complex(re, im), z * w)
+```
+
+```output
+(1+3j) (1+3j)
+```
+
+## The whole plane
+
+So multiplying by $w$ is a linear map of the plane: the matrix with columns $w$ and $iw$ sends
+$(a, b)$ to the coordinates of $zw$. Its columns are where $1$ and $i$ land, so the unit square
+turns into a square with a corner at $w$.
+
+```python title="plane.py" step=plane colors="z=blue w=yellow" hover="z=z w=w" check
+import numpy as np
+
+M = np.array([[c, -d],
+              [d, c]])  # columns: 1 * w and i * w
+print(M @ np.array([a, b]), z * w)
+
+square = np.array([[0, 1, 1, 0],   # 0, 1, 1 + i, i
+                   [0, 0, 1, 1]])
+print(M @ square)
+```
+
+```output
+[1. 3.] (1+3j)
+[[ 0.  1.  0. -1.]
+ [ 0.  1.  2.  1.]]
+```

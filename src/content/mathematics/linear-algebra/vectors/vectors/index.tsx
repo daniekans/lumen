@@ -210,7 +210,7 @@ export default function Vectors() {
         {id === 'arrow' && (
           <>
             {legs(v, vc.muted)}
-            <Vector to={v} color={V_COLOR} />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="ne" offset={10} />
           </>
@@ -222,7 +222,7 @@ export default function Vectors() {
               <Vector key={i} from={p} to={add(p, v)} color={V_COLOR} opacity={0.35} width={2} />
             ))}
             <Vector to={v} color={V_COLOR} opacity={0.6} />
-            <Vector from={tail} to={add(tail, v)} color={V_COLOR} />
+            <Vector from={tail} to={add(tail, v)} color={V_COLOR} hoverKey="v" />
             <Point at={tail} color={V_COLOR} hollow onDrag={dragTail} label="Tail of the arrow" />
             <MathLabel
               at={add(tail, scale(v, 0.5))}
@@ -252,21 +252,22 @@ export default function Vectors() {
                   opacity={0.55}
                   width={2.5}
                 />
-                <Vector to={w} color={W_COLOR} />
+                <Vector to={w} color={W_COLOR} hoverKey="w" />
               </>
             )}
-            <Vector to={v} color={V_COLOR} />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
             {id === 'add' && (
               <Vector
                 from={lerpVec([0, 0], v, slide)}
                 to={add(lerpVec([0, 0], v, slide), w)}
                 color={W_COLOR}
+                hoverKey="w"
               />
             )}
             {id === 'order' && (
               <Vector from={v} to={vw} color={W_COLOR} opacity={0.55} width={2.5} />
             )}
-            <Vector to={vw} color={SUM_COLOR} opacity={slide} />
+            <Vector to={vw} color={SUM_COLOR} opacity={slide} hoverKey="sum" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             {id === 'add' ? (
               <Point
@@ -300,8 +301,8 @@ export default function Vectors() {
         {id === 'scale' && (
           <>
             <Segment from={[0, 0]} to={v} extend color={vc.muted} width={1} dash="3 6" />
-            <Vector to={cv} color={SUM_COLOR} width={5} opacity={0.75} />
-            <Vector to={v} color={V_COLOR} />
+            <Vector to={cv} color={SUM_COLOR} width={5} opacity={0.75} hoverKey="cv" />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="nw" offset={10} />
             <MathLabel
@@ -316,10 +317,10 @@ export default function Vectors() {
 
         {id === 'subtract' && (
           <>
-            <Vector to={v} color={V_COLOR} />
-            <Vector to={w} color={W_COLOR} />
-            <Vector from={v} to={w} color={SUM_COLOR} />
-            <Vector to={sub(w, v)} color={SUM_COLOR} opacity={0.35} width={2} />
+            <Vector to={v} color={V_COLOR} hoverKey="v" />
+            <Vector to={w} color={W_COLOR} hoverKey="w" />
+            <Vector from={v} to={w} color={SUM_COLOR} hoverKey="diff" />
+            <Vector to={sub(w, v)} color={SUM_COLOR} opacity={0.35} width={2} hoverKey="diff" />
             <Point at={v} color={V_COLOR} onDrag={dragV} label="Tip of v" />
             <Point at={w} color={W_COLOR} onDrag={dragW} label="Tip of w" />
             <MathLabel at={v} tex="\mathbf{v}" color={V_COLOR} anchor="se" offset={10} />
@@ -354,7 +355,7 @@ export default function Vectors() {
               </g>
             ))}
             {legs(ROWS[row]!, alpha(V_COLOR, 0.7))}
-            <Vector to={MEAN} color={SUM_COLOR} width={2.5} />
+            <Vector to={MEAN} color={SUM_COLOR} width={2.5} hoverKey="mean" />
             <Point at={MEAN} color={SUM_COLOR} r={3.5} />
             <MathLabel at={MEAN} tex="\bar{\mathbf{r}}" color={SUM_COLOR} anchor="se" offset={8} />
           </>

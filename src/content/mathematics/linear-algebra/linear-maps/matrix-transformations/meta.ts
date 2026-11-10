@@ -8,6 +8,7 @@ export const meta = defineItem({
   level: 'core',
   skills: ['matrix-columns', 'linear-maps'],
   order: 2,
+  codeCorner: 'bottom-right',
   steps: [
     {
       id: 'basis',

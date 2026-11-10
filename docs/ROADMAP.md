@@ -35,12 +35,11 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the owner's review of Linear maps and matrices batch 3
-(`plans/linear-algebra.md`, "Batch 3 (built 2026-11-07, for review)": `maps-in-3d`,
-`kernel-and-image-preview`, `practice-maps`, `checkpoint`). Apply the review, which closes the
-unit; then step 13 of the suggested order: code for existing items, batch 8 (Linear Algebra
-and Machine Learning, `plans/code-views.md`, "Code for existing items"). Batches 9 (Calculus 1)
-and 10 (Data Engineering) follow in their own sessions, then Probability and Statistics.
+**Suggested next session:** the owner's review of code batch 8 (`plans/code-views.md`,
+"Batch 8 (built 2026-11-09, for review)": code walkthroughs for the Vectors items,
+`linear-maps`, `matrix-transformations`, `backpropagation`, `complex-multiplication`). Apply
+the review; then batch 9 (Calculus 1), and batch 10 (Data Engineering) in its own session, then
+Probability and Statistics (step 14 of the suggested order).
 
 ### Phase 3: Explore page
 

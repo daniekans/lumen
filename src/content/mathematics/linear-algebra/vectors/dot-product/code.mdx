@@ -1,0 +1,142 @@
+In NumPy, `v @ w` is the dot product of two arrays. The blocks below use the vectors of the stage
+and compute the same number the three ways of the explanation: components, shadow, angle. Hover
+a name to light its arrow.
+
+## Multiply and add
+
+`v[0] * w[0] + v[1] * w[1]` is the formula as written; `v @ w` does the same for any number of
+components:
+
+```python title="dot.py" step=components colors="v=blue w=yellow" hover="v=v w=w" check
+import numpy as np
+
+v = np.array([3.0, 1.0])
+w = np.array([1.0, 2.0])
+print(v[0] * w[0] + v[1] * w[1])  # multiply, add
+print(v @ w)
+print(np.dot(v, w))  # the same function
+```
+
+```output
+5.0
+5.0
+5.0
+```
+
+## The shadow
+
+The signed shadow of `w` on the line of `v` is `v @ w` divided by the length of `v`. Times that
+length it gives the dot product back. `proj` is the shadow as an arrow, and the drop from the
+tip of `w` to it is perpendicular to `v`, up to rounding:
+
+```python title="shadow.py" step=projection colors="v=blue w=yellow proj=teal" hover="v=v w=w proj=proj" check
+w = np.array([2.0, 2.0])
+norm_v = np.linalg.norm(v)
+shadow = (v @ w) / norm_v  # signed length
+print(shadow * norm_v, v @ w)
+
+proj = (v @ w) / (v @ v) * v
+print(proj)
+drop = w - proj  # from the tip of w to the line
+print(np.isclose(drop @ v, 0.0))
+```
+
+```output
+8.0 8.0
+[2.4 0.8]
+True
+```
+
+## The angle
+
+Divide by both lengths for $\cos\theta$; `np.arccos` returns $\theta$ in radians and `np.degrees`
+converts it. `np.clip` guards against rounding, shown two steps on:
+
+```python title="angle.py" step=angle colors="v=blue w=yellow" hover="v=v w=w" check
+def angle(v: np.ndarray, w: np.ndarray) -> float:
+    lengths = np.linalg.norm(v) * np.linalg.norm(w)
+    cos = np.clip((v @ w) / lengths, -1.0, 1.0)
+    return float(np.degrees(np.arccos(cos)))
+
+w = np.array([1.0, 2.0])
+print(angle(v, w))
+w_back = np.array([-2.0, 1.0])
+print(v @ w_back, angle(v, w_back))  # past 90
+```
+
+```output
+45.00000000000001
+-5.0 135.0
+```
+
+## Perpendicular
+
+A zero dot product is the test. Floats carry rounding, so `np.isclose` compares with a small
+tolerance instead of `== 0`:
+
+```python title="orthogonal.py" step=orthogonal colors="v=blue w=yellow" hover="v=v w=w" check
+w = np.array([-1.0, 3.0])
+print(v @ w, angle(v, w))
+print(np.isclose(v @ w, 0.0))
+```
+
+```output
+0.0 90.0
+True
+```
+
+## Never more than the lengths
+
+`abs(v @ w)` stays below the product of the lengths. For `w` on the line of `v` the two are
+equal, and rounding can push the cosine just above `1`, where `np.arccos` gives `nan`. That is
+why `angle` clips it:
+
+```python title="bound.py" step=bound colors="v=blue w=yellow" hover="v=v w=w" check
+w = np.array([0.0, 2.0])
+lengths = np.linalg.norm(v) * np.linalg.norm(w)
+print(abs(v @ w), lengths)
+
+w = 1.3 * v  # on the line of v
+lengths = np.linalg.norm(v) * np.linalg.norm(w)
+cos = (v @ w) / lengths
+print(cos, np.arccos(cos))
+print(angle(v, w))
+```
+
+```output
+2.0 6.324555320336759
+1.0000000000000002 nan
+0.0
+```
+
+## Cosine similarity
+
+One row of `D` per document, word counts of "match" and "election". `D @ q` is every dot
+product at once, and `axis=1` takes the length of each row:
+
+```python title="similarity.py" step=similarity colors="q=yellow" hover="q=q D=D" check
+D = np.array([[8.0, 2.0],   # long sports article
+              [3.0, 1.0],   # short sports article
+              [1.0, 5.0]])  # politics article
+q = np.array([2.0, 4.0])
+
+norms = np.linalg.norm(D, axis=1) * np.linalg.norm(q)
+scores = D @ q / norms
+print(scores.round(3), scores.argmax())
+```
+
+```output
+[0.651 0.707 0.965] 2
+```
+
+With unit vectors, as many embedding models return, the scores are plain dot products:
+
+```python title="unit.py" colors="q=yellow" hover="q=q D=D" check
+D_unit = D / np.linalg.norm(D, axis=1, keepdims=True)
+q_unit = q / np.linalg.norm(q)
+print((D_unit @ q_unit).round(3))
+```
+
+```output
+[0.651 0.707 0.965]
+```

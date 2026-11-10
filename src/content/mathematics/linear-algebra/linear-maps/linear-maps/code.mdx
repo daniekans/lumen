@@ -1,0 +1,144 @@
+In code a map of the plane is a function from an array of two numbers to another. The blocks
+below test the two rules on the stage's vectors: for a linear map both sides agree, and for the
+shift and the bend the difference between them, the gap, is not zero.
+
+## A map
+
+`T` is the linear map of the stage, $(x, y) \mapsto (x - y, 0.5x + y)$, applied to `u`:
+
+```python title="map.py" step=map colors="u=blue" hover="u=u" check
+from collections.abc import Callable
+
+import numpy as np
+
+def T(p: np.ndarray) -> np.ndarray:
+    x, y = p
+    return np.array([x - y, 0.5 * x + y])
+
+u = np.array([1.0, 2.0])
+print(T(u))
+```
+
+```output
+[-1.   2.5]
+```
+
+## Sums go to sums
+
+Map the sum, or map each input and add: the same point.
+
+```python title="sums.py" step=sum colors="u=blue v=blue" hover="u=u v=v" check
+v = np.array([2.0, -1.0])
+print(T(u + v))
+print(T(u) + T(v))
+```
+
+```output
+[2.  2.5]
+[2.  2.5]
+```
+
+## Multiples go to multiples
+
+Scale `v` by `c` and map it, or map `v` and scale: the same point for each `c`, negative too.
+`np.allclose` compares the two sides.
+
+```python title="multiples.py" step=scale colors="v=blue" hover="v=v" check
+print(T(v))
+for c in [2.0, -1.5]:
+    print(c, T(c * v), np.allclose(T(c * v), c * T(v)))
+```
+
+```output
+[3. 0.]
+2.0 [6. 0.] True
+-1.5 [-4.5  0. ] True
+```
+
+## The picture of the rules
+
+The origin stays, and points evenly spaced along a line land evenly spaced: the steps between
+them are all $T(\mathbf{u})$.
+
+```python title="grid.py" step=grid colors="u=blue" hover="u=u" check
+print(T(np.zeros(2)))
+points = np.array([T(k * u) for k in range(4)])
+print(np.diff(points, axis=0))
+```
+
+```output
+[0. 0.]
+[[-1.   2.5]
+ [-1.   2.5]
+ [-1.   2.5]]
+```
+
+## A shift
+
+Shifting by `b` moves the origin to `b`, and adding two outputs counts the shift twice, so the
+gap is `b`:
+
+```python title="shift.py" step=shift colors="u=blue v=blue b=red gap=red" hover="u=u v=v" check
+b = np.array([0.5, 1.5])
+
+def shift(p: np.ndarray) -> np.ndarray:
+    return p + b
+
+print(shift(np.zeros(2)))  # T(0)
+gap = shift(u) + shift(v) - shift(u + v)
+print(gap)
+```
+
+```output
+[0.5 1.5]
+[0.5 1.5]
+```
+
+## A bend
+
+The bend keeps the origin, but doubling `v` quadruples the $\frac{x^2}{4}$ term, so
+$T(2\mathbf{v}) - 2T(\mathbf{v})$ is not zero:
+
+```python title="bend.py" step=bend colors="v=blue gap=red" hover="v=v" check
+def bend(p: np.ndarray) -> np.ndarray:
+    x, y = p
+    return np.array([x, y + x**2 / 4])
+
+print(bend(np.zeros(2)))  # T(0)
+gap = bend(2 * v) - 2 * bend(v)
+print(gap)
+```
+
+```output
+[0. 0.]
+[0. 2.]
+```
+
+## A collapse, and all four maps
+
+The collapse sends every point onto the line $y = \frac{x}{2}$. `rules` tests both rules on `u`,
+`v` and `c = 2` for each map; `np.allclose` absorbs rounding in the decimals:
+
+```python title="rules.py" step=collapse colors="u=blue v=blue" hover="u=u v=v" check
+def collapse(p: np.ndarray) -> np.ndarray:
+    x, y = p
+    return np.array([0.8 * x + 0.4 * y,
+                     0.4 * x + 0.2 * y])
+
+Map = Callable[[np.ndarray], np.ndarray]
+
+def rules(f: Map, c: float = 2.0) -> tuple[bool, bool]:
+    sums = np.allclose(f(u + v), f(u) + f(v))
+    multiples = np.allclose(f(c * v), c * f(v))
+    return sums, multiples
+
+for f in [T, shift, bend, collapse]:
+    print(f.__name__, rules(f))
+```
+
+```output
+T (True, True)
+shift (False, False)
+bend (False, False)
+collapse (True, True)
+```

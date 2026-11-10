@@ -12,6 +12,7 @@ import {
   Pulse,
   Segment,
   Stage,
+  useHighlight,
   useSequence,
   useStepEffect,
   useStepStart,
@@ -85,6 +86,7 @@ export default function LinearMaps() {
   const [prev, setPrev] = useState<MapKind>('identity')
   const [t, setT] = useState(1)
   const seq = useSequence()
+  const hl = useHighlight()
 
   const u: Vec2 = [up.x, up.y]
   const v: Vec2 = [vp.x, vp.y]
@@ -177,6 +179,7 @@ export default function LinearMaps() {
       <Stage
         zoomable
         domain={{ x: [-4.5, 6], y: [-3, 5] }}
+        highlight={hl}
         ariaLabel="A map of the plane and its effect on sums and multiples"
         overlay={
           <Overlay corner="top-left">
@@ -254,8 +257,8 @@ export default function LinearMaps() {
         {sumRule && <Vector to={uv} color={IN_COLOR} width={1.5} opacity={0.6} />}
         {scaleRule && <Vector to={cv} color={IN_COLOR} width={1.5} opacity={0.6} />}
         {single && <Segment from={u} to={Tu} color={vc.fg} width={1} dash="3 5" opacity={0.5} />}
-        {(single || sumRule) && <Vector to={u} color={IN_COLOR} />}
-        {!single && <Vector to={v} color={IN_COLOR} />}
+        {(single || sumRule) && <Vector to={u} color={IN_COLOR} hoverKey="u" />}
+        {!single && <Vector to={v} color={IN_COLOR} hoverKey="v" />}
 
         {/* Outputs. */}
         {sumRule && (

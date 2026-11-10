@@ -1,0 +1,171 @@
+NumPy arrays add and scale component by component, so the rules of this lesson can be checked
+on real numbers, and `np.linalg.norm` gives the length. The blocks use the vectors of the stage;
+hover a name to light its arrow.
+
+## Component by component
+
+`v + w` adds first components and second components separately. The last line is the check
+question, one component at a time:
+
+```python title="components.py" step=componentwise colors="v=blue w=yellow v_plus_w=teal" hover="v=v w=w v_plus_w=sum" check
+import numpy as np
+
+v = np.array([2.0, 1.0])
+w = np.array([1.5, 2.0])
+v_plus_w = v + w
+print(v_plus_w)
+print(v[0] + w[0], v[1] + w[1])
+
+print(2 * np.array([3, -1]) - np.array([1, 4]))
+```
+
+```output
+[3.5 3. ]
+3.5 3.0
+[ 5 -6]
+```
+
+## The eight rules
+
+Each pair holds the two sides of one rule, in the order of the table in the explanation.
+`np.allclose` allows for rounding, which matters once the numbers are not exact in binary:
+
+```python title="rules.py" step=rules check
+u = np.array([2.5, 0.5])
+v, w = np.array([0.5, 1.5]), np.array([-1.5, 1.0])
+c, d, zero = 2.0, -3.0, np.zeros(2)
+pairs = [
+    (v + w, w + v),
+    ((u + v) + w, u + (v + w)),
+    (v + zero, v),
+    (v + (-v), zero),
+    (c * (d * v), (c * d) * v),
+    (1 * v, v),
+    (c * (v + w), c * v + c * w),
+    ((c + d) * v, c * v + d * v),
+]
+for left, right in pairs:
+    print(np.allclose(left, right))
+```
+
+```output
+True
+True
+True
+True
+True
+True
+True
+True
+```
+
+## Length
+
+The square root of the sum of squares, written out and with `np.linalg.norm`. The same call works
+in $\mathbb{R}^3$:
+
+```python title="length.py" step=length colors="v=blue" hover="v=v" check
+v = np.array([3.0, 2.0])
+print(np.sqrt(np.sum(v**2)))
+print(np.linalg.norm(v))
+
+print(np.linalg.norm([2.0, -1.0, 2.0]))
+```
+
+```output
+3.605551275463989
+3.605551275463989
+3.0
+```
+
+## Scaling scales the length
+
+The length of `c * v` is `abs(c)` times the length of `v`, also for a negative `c`:
+
+```python title="scaled.py" step=scaled-length colors="v=blue cv=teal" hover="v=v cv=cv" check
+v = np.array([2.0, 1.0])
+for c in [2.0, -1.5]:
+    cv = c * v
+    print(c, np.linalg.norm(cv),
+          abs(c) * np.linalg.norm(v))
+```
+
+```output
+2.0 4.47213595499958 4.47213595499958
+-1.5 3.3541019662496847 3.3541019662496847
+```
+
+## Unit vectors
+
+Dividing by the length keeps the direction and leaves length $1$:
+
+```python title="unit.py" step=unit-vector colors="v=blue v_hat=teal" hover="v=v v_hat=v_hat" check
+v = np.array([1.2, -1.6])
+v_hat = v / np.linalg.norm(v)
+print(np.linalg.norm(v), v_hat)
+print(np.linalg.norm(v_hat))
+```
+
+```output
+2.0 [ 0.6 -0.8]
+1.0
+```
+
+## Distance
+
+The distance between two tips is the length of their difference:
+
+```python title="distance.py" step=distance colors="v=blue w=yellow diff=teal" hover="v=v w=w diff=diff" check
+v = np.array([1.0, 0.5])
+w = np.array([4.0, 3.5])
+diff = w - v
+print(diff, np.linalg.norm(diff))
+```
+
+```output
+[3. 3.] 4.242640687119285
+```
+
+The houses of the explanation, as (area, bedrooms). Dividing each column by its spread changes
+which house is nearer to `A`:
+
+```python title="houses.py" step=distance check
+A = np.array([120.0, 3.0])
+B = np.array([125.0, 1.0])
+C = np.array([100.0, 3.0])
+print(np.linalg.norm(B - A), np.linalg.norm(C - A))
+
+spread = np.array([30.0, 1.0])  # m², bedrooms
+A_s, B_s, C_s = A / spread, B / spread, C / spread
+print(np.linalg.norm(B_s - A_s), np.linalg.norm(C_s - A_s))
+```
+
+```output
+5.385164807134504 20.0
+2.0069324297987157 0.6666666666666665
+```
+
+## The triangle inequality
+
+The direct path is never longer than the two sides. When `w` points along `v`, the two lengths
+agree up to rounding:
+
+```python title="triangle.py" step=triangle colors="v=blue w=yellow" hover="v=v w=w" check
+def sides(v: np.ndarray, w: np.ndarray) -> tuple[float, float]:
+    direct = np.linalg.norm(v + w)
+    two_sides = np.linalg.norm(v) + np.linalg.norm(w)
+    return float(direct), float(two_sides)
+
+v = np.array([2.0, 0.5])
+w = np.array([0.5, 2.0])
+print(sides(v, w))
+
+w = np.linalg.norm(w) * v / np.linalg.norm(v)  # along v
+direct, two_sides = sides(v, w)
+print(np.isclose(direct, two_sides))
+```
+
+```output
+(3.5355339059327378, 4.123105625617661)
+True
+```

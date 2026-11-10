@@ -196,7 +196,7 @@ export default function ComplexMultiplication() {
               opacity={0.6}
               dash="3 4"
             />
-            <Vector to={toVec(moving)} color={ZW} />
+            <Vector to={toVec(moving)} color={ZW} hoverKey="zw" />
             <MathLabel
               at={toVec(moving)}
               tex="zw"
@@ -206,8 +206,8 @@ export default function ComplexMultiplication() {
           </>
         )}
 
-        <Vector to={toVec(w)} color={W} />
-        <Vector to={toVec(z)} color={Z} />
+        <Vector to={toVec(w)} color={W} hoverKey="w" />
+        <Vector to={toVec(z)} color={Z} hoverKey="z" />
         <MathLabel at={toVec(w)} tex="w" color={W} anchor={w.re >= 0 ? 'se' : 'sw'} />
         <MathLabel at={toVec(z)} tex="z" color={Z} anchor={z.re >= 0 ? 'se' : 'sw'} />
         <Point

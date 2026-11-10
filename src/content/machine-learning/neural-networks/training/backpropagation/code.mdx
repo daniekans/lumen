@@ -1,0 +1,167 @@
+The network of the stage in NumPy: sizes $3, 4, 4, 2$, sigmoid activations, the input
+$\mathbf x = (0.9, 0.2, 0.6)$ and the target $\mathbf y = (1, 0)$. The weights are the stage's
+starting weights, so the numbers match the readouts until you train.
+
+## The weights
+
+`W1` feeds hidden layer 1 from the input, `W2` feeds hidden layer 2, and `W3` feeds the output.
+Row $j$ of each matrix holds the weights into neuron $j$:
+
+```python title="network.py" check
+import numpy as np
+
+W1 = np.array([[1.2328, 0.9935, -0.3479],
+               [1.6513, -1.5695, -0.8355],
+               [1.6954, -0.2256, -0.7288],
+               [1.0316, -0.5962, 0.2215]])
+W2 = np.array([[-0.4425, 1.7563, -1.7572, 1.0589],
+               [-0.1726, 1.6394, -0.4384, -0.2392],
+               [1.0486, 0.5693, -0.5232, 0.3430],
+               [-0.7922, -0.6207, 0.5053, -0.3132]])
+W3 = np.array([[-0.8910, 0.9114, 0.4113, 0.6536],
+               [-0.5744, -0.0219, 0.1235, -0.6676]])
+b1 = np.array([0.0424, -0.0274, -0.0772, -0.0640])
+b2 = np.array([0.1023, -0.3998, -0.0924, -0.0471])
+b3 = np.array([0.0936, -0.0446])
+```
+
+## The forward pass
+
+Each layer computes its weighted sums `z` and its activations `a`. The backward pass needs both,
+so the code keeps every layer's values:
+
+```python title="forward.py" step=predict check
+def sigma(z: np.ndarray) -> np.ndarray:
+    return 1 / (1 + np.exp(-z))
+
+
+x = np.array([0.9, 0.2, 0.6])
+y = np.array([1.0, 0.0])
+z1 = W1 @ x + b1
+a1 = sigma(z1)
+z2 = W2 @ a1 + b2
+a2 = sigma(z2)
+z3 = W3 @ a2 + b3
+y_hat = sigma(z3)
+print(y_hat.round(2))
+```
+
+```output
+[0.63 0.38]
+```
+
+## The cost and the output error
+
+The cost is half the squared error. The output layer's $\delta$ is the error times
+$\sigma'(z)$, which equals $\sigma(z)\,(1 - \sigma(z))$:
+
+```python title="loss.py" step=loss colors="C=yellow delta3=yellow" check
+def dsigma(z: np.ndarray) -> np.ndarray:
+    return sigma(z) * (1 - sigma(z))
+
+
+C = 0.5 * np.sum((y_hat - y) ** 2)
+delta3 = (y_hat - y) * dsigma(z3)
+print(round(C, 4), delta3.round(4))
+```
+
+```output
+0.1412 [-0.0877  0.0886]
+```
+
+## Backward, layer by layer
+
+Each weight gradient is `np.outer(delta, a)`, the error at the far end times what flows in. Each
+earlier $\delta$ comes from the next one through `W.T`. PyTorch's autograd runs the same chain
+rule from the cost alone and gives the same `dW3`.
+
+<CodeTabs>
+
+```python title="backward.py" tab=NumPy step=backward colors="dW3=yellow dW2=yellow dW1=yellow" check
+dW3 = np.outer(delta3, a2)
+delta2 = (W3.T @ delta3) * dsigma(z2)
+dW2 = np.outer(delta2, a1)
+delta1 = (W2.T @ delta2) * dsigma(z1)
+dW1 = np.outer(delta1, x)
+print(dW3.round(4))
+```
+
+```output
+[[-0.0523 -0.0451 -0.063  -0.0252]
+ [ 0.0529  0.0456  0.0637  0.0254]]
+```
+
+```python title="backward_torch.py" tab=PyTorch step=backward env=torch check=torch
+import torch
+
+Ws = [torch.tensor(W, requires_grad=True)
+      for W in (W1, W2, W3)]
+bs = [torch.tensor(b, requires_grad=True)
+      for b in (b1, b2, b3)]
+a = torch.tensor(x)
+for W, b in zip(Ws, bs):
+    a = torch.sigmoid(W @ a + b)
+C_t = 0.5 * ((a - torch.tensor(y)) ** 2).sum()
+C_t.backward()  # the chain rule, automatically
+print(Ws[2].grad.round(decimals=4))
+```
+
+```output
+tensor([[-0.0523, -0.0451, -0.0630, -0.0252],
+        [ 0.0529,  0.0456,  0.0637,  0.0254]], dtype=torch.float64)
+```
+
+</CodeTabs>
+
+## One gradient descent step
+
+Every weight and bias moves against its gradient, scaled by the learning rate $\eta$ (the
+slider, 2 by default). A bias's gradient is its neuron's $\delta$. The next forward pass gives a
+lower cost:
+
+```python title="update.py" step=update check
+eta = 2.0
+W3 -= eta * dW3
+b3 -= eta * delta3
+W2 -= eta * dW2
+b2 -= eta * delta2
+W1 -= eta * dW1
+b1 -= eta * delta1
+
+a1 = sigma(W1 @ x + b1)
+a2 = sigma(W2 @ a1 + b2)
+y_hat = sigma(W3 @ a2 + b3)
+print(round(0.5 * np.sum((y_hat - y) ** 2), 4))
+```
+
+```output
+0.0789
+```
+
+## The training loop
+
+Training repeats forward, backward and update. Here the same steps loop over the layers, with
+$\sigma'$ read from the stored activations as `a * (1 - a)`, for 80 more steps:
+
+```python title="train.py" step=repeat check
+def train_step(Ws: list, bs: list, eta: float) -> float:
+    a = [x]
+    for W, b in zip(Ws, bs):  # forward
+        a.append(sigma(W @ a[-1] + b))
+    delta = (a[-1] - y) * a[-1] * (1 - a[-1])
+    for l in (2, 1, 0):  # backward
+        dW, db = np.outer(delta, a[l]), delta
+        delta = (Ws[l].T @ delta) * a[l] * (1 - a[l])
+        Ws[l] -= eta * dW
+        bs[l] -= eta * db
+    return 0.5 * np.sum((a[-1] - y) ** 2)
+
+
+costs = [train_step([W1, W2, W3], [b1, b2, b3], eta)
+         for _ in range(80)]
+print(np.round(costs[::20], 4))
+```
+
+```output
+[0.0789 0.0045 0.0021 0.0013]
+```

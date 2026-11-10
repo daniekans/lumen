@@ -14,8 +14,8 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done    |
 | 6     | The code panel: code beside the visual, step by step (replaces tab) | done    |
 | 7     | Code that moves with the visual: per-step and animated line focus   | done    |
-| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | next    |
-| 9     | Code for existing items: Calculus 1 (18)                            | planned |
+| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | review  |
+| 9     | Code for existing items: Calculus 1 (18)                            | next    |
 | 10    | Code for existing items: Data Engineering (16)                      | planned |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
@@ -464,6 +464,24 @@ NumPy first, SymPy where exact values matter.
 Also in this batch, `complex-numbers/arithmetic/complex-multiplication`: Python's `complex`
 (`z * w`, `abs`, `cmath.phase`) and multiplication as a rotation and scaling, the same as a
 $2 \times 2$ matrix acting on $(a, b)$.
+
+**Batch 8 (built 2026-11-09, for review).** All 11 items have a `code.mdx`; every block is
+`check` and its output comes from a real run. Most items had no hover keys, so their arrows
+gained `hoverKey`s (and `useHighlight` where the stage had none) to link the code. Notes:
+
+- `backpropagation` uses the stage's own starting weights (seed 9) as literals, so the cost
+  matches the readout (0.1412, then 0.0789 after one step at $\eta = 2$); `useCodeFocus` follows
+  the layers in `predict` and the gradients in `backward`. The PyTorch tab (`env=torch`) gives
+  the same `dW3`. `NeuralNet` has no hover keys, so names in that code do not light neurons; the
+  panel stays bottom-left, since on the right it hides the output layer where the backward pass
+  starts.
+- `matrix-transformations` moved its panel to the bottom-right (`codeCorner`), off the letter.
+- `linear-maps` doubles $\mathbf{v}$ in the bend witness, as the stage does.
+- `dot-product` shows why `np.clip` is needed: `w = 1.3 * v` gives a cosine of
+  1.0000000000000002 and `np.arccos` returns `nan`.
+- Ideas for the owner (kit changes, not done): `hoverKey` on 2D `Segment`, `Path` and `Point`
+  (the gap segment in `linear-maps`, the letter in `matrix-transformations`, the base point in
+  `lines-and-planes`), and on `NeuralNet` neurons and edges.
 
 ### Batch 9: Calculus 1 (18 items)
 

@@ -32,12 +32,11 @@ unit can be picked out of order.
 12. Linear Algebra: Vectors, the revision from the self-review (done, approved 2026-10-25);
     then Linear maps and matrices: unit plan approved 2026-10-25 (`plans/linear-algebra.md`),
     batch 1 (items 1 to 4) built and reviewed 2026-10-25; batch 2 (items 5 to 8, with code
-    walkthroughs) approved 2026-11-07; batch 3 (items 9 to 12) built 2026-11-07, waiting for the
-    owner's review
+    walkthroughs) approved 2026-11-07; batch 3 (items 9 to 12) approved 2026-11-09 (unit done)
 13. Code for existing items, three batches (`plans/code-views.md`, batches 8 to 10, decided
     2026-11-07): Linear Algebra and Machine Learning, then Calculus 1, then Data Engineering.
     One session each, reviewed after each. Batch 10 counts as an owner's request for Data
-    Engineering.
+    Engineering. Batch 8 built 2026-11-09, waiting for the owner's review.
 14. Outline Probability and Statistics (for review), then its first unit
 15. Calculus 1 and Linear Algebra, next units
 

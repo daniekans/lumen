@@ -1,0 +1,120 @@
+In NumPy the matrix of a linear map is built from where $\hat{\imath}$ and $\hat{\jmath}$ land:
+`np.column_stack` puts those two vectors side by side as columns. The blocks below build the
+stage's matrices that way and apply them with `@`.
+
+## Every vector from the basis
+
+`x` is two of `i_hat` plus one of `j_hat`:
+
+```python title="basis.py" step=basis colors="i_hat=green j_hat=red x=blue" hover="i_hat=i j_hat=j x=x" check
+import numpy as np
+
+i_hat = np.array([1.0, 0.0])
+j_hat = np.array([0.0, 1.0])
+x = np.array([2.0, 1.0])
+
+print(2 * i_hat + 1 * j_hat)
+```
+
+```output
+[2. 1.]
+```
+
+## Where the basis lands
+
+`T_i` and `T_j` are the images of the basis, and they become the columns of `A`. The same
+weights on the new vectors give `A @ x`:
+
+```python title="columns.py" step=columns colors="i_hat=green j_hat=red T_i=green T_j=red x=blue" hover="i_hat=i j_hat=j T_i=i T_j=j x=x" check
+T_i = np.array([1.5, 0.5])  # where i_hat lands
+T_j = np.array([-0.5, 1.0])  # where j_hat lands
+A = np.column_stack([T_i, T_j])
+print(A)
+
+print(2 * T_i + 1 * T_j)
+print(A @ x)
+```
+
+```output
+[[ 1.5 -0.5]
+ [ 0.5  1. ]]
+[2.5 2. ]
+[2.5 2. ]
+```
+
+## Reading a matrix from a picture
+
+The tips of the two images, in order, are the columns:
+
+```python title="read.py" step=read colors="T_i=green T_j=red" hover="T_i=i T_j=j" check
+T_i = np.array([1.0, 1.0])
+T_j = np.array([-1.0, 0.5])
+print(np.column_stack([T_i, T_j]))
+```
+
+```output
+[[ 1.  -1. ]
+ [ 1.   0.5]]
+```
+
+## Drawing a map from a matrix
+
+The other way: `A` times `i_hat` and `j_hat` picks out the columns, which are where the two land.
+
+```python title="draw.py" step=draw colors="i_hat=green j_hat=red" hover="i_hat=i j_hat=j" check
+A = np.array([[2.0, 1.0],
+              [0.0, 1.0]])
+print(A @ i_hat, A[:, 0])
+print(A @ j_hat, A[:, 1])
+```
+
+```output
+[2. 0.] [2. 0.]
+[1. 1.] [1. 1.]
+```
+
+## Italic type is a shear
+
+The shear keeps `i_hat` and sends `j_hat` to $(0.25, 1)$. With the letter's points as the
+columns of `P`, one product moves them all; the second row, the heights, stays the same:
+
+```python title="italic.py" step=italic colors="i_hat=green" hover="i_hat=i" check
+A = np.column_stack([i_hat, [0.25, 1.0]])
+
+# the letter F, one point per column
+P = np.array([[-3.0, -3.0, -1.8, -3.0, -2.1],
+              [0.0, 2.0, 2.0, 1.1, 1.1]])
+Q = A @ P
+print(Q)
+print(np.array_equal(Q[1], P[1]))
+```
+
+```output
+[[-3.    -2.5   -1.3   -2.725 -1.825]
+ [ 0.     2.     2.     1.1    1.1  ]]
+True
+```
+
+## A few maps
+
+Each preset is again two columns. `P[:, 2]` is the top right corner of the letter; the projection
+puts every point on the line $y = \frac{x}{2}$:
+
+```python title="presets.py" step=presets colors="i_hat=green j_hat=red" hover="i_hat=i j_hat=j" check
+rotate = np.column_stack([j_hat, -i_hat])  # a quarter turn
+reflect = np.column_stack([-i_hat, j_hat])
+stretch = np.column_stack([2 * i_hat, 1.5 * j_hat])
+project = np.column_stack([[0.8, 0.4], [0.4, 0.2]])
+
+for M in [rotate, reflect, stretch]:
+    print(M @ P[:, 2])
+Q = project @ P
+print(np.allclose(Q[1], Q[0] / 2))
+```
+
+```output
+[-2.  -1.8]
+[1.8 2. ]
+[-3.6  3. ]
+True
+```

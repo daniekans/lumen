@@ -274,12 +274,12 @@ export default function LinearCombinations() {
           </>
         )}
 
-        <Vector to={av} color={V_COLOR} width={2} opacity={0.6} />
-        <Vector from={av} to={tip} color={W_COLOR} width={2} opacity={0.6} />
-        <Vector to={tip} color={SUM_COLOR} />
+        <Vector to={av} color={V_COLOR} width={2} opacity={0.6} hoverKey="av" />
+        <Vector from={av} to={tip} color={W_COLOR} width={2} opacity={0.6} hoverKey="bw" />
+        <Vector to={tip} color={SUM_COLOR} hoverKey="comb" />
 
-        <Vector to={V} color={V_COLOR} />
-        <Vector to={w} color={W_COLOR} />
+        <Vector to={V} color={V_COLOR} hoverKey="v" />
+        <Vector to={w} color={W_COLOR} hoverKey="w" />
         <MathLabel
           at={V}
           tex={meal ? '\\mathbf{v}\\text{ (A)}' : '\\mathbf{v}'}

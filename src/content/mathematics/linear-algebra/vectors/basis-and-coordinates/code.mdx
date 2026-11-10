@@ -1,0 +1,93 @@
+In NumPy a basis of the plane is a $2 \times 2$ array with the basis vectors as its columns. The
+coordinates of $\mathbf{x}$ are the weights that solve $B\mathbf{c} = \mathbf{x}$, so
+`np.linalg.solve(B, x)` finds them, and `B @ c` turns them back into $\mathbf{x}$.
+
+## Components are weights
+
+The components of `x` are its weights on the standard basis:
+
+```python title="standard.py" step=standard colors="x=teal i_hat=blue j_hat=yellow" hover="x=x i_hat=b1 j_hat=b2" check
+import numpy as np
+
+i_hat = np.array([1.0, 0.0])
+j_hat = np.array([0.0, 1.0])
+x = np.array([3.0, 4.0])
+
+print(3 * i_hat + 4 * j_hat)
+```
+
+```output
+[3. 4.]
+```
+
+## Coordinates in another basis
+
+`column_stack` puts `b1` and `b2` in the columns of `B`. Solving `B @ c = x` gives the weights,
+and `B @ c` rebuilds `x` from them:
+
+```python title="coords.py" step=new-basis colors="x=teal b1=blue b2=yellow c=teal" hover="x=x b1=b1 b2=b2 c=path" check
+b1 = np.array([2.0, 1.0])
+b2 = np.array([-1.0, 2.0])
+B = np.column_stack([b1, b2])
+
+c = np.linalg.solve(B, x)
+print(c)  # [x] in the basis b1, b2
+print(B @ c)  # c[0] * b1 + c[1] * b2
+```
+
+```output
+[2. 1.]
+[3. 4.]
+```
+
+## Same arrow, other coordinates
+
+Turn `b2` to $(1, 3)$ and solve again. `x` is the same array; only `c` changes:
+
+```python title="move.py" step=move-basis colors="x=teal b1=blue b2=yellow c=teal" hover="x=x b1=b1 b2=b2 c=path" check
+b2 = np.array([1.0, 3.0])
+B = np.column_stack([b1, b2])
+
+c = np.linalg.solve(B, x)
+print(c, B @ c)
+```
+
+```output
+[1. 1.] [3. 4.]
+```
+
+## When it is not a basis
+
+With `b2` parallel to `b1`, the columns of `B` span a line: its rank is 1, and `solve` refuses:
+
+```python title="parallel.py" step=not-a-basis colors="x=teal b1=blue b2=yellow" hover="x=x b1=b1 b2=b2" check raises=LinAlgError
+b2 = -0.5 * b1
+B = np.column_stack([b1, b2])
+print(np.linalg.matrix_rank(B))
+np.linalg.solve(B, x)  # LinAlgError: Singular matrix
+```
+
+```output
+1
+```
+
+## A basis of space
+
+In $\mathbb{R}^3$ the basis matrix has three columns, and the same two calls work:
+
+```python title="space.py" step=space colors="x=teal b1=blue b2=yellow c=teal" hover="x=x b1=b1 b2=b2 b3=b3 c=path" check
+b1 = np.array([2.0, -1.0, 0.0])
+b2 = np.array([0.0, 1.0, 1.0])
+b3 = np.array([-1.0, 0.0, 1.0])
+B = np.column_stack([b1, b2, b3])
+x = np.array([-3.0, 2.0, 2.0])
+
+c = np.linalg.solve(B, x)
+print(c)
+print(B @ c)
+```
+
+```output
+[-1.  1.  1.]
+[-3.  2.  2.]
+```
