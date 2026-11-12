@@ -15,6 +15,8 @@ import {
   VizControls,
   type PairState,
   SqlLabel,
+  HoverGroup,
+  useHighlight,
 } from '@/viz-kit'
 import {
   COL_W,
@@ -48,6 +50,7 @@ const MAX_LISTED = 8
 
 export default function JoinsAsProducts() {
   const { id } = useVizStep()
+  const hl = useHighlight()
   const [sweep, setSweep] = useState(PAIRS)
   const [condition, setCondition] = useState<Condition>('eq')
   const seq = useSequence()
@@ -91,6 +94,7 @@ export default function JoinsAsProducts() {
       <Stage
         domain={{ x: [40, 780], y: [40, 740] }}
         yUp={false}
+        highlight={hl}
         ariaLabel="A grid with one cell for each pair of a customer and an order; the cells that satisfy the join condition become the rows of the result"
         overlay={
           <Overlay corner="top-right">
@@ -107,35 +111,41 @@ export default function JoinsAsProducts() {
           </Overlay>
         }
       >
-        <TransposedHeader
-          {...ORDERS_HEADER}
-          title="orders"
-          lines={orderLines}
-          highlight={nullKeys ? [4, 5] : []}
-        />
-        <RelationTable
-          {...CUSTOMERS}
-          columns={customerColumns}
-          rows={customers.map((c, i) => ({
-            id: c.id,
-            cells: [c.id, c.name],
-            state: fanOut ? (i === 0 ? 'active' : i === 2 ? 'dim' : 'idle') : 'idle',
-            color: vc.blue,
-          }))}
-        />
-        <TextLabel at={[CUSTOMERS.x, GRID_BOTTOM + 22]} align="start" uppercase size={11}>
-          customers
-        </TextLabel>
+        <HoverGroup hoverKey="orders">
+          <TransposedHeader
+            {...ORDERS_HEADER}
+            title="orders"
+            lines={orderLines}
+            highlight={nullKeys ? [4, 5] : []}
+          />
+        </HoverGroup>
+        <HoverGroup hoverKey="customers">
+          <RelationTable
+            {...CUSTOMERS}
+            columns={customerColumns}
+            rows={customers.map((c, i) => ({
+              id: c.id,
+              cells: [c.id, c.name],
+              state: fanOut ? (i === 0 ? 'active' : i === 2 ? 'dim' : 'idle') : 'idle',
+              color: vc.blue,
+            }))}
+          />
+          <TextLabel at={[CUSTOMERS.x, GRID_BOTTOM + 22]} align="start" uppercase size={11}>
+            customers
+          </TextLabel>
+        </HoverGroup>
 
-        <JoinGrid
-          x={GRID.x}
-          y={GRID.y}
-          rows={customers.length}
-          cols={orders.length}
-          colWidth={COL_W}
-          rowHeight={ROW_H}
-          state={state}
-        />
+        <HoverGroup hoverKey="pairs">
+          <JoinGrid
+            x={GRID.x}
+            y={GRID.y}
+            rows={customers.length}
+            cols={orders.length}
+            colWidth={COL_W}
+            rowHeight={ROW_H}
+            state={state}
+          />
+        </HoverGroup>
 
         {fanOut &&
           customers.map((c, i) => (
@@ -157,23 +167,25 @@ export default function JoinsAsProducts() {
         </SqlLabel>
 
         <g style={{ opacity: showResult ? 1 : 0, transition: 'opacity var(--dur-slow)' }}>
-          {listed ? (
-            <RelationTable
-              {...RESULT}
-              title="result"
-              columns={resultColumns}
-              rows={pairs.map((p) => ({
-                id: `${p.left}-${p.right}`,
-                cells: resultCells(p.left, p.right),
-                state: fanOut && p.left === 0 ? 'active' : 'idle',
-                color: vc.blue,
-              }))}
-            />
-          ) : (
-            <TextLabel at={[RESULT.x, RESULT.y + 50]} align="start" size={14} color={vc.muted}>
-              {`${pairs.length} rows, too many to list`}
-            </TextLabel>
-          )}
+          <HoverGroup hoverKey="result">
+            {listed ? (
+              <RelationTable
+                {...RESULT}
+                title="result"
+                columns={resultColumns}
+                rows={pairs.map((p) => ({
+                  id: `${p.left}-${p.right}`,
+                  cells: resultCells(p.left, p.right),
+                  state: fanOut && p.left === 0 ? 'active' : 'idle',
+                  color: vc.blue,
+                }))}
+              />
+            ) : (
+              <TextLabel at={[RESULT.x, RESULT.y + 50]} align="start" size={14} color={vc.muted}>
+                {`${pairs.length} rows, too many to list`}
+              </TextLabel>
+            )}
+          </HoverGroup>
         </g>
       </Stage>
 

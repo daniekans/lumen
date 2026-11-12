@@ -9,6 +9,7 @@ export const meta = defineItem({
   level: 'core',
   order: 2,
   skills: ['layouts', 'scan-cost'],
+  codeCorner: 'bottom-right',
   steps: [
     {
       id: 'area',

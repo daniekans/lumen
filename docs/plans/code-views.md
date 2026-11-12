@@ -5,18 +5,18 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 
 ## Status
 
-| Batch | What                                                                | Status  |
-| ----- | ------------------------------------------------------------------- | ------- |
-| 1     | Code model and highlighted blocks in every MDX file (build time)    | done    |
-| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done    |
-| 3     | Code in the explanation pane: step peeks and the Code tab           | done    |
-| 4     | Pilot content in three areas, then the owner's review               | done    |
-| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done    |
-| 6     | The code panel: code beside the visual, step by step (replaces tab) | done    |
-| 7     | Code that moves with the visual: per-step and animated line focus   | done    |
-| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | done    |
-| 9     | Code for existing items: Calculus 1 (18)                            | done    |
-| 10    | Code for existing items: Data Engineering (16)                      | planned |
+| Batch | What                                                                | Status |
+| ----- | ------------------------------------------------------------------- | ------ |
+| 1     | Code model and highlighted blocks in every MDX file (build time)    | done   |
+| 2     | Code on the stage: `CodeLabel`, `CodeBlock`, links to shapes        | done   |
+| 3     | Code in the explanation pane: step peeks and the Code tab           | done   |
+| 4     | Pilot content in three areas, then the owner's review               | done   |
+| 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done   |
+| 6     | The code panel: code beside the visual, step by step (replaces tab) | done   |
+| 7     | Code that moves with the visual: per-step and animated line focus   | done   |
+| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | done   |
+| 9     | Code for existing items: Calculus 1 (18)                            | done   |
+| 10    | Code for existing items: Data Engineering (16)                      | review |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
 batch ends.
@@ -566,6 +566,36 @@ an image is built once and all blocks of an item run in one container.
 
 Keep each block short; Spark setup (session, sample data) goes in the first block of an item and
 later blocks reuse it, as the pilot does.
+
+**Batch 10 (built 2026-11-12, for review).** All 16 items have a `code.mdx`; all 94 blocks are
+`check` and their outputs come from real runs (Spark items in `spark`, the pure hashing items
+`rehashing`, `consistent-hashing` and `sizing-partitions` mostly in `default`). Notes:
+
+- The Spark image now has `pyarrow` 21 (Python 3.10 there, so no 3.12-only syntax in Spark
+  blocks). `run-code.mjs` raises `spawnSync`'s `maxBuffer`: Spark's INFO logs passed the 1 MB
+  default and cut off the results. Relational items set `spark.sql.shuffle.partitions` to 4.
+- Hover keys: the five relational stages gained `useHighlight` and `HoverGroup`s; `rehashing`
+  its bars. The storage items and the other partitioning items link names by color only.
+- Real numbers next to the stage's idealized ones, each said in the text: Parquet sizes on 8 or
+  16 rows are mostly overhead (a 1620-byte footer in `parquet-anatomy`); pyarrow writes one data
+  page per chunk where the stage shows three values per page; Spark's `pmod` of the signed hash
+  moves 9 keys from $n = 4$ to $5$ in `hash-partitioning`, the stage's unsigned remainder 10;
+  salting in `skew` gives 1.48 against the stage's 1.67 (the stage hashes the salted key as
+  text); Spark's string `hash` differs from standard Murmur3 when the length is not a multiple
+  of 4 (`consistent-hashing`).
+- Plans shown: `SortMergeJoin` from a cross join and filter, `CartesianProduct` for a `<` join,
+  `Exchange hashpartitioning`, a bucketed join without `Exchange` and with "Coalesced to 4",
+  `PushedFilters` and `ReadSchema`, and AQE's `SortMergeJoin(skew=true)` (needs lowered
+  thresholds and `advisoryPartitionSizeInBytes`).
+- `scan-cost` is the page-area cost model, so predicate pushdown and row-group skipping
+  (`may_match`) went to `parquet-anatomy`.
+- `codeCorner: 'bottom-right'` in `joins-as-products`, `outer-joins`, `encodings`, `scan-cost`
+  and `hash-partitioning`. For the owner: on narrow stages the panel still partly covers the
+  drawing in `tables-as-relations`, `keys-and-references`, `join-row-counts`,
+  `row-vs-columnar`, `parquet-anatomy`, `rehashing`, `consistent-hashing`, `bucketed-joins`
+  and `skew`, and no corner is clear in every step. Hover keys on `Chip` and readout rows would
+  let more names link.
+- The e2e smoke test that visits every step now has 480 s (it passed 240 s as content grew).
 
 ## Pilot content (batch 4)
 

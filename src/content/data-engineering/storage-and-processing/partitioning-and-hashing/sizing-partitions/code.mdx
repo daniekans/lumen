@@ -1,0 +1,84 @@
+The lesson's arithmetic as one small function, then what Spark does when it reads many small
+files.
+
+## Layouts
+
+Partitions $P$, GB per partition and files of at most $T$, for evenly spread data (a month
+comes out at $60.8$ GB; the stage's months are $56$ to $62$).
+
+```python title="layouts.py" step="area by-day by-month day-country by-user" focus="area=1-13 by-day=14 by-month=15 day-country=16 by-user=17" colors="T=yellow S=blue" check
+from math import ceil, prod
+
+GB = 10**9
+B, T = 730 * GB, 1 * GB  # table, target file size
+
+
+def layout(*distinct: int) -> tuple[int, float, int]:
+    P = prod(distinct)  # partitions
+    S = B / P  # bytes per partition
+    return P, float(f"{S / GB:.3g}"), P * ceil(S / T)
+
+
+print(layout())  # no partitions
+print(layout(365))  # day
+print(layout(12))  # month
+print(layout(365, 50))  # day and country
+print(layout(365, 10**7))  # day and user: 200 bytes each
+```
+
+```output
+(1, 730.0, 730)
+(365, 2.0, 730)
+(12, 60.8, 732)
+(18250, 0.04, 18250)
+(3650000000, 2e-07, 3650000000)
+```
+
+## The budget
+
+Partitions of at least $T$ allow at most $\frac{B}{T}$ of them.
+
+```python title="budget.py" step=rule colors="T=yellow" check
+P_max = B // T
+print(P_max)
+for name, distinct in [("day", (365,)), ("day, country", (365, 50))]:
+    P = prod(distinct)
+    print(name, P, P <= P_max)
+```
+
+```output
+730
+day 365 True
+day, country 18250 False
+```
+
+## Reading small files in Spark
+
+When Spark reads files it packs them into tasks of at most `spark.sql.files.maxPartitionBytes`
+($128$ MB by default), and it counts every file as `spark.sql.files.openCostInBytes` ($4$ MB)
+more than its size: the fixed cost of opening it. $200$ files of a few kilobytes each are read
+by $7$ tasks of about $29$ files, and each file is still opened. One file of the same rows is one
+task.
+
+```python title="small_files.py" check=spark
+import os
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.files.minPartitionNum", 4)  # as on 4 cores
+events = spark.range(200_000).select("id", (F.col("id") % 50).alias("country"))
+
+events.repartition(200).write.parquet("tiny")
+files = [f for f in os.listdir("tiny") if f.endswith(".parquet")]
+print(len(files), spark.read.parquet("tiny").rdd.getNumPartitions())
+
+events.coalesce(1).write.parquet("one")
+print(spark.read.parquet("one").rdd.getNumPartitions())
+```
+
+```output
+200 7
+1
+```

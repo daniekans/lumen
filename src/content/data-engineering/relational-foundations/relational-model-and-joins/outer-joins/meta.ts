@@ -1,6 +1,7 @@
 import { defineItem } from '@/catalog/types'
 
 export const meta = defineItem({
+  codeCorner: 'bottom-right',
   kind: 'explore',
   title: 'Outer joins',
   summary:

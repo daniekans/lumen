@@ -1,7 +1,16 @@
 import { joinSize, valueCounts, type Value } from '@/lib/relational'
 import { alpha, vc } from '@/styles/viz-colors'
 import { Readout, ReadoutPanel } from '@/ui/molecules'
-import { MathLabel, Overlay, Stage, useAnimatedValue, useCoords, useVizStep } from '@/viz-kit'
+import {
+  MathLabel,
+  Overlay,
+  Stage,
+  useAnimatedValue,
+  useCoords,
+  useVizStep,
+  HoverGroup,
+  useHighlight,
+} from '@/viz-kit'
 
 interface Dataset {
   a: Value[]
@@ -107,6 +116,7 @@ const datasets: Record<string, Dataset> = {
 
 export default function JoinRowCounts() {
   const { id } = useVizStep()
+  const hl = useHighlight()
   const data = datasets[id ?? ''] ?? MIXED
   const blocks = layoutBlocks(data)
   const cellsOpacity = useAnimatedValue(id === 'per-key' ? 0 : 1, { duration: 0.8 })
@@ -134,6 +144,7 @@ export default function JoinRowCounts() {
     <Stage
       domain={{ x: [-110, 700], y: [150, 480] }}
       yUp={false}
+      highlight={hl}
       ariaLabel="One block per key value: a row of A's values along the bottom, B's values up the side, and a rectangle of joined rows between them"
       overlay={
         <Overlay corner="top-right">
@@ -160,51 +171,59 @@ export default function JoinRowCounts() {
             key={`${id}-${blk.label}`}
             style={{ opacity: dim, transition: 'opacity var(--dur-slow)' }}
           >
-            {Array.from({ length: blk.a }, (_, i) => (
-              <Square
-                key={`a${i}`}
-                x={blk.x + i * U}
-                y={BASE + 6}
-                fill="var(--bg-elevated)"
-                stroke={vc.gridStrong}
-                text={blk.label}
-              />
-            ))}
-            {Array.from({ length: blk.b }, (_, j) => (
-              <Square
-                key={`b${j}`}
-                x={blk.x - U - 8}
-                y={BASE - (j + 1) * U}
-                fill="var(--bg-elevated)"
-                stroke={vc.gridStrong}
-                text={blk.label}
-              />
-            ))}
-            {!blk.isNull &&
-              Array.from({ length: blk.a }, (_, i) =>
-                Array.from({ length: blk.b }, (_, j) => (
-                  <Square
-                    key={`c${i},${j}`}
-                    x={blk.x + i * U}
-                    y={BASE - (j + 1) * U}
-                    fill={alpha(vc.blue, 0.55)}
-                    stroke={vc.blue}
-                    opacity={cellsOpacity}
-                  />
-                )),
-              )}
-            {padded &&
-              Array.from({ length: blk.a }, (_, i) => (
+            <HoverGroup hoverKey="A">
+              {Array.from({ length: blk.a }, (_, i) => (
                 <Square
-                  key={`p${i}`}
+                  key={`a${i}`}
                   x={blk.x + i * U}
-                  y={BASE - U}
-                  fill={alpha(vc.yellow, 0.14)}
-                  stroke={vc.yellow}
-                  dashed
-                  opacity={padOpacity}
+                  y={BASE + 6}
+                  fill="var(--bg-elevated)"
+                  stroke={vc.gridStrong}
+                  text={blk.label}
                 />
               ))}
+            </HoverGroup>
+            <HoverGroup hoverKey="B">
+              {Array.from({ length: blk.b }, (_, j) => (
+                <Square
+                  key={`b${j}`}
+                  x={blk.x - U - 8}
+                  y={BASE - (j + 1) * U}
+                  fill="var(--bg-elevated)"
+                  stroke={vc.gridStrong}
+                  text={blk.label}
+                />
+              ))}
+            </HoverGroup>
+            <HoverGroup hoverKey="joined">
+              {!blk.isNull &&
+                Array.from({ length: blk.a }, (_, i) =>
+                  Array.from({ length: blk.b }, (_, j) => (
+                    <Square
+                      key={`c${i},${j}`}
+                      x={blk.x + i * U}
+                      y={BASE - (j + 1) * U}
+                      fill={alpha(vc.blue, 0.55)}
+                      stroke={vc.blue}
+                      opacity={cellsOpacity}
+                    />
+                  )),
+                )}
+            </HoverGroup>
+            <HoverGroup hoverKey="padded">
+              {padded &&
+                Array.from({ length: blk.a }, (_, i) => (
+                  <Square
+                    key={`p${i}`}
+                    x={blk.x + i * U}
+                    y={BASE - U}
+                    fill={alpha(vc.yellow, 0.14)}
+                    stroke={vc.yellow}
+                    dashed
+                    opacity={padOpacity}
+                  />
+                ))}
+            </HoverGroup>
             {id !== 'per-key' && (
               <MathLabel
                 at={[blk.x + blk.width / 2, BASE + U + 30]}

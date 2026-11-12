@@ -1,0 +1,159 @@
+The stage's $24$ sales written by pyarrow with the same row groups, then read back through the
+footer, the way a reader plans. The last blocks ask Spark for the same query.
+
+## The table
+
+```python title="sales.py" step=table check=spark
+import pyarrow as pa
+import pyarrow.parquet as pq
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+days = [3, 27, 12, 8, 19, 2, 25, 6, 14, 1, 21, 10,
+        9, 28, 16, 4, 23, 12, 20, 5, 11, 26, 15, 24]
+amounts = [42, 17, 88, 35, 61, 23, 74, 50, 19, 66, 31, 92,
+           27, 58, 45, 13, 80, 39, 64, 22, 97, 48, 36, 71]
+names = ["LIS", "OSL", "REC", "TYO", "OSL", "LIS"]
+cities = [names[i * 5 % 6] for i in range(24)]
+sales = pa.table({"day": days, "city": cities, "amount": amounts})
+```
+
+## Row groups and column chunks
+
+`row_group_size` cuts the rows; each row group stores every column as one chunk, and the footer
+records where each chunk starts in the file.
+
+```python title="write.py" step="row-groups column-chunks" focus="row-groups=1-3 column-chunks=5-8" check=spark
+pq.write_table(sales, "sales.parquet", row_group_size=6)
+meta = pq.ParquetFile("sales.parquet").metadata
+print(meta.num_rows, "rows,", meta.num_row_groups, "row groups")
+
+group = meta.row_group(0)
+for j in range(group.num_columns):
+    c = group.column(j)
+    start = c.dictionary_page_offset or c.data_page_offset
+    print(c.path_in_schema, "from byte", start, c.total_compressed_size, "bytes")
+```
+
+```output
+24 rows, 4 row groups
+day from byte 4 124 bytes
+city from byte 128 86 bytes
+amount from byte 214 124 bytes
+```
+
+## Pages
+
+A chunk is a sequence of pages. pyarrow encodes `city` with a dictionary, so its chunk starts
+with a dictionary page and the data pages follow it.
+
+```python title="pages.py" step=pages check=spark
+city = meta.row_group(0).column(1)
+print(city.encodings)
+print("dictionary page at", city.dictionary_page_offset)
+print("first data page at", city.data_page_offset)
+```
+
+```output
+('PLAIN', 'RLE', 'RLE_DICTIONARY')
+dictionary page at 128
+first data page at 171
+```
+
+pyarrow's pages hold about $1$ MB, so these $6$ values make one data page; the stage uses pages
+of $3$ values to show more than one.
+
+## The footer
+
+The file ends with the footer, its length in $4$ bytes, and the magic word `PAR1`. A reader
+fetches those last $8$ bytes first, then the footer, which holds every chunk's statistics. On
+this tiny file the footer, $1620$ bytes of schema, offsets and statistics, is larger than the
+data; on a real file it is a rounding error.
+
+```python title="footer.py" step=footer colors="min=yellow max=yellow" check=spark
+with open("sales.parquet", "rb") as f:
+    f.seek(-8, 2)
+    tail = f.read(8)
+print(int.from_bytes(tail[:4], "little"), "footer bytes,", tail[4:])
+
+for g in range(meta.num_row_groups):
+    s = meta.row_group(g).column(0).statistics
+    print("group", g, "day", s.min, "to", s.max, "nulls", s.null_count)
+```
+
+```output
+1620 footer bytes, b'PAR1'
+group 0 day 2 to 27 nulls 0
+group 1 day 1 to 25 nulls 0
+group 2 day 4 to 28 nulls 0
+group 3 day 5 to 26 nulls 0
+```
+
+## Projection
+
+Spark plans from the footer too: the scan asks only for `amount` (`ReadSchema`), so only its
+chunks are fetched.
+
+```python title="projection.py" step=projection check=spark
+spark = SparkSession.builder.getOrCreate()
+df = spark.read.parquet("sales.parquet")
+df.select(F.sum("amount")).explain("formatted")
+```
+
+```output excerpt
+(1) Scan parquet
+Output [1]: [amount#2L]
+Batched: true
+ReadSchema: struct<amount:bigint>
+```
+
+## Predicate pushdown
+
+The filter is pushed into the reader (`PushedFilters`), which checks it against each row group's
+min and max. `may_match` is that check: every range contains $12$, so nothing is skipped.
+
+```python title="pushdown.py" step=pushdown colors="t=yellow" check=spark
+t = 12
+query = df.where(F.col("day") == t).select(F.sum("amount"))
+query.explain("formatted")
+
+def may_match(path: str, t: int) -> list[int]:
+    m = pq.ParquetFile(path).metadata
+    groups = range(m.num_row_groups)
+    stats = [m.row_group(g).column(0).statistics for g in groups]
+    return [g for g in groups if stats[g].min <= t <= stats[g].max]
+
+print("row groups read:", may_match("sales.parquet", t))
+```
+
+```output excerpt
+(1) Scan parquet
+Output [2]: [day#0L, amount#2L]
+Batched: true
+PushedFilters: [IsNotNull(day), EqualTo(day,12)]
+ReadSchema: struct<day:bigint,amount:bigint>
+row groups read: [0, 1, 2, 3]
+```
+
+## Sorting tightens the ranges
+
+Sorted by day, each row group covers a narrow range, and the same check keeps one.
+
+```python title="sorted.py" step=sorted colors="t=yellow" check=spark
+pq.write_table(sales.sort_by("day"), "sorted.parquet", row_group_size=6)
+m = pq.ParquetFile("sorted.parquet").metadata
+for g in range(m.num_row_groups):
+    s = m.row_group(g).column(0).statistics
+    print("group", g, "day", s.min, "to", s.max)
+print("row groups read:", may_match("sorted.parquet", t))
+print("day 7:", may_match("sorted.parquet", 7))
+```
+
+```output
+group 0 day 1 to 6
+group 1 day 8 to 12
+group 2 day 14 to 21
+group 3 day 23 to 28
+row groups read: [1]
+day 7: []
+```

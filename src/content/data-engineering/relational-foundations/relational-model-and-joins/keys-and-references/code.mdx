@@ -1,0 +1,157 @@
+The same two tables in PySpark. A database enforces keys on every insert and delete; Spark and
+most lakehouse tables do not, so the code below turns each constraint into a query that finds
+the rows breaking it. Hover a table's name to light it.
+
+## A primary key
+
+Spark accepts the second row with id $2$ without complaint. A key is a check: group by `id` and
+look for groups of more than one row, and for NULLs.
+
+```python title="customers.py" step=primary-key colors="customers=yellow" hover="customers=customers" check=spark
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.shuffle.partitions", 4)  # tiny data
+customers = spark.createDataFrame(
+    [(1, "Ana"), (2, "Ben"), (3, "Caio"), (4, "Dara"), (2, "Eva")],
+    "id int, name string",
+)
+customers.groupBy("id").count().where("count > 1").show()
+print(customers.where(F.col("id").isNull()).count())
+customers = customers.where(F.col("name") != "Eva")
+```
+
+```output
++---+-----+
+| id|count|
++---+-----+
+|  2|    2|
++---+-----+
+
+0
+```
+
+## A foreign key
+
+`customer_id` holds values of `customers.id`. Following a reference is a join on that pair of
+columns: each order picks up the name of its customer.
+
+```python title="orders.py" step=foreign-key colors="customers=yellow orders=yellow refs=blue" hover="customers=customers orders=orders refs=refs" check=spark
+orders = spark.createDataFrame(
+    [(101, 1, 30), (102, 2, 12), (103, 1, 45),
+     (104, 4, 8), (105, 2, 20)],
+    "order_id int, customer_id int, amount int",
+)
+refs = orders.join(
+    customers, orders.customer_id == customers.id
+)
+refs.select("order_id", "name").orderBy("order_id").show()
+```
+
+```output
++--------+----+
+|order_id|name|
++--------+----+
+|     101| Ana|
+|     102| Ben|
+|     103| Ana|
+|     104|Dara|
+|     105| Ben|
++--------+----+
+```
+
+## Many to one
+
+Every order has exactly one customer, so the join keeps one row per order: $5$ in, $5$ out. Ana's
+orders are the rows whose reference is $1$.
+
+```python title="many_to_one.py" step=many-to-one colors="orders=yellow refs=blue" hover="orders=orders refs=refs" check=spark
+print(orders.count(), refs.count())
+orders.where(F.col("customer_id") == 1).show()
+```
+
+```output
+5 5
++--------+-----------+------+
+|order_id|customer_id|amount|
++--------+-----------+------+
+|     101|          1|    30|
+|     103|          1|    45|
++--------+-----------+------+
+```
+
+## One to many
+
+Read backward, a customer has any number of orders. A left join keeps Caio, and counting a
+column of `orders` (which is NULL for him) gives his $0$.
+
+```python title="one_to_many.py" step=one-to-many colors="customers=yellow orders=yellow" hover="customers=customers orders=orders" check=spark
+per_customer = (
+    customers.join(orders, customers.id == orders.customer_id, "left")
+    .groupBy("id", "name")
+    .agg(F.count("order_id").alias("orders"))
+)
+per_customer.orderBy("id").show()
+```
+
+```output
++---+----+------+
+| id|name|orders|
++---+----+------+
+|  1| Ana|     2|
+|  2| Ben|     2|
+|  3|Caio|     0|
+|  4|Dara|     1|
++---+----+------+
+```
+
+## Orphans
+
+Order $106$ names customer $9$. A `left_anti` join keeps the orders that match no customer, the
+rows a database would reject.
+
+```python title="orphans.py" step=orphan colors="orders=yellow orphans=red" hover="orders=orders orphans=orphans" check=spark
+orders = orders.union(
+    spark.createDataFrame([(106, 9, 15)], orders.schema)
+)
+orphans = orders.join(
+    customers, orders.customer_id == customers.id, "left_anti"
+)
+orphans.show()
+orders = orders.where(F.col("order_id") != 106)
+```
+
+```output
++--------+-----------+------+
+|order_id|customer_id|amount|
++--------+-----------+------+
+|     106|          9|    15|
++--------+-----------+------+
+
+```
+
+## Deleting a referenced row
+
+Each rule, applied to the orders when Ana (id $1$) goes: restrict refuses while orders point at
+her, cascade drops them, set NULL keeps them and clears the reference.
+
+```python title="on_delete.py" step=on-delete colors="customers=yellow orders=yellow" hover="customers=customers orders=orders" check=spark
+gone = 1
+points_at = F.col("customer_id") == gone
+print("restrict:", orders.where(points_at).count(), "orders block it")
+
+cascade = orders.where(~points_at)
+set_null = orders.withColumn(
+    "customer_id",
+    F.when(points_at, None).otherwise(F.col("customer_id")),
+)
+print("cascade:", orders.count() - cascade.count(), "orders gone")
+print("set NULL:", set_null.where("customer_id IS NULL").count())
+```
+
+```output
+restrict: 2 orders block it
+cascade: 2 orders gone
+set NULL: 2
+```

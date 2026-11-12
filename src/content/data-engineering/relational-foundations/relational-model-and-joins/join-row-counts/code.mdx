@@ -1,0 +1,132 @@
+The row count of a join, predicted from the key counts of each side and checked against the join
+itself in PySpark. This is the check to run before joining two large tables: two small
+`groupBy` results say how many rows the join will produce. Hover a name to light its part of the
+stage.
+
+## Count each key value
+
+`a` and `b` count the rows per key value, $a_k$ and $b_k$. NULL is a group of its own, and the full
+join keeps the two NULL groups apart, since NULL does not equal NULL.
+
+```python title="counts.py" step=per-key hover="A=A B=B a=A b=B" check=spark
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.shuffle.partitions", 4)  # tiny data
+
+
+def frame(keys: list[int | None]) -> DataFrame:
+    return spark.createDataFrame([(k,) for k in keys], "k int")
+
+
+def counts(df: DataFrame, name: str) -> DataFrame:
+    return df.groupBy("k").agg(F.count("*").alias(name))
+
+
+A = frame([1, 1, 2, 3, 3, 3, 5, None])
+B = frame([1, 2, 2, 3, 3, 4, None])
+a, b = counts(A, "a"), counts(B, "b")
+a.join(b, "k", "full").orderBy("k").show()
+```
+
+```output
++----+----+----+
+|   k|   a|   b|
++----+----+----+
+|NULL|   1|NULL|
+|NULL|NULL|   1|
+|   1|   2|   1|
+|   2|   1|   2|
+|   3|   3|   2|
+|   4|NULL|   1|
+|   5|   1|NULL|
++----+----+----+
+```
+
+## The total area
+
+Each value gives an $a_k \times b_k$ block of rows, so the join has $\sum_k a_k b_k$ rows. Joining
+the counts on `k` keeps the values present on both sides, the only ones with a nonzero block.
+
+```python title="area.py" step=area colors="joined=blue" hover="A=A B=B joined=joined" check=spark
+def predicted(A: DataFrame, B: DataFrame) -> int:
+    ab = counts(A, "a").join(counts(B, "b"), "k")
+    return ab.select(F.sum(F.col("a") * F.col("b"))).first()[0]
+
+
+joined = A.join(B, "k")
+print(predicted(A, B), joined.count())
+```
+
+```output
+10 10
+```
+
+## A unique key on one side
+
+When `A.k` is unique, every $a_k$ is $1$ (or $0$), and each row of `B` matches at most once: at
+most $|B| = 7$ rows. The $5$ in `B` has no partner, so there are $6$.
+
+```python title="unique.py" step=one-to-many colors="joined=blue" hover="A=A B=B joined=joined" check=spark
+A = frame([1, 2, 3, 4])
+B = frame([1, 1, 1, 2, 4, 4, 5])
+print(A.count() == A.distinct().count())  # A.k is unique
+print(predicted(A, B), A.join(B, "k").count())
+```
+
+```output
+True
+6 6
+```
+
+## Duplicates on both sides
+
+$3 \cdot 4 + 2 \cdot 3 = 18$ rows from tables of $5$ and $7$. A total summed after such a join
+counts each row of `A` several times.
+
+```python title="many.py" step=many-to-many colors="joined=blue" hover="A=A B=B joined=joined" check=spark
+A = frame([1, 1, 1, 2, 2])
+B = frame([1, 1, 1, 1, 2, 2, 2])
+print(predicted(A, B), A.join(B, "k").count())
+```
+
+```output
+18 18
+```
+
+## Left join: a floor of one
+
+A value without a partner still gives $a_k$ padded rows: `greatest(coalesce(b, 0), 1)` is the
+floor of one. The two padded rows are the $5$ and the NULL of `A`.
+
+```python title="left.py" step=left colors="padded=yellow" hover="A=A B=B padded=padded" check=spark
+A = frame([1, 1, 2, 3, 3, 3, 5, None])
+B = frame([1, 2, 2, 3, 3, 4, None])
+ab = counts(A, "a").join(counts(B, "b"), "k", "left")
+floor = F.greatest(F.coalesce("b", F.lit(0)), F.lit(1))
+print(ab.select(F.sum(F.col("a") * floor)).first()[0])
+
+padded = A.join(B, "k", "left_anti")  # rows of A with no partner
+print(A.join(B, "k", "left").count(), padded.count())
+```
+
+```output
+12
+12 2
+```
+
+## NULL is not a value to match
+
+The join condition `A.k = B.k` is unknown for two NULLs, so they never pair. The null-safe
+`eqNullSafe` (SQL's `<=>`) treats them as equal and adds their $1 \cdot 1$ block.
+
+```python title="nulls.py" step=nulls hover="A=A B=B" check=spark
+print(A.join(B, A.k == B.k).count())
+print(A.join(B, A.k.eqNullSafe(B.k)).count())
+```
+
+```output
+10
+11
+```

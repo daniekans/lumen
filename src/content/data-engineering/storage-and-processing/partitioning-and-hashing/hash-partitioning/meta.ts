@@ -2,6 +2,7 @@ import { defineItem } from '@/catalog/types'
 
 export const meta = defineItem({
   kind: 'explore',
+  codeCorner: 'bottom-right',
   title: 'Hash partitioning',
   summary:
     'A hash function maps each key to a large number, and the remainder of that number divided by $n$ picks one of $n$ buckets. The same key always lands in the same bucket, neighboring keys scatter, and range partitioning makes the opposite trade.',

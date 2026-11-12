@@ -1,0 +1,142 @@
+The stage's hash is Spark's: Murmur3 with seed $42$ on the four bytes of the key. Spark hashes the
+same way when it shuffles a table, so the buckets below are the ones a `repartition` builds.
+
+## The keys
+
+```python title="orders.py" step=keys check=spark
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+keys = [(k,) for k in range(1001, 1013)]
+orders = spark.createDataFrame(keys, "customer_id int")
+n = 4
+```
+
+## The hash
+
+`F.hash` returns a signed 32-bit number. The stage reads the same $32$ bits as unsigned, from $0$
+to $2^{32} - 1$, which adds $2^{32}$ to the negative ones.
+
+```python title="hash.py" step=hash check=spark
+h = F.hash("customer_id")  # Murmur3, seed 42, signed
+h_u = F.pmod(h.cast("long"), F.lit(2**32))  # the stage's h
+orders.select("customer_id", h.alias("h"), h_u.alias("h_u")).show(4)
+```
+
+```output
++-----------+----------+----------+
+|customer_id|         h|       h_u|
++-----------+----------+----------+
+|       1001|-396384284|3898583012|
+|       1002|1048811874|1048811874|
+|       1003| 864281936| 864281936|
+|       1004| 556136777| 556136777|
++-----------+----------+----------+
+only showing top 4 rows
+```
+
+## Modulo
+
+`pmod` is the remainder that is never negative, which is what Spark uses for buckets. The loads
+are the stage's $2, 3, 2, 5$.
+
+```python title="modulo.py" step=modulo check=spark
+bucket = F.pmod(h, F.lit(n))
+orders.groupBy(bucket.alias("bucket")).count().orderBy("bucket").show()
+```
+
+```output
++------+-----+
+|bucket|count|
++------+-----+
+|     0|    2|
+|     1|    3|
+|     2|    2|
+|     3|    5|
++------+-----+
+```
+
+## Same key, same bucket
+
+`repartition(n, "customer_id")` is the shuffle that does this to a whole table. Each row's
+partition, `spark_partition_id()`, is its bucket; no row disagrees, and the plan names the hash.
+
+```python title="repartition.py" step=same-key check=spark
+parts = orders.repartition(n, "customer_id")
+part = F.spark_partition_id()
+print(parts.where(part != bucket).count())
+parts.explain()
+```
+
+```output excerpt
+0
++- Exchange hashpartitioning(customer_id#0, 4), REPARTITION_BY_NUM, [plan_id=160]
+```
+
+## A different n
+
+The keys whose remainder changes from $4$ to $5$. Spark takes `pmod` of the signed hash, the
+stage the remainder of the unsigned one. For $n = 4$ they agree, since $2^{32}$ is a multiple of
+$4$; for $n = 5$ they do not, so Spark moves $9$ keys where the stage moves $10$.
+
+```python title="resize.py" step=change-n check=spark
+def moved(x: F.Column, n: int, m: int) -> int:
+    return orders.where(F.pmod(x, F.lit(n)) != F.pmod(x, F.lit(m))).count()
+
+print(moved(h, 4, 5))    # Spark
+print(moved(h_u, 4, 5))  # the stage
+```
+
+```output
+9
+10
+```
+
+## Range partitioning
+
+`repartitionByRange` samples the keys and picks the bounds itself, so its four parts come out
+even on the $18$ keys. Fixed bounds like the stage's put the six new keys in the last part;
+Spark avoids that by choosing the bounds again each time it runs.
+
+```python title="range.py" step=range check=spark
+all_keys = spark.createDataFrame(
+    [(k,) for k in range(1001, 1019)], "customer_id int"
+)
+ranged = all_keys.repartitionByRange(n, "customer_id")
+ranged = ranged.withColumn("part", part)
+ranged.groupBy("part").agg(
+    F.min("customer_id"), F.max("customer_id"), F.count("*")
+).orderBy("part").show()
+```
+
+```output
++----+----------------+----------------+--------+
+|part|min(customer_id)|max(customer_id)|count(1)|
++----+----------------+----------------+--------+
+|   0|            1001|            1005|       5|
+|   1|            1006|            1009|       4|
+|   2|            1010|            1014|       5|
+|   3|            1015|            1018|       4|
++----+----------------+----------------+--------+
+```
+
+## What each layout reads
+
+The parts that hold a match, in each layout: one range, three buckets. The part goes into a
+column first, since Spark moves a filter below a repartition when it can, and the three
+filtered rows alone would be split again.
+
+```python title="range_query.py" step=range-query colors="q=yellow" check=spark
+q = F.col("customer_id").between(1007, 1009)
+hashed = all_keys.repartition(n, "customer_id")
+hashed = hashed.withColumn("part", part)
+for name, df in [("range", ranged), ("hash", hashed)]:
+    found = df.where(q).select("part").distinct().collect()
+    print(name, sorted(r.part for r in found))
+```
+
+```output
+range [1]
+hash [1, 2, 3]
+```

@@ -1,0 +1,114 @@
+The lesson's formulas in Python on the same city column, then real codecs on a larger column
+written by pyarrow.
+
+## Information and entropy
+
+`information` is $\log_2 \frac{1}{p}$; `entropy` weights it by each value's probability.
+
+```python title="entropy.py" step="information entropy" focus="information=8-9,13-14 entropy=11-12,15-16" check=spark
+import math
+from collections import Counter
+
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+cities = list("LOLRTOLRRLTOLROL")  # Lisbon, Oslo, Recife, Tokyo
+
+def information(p: float) -> float:
+    return math.log2(1 / p)
+
+def entropy(counts: list[int]) -> float:
+    n = sum(counts)
+    return sum(c / n * information(c / n) for c in counts)
+
+print(information(3 / 8), information(1 / 8))
+H = entropy(list(Counter(cities).values()))
+print(H, "bits per value,", 16 * H, "bits in all")
+```
+
+```output
+1.4150374992788437 3.0
+1.9056390622295662 bits per value, 30.49022499567306 bits in all
+```
+
+## The extremes
+
+Equal counts give $\log_2 d$. For the skewed counts, the code words' lengths are their values'
+information, so the average length equals $H$.
+
+```python title="extremes.py" step="uniform skewed" focus="uniform=1 skewed=3-6" check=spark
+print(entropy([4, 4, 4, 4]))
+
+counts = [8, 4, 2, 2]
+words = ["0", "10", "110", "111"]
+average = sum(c * len(w) for c, w in zip(counts, words)) / sum(counts)
+print(entropy(counts), average)
+```
+
+```output
+2.0
+1.75 1.75
+```
+
+## Order is not counted
+
+Sorting keeps the counts, so $H$ stays; the runs are what change.
+
+```python title="order.py" step=order colors="runs=yellow" check=spark
+s = sorted(cities, key="LORT".index)
+runs = 1 + sum(a != b for a, b in zip(s, s[1:]))
+print(entropy(list(Counter(s).values())), runs, "runs")
+```
+
+```output
+1.9056390622295662 4 runs
+```
+
+## Unique values
+
+Every value once: each has $p = 2^{-20}$.
+
+```python title="unique.py" step=cardinality check=spark
+print(entropy([1] * 2**20))
+```
+
+```output
+20.0
+```
+
+## Codecs on top
+
+A column of $100000$ cities drawn with the same probabilities, written with each codec. The ratio
+is the size before the codec over the stored size.
+
+```python title="codecs.py" step=codecs check=spark
+import random
+
+random.seed(7)
+column = random.choices(["Lisbon", "Oslo", "Recife", "Tokyo"],
+                        weights=[6, 4, 4, 2], k=100_000)
+table = pa.table({"city": column})
+for codec in ["none", "snappy", "lz4", "zstd", "gzip"]:
+    pq.write_table(table, "c.parquet", compression=codec)
+    c = pq.ParquetFile("c.parquet").metadata.row_group(0).column(0)
+    ratio = c.total_uncompressed_size / c.total_compressed_size
+    print(f"{codec:7} {c.total_compressed_size:6} bytes  ratio {ratio:.2f}")
+print("text:", sum(len(v) for v in column), "bytes")
+print("floor:", round(len(column) * H / 8), "bytes")
+```
+
+```output
+none     25301 bytes  ratio 1.00
+snappy   25309 bytes  ratio 1.00
+lz4      25402 bytes  ratio 1.00
+zstd     24273 bytes  ratio 1.04
+gzip     24302 bytes  ratio 1.04
+text: 537797 bytes
+floor: 23820 bytes
+```
+
+The text is $21$ to $22$ times the stored column, and the dictionary with its $2$ bit codes
+($25000$ bytes) does nearly all of that. The draws are independent, so no codec finds
+repetition left to remove: Zstd and gzip gain $4$ percent, closer to the entropy floor, and Snappy
+and LZ4 add a few bytes. Codecs pay off on what encodings miss, such as repeated substrings in
+plain-encoded text.

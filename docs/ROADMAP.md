@@ -35,10 +35,10 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the owner's review of code batch 9 (`plans/code-views.md`,
-"Batch 9 (built 2026-11-12, for review)": code walkthroughs for the 17 Limits and Derivatives
-items and `riemann-sums`). Apply the review; then batch 10 (Data Engineering) in its own session,
-then Probability and Statistics (step 14 of the suggested order).
+**Suggested next session:** the owner's review of code batch 10 (`plans/code-views.md`,
+"Batch 10 (built 2026-11-12, for review)": code walkthroughs for the 16 Data Engineering items).
+Apply the review; then Probability and Statistics (step 14 of the suggested order): outline the
+course for review.
 
 ### Phase 3: Explore page
 
@@ -82,7 +82,7 @@ Next for 3D, in order of priority:
    and readouts too.
 6. A slight perspective option, only if depth cueing turns out not to be enough.
 
-### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 7 built; 8 to 10 add code to existing items)
+### Phase 6: Code lessons (in progress: read-only code views, batches 1 to 10 built; 10 waits for review)
 
 Read-only code views come first, planned in [plans/code-views.md](plans/code-views.md) (seven
 batches: a code model with highlighted MDX blocks, code on the stage, step peeks and a Code tab,

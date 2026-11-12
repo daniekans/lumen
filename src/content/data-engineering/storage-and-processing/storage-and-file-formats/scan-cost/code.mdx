@@ -1,0 +1,102 @@
+The lesson's cost model in a few Python functions, then a real Parquet file with $200$ columns to
+check the last step's ratio.
+
+## The table as an area
+
+```python title="table.py" step=area check=spark
+import math
+
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+widths = {"id": 8, "ts": 8, "geo": 4, "amount": 8, "note": 36}
+N, P = 64, 256
+W = sum(widths.values())
+print(W, "bytes per row,", N * W, "bytes in all")
+```
+
+```output
+64 bytes per row, 4096 bytes in all
+```
+
+## Two ways to cut
+
+A row layout cuts $NW$ bytes into pages; a column layout cuts each column on its own.
+
+```python title="pages.py" step="row-pages column-pages" focus="row-pages=1-2,7 column-pages=4-5,8" check=spark
+def row_pages() -> int:
+    return math.ceil(N * W / P)
+
+def column_pages(w: int) -> int:
+    return math.ceil(N * w / P)
+
+print(row_pages())
+print([column_pages(w) for w in widths.values()])
+```
+
+```output
+16
+[2, 2, 1, 2, 9]
+```
+
+## A query is a region
+
+The scan uses the columns in `S`. Every strip of the row layout crosses them; the column layout
+reads only their pages.
+
+```python title="query.py" step="row-query column-query" focus="row-query=3,6-7 column-query=4,6-7" colors="S=blue" check=spark
+S = ["geo", "amount"]
+
+pages = {"row": row_pages(),
+         "column": sum(column_pages(widths[c]) for c in S)}
+used = N * sum(widths[c] for c in S)
+for layout, k in pages.items():
+    print(layout, k, "pages,", k * P, "bytes")
+print("bytes used:", used)
+```
+
+```output
+row 16 pages, 4096 bytes
+column 3 pages, 768 bytes
+bytes used: 768
+```
+
+## A single row
+
+Row $41$ sits in page $\lfloor 41 \cdot w / P \rfloor$ of each column, and in one strip of the
+row layout.
+
+```python title="lookup.py" step=lookup check=spark
+row = 41
+print("row layout page:", row * W // P)
+print({c: row * w // P for c, w in widths.items()})
+```
+
+```output
+row layout page: 10
+{'id': 1, 'ts': 1, 'geo': 0, 'amount': 1, 'note': 5}
+```
+
+## Wide tables
+
+A real file: $200$ columns of $8$ byte integers, written plain and uncompressed so a chunk's size is
+its bytes. A query that uses $3$ columns reads their chunks only.
+
+```python title="wide.py" step=wide colors="used=blue" check=spark
+rows = 10_000
+table = pa.table({f"c{j}": pa.array(range(j, j + rows), pa.int64())
+                  for j in range(200)})
+pq.write_table(table, "wide.parquet", compression="none",
+               use_dictionary=False)
+group = pq.ParquetFile("wide.parquet").metadata.row_group(0)
+sizes = [group.column(j).total_compressed_size for j in range(200)]
+used = sum(sizes[:3])
+print(used, "of", sum(sizes), f"bytes: {100 * used / sum(sizes):.2f}%")
+```
+
+```output
+240225 of 16015000 bytes: 1.50%
+```
+
+Each chunk is $80000$ bytes of values plus $75$ bytes of page header, so the share is $1.5\%$ as
+the model says.

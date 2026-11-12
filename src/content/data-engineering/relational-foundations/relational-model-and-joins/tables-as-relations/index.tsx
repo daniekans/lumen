@@ -5,6 +5,7 @@ import { alpha, vc } from '@/styles/viz-colors'
 import { Button } from '@/ui/atoms'
 import { Readout, ReadoutPanel } from '@/ui/molecules'
 import {
+  HoverGroup,
   MathLabel,
   Overlay,
   RelationTable,
@@ -13,6 +14,7 @@ import {
   tableLayout,
   TextLabel,
   useCoords,
+  useHighlight,
   useSequence,
   useStepEffect,
   useVizStep,
@@ -101,6 +103,7 @@ export default function TablesAsRelations() {
   const [t, setT] = useState(0)
   const [shuffle, setShuffle] = useState(0)
   const seq = useSequence()
+  const hl = useHighlight()
 
   const fly = (to: number) =>
     seq.run(({ tween }) =>
@@ -167,6 +170,7 @@ export default function TablesAsRelations() {
       <Stage
         domain={{ x: [80, 860], y: [80, 540] }}
         yUp={false}
+        highlight={hl}
         ariaLabel="A grid of name and city pairs; the chosen pairs become the rows of a table"
         overlay={
           stepIndex >= 1 && (
@@ -190,62 +194,70 @@ export default function TablesAsRelations() {
         {checking &&
           perName.map((n, i) => (n > 1 ? <RowBand key={i} i={i} color={vc.red} /> : null))}
 
-        {/* Grid lines of the product. */}
-        <g style={{ opacity: showCells ? 1 : 0, transition: 'opacity var(--dur-slow)' }}>
-          {names.map((_, i) => (
-            <Segment
-              key={i}
-              from={[GRID_X[0], nameY(i)]}
-              to={[GRID_X[1], nameY(i)]}
-              color={vc.grid}
-              width={1}
-            />
-          ))}
-          {cities.map((_, j) => (
-            <Segment
-              key={j}
-              from={[cityX(j), nameY(0) - 30]}
-              to={[cityX(j), nameY(3) + 30]}
-              color={vc.grid}
-              width={1}
-            />
-          ))}
-        </g>
-
-        {names.map((n, i) => (
-          <TextLabel
-            key={n}
-            at={[GRID_X[0] - 20, nameY(i)]}
-            align="end"
-            size={14}
-            mono
-            color={vc.fg}
-          >
-            {n}
-          </TextLabel>
-        ))}
-        {cities.map((n, j) => (
-          <TextLabel key={n} at={[cityX(j), nameY(0) - 50]} size={14} mono color={vc.fg}>
-            {n}
-          </TextLabel>
-        ))}
-        <MathLabel at={[GRID_X[0] - 60, nameY(3) + 62]} tex="N" color={vc.muted} />
-        <MathLabel at={[cityX(1), nameY(0) - 82]} tex="C" color={vc.muted} />
-
-        {names.map((_, i) =>
-          cities.map((_, j) => {
-            const k = cellKey(i, j)
-            return (
-              <Cell
-                key={k}
-                at={cellAt(i, j)}
-                lit={showLit && chosen.includes(k)}
-                visible={showCells ? 1 : 0}
-                onClick={editable ? () => toggle(k) : undefined}
+        <HoverGroup hoverKey="NC">
+          {/* Grid lines of the product. */}
+          <g style={{ opacity: showCells ? 1 : 0, transition: 'opacity var(--dur-slow)' }}>
+            {names.map((_, i) => (
+              <Segment
+                key={i}
+                from={[GRID_X[0], nameY(i)]}
+                to={[GRID_X[1], nameY(i)]}
+                color={vc.grid}
+                width={1}
               />
-            )
-          }),
-        )}
+            ))}
+            {cities.map((_, j) => (
+              <Segment
+                key={j}
+                from={[cityX(j), nameY(0) - 30]}
+                to={[cityX(j), nameY(3) + 30]}
+                color={vc.grid}
+                width={1}
+              />
+            ))}
+          </g>
+
+          <HoverGroup hoverKey="N">
+            {names.map((n, i) => (
+              <TextLabel
+                key={n}
+                at={[GRID_X[0] - 20, nameY(i)]}
+                align="end"
+                size={14}
+                mono
+                color={vc.fg}
+              >
+                {n}
+              </TextLabel>
+            ))}
+          </HoverGroup>
+          <HoverGroup hoverKey="C">
+            {cities.map((n, j) => (
+              <TextLabel key={n} at={[cityX(j), nameY(0) - 50]} size={14} mono color={vc.fg}>
+                {n}
+              </TextLabel>
+            ))}
+            <MathLabel at={[cityX(1), nameY(0) - 82]} tex="C" color={vc.muted} />
+          </HoverGroup>
+          <HoverGroup hoverKey="N">
+            <MathLabel at={[GRID_X[0] - 60, nameY(3) + 62]} tex="N" color={vc.muted} />
+          </HoverGroup>
+
+          {names.map((_, i) =>
+            cities.map((_, j) => {
+              const k = cellKey(i, j)
+              return (
+                <Cell
+                  key={k}
+                  at={cellAt(i, j)}
+                  lit={showLit && chosen.includes(k)}
+                  visible={showCells ? 1 : 0}
+                  onClick={editable ? () => toggle(k) : undefined}
+                />
+              )
+            }),
+          )}
+        </HoverGroup>
 
         <MathLabel
           at={[340, 510]}
@@ -260,19 +272,21 @@ export default function TablesAsRelations() {
         />
 
         <g style={{ opacity: tableOpacity }}>
-          <RelationTable
-            {...TABLE}
-            title="lives_in"
-            columns={columns}
-            color={vc.blue}
-            rows={tuples.map(([i, j], r) => ({
-              id: cellKey(i, j),
-              cells: [names[i]!, cities[j]!],
-              slot: slots[r],
-              opacity: rowOpacity,
-              state: checking && perName[i]! > 1 ? 'error' : 'idle',
-            }))}
-          />
+          <HoverGroup hoverKey="lives_in">
+            <RelationTable
+              {...TABLE}
+              title="lives_in"
+              columns={columns}
+              color={vc.blue}
+              rows={tuples.map(([i, j], r) => ({
+                id: cellKey(i, j),
+                cells: [names[i]!, cities[j]!],
+                slot: slots[r],
+                opacity: rowOpacity,
+                state: checking && perName[i]! > 1 ? 'error' : 'idle',
+              }))}
+            />
+          </HoverGroup>
         </g>
 
         {/* Each chosen pair travels from its cell to its row. */}

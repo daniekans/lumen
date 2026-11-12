@@ -1,0 +1,145 @@
+The stage's $16$ orders and $8$ customers in PySpark. The tables are tiny, so the setup turns off
+broadcast joins (Spark would copy the small side to every task instead) and uses $4$ shuffle
+partitions, the stage's $n$.
+
+## Every pair, and the matches
+
+A cross join compares every pair; the join on customer_id keeps the matches.
+
+```python title="tables.py" step="pairs matches" focus="pairs=1-17 matches=18" colors="pairs=blue matches=yellow" check=spark
+import os
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", -1)
+spark.conf.set("spark.sql.shuffle.partitions", 4)
+ORDERS = [1004, 1001, 1007, 1002, 1005, 1001, 1008, 1004,
+          1003, 1006, 1002, 1008, 1004, 1007, 1005, 1001]
+orders = spark.createDataFrame(
+    list(enumerate(ORDERS, 1)), "order_id int, customer_id int"
+)
+customers = spark.createDataFrame(
+    [(k, f"c{k}") for k in range(1001, 1009)], "customer_id int, name string"
+)
+pairs = orders.crossJoin(customers).count()
+matches = orders.join(customers, "customer_id").count()
+print(pairs, matches)
+```
+
+```output
+128 16
+```
+
+## Bucket k meets bucket k
+
+Rows per bucket on each side, $a_k$ and $b_k$, with Spark's bucket function, and the pairs a
+bucket-by-bucket join compares.
+
+```python title="buckets.py" step=hash-both colors="pairs=blue" check=spark
+def sizes(df, n: int) -> list[int]:
+    bucket = F.pmod(F.hash("customer_id"), F.lit(n))
+    rows = df.groupBy(bucket.alias("k")).count().collect()
+    counts = {r["k"]: r["count"] for r in rows}
+    return [counts.get(k, 0) for k in range(n)]
+
+
+a, b = sizes(orders, 4), sizes(customers, 4)
+pairs = sum(a_k * b_k for a_k, b_k in zip(a, b))
+print(a, b, pairs)
+```
+
+```output
+[4, 4, 4, 4] [2, 2, 2, 2] 32
+```
+
+## The shuffle
+
+Without bucketing, the plan sends both tables through an `Exchange`: a shuffle by the hash of
+customer_id into $4$ partitions, the same buckets as above. Then each partition is sorted and
+merged.
+
+```python title="shuffle.py" step=shuffle check=spark
+orders.join(customers, "customer_id").explain("formatted")
+```
+
+```output excerpt
+   +- SortMergeJoin Inner (9)
+      :- Sort (4)
+      :  +- Exchange (3)
+      :     +- Filter (2)
+      :        +- Scan ExistingRDD (1)
+      +- Sort (8)
+         +- Exchange (7)
+            +- Filter (6)
+               +- Scan ExistingRDD (5)
+```
+
+## Bucketed tables
+
+`bucketBy` writes one file per bucket (`coalesce(1)` keeps it to one per bucket), with the bucket
+number at the end of the name. Joining the two tables reads bucket $k$ of each, and the plan has
+no `Exchange` left.
+
+```python title="bucketed.py" step=bucketed check=spark
+def bucketed(df, name: str, n: int):
+    df.coalesce(1).write.bucketBy(n, "customer_id").saveAsTable(name)
+    return spark.table(name)
+
+
+orders_b = bucketed(orders, "orders_b", 4)
+customers_b = bucketed(customers, "customers_b", 4)
+files = os.listdir("spark-warehouse/orders_b")
+print(sorted(f.split("_")[-1] for f in files if f[0] == "p"))
+orders_b.join(customers_b, "customer_id").explain("formatted")
+```
+
+```output excerpt
+['00000.c000.snappy.parquet', '00001.c000.snappy.parquet', '00002.c000.snappy.parquet', '00003.c000.snappy.parquet']
+   +- SortMergeJoin Inner (7)
+      :- Sort (3)
+      :  +- Filter (2)
+      :     +- Scan parquet spark_catalog.default.orders_b (1)
+      +- Sort (6)
+         +- Filter (5)
+            +- Scan parquet spark_catalog.default.customers_b (4)
+Bucketed: true
+SelectedBucketsCount: 4 out of 4
+```
+
+## Eight buckets
+
+Smaller blocks: fewer pairs compared.
+
+```python title="eight.py" step=more-buckets colors="pairs=blue" check=spark
+a, b = sizes(orders, 8), sizes(customers, 8)
+pairs = sum(a_k * b_k for a_k, b_k in zip(a, b))
+print(a, b, pairs)
+```
+
+```output
+[1, 3, 4, 2, 3, 1, 0, 2] [1, 1, 2, 1, 1, 1, 0, 1] 20
+```
+
+## Different bucket counts
+
+Orders in $8$ buckets against customers in $4$. By default Spark ignores the customers' buckets
+and shuffles them into $8$. With `coalesceBucketsInJoin`, it reads buckets $k$ and $k + 4$ of
+orders as one bucket instead, and the shuffle is gone.
+
+```python title="coalesce.py" step=different-counts check=spark
+orders_8 = bucketed(orders, "orders_8", 8)
+orders_8.join(customers_b, "customer_id").explain("formatted")
+
+spark.conf.set("spark.sql.bucketing.coalesceBucketsInJoin.enabled", True)
+orders_8.join(customers_b, "customer_id").explain("formatted")
+```
+
+```output excerpt
+   +- SortMergeJoin Inner (8)
+         +- Exchange (6)
+Bucketed: false (disabled by query planner)
+   +- SortMergeJoin Inner (7)
+SelectedBucketsCount: 8 out of 8 (Coalesced to 4)
+```

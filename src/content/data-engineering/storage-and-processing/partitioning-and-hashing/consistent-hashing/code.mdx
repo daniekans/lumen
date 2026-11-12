@@ -1,0 +1,192 @@
+A hash ring in plain Python: a sorted list of points and a binary search. The hash is the
+stage's Murmur3, written out in the first block. Spark has no ring; the ring lives in stores such
+as Cassandra and in caches.
+
+## Murmur3
+
+Murmur3 with seed $42$, on the four bytes of an integer key or the UTF-8 bytes of a name. (Spark's
+own `hash` of a text column differs from this one when the length is not a multiple of $4$; it
+mixes the last bytes one at a time.)
+
+```python title="murmur3.py" check
+from bisect import bisect_left
+from collections import Counter
+
+MASK = 0xFFFFFFFF
+RING = 2**32
+
+
+def rotl(x: int, r: int) -> int:
+    return ((x << r) | (x >> (32 - r))) & MASK
+
+
+def mix(k: int) -> int:
+    return rotl(k * 0xCC9E2D51 & MASK, 15) * 0x1B873593 & MASK
+
+
+def murmur3(data: bytes, seed: int = 42) -> int:
+    """MurmurHash3, x86, 32 bits, unsigned."""
+    h = seed
+    end = len(data) - len(data) % 4
+    for i in range(0, end, 4):
+        h ^= mix(int.from_bytes(data[i : i + 4], "little"))
+        h = (rotl(h, 13) * 5 + 0xE6546B64) & MASK
+    if tail := data[end:]:
+        h ^= mix(int.from_bytes(tail, "little"))
+    h ^= len(data)
+    h = (h ^ (h >> 16)) * 0x85EBCA6B & MASK
+    h = (h ^ (h >> 13)) * 0xC2B2AE35 & MASK
+    return h ^ (h >> 16)
+
+
+def h(key: int | str) -> int:
+    if isinstance(key, int):
+        return murmur3(key.to_bytes(4, "little", signed=True))
+    return murmur3(key.encode())
+```
+
+## The ring
+
+A hash value is a point on the ring: the fraction $\frac{h}{2^{32}}$ of a turn, clockwise from the
+top.
+
+```python title="ring.py" step=ring check
+def turn(x: int) -> float:
+    return x / RING
+
+
+print(f"{turn(h(1001)):.3f}", f"{turn(2**30):.3f}")
+```
+
+```output
+0.908 0.250
+```
+
+## Nodes and owners
+
+Nodes get points by hashing their names, and the ring is the sorted list of points. `owner`
+finds the first point at or after the key's hash with a binary search, and wraps to the first
+point past the top.
+
+```python title="owner.py" step="nodes owner" focus="nodes=1-11 owner=13-17" check
+FOUR = ["node-A", "node-B", "node-C", "node-D"]
+
+
+def name(node: str, i: int) -> str:
+    return node if i == 0 else f"{node}#{i}"
+
+
+def ring(nodes: list[str], v: int = 1) -> list[tuple[int, str]]:
+    return sorted((h(name(nd, i)), nd) for nd in nodes for i in range(v))
+
+
+points = ring(FOUR)
+print([(nd, f"{turn(x):.3f}") for x, nd in points])
+
+
+def owner(key: int, points: list[tuple[int, str]]) -> str:
+    i = bisect_left(points, (h(key), ""))
+    return points[i % len(points)][1]
+
+
+print(owner(1002, points))
+```
+
+```output
+[('node-A', '0.226'), ('node-B', '0.760'), ('node-D', '0.817'), ('node-C', '0.942')]
+node-B
+```
+
+## Arcs
+
+A node owns the arc that ends at its point, from the point before. The keys follow the arcs:
+node-B owns over half of the ring and $15$ of the $24$ keys.
+
+```python title="arcs.py" step=arcs check
+KEYS = range(1001, 1025)
+
+
+def shares(points: list[tuple[int, str]]) -> dict[str, float]:
+    total = Counter[str]()
+    for (prev, _), (x, nd) in zip(points[-1:] + points, points):
+        total[nd] += (x - prev) % RING / RING
+    return {nd: round(s, 3) for nd, s in sorted(total.items())}
+
+
+print(shares(points))
+print(sorted(Counter(owner(k, points) for k in KEYS).items()))
+```
+
+```output
+{'node-A': 0.284, 'node-B': 0.535, 'node-C': 0.124, 'node-D': 0.057}
+[('node-A', 8), ('node-B', 15), ('node-C', 1)]
+```
+
+## Joining and leaving
+
+The keys whose owner changes when node-E joins, and then when node-A leaves, with where they
+go. Modulo, from $4$ to $5$ buckets, moves more than twice as many.
+
+```python title="join.py" step="join leave" focus="join=1-13 leave=15-16" check
+FIVE = FOUR + ["node-E"]
+five = ring(FIVE)
+
+
+def moved(before, after) -> Counter[str]:
+    return Counter(
+        owner(k, after) for k in KEYS
+        if owner(k, before) != owner(k, after)
+    )
+
+
+print(moved(points, five))
+print(sum(h(k) % 4 != h(k) % 5 for k in KEYS))  # modulo
+
+no_a = ring([nd for nd in FIVE if nd != "node-A"])
+print(moved(five, no_a))
+```
+
+```output
+Counter({'node-E': 9})
+19
+Counter({'node-E': 8})
+```
+
+## Virtual nodes
+
+With $V$ points per node, a node's share is a sum of $V$ arcs. The largest share over the mean
+share falls from $2.14$ to about $1.1$.
+
+```python title="virtual.py" step=virtual check
+def max_over_mean(points: list[tuple[int, str]]) -> float:
+    s = shares(points).values()
+    return round(max(s) / (sum(s) / len(s)), 2)
+
+
+for v in (1, 4, 32):
+    print(v, max_over_mean(ring(FOUR, v)))
+print(shares(ring(FOUR, 32)))
+```
+
+```output
+1 2.14
+4 1.49
+32 1.1
+{'node-A': 0.25, 'node-B': 0.252, 'node-C': 0.275, 'node-D': 0.223}
+```
+
+## Joining with virtual nodes
+
+node-E's $32$ points each take a short arc from the node after it, so every old node gives up
+part of its share.
+
+```python title="virtual_join.py" step=virtual-join check
+before, after = shares(ring(FOUR, 32)), shares(ring(FIVE, 32))
+print({nd: round(before[nd] - after[nd], 3) for nd in FOUR})
+print(after["node-E"])
+```
+
+```output
+{'node-A': 0.036, 'node-B': 0.105, 'node-C': 0.049, 'node-D': 0.056}
+0.246
+```

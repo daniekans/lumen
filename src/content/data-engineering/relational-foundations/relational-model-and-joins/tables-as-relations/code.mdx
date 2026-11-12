@@ -1,0 +1,134 @@
+The same relation in PySpark. A DataFrame has a schema (the columns and their domains as types)
+and a bag of rows. Spark keeps duplicates unless asked, so the set view of the relational model
+is something the code checks or enforces with `distinct`. Hover a name such as `lives_in` to light its part of the stage.
+
+## Two domains
+
+Each domain is a one-column DataFrame. Its type, `string`, is wider than the domain: any string
+fits, and the four names are the values in use.
+
+```python title="domains.py" step=domains check=spark
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.shuffle.partitions", 4)  # tiny data
+N = spark.createDataFrame(
+    [("Ana",), ("Ben",), ("Caio",), ("Dara",)], "name string"
+)
+C = spark.createDataFrame(
+    [("Lisbon",), ("Oslo",), ("Recife",)], "city string"
+)
+print(N.count(), C.count())
+```
+
+```output
+4 3
+```
+
+## The Cartesian product
+
+`crossJoin` pairs every row of `N` with every row of `C`: $4 \cdot 3 = 12$ rows.
+
+```python title="product.py" step=product hover="N=N C=C NC=NC" check=spark
+NC = N.crossJoin(C)
+print(NC.count())
+NC.orderBy("name", "city").show(4)
+```
+
+```output
+12
++----+------+
+|name|  city|
++----+------+
+| Ana|Lisbon|
+| Ana|  Oslo|
+| Ana|Recife|
+| Ben|Lisbon|
++----+------+
+only showing top 4 rows
+```
+
+## A subset of the product
+
+`lives_in` holds the four pairs that are true. It is a relation on $N$ and $C$ because every row
+is also a row of the product: removing the product's rows leaves nothing.
+
+```python title="relation.py" step=relation colors="lives_in=blue" hover="lives_in=lives_in NC=NC" check=spark
+lives_in = spark.createDataFrame(
+    [("Ana", "Lisbon"), ("Ben", "Recife"),
+     ("Caio", "Recife"), ("Dara", "Oslo")],
+    "name string, city string",
+)
+print(lives_in.exceptAll(NC).count())  # rows outside N x C
+```
+
+```output
+0
+```
+
+## The table
+
+The degree is the number of columns, the cardinality the number of rows.
+
+```python title="table.py" step=table colors="lives_in=blue" hover="lives_in=lives_in" check=spark
+lives_in.printSchema()
+print(len(lives_in.columns), lives_in.count())
+```
+
+```output
+root
+ |-- name: string (nullable = true)
+ |-- city: string (nullable = true)
+
+2 4
+```
+
+## Order carries no meaning
+
+A shuffled copy is the same relation: neither has a row the other lacks. A DataFrame promises no
+row order either, so code that needs one says `orderBy`.
+
+```python title="order.py" step=order colors="lives_in=blue shuffled=blue" hover="lives_in=lives_in shuffled=lives_in" check=spark
+shuffled = lives_in.orderBy(F.rand(seed=7))
+print(shuffled.exceptAll(lives_in).count(),
+      lives_in.exceptAll(shuffled).count())
+lives_in.orderBy("city", "name").show()
+```
+
+```output
+0 0
++----+------+
+|name|  city|
++----+------+
+| Ana|Lisbon|
+|Dara|  Oslo|
+| Ben|Recife|
+|Caio|Recife|
++----+------+
+```
+
+## A key is a check
+
+Spark does not enforce keys, so a key is a test: no name may occur twice. Ana in a second city
+fails it, and `name` no longer determines `city`.
+
+```python title="key.py" step=function colors="lives_in=blue twice=red" hover="lives_in=lives_in" check=spark
+lives_in = lives_in.union(
+    spark.createDataFrame([("Ana", "Recife")], lives_in.schema)
+)
+twice = lives_in.groupBy("name").count().where("count > 1")
+twice.show()
+names = lives_in.select("name").distinct().count()
+print(names, lives_in.count())
+```
+
+```output
++----+-----+
+|name|count|
++----+-----+
+| Ana|    2|
++----+-----+
+
+4 5
+```

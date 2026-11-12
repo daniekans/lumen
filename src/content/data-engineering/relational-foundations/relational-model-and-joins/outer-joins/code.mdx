@@ -1,0 +1,163 @@
+The same joins in PySpark. The third argument of `join` names the kind; the rows without a
+match come back padded with NULL, which `show` prints as `NULL`. Hover a name to light its part of
+the stage.
+
+## Inner join
+
+The four matched pairs. Caio and orders $105$ and $106$ are not in the result.
+
+```python title="inner.py" step=inner colors="result=yellow" hover="customers=customers orders=orders result=result" check=spark
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.shuffle.partitions", 4)  # tiny data
+customers = spark.createDataFrame(
+    [(1, "Ana"), (2, "Ben"), (3, "Caio"), (4, "Dara")],
+    "id int, name string",
+)
+orders = spark.createDataFrame(
+    [(101, 1), (102, 2), (103, 1), (104, 4), (105, 9), (106, None)],
+    "order_id int, customer_id int",
+)
+customers.createOrReplaceTempView("customers")
+orders.createOrReplaceTempView("orders")
+on = customers.id == orders.customer_id
+
+
+def joined(how: str) -> DataFrame:
+    return customers.join(orders, on, how).orderBy("order_id", "id")
+
+
+result = joined("inner")
+result.show()
+```
+
+```output
++---+----+--------+-----------+
+| id|name|order_id|customer_id|
++---+----+--------+-----------+
+|  1| Ana|     101|          1|
+|  2| Ben|     102|          2|
+|  1| Ana|     103|          1|
+|  4|Dara|     104|          4|
++---+----+--------+-----------+
+
+```
+
+## Left join
+
+Every customer is kept. Caio has no order, so his order columns are NULL: $4 + 1 = 5$ rows.
+
+```python title="left.py" step=left colors="result=yellow padded=yellow" hover="customers=customers result=result" check=spark
+result = joined("left")
+padded = result.where(F.col("order_id").isNull())
+print(result.count(), padded.count())
+padded.show()
+```
+
+```output
+5 1
++---+----+--------+-----------+
+| id|name|order_id|customer_id|
++---+----+--------+-----------+
+|  3|Caio|    NULL|       NULL|
++---+----+--------+-----------+
+
+```
+
+## Right join
+
+Every order is kept: $105$ and $106$ get NULL customer columns, $4 + 2 = 6$ rows.
+
+```python title="right.py" step=right colors="result=yellow padded=yellow" hover="orders=orders result=result" check=spark
+result = joined("right")
+padded = result.where(F.col("id").isNull())
+print(result.count(), padded.count())
+padded.show()
+```
+
+```output
+6 2
++----+----+--------+-----------+
+|  id|name|order_id|customer_id|
++----+----+--------+-----------+
+|NULL|NULL|     105|          9|
+|NULL|NULL|     106|       NULL|
++----+----+--------+-----------+
+
+```
+
+## Full join
+
+Both sides padded: $4 + 1 + 2 = 7$ rows. Spark sorts NULLs first in ascending order, so Caio's
+row, with no `order_id`, comes first.
+
+```python title="full.py" step=full colors="result=yellow" hover="customers=customers orders=orders result=result" check=spark
+result = joined("full")
+result.show()
+```
+
+```output
++----+----+--------+-----------+
+|  id|name|order_id|customer_id|
++----+----+--------+-----------+
+|   3|Caio|    NULL|       NULL|
+|   1| Ana|     101|          1|
+|   2| Ben|     102|          2|
+|   1| Ana|     103|          1|
+|   4|Dara|     104|          4|
+|NULL|NULL|     105|          9|
+|NULL|NULL|     106|       NULL|
++----+----+--------+-----------+
+
+```
+
+## Anti join
+
+Three ways to the customers with no orders: the left join filtered to its padded rows, Spark's
+`left_anti` join, and `NOT EXISTS` in SQL.
+
+<CodeTabs>
+
+```python title="anti.py" tab=PySpark step=anti colors="customers=yellow" hover="customers=customers" check=spark
+by_filter = joined("left").where(F.col("order_id").isNull())
+by_filter.select("id", "name").show()
+
+anti = customers.join(orders, on, "left_anti")
+anti.show()
+```
+
+```output
++---+----+
+| id|name|
++---+----+
+|  3|Caio|
++---+----+
+
++---+----+
+| id|name|
++---+----+
+|  3|Caio|
++---+----+
+
+```
+
+```sql title="anti.sql" tab=SQL step=anti check=spark
+SELECT c.*
+FROM customers c
+WHERE NOT EXISTS (
+  SELECT 1 FROM orders o WHERE o.customer_id = c.id
+);
+```
+
+```output
++---+----+
+|id |name|
++---+----+
+|3  |Caio|
++---+----+
+
+```
+
+</CodeTabs>

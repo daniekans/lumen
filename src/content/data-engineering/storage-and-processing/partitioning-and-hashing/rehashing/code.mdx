@@ -1,0 +1,143 @@
+Counting moves in plain Python. Only the hash values matter, so the first steps use the values
+$0, 1, 2, \dots$ themselves, and the later ones the hashes of real keys.
+
+## Two rows of remainders
+
+The stage's strip: $h$ from $0$ to $29$, its bucket for $n = 4$, then for $n + 1 = 5$, and the
+values where the two agree.
+
+```python title="remainders.py" step="remainders add-bucket" focus="remainders=1-3 add-bucket=4-6" colors="stay=blue" check
+n = 4
+hs = range(30)
+print([h % n for h in hs])
+print([h % (n + 1) for h in hs])
+stay = [h for h in hs if h % n == h % (n + 1)]
+print(stay)
+```
+
+```output
+[0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1]
+[0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4]
+[0, 1, 2, 3, 20, 21, 22, 23]
+```
+
+## The period
+
+In one period of $n(n + 1) = 20$ values only the first $n$ stay. The `assert` checks the rule
+$h \bmod n(n + 1) < n$ on ten thousand values.
+
+```python title="period.py" step=period colors="stay=blue" check
+period = n * (n + 1)
+stay = [h for h in range(period) if h % n == h % (n + 1)]
+print(period, stay, len(stay) / period)
+
+for h in range(10_000):
+    assert (h % n == h % (n + 1)) == (h % period < n)
+```
+
+```output
+20 [0, 1, 2, 3] 0.2
+```
+
+## Murmur3
+
+The hash of the stage and of Spark: Murmur3 with seed $42$, on the four bytes of an integer key
+or the UTF-8 bytes of a text key. Python has no built-in Murmur3, so it is written out here.
+
+```python title="murmur3.py" check
+MASK = 0xFFFFFFFF
+
+
+def rotl(x: int, r: int) -> int:
+    return ((x << r) | (x >> (32 - r))) & MASK
+
+
+def mix(k: int) -> int:
+    return rotl(k * 0xCC9E2D51 & MASK, 15) * 0x1B873593 & MASK
+
+
+def murmur3(data: bytes, seed: int = 42) -> int:
+    """MurmurHash3, x86, 32 bits, unsigned."""
+    h = seed
+    end = len(data) - len(data) % 4
+    for i in range(0, end, 4):
+        h ^= mix(int.from_bytes(data[i : i + 4], "little"))
+        h = (rotl(h, 13) * 5 + 0xE6546B64) & MASK
+    if tail := data[end:]:
+        h ^= mix(int.from_bytes(tail, "little"))
+    h ^= len(data)
+    h = (h ^ (h >> 16)) * 0x85EBCA6B & MASK
+    h = (h ^ (h >> 13)) * 0xC2B2AE35 & MASK
+    return h ^ (h >> 16)
+
+
+def h(key: int | str) -> int:
+    if isinstance(key, int):
+        return murmur3(key.to_bytes(4, "little", signed=True))
+    return murmur3(key.encode())
+```
+
+## Real keys
+
+The hashes of customer ids $1$ to $400$ (`h` is Murmur3, written out in the whole file). A key
+moves when its two remainders differ.
+
+```python title="real_keys.py" step=real-keys colors="moved=orange" hover="moved=moved" check
+hashes = [h(k) for k in range(1, 401)]
+
+
+def moved(n: int, m: int) -> int:
+    return sum(x % n != x % m for x in hashes)
+
+
+print(moved(4, 5), moved(4, 5) / len(hashes))
+```
+
+```output
+323 0.8075
+```
+
+## Any n
+
+The share that moves for a few $n$, next to the predicted $\frac{n}{n + 1}$.
+
+```python title="any_n.py" step=any-n colors="moved=orange" hover="moved=moved" check
+for n in (4, 9, 16):
+    print(n, moved(n, n + 1) / len(hashes), round(n / (n + 1), 3))
+```
+
+```output
+4 0.8075 0.8
+9 0.905 0.9
+16 0.955 0.941
+```
+
+## Doubling
+
+About half of the keys move, $190$ and $194$ of $400$, and each from bucket $b$ to $b + n$: the
+`assert` holds for every key.
+
+```python title="doubling.py" step=doubling colors="moved=orange" hover="moved=moved" check
+for n in (4, 8):
+    print(n, moved(n, 2 * n))
+    for x in hashes:
+        assert x % (2 * n) in (x % n, x % n + n)
+```
+
+```output
+4 190
+8 194
+```
+
+## The fewest
+
+The new bucket needs its share of the keys, $80$. Modulo moves about $n = 4$ times that.
+
+```python title="fewest.py" step=fewest colors="fewest=yellow moved=orange" hover="fewest=fewest moved=moved" check
+fewest = len(hashes) // 5
+print(fewest, moved(4, 5), moved(4, 5) / fewest)
+```
+
+```output
+80 323 4.0375
+```

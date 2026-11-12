@@ -3,6 +3,7 @@ import { alpha, vc } from '@/styles/viz-colors'
 import { LabeledSlider, Readout, ReadoutPanel } from '@/ui/molecules'
 import {
   Chip,
+  HoverGroup,
   Overlay,
   Segment,
   Stage,
@@ -261,27 +262,33 @@ export default function Rehashing() {
           shown={dots}
         />
 
-        <Bar
-          y={BAR_Y[0]}
-          count={moved}
-          color={MOVE}
-          label={`moved by modulo: ${moved}`}
-          shown={dots}
-        />
-        <Bar
-          y={BAR_Y[1]}
-          count={HASHES.length - moved}
-          color={STAY}
-          label={`stay: ${HASHES.length - moved}`}
-          shown={dots}
-        />
-        <Bar
-          y={BAR_Y[2]}
-          count={Math.round(HASHES.length / m)}
-          color={FEWEST}
-          label={`fewest a new bucket needs: ${Math.round(HASHES.length / m)}`}
-          shown={fewestShown}
-        />
+        <HoverGroup hoverKey="moved">
+          <Bar
+            y={BAR_Y[0]}
+            count={moved}
+            color={MOVE}
+            label={`moved by modulo: ${moved}`}
+            shown={dots}
+          />
+        </HoverGroup>
+        <HoverGroup hoverKey="stay">
+          <Bar
+            y={BAR_Y[1]}
+            count={HASHES.length - moved}
+            color={STAY}
+            label={`stay: ${HASHES.length - moved}`}
+            shown={dots}
+          />
+        </HoverGroup>
+        <HoverGroup hoverKey="fewest">
+          <Bar
+            y={BAR_Y[2]}
+            count={Math.round(HASHES.length / m)}
+            color={FEWEST}
+            label={`fewest a new bucket needs: ${Math.round(HASHES.length / m)}`}
+            shown={fewestShown}
+          />
+        </HoverGroup>
       </Stage>
 
       <VizControls>

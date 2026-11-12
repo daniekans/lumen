@@ -14,6 +14,8 @@ import {
   VizControls,
   type PairState,
   SqlLabel,
+  HoverGroup,
+  useHighlight,
 } from '@/viz-kit'
 import {
   COL_W,
@@ -54,6 +56,7 @@ const rightAlone = matches('right')
 
 export default function OuterJoins() {
   const { id } = useVizStep()
+  const hl = useHighlight()
   const [kind, setKind] = useState<Kind>('inner')
 
   useStepEffect({
@@ -81,6 +84,7 @@ export default function OuterJoins() {
       <Stage
         domain={{ x: [40, 780], y: [40, 740] }}
         yUp={false}
+        highlight={hl}
         ariaLabel="The grid of customer and order pairs, with NULL-padded cells for rows that have no match, and the result of the chosen join"
         overlay={
           <Overlay corner="top-right">
@@ -92,37 +96,43 @@ export default function OuterJoins() {
           </Overlay>
         }
       >
-        <TransposedHeader
-          {...ORDERS_HEADER}
-          title="orders"
-          lines={orderLines}
-          highlight={keepsRight || lost ? rightAlone : []}
-        />
-        <RelationTable
-          {...CUSTOMERS}
-          columns={customerColumns}
-          color={vc.yellow}
-          rows={customers.map((c, i) => ({
-            id: c.id,
-            cells: [c.id, c.name],
-            state: leftAlone.includes(i) && (keepsLeft || lost) ? 'active' : 'idle',
-          }))}
-        />
-        <TextLabel at={[CUSTOMERS.x, GRID_BOTTOM + 22]} align="start" uppercase size={11}>
-          customers
-        </TextLabel>
+        <HoverGroup hoverKey="orders">
+          <TransposedHeader
+            {...ORDERS_HEADER}
+            title="orders"
+            lines={orderLines}
+            highlight={keepsRight || lost ? rightAlone : []}
+          />
+        </HoverGroup>
+        <HoverGroup hoverKey="customers">
+          <RelationTable
+            {...CUSTOMERS}
+            columns={customerColumns}
+            color={vc.yellow}
+            rows={customers.map((c, i) => ({
+              id: c.id,
+              cells: [c.id, c.name],
+              state: leftAlone.includes(i) && (keepsLeft || lost) ? 'active' : 'idle',
+            }))}
+          />
+          <TextLabel at={[CUSTOMERS.x, GRID_BOTTOM + 22]} align="start" uppercase size={11}>
+            customers
+          </TextLabel>
+        </HoverGroup>
 
-        <JoinGrid
-          x={GRID.x}
-          y={GRID.y}
-          rows={customers.length}
-          cols={orders.length}
-          colWidth={COL_W}
-          rowHeight={ROW_H}
-          state={state}
-          padRows={keepsLeft ? leftAlone : []}
-          padCols={keepsRight ? rightAlone : []}
-        />
+        <HoverGroup hoverKey="pairs">
+          <JoinGrid
+            x={GRID.x}
+            y={GRID.y}
+            rows={customers.length}
+            cols={orders.length}
+            colWidth={COL_W}
+            rowHeight={ROW_H}
+            state={state}
+            padRows={keepsLeft ? leftAlone : []}
+            padCols={keepsRight ? rightAlone : []}
+          />
+        </HoverGroup>
 
         {sql[kind].map((line, k) => (
           <SqlLabel key={k} at={[CUSTOMERS.x, SQL_Y - 10 + k * 20]}>
@@ -130,18 +140,20 @@ export default function OuterJoins() {
           </SqlLabel>
         ))}
 
-        <RelationTable
-          {...RESULT}
-          y={RESULT.y + 10}
-          title="result"
-          columns={resultColumns}
-          color={vc.yellow}
-          rows={pairs.map((p) => ({
-            id: `${p.left}-${p.right}`,
-            cells: resultCells(p.left, p.right),
-            state: p.left === null || p.right === null ? 'active' : 'idle',
-          }))}
-        />
+        <HoverGroup hoverKey="result">
+          <RelationTable
+            {...RESULT}
+            y={RESULT.y + 10}
+            title="result"
+            columns={resultColumns}
+            color={vc.yellow}
+            rows={pairs.map((p) => ({
+              id: `${p.left}-${p.right}`,
+              cells: resultCells(p.left, p.right),
+              state: p.left === null || p.right === null ? 'active' : 'idle',
+            }))}
+          />
+        </HoverGroup>
       </Stage>
 
       <VizControls>

@@ -1,0 +1,146 @@
+Each encoding by hand in a few lines of Python, then the same column written by pyarrow, which
+reports the encodings Parquet chose.
+
+## The column
+
+```python title="cities.py" step=plain check=spark
+import math
+
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+cities = [
+    "Lisbon", "Oslo", "Lisbon", "Recife", "Tokyo", "Oslo",
+    "Lisbon", "Recife", "Recife", "Lisbon", "Tokyo", "Oslo",
+    "Lisbon", "Recife", "Oslo", "Lisbon",
+]
+print("text bytes:", sum(len(c) for c in cities))
+```
+
+```output
+text bytes: 86
+```
+
+## Dictionary codes and bit packing
+
+The dictionary keeps the values in the order they first appear; each value becomes its position
+there. Codes below $d$ need $\lceil \log_2 d \rceil$ bits.
+
+```python title="dictionary.py" step="dictionary bit-packing" focus="dictionary=1-5 bit-packing=7-8" colors="codes=blue bits=blue" check=spark
+dictionary = list(dict.fromkeys(cities))
+codes = [dictionary.index(c) for c in cities]
+print(dictionary)
+print(codes)
+print("bytes:", sum(len(c) for c in dictionary) + len(codes))
+
+bits = math.ceil(math.log2(len(dictionary)))
+print("bits per code:", bits, "packed bytes:", len(codes) * bits // 8)
+```
+
+```output
+['Lisbon', 'Oslo', 'Recife', 'Tokyo']
+[0, 1, 0, 2, 3, 1, 0, 2, 2, 0, 3, 1, 0, 2, 1, 0]
+bytes: 37
+bits per code: 2 packed bytes: 4
+```
+
+## Runs
+
+A run ends wherever a value differs from the one before it.
+
+```python title="runs.py" step=runs colors="runs=yellow" check=spark
+def runs(values: list) -> list[tuple]:
+    out: list[list] = []
+    for v in values:
+        if out and out[-1][0] == v:
+            out[-1][1] += 1
+        else:
+            out.append([v, 1])
+    return [tuple(r) for r in out]
+
+print(len(runs(cities)), "runs")
+```
+
+```output
+15 runs
+```
+
+## Sorting makes runs
+
+By hand, the sorted column has one run per distinct value. pyarrow writes the column, repeated
+$1000$ times, in both orders and lists each chunk's encodings: `RLE_DICTIONARY` is the
+dictionary codes in Parquet's hybrid of runs and bit-packed groups.
+
+<CodeTabs>
+
+```python title="sorted.py" tab="By hand" step=sorted colors="runs=yellow" check=spark
+print(runs(sorted(cities, key=dictionary.index)))
+```
+
+```output
+[('Lisbon', 6), ('Oslo', 4), ('Recife', 4), ('Tokyo', 2)]
+```
+
+```python title="parquet.py" tab=Parquet step=sorted check=spark
+def chunk(values: list, path: str) -> pq.ColumnChunkMetaData:
+    pq.write_table(pa.table({"city": values}), path)
+    return pq.ParquetFile(path).metadata.row_group(0).column(0)
+
+big = cities * 1000  # 16000 values, runs as short as before
+for order, values in [("original", big), ("sorted", sorted(big))]:
+    c = chunk(values, f"{order}.parquet")
+    print(order, c.encodings, c.total_uncompressed_size, "bytes")
+```
+
+```output
+original ('PLAIN', 'RLE', 'RLE_DICTIONARY') 4132 bytes
+sorted ('PLAIN', 'RLE', 'RLE_DICTIONARY') 110 bytes
+```
+
+</CodeTabs>
+
+In the original order the runs are too short, so the codes are bit-packed: $16000$ codes of $2$
+bits are $4000$ bytes, plus headers and the dictionary page (written `PLAIN`). Sorted, the
+$4$ runs take a few bytes. On the $16$ values alone both orders take the same $99$ bytes, since
+the headers hide the difference.
+
+## Deltas
+
+The differences of the stage's timestamps fit in $3$ bits. Asked for `DELTA_BINARY_PACKED`, Parquet
+does the same: a first value, then differences packed into blocks of a fixed bit width.
+
+<CodeTabs>
+
+```python title="delta.py" tab="By hand" step=delta colors="deltas=blue" check=spark
+ts = [
+    1760659200, 1760659204, 1760659205, 1760659212,
+    1760659215, 1760659215, 1760659220, 1760659222,
+]
+deltas = [b - a for a, b in zip(ts, ts[1:])]
+print(ts[0], deltas)
+print("bits per delta:", max(deltas).bit_length())
+```
+
+```output
+1760659200 [4, 1, 7, 3, 0, 5, 2]
+bits per delta: 3
+```
+
+```python title="delta_parquet.py" tab=Parquet step=delta check=spark
+table = pa.table({"ts": pa.array(ts, pa.int64())})
+for encoding in ["PLAIN", "DELTA_BINARY_PACKED"]:
+    pq.write_table(table, "ts.parquet", use_dictionary=False,
+                   column_encoding={"ts": encoding})
+    c = pq.ParquetFile("ts.parquet").metadata.row_group(0).column(0)
+    print(encoding, c.total_uncompressed_size, "bytes")
+```
+
+```output
+PLAIN 132 bytes
+DELTA_BINARY_PACKED 105 bytes
+```
+
+</CodeTabs>
+
+`PLAIN` stores $8$ values of $8$ bytes, $64$ bytes plus the page header. Delta packs the $7$
+differences in a few bytes after the first value and a small block header.

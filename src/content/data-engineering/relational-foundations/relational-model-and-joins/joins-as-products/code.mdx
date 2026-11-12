@@ -1,0 +1,144 @@
+The same join in PySpark: a cross join, a filter, and the plan Spark runs for them. Hover a
+name to light its part of the stage.
+
+## Every pair of rows
+
+`crossJoin` pairs each customer with each order: $4 \cdot 6 = 24$ rows, one per cell of the grid.
+
+```python title="pairs.py" step=product colors="customers=blue" hover="customers=customers orders=orders pairs=pairs" check=spark
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder.getOrCreate()
+spark.conf.set("spark.sql.shuffle.partitions", 4)  # tiny data
+customers = spark.createDataFrame(
+    [(1, "Ana"), (2, "Ben"), (3, "Caio"), (4, "Dara")],
+    "id int, name string",
+)
+orders = spark.createDataFrame(
+    [(101, 1), (102, 2), (103, 1), (104, 4), (105, 9), (106, None)],
+    "order_id int, customer_id int",
+)
+customers.createOrReplaceTempView("customers")
+orders.createOrReplaceTempView("orders")
+
+pairs = customers.crossJoin(orders)
+print(pairs.count())
+```
+
+```output
+24
+```
+
+## Test each pair
+
+The filtered product and the inner join have the same $4$ rows. The plan shows why: the optimizer
+turns the filter into a join on the equality, with `isnotnull` filters, since a NULL key never
+passes `=`.
+
+```python title="condition.py" step=condition hover="pairs=pairs result=result" colors="result=blue" check=spark
+on = customers.id == orders.customer_id
+filtered = pairs.where(on)
+result = customers.join(orders, on)
+print(filtered.count(), result.count())
+print(filtered.exceptAll(result).count())
+filtered.explain()
+```
+
+```output excerpt
+4 4
+0
++- SortMergeJoin [id#0], [customer_id#3], Cross
+   :     +- Filter isnotnull(id#0)
+         +- Filter isnotnull(customer_id#3)
+```
+
+## The rows of the result
+
+Each passing pair is one row, with the columns of both tables side by side.
+
+```python title="result.py" step=result colors="result=blue" hover="result=result" check=spark
+result.orderBy("order_id").show()
+```
+
+```output
++---+----+--------+-----------+
+| id|name|order_id|customer_id|
++---+----+--------+-----------+
+|  1| Ana|     101|          1|
+|  2| Ben|     102|          2|
+|  1| Ana|     103|          1|
+|  4|Dara|     104|          4|
++---+----+--------+-----------+
+
+```
+
+## Fan-out
+
+Counting the result's rows per customer gives each customer's number of matches: Ana appears
+twice, and Caio, with no match, is not in the result at all.
+
+```python title="fan_out.py" step=fan-out colors="result=blue" hover="result=result customers=customers" check=spark
+result.groupBy("name").count().orderBy("name").show()
+```
+
+```output
++----+-----+
+|name|count|
++----+-----+
+| Ana|    2|
+| Ben|    1|
+|Dara|    1|
++----+-----+
+
+```
+
+## NULL never matches
+
+A comparison with NULL is NULL (unknown) and a filter keeps only true rows, so order $106$ never
+matches. Only the null-safe `<=>` treats two NULLs as equal.
+
+```sql title="nulls.sql" step=null-keys check=spark
+SELECT NULL = 1, NULL = NULL, NULL <=> NULL;
+```
+
+```output
++----------+-------------+---------------+
+|(NULL = 1)|(NULL = NULL)|(NULL <=> NULL)|
++----------+-------------+---------------+
+|NULL      |NULL         |true           |
++----------+-------------+---------------+
+```
+
+## Any condition
+
+With `<` there is no equality to sort or hash on, so Spark plans a `CartesianProduct` that tests
+every pair, as the grid does. On large tables it is the slow join.
+
+<CodeTabs>
+
+```python title="theta.py" tab=PySpark step=theta hover="result=result" colors="result=blue" check=spark
+theta = customers.join(orders, customers.id < orders.customer_id)
+print(theta.count())
+theta.explain()
+```
+
+```output excerpt
+8
+CartesianProduct (id#0 < customer_id#3)
+```
+
+```sql title="theta.sql" tab=SQL step=theta check=spark
+SELECT count(*) AS rows
+FROM customers c JOIN orders o ON c.id < o.customer_id;
+```
+
+```output
++----+
+|rows|
++----+
+|8   |
++----+
+```
+
+</CodeTabs>

@@ -6,12 +6,14 @@ import { Button } from '@/ui/atoms'
 import { Readout, ReadoutPanel, SegmentedControl } from '@/ui/molecules'
 import {
   curveAt,
+  HoverGroup,
   Overlay,
   Path,
   RelationTable,
   Stage,
   tableLayout,
   TextLabel,
+  useHighlight,
   useStepEffect,
   useVizStep,
   Vector,
@@ -85,6 +87,7 @@ export default function KeysAndReferences() {
   const [duplicate, setDuplicate] = useState(false)
   const [selected, setSelected] = useState<number | null>(null)
   const [onDelete, setOnDelete] = useState<OnDelete>('restrict')
+  const hl = useHighlight()
 
   useStepEffect({
     'primary-key': () => {
@@ -157,6 +160,7 @@ export default function KeysAndReferences() {
       <Stage
         domain={{ x: [70, 820], y: [90, 500] }}
         yUp={false}
+        highlight={hl}
         ariaLabel="A customers table and an orders table, with an arrow from each order to its customer"
         overlay={
           <Overlay corner="top-right">
@@ -199,33 +203,39 @@ export default function KeysAndReferences() {
           </Overlay>
         }
       >
-        <RelationTable
-          {...CUSTOMERS}
-          title="customers"
-          columns={customerColumns}
-          color={vc.yellow}
-          rows={customerRows.map((c) => ({
-            id: c.rowId,
-            cells: [c.id, c.name],
-            state: customerState(c),
-            opacity: deleted && c.id === 1 ? 0 : 1,
-          }))}
-          onRowClick={choosing ? (rowId) => setSelected(Number(String(rowId).slice(1))) : undefined}
-        />
+        <HoverGroup hoverKey="customers">
+          <RelationTable
+            {...CUSTOMERS}
+            title="customers"
+            columns={customerColumns}
+            color={vc.yellow}
+            rows={customerRows.map((c) => ({
+              id: c.rowId,
+              cells: [c.id, c.name],
+              state: customerState(c),
+              opacity: deleted && c.id === 1 ? 0 : 1,
+            }))}
+            onRowClick={
+              choosing ? (rowId) => setSelected(Number(String(rowId).slice(1))) : undefined
+            }
+          />
+        </HoverGroup>
 
         <g style={{ opacity: showOrders ? 1 : 0, transition: 'opacity var(--dur-slow)' }}>
-          <RelationTable
-            {...ORDERS}
-            title="orders"
-            columns={orderColumns}
-            color={vc.yellow}
-            rows={orderRows.map((o) => ({
-              id: o.id,
-              cells: [o.id, refOf(o), o.amount],
-              state: orderState(o),
-              opacity: orderGone(o) ? 0 : 1,
-            }))}
-          />
+          <HoverGroup hoverKey="orders">
+            <RelationTable
+              {...ORDERS}
+              title="orders"
+              columns={orderColumns}
+              color={vc.yellow}
+              rows={orderRows.map((o) => ({
+                id: o.id,
+                cells: [o.id, refOf(o), o.amount],
+                state: orderState(o),
+                opacity: orderGone(o) ? 0 : 1,
+              }))}
+            />
+          </HoverGroup>
 
           {orderRows.map((o, slot) => {
             const ref = refOf(o)
@@ -233,13 +243,14 @@ export default function KeysAndReferences() {
             const from = oLayout.leftOf(slot)
             if (o.id === ORPHAN.id)
               return (
-                <Reference
-                  key={o.id}
-                  from={from}
-                  to={[cLayout.x + cLayout.width + 60, cLayout.bottom(customers.length) + 50]}
-                  color={vc.red}
-                  opacity={1}
-                />
+                <HoverGroup key={o.id} hoverKey="orphans">
+                  <Reference
+                    from={from}
+                    to={[cLayout.x + cLayout.width + 60, cLayout.bottom(customers.length) + 50]}
+                    color={vc.red}
+                    opacity={1}
+                  />
+                </HoverGroup>
               )
             const hidden = ref === null || orderGone(o) || target < 0
             const highlighted = choosing && selected === o.customer
@@ -249,13 +260,14 @@ export default function KeysAndReferences() {
                 ? vc.red
                 : vc.blue
             return (
-              <Reference
-                key={o.id}
-                from={from}
-                to={cLayout.rightOf(Math.max(target, 0))}
-                color={color}
-                opacity={hidden ? 0 : choosing && selected !== null && !highlighted ? 0.18 : 1}
-              />
+              <HoverGroup key={o.id} hoverKey="refs">
+                <Reference
+                  from={from}
+                  to={cLayout.rightOf(Math.max(target, 0))}
+                  color={color}
+                  opacity={hidden ? 0 : choosing && selected !== null && !highlighted ? 0.18 : 1}
+                />
+              </HoverGroup>
             )
           })}
           {orphanStep && (
