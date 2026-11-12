@@ -205,8 +205,20 @@ export default function RelatedRates() {
             <MathLabel at={[x / 2, y / 2]} tex="5" anchor="ne" />
             <MathLabel at={[x / 2, 0]} tex="x" anchor="s" color={vc.blue} />
             <MathLabel at={[0, y / 2]} tex="y" anchor="w" color={vc.purple} />
-            <Vector from={[x, 0]} to={[x + FOOT_SPEED, 0]} color={vc.blue} grow={false} />
-            <Vector from={[0, y]} to={[0, y + dy]} color={vc.purple} grow={false} />
+            <Vector
+              from={[x, 0]}
+              to={[x + FOOT_SPEED, 0]}
+              color={vc.blue}
+              grow={false}
+              hoverKey="dx_dt"
+            />
+            <Vector
+              from={[0, y]}
+              to={[0, y + dy]}
+              color={vc.purple}
+              grow={false}
+              hoverKey="dy_dt"
+            />
             <Point at={[x, 0]} color={vc.blue} r={5} coords={false} />
             <Point at={[0, y]} color={vc.purple} r={5} coords={false} />
           </>
@@ -268,7 +280,7 @@ export default function RelatedRates() {
             <Segment from={O} to={[0, b]} color={vc.teal} width={2} />
             <MathLabel at={[-DISTANCE / 2, 0]} tex="4" anchor="s" />
             <MathLabel at={[0, b / 2]} tex="h" anchor="e" color={vc.purple} />
-            <Vector from={[0, b]} to={[0, b + 1]} color={vc.purple} grow={false} />
+            <Vector from={[0, b]} to={[0, b + 1]} color={vc.purple} grow={false} hoverKey="dh_dt" />
             <Point at={O} color={vc.fg} r={5} coords={false} />
             <Point at={[0, b]} color={vc.purple} r={9} coords={false} />
           </>
@@ -285,8 +297,20 @@ export default function RelatedRates() {
             <MathLabel at={[px, PERSON / 2]} tex="1.8" anchor="w" />
             <MathLabel at={[px / 2, 0]} tex="x" anchor="s" color={vc.blue} />
             <MathLabel at={[tip, 0]} tex="s" anchor="s" color={vc.purple} />
-            <Vector from={[px, PERSON]} to={[px + WALK, PERSON]} color={vc.blue} grow={false} />
-            <Vector from={[tip, 0]} to={[tip + 1.5 * WALK, 0]} color={vc.purple} grow={false} />
+            <Vector
+              from={[px, PERSON]}
+              to={[px + WALK, PERSON]}
+              color={vc.blue}
+              grow={false}
+              hoverKey="dx_dt"
+            />
+            <Vector
+              from={[tip, 0]}
+              to={[tip + 1.5 * WALK, 0]}
+              color={vc.purple}
+              grow={false}
+              hoverKey="ds_dt"
+            />
             <Point at={[0, LAMP]} color={vc.yellow} r={7} coords={false} />
             <Point at={[px, PERSON]} color={vc.blue} r={5} coords={false} />
             <Point at={[tip, 0]} color={vc.purple} r={5} coords={false} />
@@ -307,8 +331,20 @@ export default function RelatedRates() {
             <MathLabel at={[ax / 2, by / 2]} tex="D" anchor="ne" color={vc.teal} />
             <MathLabel at={[ax / 2, 0]} tex="x" anchor="s" color={vc.blue} />
             <MathLabel at={[0, by / 2]} tex="y" anchor="w" color={vc.purple} />
-            <Vector from={[ax, 0]} to={[ax + SPEED_A * ARROW, 0]} color={vc.blue} grow={false} />
-            <Vector from={[0, by]} to={[0, by + SPEED_B * ARROW]} color={vc.purple} grow={false} />
+            <Vector
+              from={[ax, 0]}
+              to={[ax + SPEED_A * ARROW, 0]}
+              color={vc.blue}
+              grow={false}
+              hoverKey="dx_dt"
+            />
+            <Vector
+              from={[0, by]}
+              to={[0, by + SPEED_B * ARROW]}
+              color={vc.purple}
+              grow={false}
+              hoverKey="dy_dt"
+            />
             <Point at={[ax, 0]} color={vc.blue} r={7} coords={false} />
             <Point at={[0, by]} color={vc.purple} r={7} coords={false} />
             <MathLabel at={[ax, 0]} tex="A" anchor="se" color={vc.blue} />

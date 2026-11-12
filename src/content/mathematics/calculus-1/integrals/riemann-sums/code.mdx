@@ -1,0 +1,89 @@
+A Riemann sum is one line of NumPy: sample `f` at one point per strip, multiply by the width and
+add, `np.sum(f(x_star) * dx)`. The blocks use the stage's curve on $[0.5, 5.5]$ and SymPy for the
+exact area. Hover a name to light its shape.
+
+## One rectangle
+
+Width $b - a$, height $f(a)$:
+
+```python title="one.py" step=one colors="f=blue S=yellow" hover="f=f S=sum" check
+import numpy as np
+import sympy as sp
+
+def f(x: np.ndarray) -> np.ndarray:
+    return 1.2 + 0.8 * np.sin(x) + 0.1 * x
+
+a, b = 0.5, 5.5
+S = f(a) * (b - a)
+print(S)
+```
+
+```output
+8.167702154416812
+```
+
+## More strips
+
+`x_star` holds the left edge of every strip, so `f(x_star) * dx` is the array of rectangle areas
+and `np.sum` adds them:
+
+```python title="strips.py" step=more colors="S=yellow areas=yellow" hover="S=sum areas=sum" check
+n = 8
+dx = (b - a) / n
+x_star = a + np.arange(n) * dx  # left edges
+areas = f(x_star) * dx
+S = np.sum(areas)
+print(areas.round(3))
+print(S)
+```
+
+```output
+[1.021 1.271 1.351 1.245 1.008 0.744 0.568 0.561]
+7.77069401880787
+```
+
+## Where to sample
+
+One function for all four rules: the sample point is the left edge plus a fraction `t` of the
+width, and the trapezoid is the average of left and right:
+
+```python title="rules.py" step=rules colors="left=yellow mid=yellow right=yellow trapezoid=yellow" hover="left=sum mid=sum right=sum trapezoid=sum" check
+def riemann(n: int, t: float) -> float:
+    dx = (b - a) / n
+    x_star = a + (np.arange(n) + t) * dx
+    return float(np.sum(f(x_star) * dx))
+
+left, mid, right = (riemann(8, t) for t in (0.0, 0.5, 1.0))
+trapezoid = (left + right) / 2
+print(f"left {left:.4f}  midpoint {mid:.4f}")
+print(f"right {right:.4f}  trapezoid {trapezoid:.4f}")
+```
+
+```output
+left 7.7707  midpoint 7.6374
+right 7.4907  trapezoid 7.6307
+```
+
+## The limit
+
+SymPy integrates exactly. As `n` doubles, the left sum's error halves and the midpoint error
+falls to a quarter, as the explanation says:
+
+```python title="limit.py" step=limit colors="exact=teal" hover="exact=exact" check
+x = sp.symbols("x")
+fx = sp.Rational(6, 5) + sp.Rational(4, 5) * sp.sin(x) + x / 10
+exact = float(sp.integrate(fx, (x, sp.Rational(1, 2), sp.Rational(11, 2))))
+print(exact)
+
+for n in [8, 16, 32, 64]:
+    print(n, f"{riemann(n, 0.0) - exact:+.5f}",
+          f"{riemann(n, 0.5) - exact:+.6f}")
+```
+
+```output
+7.63513023007929
+8 +0.13556 +0.002225
+16 +0.06889 +0.000551
+32 +0.03472 +0.000138
+64 +0.01743 +0.000034
+```

@@ -7,12 +7,14 @@ import {
   Axes,
   FunctionPlot,
   Grid,
+  HoverGroup,
   MathLabel,
   Overlay,
   Path,
   Point,
   Stage,
   useAnimatedValue,
+  useHighlight,
   useStepEffect,
   VizControls,
 } from '@/viz-kit'
@@ -56,6 +58,7 @@ export default function RiemannSums() {
   const [rule, setRule] = useState<RiemannRule>('left')
   const [showExact, setShowExact] = useState(false)
   const [nDuration, setNDuration] = useState(0.6)
+  const hl = useHighlight()
 
   // n is animated on a log scale so going from 1 to 64 spends equal time on each doubling.
   const nSmooth = 2 ** useAnimatedValue(Math.log2(n), { duration: nDuration })
@@ -113,6 +116,7 @@ export default function RiemannSums() {
     <>
       <Stage
         zoomable
+        highlight={hl}
         domain={{ x: [-0.4, 6.4], y: [-0.7, 3.2] }}
         ariaLabel="Area under a curve approximated by strips"
         overlay={
@@ -120,8 +124,18 @@ export default function RiemannSums() {
             <ReadoutPanel>
               <Readout label="$n$" value={n} />
               <Readout label="$\Delta x$" value={fmt((B - A) / n, 3)} />
-              <Readout label="Riemann sum" value={fmt(sum, 4)} color={vc.yellow} />
-              <Readout label="$\int_a^b f(x)\,dx$" value={fmt(EXACT, 4)} color={vc.teal} />
+              <Readout
+                label="Riemann sum"
+                value={fmt(sum, 4)}
+                color={vc.yellow}
+                {...hl.bind('sum')}
+              />
+              <Readout
+                label="$\int_a^b f(x)\,dx$"
+                value={fmt(EXACT, 4)}
+                color={vc.teal}
+                {...hl.bind('exact')}
+              />
               <Readout label="error" value={fmt(error, 4)} />
             </ReadoutPanel>
           </Overlay>
@@ -130,31 +144,37 @@ export default function RiemannSums() {
         <Grid />
         <Axes />
 
-        {strips.map((s, k) => (
+        <HoverGroup hoverKey="sum">
+          {strips.map((s, k) => (
+            <Path
+              key={k}
+              points={[
+                [s.x0, 0],
+                [s.x0, s.y0],
+                [s.x1, s.y1],
+                [s.x1, 0],
+              ]}
+              closed
+              color={vc.yellow}
+              width={strokeWidth}
+              fill={alpha(vc.yellow, 0.16)}
+            />
+          ))}
+        </HoverGroup>
+
+        <HoverGroup hoverKey="exact">
           <Path
-            key={k}
-            points={[
-              [s.x0, 0],
-              [s.x0, s.y0],
-              [s.x1, s.y1],
-              [s.x1, 0],
-            ]}
+            points={exactArea}
             closed
-            color={vc.yellow}
-            width={strokeWidth}
-            fill={alpha(vc.yellow, 0.16)}
+            color="none"
+            fill={vc.teal}
+            fillOpacity={0.3 * exactOpacity}
           />
-        ))}
+        </HoverGroup>
 
-        <Path
-          points={exactArea}
-          closed
-          color="none"
-          fill={vc.teal}
-          fillOpacity={0.3 * exactOpacity}
-        />
-
-        <FunctionPlot f={f} color={vc.blue} />
+        <HoverGroup hoverKey="f">
+          <FunctionPlot f={f} color={vc.blue} />
+        </HoverGroup>
 
         {n <= 16 &&
           strips.map((s, k) => (

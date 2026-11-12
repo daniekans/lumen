@@ -8,6 +8,7 @@ import {
   Box3D,
   FunctionPlot,
   Grid,
+  HoverGroup,
   MathLabel,
   MathLabel3D,
   Overlay,
@@ -17,6 +18,7 @@ import {
   Stage,
   Stage3D,
   useAnimatedValue,
+  useHighlight,
   useSequence,
   useStepEffect,
   useStepStart,
@@ -71,6 +73,7 @@ export default function PowerAndSumRules() {
   const [a, setA] = useVizParam<number>('a', 1)
   const [b, setB] = useVizParam<number>('b', 1)
   const seq = useSequence()
+  const hl = useHighlight()
   const start = useStepStart({ dx, h })
 
   const shrinkDx = (from: number) =>
@@ -124,13 +127,14 @@ export default function PowerAndSumRules() {
   const shapes = [
     { key: 'f', fn: f, slope: df(x), color: vc.blue },
     { key: 'g', fn: g, slope: dg(x), color: vc.purple },
-    { key: 'af+bg', fn: combo, slope: a * df(x) + b * dg(x), color: vc.green },
+    { key: 'combo', fn: combo, slope: a * df(x) + b * dg(x), color: vc.green },
   ]
 
   return (
     <>
       <Stage
         zoomable
+        highlight={hl}
         domain={{ x: [vx0, vx1], y: [vy0, vy1] }}
         ariaLabel="Pictures and graphs behind the power and sum rules"
         overlay={
@@ -167,6 +171,7 @@ export default function PowerAndSumRules() {
                       label="secant slope"
                       value={fmt((xn(x + h) - xn(x)) / h, 3)}
                       color={vc.yellow}
+                      {...hl.bind('secant')}
                     />
                   </>
                 )}
@@ -174,6 +179,7 @@ export default function PowerAndSumRules() {
                   label="$nx^{n-1}$"
                   value={<Tex>{`${ruleTex(n)} = ${fmt(dxn(x), 3)}`}</Tex>}
                   color={vc.teal}
+                  {...hl.bind('fprime')}
                 />
               </ReadoutPanel>
             )}
@@ -184,18 +190,21 @@ export default function PowerAndSumRules() {
                   value={fmt(df(x))}
                   color={vc.blue}
                   hint="$f(x) = x^2$, $f'(x) = 2x$"
+                  {...hl.bind('f')}
                 />
                 <Readout
                   label="$g'(x)$"
                   value={fmt(dg(x))}
                   color={vc.purple}
                   hint="$g(x) = \frac{1}{2}x^3 - 2x$, $g'(x) = \frac{3}{2}x^2 - 2$"
+                  {...hl.bind('g')}
                 />
                 <Readout
                   label="$af'(x) + bg'(x)$"
                   value={fmt(a * df(x) + b * dg(x))}
                   color={vc.green}
                   hint="The slope of the green curve $af + bg$ at $x$."
+                  {...hl.bind('combo')}
                 />
               </ReadoutPanel>
             )}
@@ -214,27 +223,31 @@ export default function PowerAndSumRules() {
               width={1.5}
               fill={alpha(vc.blue, 0.2)}
             />
-            <Path
-              points={rect(s, 0, s + d, s)}
-              closed
-              color={vc.teal}
-              width={1.5}
-              fill={alpha(vc.teal, 0.35)}
-            />
-            <Path
-              points={rect(0, s, s, s + d)}
-              closed
-              color={vc.teal}
-              width={1.5}
-              fill={alpha(vc.teal, 0.35)}
-            />
-            <Path
-              points={rect(s, s, s + d, s + d)}
-              closed
-              color={vc.yellow}
-              width={1.5}
-              fill={alpha(vc.yellow, 0.45)}
-            />
+            <HoverGroup hoverKey="strips">
+              <Path
+                points={rect(s, 0, s + d, s)}
+                closed
+                color={vc.teal}
+                width={1.5}
+                fill={alpha(vc.teal, 0.35)}
+              />
+              <Path
+                points={rect(0, s, s, s + d)}
+                closed
+                color={vc.teal}
+                width={1.5}
+                fill={alpha(vc.teal, 0.35)}
+              />
+            </HoverGroup>
+            <HoverGroup hoverKey="corner">
+              <Path
+                points={rect(s, s, s + d, s + d)}
+                closed
+                color={vc.yellow}
+                width={1.5}
+                fill={alpha(vc.yellow, 0.45)}
+              />
+            </HoverGroup>
             <MathLabel at={[s / 2, s / 2]} tex="x^2" color={vc.blue} />
             <MathLabel at={[s / 2, 0]} tex="x" anchor="n" />
             <MathLabel at={[s + d / 2, 0]} tex="\Delta x" anchor="n" opacity={labelOpacity} />
@@ -267,9 +280,19 @@ export default function PowerAndSumRules() {
 
         {(id === 'expand' || id === 'power-rule') && (
           <>
-            {id === 'power-rule' && <FunctionPlot f={dxn} color={vc.teal} width={2} dash="6 6" />}
-            <FunctionPlot f={xn} color={vc.blue} />
-            {id === 'expand' && <Segment from={P} to={Q} extend color={vc.yellow} width={2} />}
+            {id === 'power-rule' && (
+              <HoverGroup hoverKey="fprime">
+                <FunctionPlot f={dxn} color={vc.teal} width={2} dash="6 6" />
+              </HoverGroup>
+            )}
+            <HoverGroup hoverKey="f">
+              <FunctionPlot f={xn} color={vc.blue} />
+            </HoverGroup>
+            {id === 'expand' && (
+              <HoverGroup hoverKey="secant">
+                <Segment from={P} to={Q} extend color={vc.yellow} width={2} />
+              </HoverGroup>
+            )}
             <Segment from={tangent.from} to={tangent.to} color={vc.teal} width={2.5} />
             {id === 'power-rule' && (
               <>
@@ -292,17 +315,17 @@ export default function PowerAndSumRules() {
             const p: Vec2 = [x, fn(x)]
             const t = tangentPiece(p, slope)
             return (
-              <g key={key}>
-                <FunctionPlot f={fn} color={color} width={key === 'af+bg' ? 3 : 2} />
+              <HoverGroup key={key} hoverKey={key}>
+                <FunctionPlot f={fn} color={color} width={key === 'combo' ? 3 : 2} />
                 <Segment from={t.from} to={t.to} color={color} width={2.5} />
                 <Point
                   at={p}
                   color={color}
                   r={5}
-                  label={key}
+                  label={key === 'combo' ? 'af+bg' : key}
                   onDrag={([px]) => setX(clamp(px, -2.4, 2.4))}
                 />
-              </g>
+              </HoverGroup>
             )
           })}
         {id === 'linearity' && (
@@ -398,9 +421,11 @@ function Cube({
   const slabs = [box([s, 0, 0], [e, s, s]), box([0, s, 0], [s, e, s]), box([0, 0, s], [s, s, e])]
   const rods = [box([s, s, 0], [e, e, s]), box([s, 0, s], [e, s, e]), box([0, s, s], [s, e, e])]
   const dV = 3 * s * s * dx + 3 * s * dx * dx + dx ** 3
+  const hl = useHighlight()
   return (
     <>
       <Stage3D
+        highlight={hl}
         radius={2.9}
         ariaLabel="A cube of side x growing by slabs, rods and a corner"
         overlay={
@@ -420,13 +445,19 @@ function Cube({
         }
       >
         <Box3D {...box([0, 0, 0], [s, s, s])} color={vc.blue} fillOpacity={0.12} />
-        {slabs.map((b, i) => (
-          <Box3D key={i} {...b} color={vc.teal} fillOpacity={0.22} />
-        ))}
-        {rods.map((b, i) => (
-          <Box3D key={i} {...b} color={vc.yellow} fillOpacity={0.3} />
-        ))}
-        <Box3D {...box([s, s, s], [e, e, e])} color={vc.orange} fillOpacity={0.4} />
+        <HoverGroup hoverKey="slabs">
+          {slabs.map((b, i) => (
+            <Box3D key={i} {...b} color={vc.teal} fillOpacity={0.22} />
+          ))}
+        </HoverGroup>
+        <HoverGroup hoverKey="rods">
+          {rods.map((b, i) => (
+            <Box3D key={i} {...b} color={vc.yellow} fillOpacity={0.3} />
+          ))}
+        </HoverGroup>
+        <HoverGroup hoverKey="corner">
+          <Box3D {...box([s, s, s], [e, e, e])} color={vc.orange} fillOpacity={0.4} />
+        </HoverGroup>
         <MathLabel3D at={add3([s / 2, s / 2, e], SHIFT)} tex="x^2\,\Delta x" color={vc.teal} />
       </Stage3D>
       <VizControls>

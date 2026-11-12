@@ -1,0 +1,123 @@
+SymPy's `limit` takes a direction: `"-"` for the left and `"+"` for the right. A two-sided
+limit is the common value of the two, when they agree. Infinity is `sp.oo`, both as a limit and
+as the point $x$ approaches. The blocks use the stage's functions.
+
+## From the left and from the right
+
+The jump: $x + 1$ left of $1$, $(2 + k) - (x - 1)$ from $1$ on. Each side only sees its own
+piece, so each one-sided limit is a limit of one formula, and the two-sided limit exists only
+when they agree:
+
+```python title="one_sided.py" step=one-sided colors="k=blue" check
+import sympy as sp
+
+x, k = sp.symbols("x k")
+
+left_piece = x + 1
+right_piece = (2 + k) - (x - 1)
+left = sp.limit(left_piece, x, 1, "-")
+right = sp.limit(right_piece, x, 1, "+")
+print(left, right)
+for k_value in [1, 0]:
+    r = right.subs(k, k_value)
+    print(k_value, left, r, "limit" if left == r else "no limit")
+```
+
+```output
+2 k + 2
+1 2 3 no limit
+0 2 2 limit
+```
+
+## Infinite limits
+
+Near $x = 2$ the bottom of $\frac{1}{(x - 2)^m}$ tends to $0$ and the sign on each side decides
+the infinity. With $m = 1$ the sides disagree, so there is no two-sided limit; with $m = 2$ it is
+$\infty$:
+
+```python title="asymptote.py" step=vertical-asymptote colors="f=blue" check
+for m in [1, 2]:
+    f = 1 / (x - 2)**m
+    left = sp.limit(f, x, 2, "-")
+    right = sp.limit(f, x, 2, "+")
+    print(m, left, right, right if left == right else "no limit")
+```
+
+```output
+1 -oo oo no limit
+2 oo oo oo
+```
+
+The pollution cost $C(p) = \frac{50p}{100 - p}$ only has a left side at $100$. Each extra nine
+multiplies the cost by about ten:
+
+```python title="cost.py" step=vertical-asymptote check
+p = sp.symbols("p")
+C = 50 * p / (100 - p)
+for share in ["90", "99", "99.9"]:
+    print(share, C.subs(p, sp.Rational(share)))
+print(sp.limit(C, p, 100, "-"))
+```
+
+```output
+90 450
+99 4950
+99.9 49950
+oo
+```
+
+## Limits at infinity
+
+`sp.oo` as the point gives the end behavior. The floats at the stage's $x$ settle toward $2$ from
+both ends:
+
+```python title="at_infinity.py" step=at-infinity colors="f=blue" check
+f = (2 * x**2 - 3 * x) / (x**2 + 1)
+for X in [10, 100, 1000]:
+    print(X, float(f.subs(x, X)), float(f.subs(x, -X)))
+print(sp.limit(f, x, sp.oo), sp.limit(f, x, -sp.oo))
+print(sp.solve(sp.Eq(f, 2), x))  # where the graph crosses y = 2
+```
+
+```output
+10 1.683168316831683 2.277227722772277
+100 1.9698030196980303 2.0297970202979703
+1000 1.996998003001997 2.002997997002003
+2 2
+[-2/3]
+```
+
+## Dominant terms
+
+Divide top and bottom by the highest power in the denominator: `expand` writes out the fading
+terms, and the limit keeps only the ratio of the leading ones. The three cases of the stage:
+
+```python title="dominant.py" step=dominant-terms colors="f=blue" check
+cases = {
+    "lower": (3 * x + 1) / (x**2 + 1),
+    "equal": (2 * x**2 - 3 * x) / (x**2 + 1),
+    "higher": (x**3 + x) / (x**2 + 4),
+}
+for name, f in cases.items():
+    top, bottom = sp.fraction(f)
+    divided = sp.expand(top / x**2) / sp.expand(bottom / x**2)
+    print(name, divided, sp.limit(f, x, sp.oo), sp.limit(f, x, -sp.oo))
+```
+
+```output
+lower (3/x + x**(-2))/(1 + x**(-2)) 0 0
+equal (2 - 3/x)/(1 + x**(-2)) 2 2
+higher (x + 1/x)/(1 + 4/x**2) oo -oo
+```
+
+With a root the two ends can differ: $\sqrt{4x^2 + 1}$ behaves like $2|x|$, so divided by $x$
+it tends to $2$ on the right and $-2$ on the left.
+
+```python title="root.py" step=dominant-terms check
+g = sp.sqrt(4 * x**2 + 1) / x
+print(sp.limit(g, x, sp.oo), sp.limit(g, x, -sp.oo))
+```
+
+```output
+2 -2
+```

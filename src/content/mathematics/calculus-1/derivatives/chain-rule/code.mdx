@@ -1,0 +1,129 @@
+SymPy differentiates a composition with the chain rule built in, and NumPy shows the stretch
+factors the stage draws. The blocks use the stage's functions $g(x) = \frac{x^2}{2}$ and
+$f(u) = 2\sin u$, at $x = 1.3$ with $\Delta x = 0.4$.
+
+## One stretch
+
+Send the ends of the interval through `g` and compare the lengths. The ratio is close to
+$g'(x) = x$, and closer for a shorter interval:
+
+```python title="stretch.py" step=stretch colors="x=blue dx=blue du=purple" check
+import numpy as np
+import sympy as sp
+
+def g(x: float) -> float:
+    return x**2 / 2
+
+x = 1.3
+for dx in [0.4, 0.04, 0.004]:
+    du = g(x + dx) - g(x)
+    print(dx, du, du / dx)  # g'(1.3) = 1.3
+```
+
+```output
+0.4 0.6000000000000002 1.5000000000000004
+0.04 0.05280000000000007 1.3200000000000016
+0.004 0.00520799999999999 1.3019999999999976
+```
+
+## Two stretches
+
+The second map stretches the interval again. Each ratio settles on its own derivative, and the
+total ratio on their product:
+
+```python title="compose.py" step=compose colors="x=blue dx=blue du=purple dy=green" check
+def f(u: float) -> float:
+    return 2 * np.sin(u)
+
+dx = 0.4
+u = g(x)
+du = g(x + dx) - u
+dy = f(u + du) - f(u)
+print(du / dx, dy / du, dy / dx)
+df_du = 2 * np.cos(u)
+print(x, df_du, df_du * x)  # g', f', product
+```
+
+```output
+1.5000000000000004 0.8137565287989561 1.2206347931984345
+1.3 1.327462564973783 1.725701334465918
+```
+
+At $\Delta x = 0.4$ the ratios are still far from the derivatives: the interval is too long for
+the maps to look linear on it.
+
+## The increments cancel
+
+$\frac{\Delta y}{\Delta u} \cdot \frac{\Delta u}{\Delta x}$ is $\frac{\Delta y}{\Delta x}$ for
+every $\Delta x$, and as $\Delta x$ shrinks each factor tends to its derivative:
+
+```python title="leibniz.py" step=leibniz colors="dx=blue du=purple dy=green" check
+for dx in [0.5, 0.1, 0.02, 0.001]:
+    du = g(x + dx) - g(x)
+    dy = f(g(x + dx)) - f(g(x))
+    r = [dy / du, du / dx, dy / dx, dy / du * du / dx]
+    print(dx, *np.round(r, 5))
+```
+
+```output
+0.5 0.64727 1.55 1.00327 1.00327
+0.1 1.22261 1.35 1.65053 1.65053
+0.02 1.30771 1.31 1.71311 1.71311
+0.001 1.32649 1.3005 1.7251 1.7251
+```
+
+The last two columns agree on every row; that is the algebra. The first two approach
+$f'(u) = 2\cos 0.845 \approx 1.32746$ and $g'(x) = 1.3$.
+
+## The derivative of the composition
+
+`sp.diff` applies the chain rule; the rule written out by hand gives the same expression. A
+program can also apply it while it computes: carry each value with its slope, as forward-mode
+automatic differentiation does.
+
+<CodeTabs>
+
+```python title="symbolic.py" tab=SymPy step=graph colors="u=purple dy_dx=teal" check
+xs, us = sp.symbols("x u")
+inner = xs**2 / 2
+outer = 2 * sp.sin(us)
+
+dy_dx = sp.diff(outer.subs(us, inner), xs)
+outer_d = sp.diff(outer, us).subs(us, inner)
+by_hand = outer_d * sp.diff(inner, xs)
+print(dy_dx)
+print(sp.simplify(dy_dx - by_hand))
+print(dy_dx.subs(xs, 1.3))
+```
+
+```output
+2*x*cos(x**2/2)
+0
+1.72570133446592
+```
+
+```python title="forward.py" tab="Forward mode" step=graph colors="u=purple dy_dx=teal" check
+Dual = tuple[float, float]  # a value and its slope
+
+def square_half(v: float, dv: float) -> Dual:
+    return v**2 / 2, v * dv  # g, and g' times dv
+
+def two_sin(v: float, dv: float) -> Dual:
+    return 2 * np.sin(v), 2 * np.cos(v) * dv
+
+u, du_dx = square_half(1.3, 1.0)  # dx/dx = 1
+y, dy_dx = two_sin(u, du_dx)
+print(u, du_dx)
+print(y, dy_dx)
+```
+
+```output
+0.8450000000000001 1.3
+1.4959422243499998 1.725701334465918
+```
+
+</CodeTabs>
+
+In the forward mode each function returns its value and its own derivative times the slope so
+far, so the factors multiply as the values flow. Backpropagation multiplies the same factors in
+the other order, from the output back to the input.

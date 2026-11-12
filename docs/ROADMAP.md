@@ -35,11 +35,10 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the owner's review of code batch 8 (`plans/code-views.md`,
-"Batch 8 (built 2026-11-09, for review)": code walkthroughs for the Vectors items,
-`linear-maps`, `matrix-transformations`, `backpropagation`, `complex-multiplication`). Apply
-the review; then batch 9 (Calculus 1), and batch 10 (Data Engineering) in its own session, then
-Probability and Statistics (step 14 of the suggested order).
+**Suggested next session:** the owner's review of code batch 9 (`plans/code-views.md`,
+"Batch 9 (built 2026-11-12, for review)": code walkthroughs for the 17 Limits and Derivatives
+items and `riemann-sums`). Apply the review; then batch 10 (Data Engineering) in its own session,
+then Probability and Statistics (step 14 of the suggested order).
 
 ### Phase 3: Explore page
 

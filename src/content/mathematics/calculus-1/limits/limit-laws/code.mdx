@@ -1,0 +1,125 @@
+SymPy's `limit` gives the answer at once; the blocks below also follow the routine of the
+lesson by hand: substitute, and when that gives $\frac{0}{0}$, `factor`, rationalize or `cancel`
+to remove the common factor, then substitute again.
+
+## The laws
+
+On the stage $f(x) = x + 1$ and $g(x) = 4 - x^2$, with limits $2$ and $3$ at $x = 1$. The limit
+of each combination is the same combination of the two limits:
+
+```python title="laws.py" step=laws colors="f=blue g=yellow L=blue M=yellow" check
+import sympy as sp
+
+x = sp.symbols("x")
+f = x + 1
+g = 4 - x**2
+L = sp.limit(f, x, 1)
+M = sp.limit(g, x, 1)
+print(L, M)
+print(sp.limit(f + g, x, 1), L + M)
+print(sp.limit(f * g, x, 1), L * M)
+print(sp.limit(f / g, x, 1), L / M)  # M is not 0
+```
+
+```output
+2 3
+5 5
+6 6
+2/3 2/3
+```
+
+## Direct substitution
+
+For a polynomial the limit is its value, so `subs` gives the same number as `limit`:
+
+```python title="substitution.py" step=substitution colors="p=blue" check
+p = x**3 - 3 * x + 1
+print(sp.limit(p, x, 2), p.subs(x, 2))
+```
+
+```output
+3 3
+```
+
+## Factor and cancel
+
+Substituting gives `nan`, SymPy's $\frac{0}{0}$. `factor` shows the common factor $x - 3$, and
+`cancel` removes it; the result allows substitution:
+
+```python title="factor.py" step=factor colors="h=blue" check
+h = (x**2 - 9) / (x - 3)
+print(h.subs(x, 3))
+print(sp.factor(x**2 - 9))
+print(sp.cancel(h), sp.cancel(h).subs(x, 3), sp.limit(h, x, 3))
+```
+
+```output
+nan
+(x - 3)*(x + 3)
+x + 3 6 6
+```
+
+## Rationalize
+
+Multiply top and bottom by the conjugate $\sqrt{x} + 2$. The bottom becomes $x - 4$, the same
+factor as the top:
+
+```python title="rationalize.py" step=rationalize colors="h=blue" check
+h = (x - 4) / (sp.sqrt(x) - 2)
+conjugate = sp.sqrt(x) + 2
+bottom = sp.expand((sp.sqrt(x) - 2) * conjugate)
+print(bottom)
+rewritten = (x - 4) * conjugate / bottom
+print(sp.cancel(rewritten), sp.limit(h, x, 4))
+```
+
+```output
+x - 4
+sqrt(x) + 2 4
+```
+
+## Combine fractions
+
+`together` writes the top over the common denominator, `cancel` removes $x - 2$:
+
+```python title="combine.py" step=combine colors="h=blue" check
+h = (1 / x - sp.Rational(1, 2)) / (x - 2)
+print(sp.together(1 / x - sp.Rational(1, 2)))
+print(sp.cancel(h), sp.limit(h, x, 2))
+```
+
+```output
+(2 - x)/(2*x)
+-1/(2*x) -1/4
+```
+
+The same shape is the slope of a secant of $\frac{1}{x}$ from $2$ to $x$, so its limit is the
+slope of $\frac{1}{x}$ at $2$:
+
+```python title="slope.py" step=combine check
+print(sp.diff(1 / x, x).subs(x, 2))  # slope at 2, see Derivatives
+```
+
+```output
+-1/4
+```
+
+## A nonzero number over zero
+
+Substitution gives $\frac{2}{0}$, which SymPy calls `zoo`, an infinity with no sign. The sign
+comes from each side:
+
+```python title="nonzero.py" step=nonzero-over-zero colors="h=blue" check
+h = (x + 1) / (x - 1)
+print(h.subs(x, 1))
+print(sp.limit(h, x, 1, "-"), sp.limit(h, x, 1, "+"))
+for d in [0.1, 0.001]:
+    print(d, h.subs(x, 1 - d).evalf(6), h.subs(x, 1 + d).evalf(6))
+```
+
+```output
+zoo
+-oo oo
+0.1 -19.0000 21.0000
+0.001 -1999.00 2001.00
+```

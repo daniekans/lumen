@@ -36,7 +36,7 @@ unit can be picked out of order.
 13. Code for existing items, three batches (`plans/code-views.md`, batches 8 to 10, decided
     2026-11-07): Linear Algebra and Machine Learning, then Calculus 1, then Data Engineering.
     One session each, reviewed after each. Batch 10 counts as an owner's request for Data
-    Engineering. Batch 8 built 2026-11-09, waiting for the owner's review.
+    Engineering. Batch 8 approved 2026-11-12; batch 9 built 2026-11-12, waiting for the owner's review.
 14. Outline Probability and Statistics (for review), then its first unit
 15. Calculus 1 and Linear Algebra, next units
 

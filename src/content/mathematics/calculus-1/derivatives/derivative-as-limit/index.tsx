@@ -7,12 +7,14 @@ import {
   Axes,
   FunctionPlot,
   Grid,
+  HoverGroup,
   MathLabel,
   Overlay,
   Point,
   Segment,
   Stage,
   useAnimatedValue,
+  useHighlight,
   useSequence,
   useStepEffect,
   useStepStart,
@@ -40,6 +42,7 @@ export default function DerivativeAsLimit() {
   const [tangent, setTangent] = useState(false)
   const [derivative, setDerivative] = useState(false)
   const seq = useSequence()
+  const hl = useHighlight()
   const start = useStepStart({ h, s })
 
   const tangentOpacity = useAnimatedValue(tangent ? 1 : 0, { duration: 0.6 })
@@ -112,6 +115,7 @@ export default function DerivativeAsLimit() {
     <>
       <Stage
         zoomable
+        highlight={hl}
         domain={domain}
         ariaLabel="Graph of f with a secant line through P and Q"
         overlay={
@@ -125,6 +129,7 @@ export default function DerivativeAsLimit() {
                     label="secant slope $\frac{\Delta y}{h}$"
                     value={fmt(slope, 3)}
                     color={vc.yellow}
+                    {...hl.bind('secant')}
                   />
                 </>
               )}
@@ -132,6 +137,7 @@ export default function DerivativeAsLimit() {
                 label={id === 'notation' ? "$f'(x_0) = \\frac{dy}{dx}$" : "$f'(x_0)$"}
                 value={fmt(m, 3)}
                 color={vc.teal}
+                {...hl.bind('tangent')}
               />
               {(id === 'limit' || showZoom) && (
                 <Readout
@@ -158,7 +164,7 @@ export default function DerivativeAsLimit() {
         <Axes step={gridStep} />
 
         {derivativeOpacity > 0.01 && (
-          <>
+          <HoverGroup hoverKey="fprime">
             <FunctionPlot
               f={df}
               color={vc.teal}
@@ -183,21 +189,25 @@ export default function DerivativeAsLimit() {
               opacity={derivativeOpacity}
               size={15}
             />
-          </>
+          </HoverGroup>
         )}
 
         {showZoom && (
-          <Segment
-            from={P}
-            to={[x0 + 1, f(x0) + m]}
-            extend
-            color={vc.teal}
-            width={6}
-            opacity={tangentOpacity * 0.45}
-          />
+          <HoverGroup hoverKey="tangent">
+            <Segment
+              from={P}
+              to={[x0 + 1, f(x0) + m]}
+              extend
+              color={vc.teal}
+              width={6}
+              opacity={tangentOpacity * 0.45}
+            />
+          </HoverGroup>
         )}
-        <FunctionPlot f={f} color={vc.blue} />
-        <MathLabel at={[5.9, f(5.9)]} tex="f(x)" color={vc.blue} anchor="nw" offset={12} />
+        <HoverGroup hoverKey="f">
+          <FunctionPlot f={f} color={vc.blue} />
+          <MathLabel at={[5.9, f(5.9)]} tex="f(x)" color={vc.blue} anchor="nw" offset={12} />
+        </HoverGroup>
 
         <g style={{ opacity: triangleOpacity }}>
           <Segment from={P} to={corner} color={vc.fg} width={1.25} dash="4 5" opacity={0.7} />
@@ -220,40 +230,46 @@ export default function DerivativeAsLimit() {
 
         {!showZoom && (
           <>
-            <Segment
-              from={P}
-              to={[x0 + 1, f(x0) + m]}
-              extend
-              color={vc.teal}
-              width={2}
-              opacity={tangentOpacity}
-            />
-            <Segment
-              from={P}
-              to={Q}
-              extend
-              color={vc.yellow}
-              width={2}
-              opacity={1 - tangentOpacity * 0.6}
-            />
-            <Point
-              at={Q}
-              color={vc.yellow}
-              r={6}
-              onDrag={([x]) => setHManually(x - x0)}
-              label="Q"
-            />
-            <MathLabel at={Q} tex="Q" color={vc.yellow} anchor="nw" opacity={triangleOpacity} />
+            <HoverGroup hoverKey="tangent">
+              <Segment
+                from={P}
+                to={[x0 + 1, f(x0) + m]}
+                extend
+                color={vc.teal}
+                width={2}
+                opacity={tangentOpacity}
+              />
+            </HoverGroup>
+            <HoverGroup hoverKey="secant">
+              <Segment
+                from={P}
+                to={Q}
+                extend
+                color={vc.yellow}
+                width={2}
+                opacity={1 - tangentOpacity * 0.6}
+              />
+              <Point
+                at={Q}
+                color={vc.yellow}
+                r={6}
+                onDrag={([x]) => setHManually(x - x0)}
+                label="Q"
+              />
+              <MathLabel at={Q} tex="Q" color={vc.yellow} anchor="nw" opacity={triangleOpacity} />
+            </HoverGroup>
           </>
         )}
-        <Point
-          at={P}
-          color={vc.fg}
-          r={6}
-          onDrag={([x]) => setX0(clamp(x, X_MIN, X_MAX - h))}
-          label="P"
-        />
-        <MathLabel at={P} tex="P" anchor="nw" />
+        <HoverGroup hoverKey="P">
+          <Point
+            at={P}
+            color={vc.fg}
+            r={6}
+            onDrag={([x]) => setX0(clamp(x, X_MIN, X_MAX - h))}
+            label="P"
+          />
+          <MathLabel at={P} tex="P" anchor="nw" />
+        </HoverGroup>
       </Stage>
 
       <VizControls>

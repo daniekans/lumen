@@ -1,0 +1,144 @@
+NumPy evaluates the stage's functions near the point, and SymPy confirms the three standard
+limits exactly. Two of them also show the floating-point thread of this course: a formula that
+subtracts nearly equal numbers loses digits, and NumPy has functions built to avoid it.
+
+## The squeeze theorem
+
+$x \sin\frac{1}{x}$ stays between $-|x|$ and $|x|$ for every `x`, so it is squeezed to $0$:
+
+```python title="squeeze.py" step=squeeze colors="f=blue x=yellow" check
+import numpy as np
+import sympy as sp
+
+def f(x: np.ndarray) -> np.ndarray:
+    return x * np.sin(1 / x)
+
+x = np.array([0.5, 0.1, 0.01, 0.001])
+print(np.all(np.abs(f(x)) <= np.abs(x)))
+print(f(x).round(6))
+```
+
+```output
+True
+[ 0.454649 -0.054402 -0.005064  0.000827]
+```
+
+SymPy reaches the same limit by the same bound: $\sin\frac{1}{x}$ has no limit at $0$, but it
+stays in $[-1, 1]$, and `AccumBounds` is that range:
+
+```python title="squeeze_exact.py" step=squeeze check
+t = sp.symbols("x", real=True)
+print(sp.limit(sp.sin(1 / t), t, 0))  # no limit, only a range
+print(sp.limit(t * sp.sin(1 / t), t, 0))
+```
+
+```output
+AccumBounds(-1, 1)
+0
+```
+
+## Three areas
+
+For an angle `x` in radians the three areas are in order. Their ratios to the small triangle are
+the bounds of the next step:
+
+```python title="areas.py" step=areas colors="small=teal sector=blue large=yellow" check
+x = 0.5
+small = np.sin(x) / 2   # triangle OAP
+sector = x / 2
+large = np.tan(x) / 2   # triangle OAT
+print(round(small, 4), round(sector, 4), round(large, 4))
+print(small <= sector <= large)
+```
+
+```output
+0.2397 0.25 0.2732
+True
+```
+
+## Squeezing sin x over x
+
+Between $\cos x$ and $1$, and both bounds tend to $1$:
+
+```python title="sinc.py" step=sin-over-x colors="x=yellow" check
+x = np.array([0.5, 0.1, 0.01, 0.001])
+print(np.column_stack([np.cos(x), np.sin(x) / x]).round(8))
+
+t = sp.symbols("x")
+print(sp.limit(sp.sin(t) / t, t, 0))
+print(sp.limit(sp.sin(t) / t, t, 0, "-"))
+```
+
+```output
+[[0.87758256 0.95885108]
+ [0.99500417 0.99833417]
+ [0.99995    0.99998333]
+ [0.9999995  0.99999983]]
+1
+1
+```
+
+Here floats are no trouble: near $0$, `np.sin(x)` is as precise as `x`, so their quotient keeps
+its digits. In degrees the limit is $\frac{\pi}{180}$, the reason calculus uses radians:
+
+```python title="degrees.py" step=sin-over-x check
+print(np.sin(1e-12) / 1e-12)
+print(sp.limit(sp.sin(sp.pi * t / 180) / t, t, 0))
+```
+
+```output
+1.0
+pi/180
+```
+
+## The slope of e^x at 0
+
+The secant slope $\frac{b^h - 1}{h}$ tends to $\ln b$. For small `h` the subtraction $b^h - 1$
+cancels the leading digits, and dividing by `h` magnifies the error; `np.expm1` computes
+$e^h - 1$ without the subtraction:
+
+```python title="slope.py" step=exponential colors="h=yellow" check
+for h in [1e-1, 1e-4, 1e-8, 1e-12]:
+    naive = (np.exp(h) - 1) / h
+    careful = np.expm1(h) / h
+    print(h, naive, careful)
+
+s = sp.symbols("h")
+b = sp.symbols("b", positive=True)
+print(sp.limit((b**s - 1) / s, s, 0))
+```
+
+```output
+0.1 1.0517091807564771 1.0517091807564762
+0.0001 1.000050001667141 1.0000500016667084
+1e-08 0.999999993922529 1.0000000050000002
+1e-12 1.000088900582341 1.0000000000005
+log(b)
+```
+
+The error is worst for the smallest `h`: shrinking the step helps the math and hurts the floats.
+
+## (1 + 1/n)^n
+
+Compound interest $n$ times a year climbs toward $e$. For very large `n` the floats fail again:
+`1 + 1 / n` rounds to a number near $1$ that has lost the digits of $\frac{1}{n}$, and at
+$10^{16}$ it is exactly $1$. `np.log1p` avoids that subtraction:
+
+```python title="compound.py" step=compound colors="n=yellow" check
+for n in [1, 12, 365, 10**8, 10**16]:
+    naive = (1 + 1 / n) ** n
+    careful = np.exp(n * np.log1p(1 / n))
+    print(n, naive, careful)
+
+k = sp.symbols("n")
+print(sp.limit((1 + 1 / k) ** k, k, sp.oo), np.e)
+```
+
+```output
+1 2.0 2.0
+12 2.613035290224676 2.613035290224678
+365 2.7145674820219727 2.714567482021874
+100000000 2.7182817983473577 2.7182818148676366
+10000000000000000 1.0 2.718281828459045
+E 2.718281828459045
+```

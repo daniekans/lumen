@@ -1,0 +1,133 @@
+SymPy's `idiff(eq, y, x)` differentiates an equation $\text{eq} = 0$ implicitly: in the variable
+`x`, with `y` a function of it, and solves for $\frac{dy}{dx}$. Swapping the two arguments
+differentiates in `y` instead. The blocks follow the lesson's curves.
+
+## A circle has slopes
+
+The first block does the two steps by hand: write $y$ as a function `Y(x)`, differentiate both
+sides in $x$, solve. `idiff` does the same in one call:
+
+```python title="circle.py" step=circle colors="dy_dx=teal" check
+import sympy as sp
+
+x, y = sp.symbols("x y")
+Y = sp.Function("Y")(x)  # y as a function of x
+lhs = sp.diff(x**2 + Y**2, x)  # the right side, 25, gives 0
+print(lhs)
+print(sp.solve(lhs, sp.diff(Y, x)))
+
+dy_dx = sp.idiff(x**2 + y**2 - 25, y, x)
+print(dy_dx, dy_dx.subs({x: 3, y: 4}))
+```
+
+```output
+2*x + 2*Y(x)*Derivative(Y(x), x)
+[-x/Y(x)]
+-x/y -3/4
+```
+
+## Differentiate both sides
+
+On $x^2 + xy + y^2 = 3$ the product rule acts on $xy$ inside `idiff`. The tangent is vertical
+where the denominator $x + 2y$ is zero; solving that together with the curve gives the hollow
+points:
+
+```python title="implicit.py" step=implicit colors="dy_dx=teal" check
+curve = x**2 + x * y + y**2 - 3
+dy_dx = sp.idiff(curve, y, x)
+print(dy_dx)
+print(sp.solve([curve, x + 2 * y], [x, y]))
+```
+
+```output
+-(2*x + y)/(x + 2*y)
+[(-2, 1), (2, -1)]
+```
+
+## Differentiate in y
+
+The equation holds for every $y$ on the right half of the circle, so it can be differentiated in
+$y$ with $x$ a function of $y$. Where both slopes exist, they are reciprocals:
+
+```python title="in_y.py" step=in-y colors="dx_dy=teal dy_dx=teal" check
+circle = x**2 + y**2 - 25
+dx_dy = sp.idiff(circle, x, y)  # in y, x a function of y
+dy_dx = sp.idiff(circle, y, x)
+print(dx_dy, dx_dy.subs({x: 5, y: 0}))
+print(dx_dy.subs({x: 4, y: 3}), dy_dx.subs({x: 4, y: 3}))
+print(sp.simplify(dx_dy * dy_dx))
+```
+
+```output
+-y/x 0
+-3/4 -4/3
+1
+```
+
+At $(5, 0)$, `dy_dx` would divide by zero; `dx_dy` is $0$ there.
+
+## The slope of an inverse
+
+The points $(f(a), a)$ and $(f(a + h), a + h)$ lie on the graph of $f^{-1}$, so their slope is
+the reflected triangle's: run and rise swapped. It approaches $\frac{1}{f'(a)}$:
+
+```python title="inverse.py" step=inverse colors="a=blue fa=purple slope=teal" check
+def f(x: float) -> float:
+    return 0.2 * x**3 + 0.5 * x + 1.5
+
+def df(x: float) -> float:
+    return 0.6 * x**2 + 0.5
+
+a = 0.6
+fa = f(a)
+for h in [0.1, 0.001]:
+    slope = h / (f(a + h) - fa)  # rise h over run
+    print(h, slope)
+print(1 / df(a))
+```
+
+```output
+0.1 1.3262599469496
+0.001 1.3959457825825845
+1.3966480446927374
+```
+
+## Arctangent and arcsine
+
+`diff` knows both rules. The implicit route gives them too: $y = \arctan x$ means $\tan y = x$:
+
+```python title="arctan.py" step=arctan colors="dy_dx=teal" check
+print(sp.diff(sp.atan(x), x), sp.diff(sp.asin(x), x))
+
+dy_dx = sp.idiff(sp.tan(y) - x, y, x)
+print(dy_dx)
+print(sp.simplify(dy_dx.subs(y, sp.atan(x))))
+print(sp.diff(sp.atan(x), x).subs(x, 1))
+```
+
+```output
+1/(x**2 + 1) 1/sqrt(1 - x**2)
+1/(tan(y)**2 + 1)
+1/(x**2 + 1)
+1/2
+```
+
+## Logarithmic differentiation
+
+Take $\ln$ of both sides of $y = x^x$ and differentiate implicitly. The result matches `diff` of
+$x^x$, and the slope is $0$ at $x = \frac{1}{e}$, the hollow point:
+
+```python title="log_diff.py" step=log-diff colors="dy_dx=teal" check
+xp = sp.symbols("x", positive=True)
+yp = sp.symbols("y", positive=True)
+dy_dx = sp.idiff(sp.log(yp) - xp * sp.log(xp), yp, xp)
+print(dy_dx)
+print(sp.diff(xp**xp, xp))
+print(sp.solve(sp.log(xp) + 1, xp))
+```
+
+```output
+y*(log(x) + 1)
+x**x*(log(x) + 1)
+[exp(-1)]
+```

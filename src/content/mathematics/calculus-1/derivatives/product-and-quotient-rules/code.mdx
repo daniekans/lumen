@@ -1,0 +1,93 @@
+SymPy checks the rectangle's pieces, takes the limit, and compares `sp.diff` of a product and of a
+quotient with the two rules. `sp.simplify` of the difference is `0` when two expressions are the
+same function. Hover a name to light its piece of the rectangle.
+
+## A growing rectangle
+
+`f` is the width and `g` the height, as on the stage; `Df` and `Dg` are their changes. The gain in
+area is exactly two strips and a corner:
+
+```python title="rectangle.py" step=rectangle colors="right=teal top=purple corner=yellow" hover="right=right top=top corner=corner" check
+import sympy as sp
+
+x, dx = sp.symbols("x dx")
+f = x / 2 + 1      # width
+g = x**2 / 4 + 1   # height
+Df = f.subs(x, x + dx) - f
+Dg = g.subs(x, x + dx) - g
+
+right, top, corner = g * Df, f * Dg, Df * Dg
+gain = (f * g).subs(x, x + dx) - f * g
+print(sp.expand(gain - (right + top + corner)))
+print([round(float(p.subs({x: 1.6, dx: 0.8})), 3)
+       for p in (right, top, corner)])
+```
+
+```output
+0
+[0.656, 1.44, 0.32]
+```
+
+## The product rule
+
+Divided by `dx`, the strips tend to $f'g$ and $fg'$ and the corner to `0`. `sp.diff` of the
+product agrees, here and on the explanation's example:
+
+```python title="product.py" step=limit colors="right=teal top=purple corner=yellow" hover="right=right top=top corner=corner" check
+for piece in (right, top, corner):
+    print(sp.limit(piece / dx, dx, 0))
+
+rule = sp.diff(f, x) * g + f * sp.diff(g, x)
+print(sp.simplify(sp.diff(f * g, x) - rule))
+
+u, v = x**2 + 1, 3 * x - 2
+print(sp.expand(sp.diff(u, x) * v + u * sp.diff(v, x)))
+```
+
+```output
+x**2/8 + 1/2
+x*(x/2 + 1)/2
+0
+0
+9*x**2 - 4*x + 3
+```
+
+## The quotient rule
+
+Now `F` is the area and `G` the height, so the width is `q = F / G`. `sp.diff(q)` matches
+$\frac{f'g - fg'}{g^2}$, and `sp.factor` tidies the example from the explanation:
+
+```python title="quotient.py" step=quotient colors="q=teal" hover="q=q" check
+F = x**2 / 2 + 1
+G = x / 2 + 1
+q = F / G
+rule = (sp.diff(F, x) * G - F * sp.diff(G, x)) / G**2
+print(sp.simplify(sp.diff(q, x) - rule))
+print(round(float(rule.subs(x, 1.6)), 3))  # the readout
+
+print(sp.factor(sp.diff(x / (x**2 + 1), x)))  # (1 - x^2) / ...
+```
+
+```output
+0
+0.537
+-(x - 1)*(x + 1)/(x**2 + 1)**2
+```
+
+## Negative powers
+
+For $\frac{1}{x^n}$ the quotient rule gives $-nx^{-n-1}$; `sp.diff` agrees for each $n$ on the
+slider:
+
+```python title="powers.py" step=negative-powers colors="power=blue rule=teal" hover="power=f rule=fprime" check
+for n in range(1, 4):
+    power = 1 / x**n
+    rule = -n * x ** (-n - 1)
+    print(n, sp.diff(power, x), sp.simplify(sp.diff(power, x) - rule))
+```
+
+```output
+1 -1/x**2 0
+2 -2/x**3 0
+3 -3/x**4 0
+```

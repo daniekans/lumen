@@ -1,0 +1,114 @@
+SymPy expands the growing square and cube, takes the limits, and checks the power rule for each
+$n$. The last block differentiates a polynomial from its list of coefficients, the rules as a few
+lines of code. Hover a name to light its shape.
+
+## A growing square
+
+`dA` is the new area minus the old one. Expanded, it is the two strips and the corner; divided by
+`dx`, only `2*x` survives the limit:
+
+```python title="square.py" step=square colors="strips=teal corner=yellow" hover="strips=strips corner=corner" check
+import numpy as np
+import sympy as sp
+
+x, dx = sp.symbols("x dx", positive=True)
+dA = sp.expand((x + dx) ** 2 - x**2)
+strips, corner = 2 * x * dx, dx**2
+print(dA, dA == strips + corner)
+print(sp.expand(dA / dx), sp.limit(dA / dx, dx, 0))
+print(dA.subs({x: 2, dx: 0.3}) / 0.3)  # the readout
+```
+
+```output
+dx**2 + 2*dx*x True
+dx + 2*x 2*x
+4.30000000000000
+```
+
+## A growing cube
+
+Three slabs, three rods and a corner. Divided by `dx`, the rods and the corner still carry a
+factor `dx`, so they vanish in the limit:
+
+```python title="cube.py" step=cube colors="slabs=teal rods=yellow corner=orange" hover="slabs=slabs rods=rods corner=corner" check
+dV = sp.expand((x + dx) ** 3 - x**3)
+slabs, rods, corner = 3 * x**2 * dx, 3 * x * dx**2, dx**3
+print(dV == slabs + rods + corner)
+print(sp.expand(dV / dx))
+print(sp.limit(dV / dx, dx, 0))
+```
+
+```output
+True
+dx**2 + 3*dx*x + 3*x**2
+3*x**2
+```
+
+## Expanding $(x + h)^n$
+
+The secant slope of $x^n$ for each whole $n$. After dividing by `h`, every term but the first
+keeps a factor `h`:
+
+```python title="expand.py" step=expand colors="slope=yellow" hover="slope=secant" check
+h = sp.symbols("h", positive=True)
+for n in range(1, 6):
+    slope = sp.expand(((x + h) ** n - x**n) / h)
+    print(n, slope, "->", sp.limit(slope, h, 0))
+```
+
+```output
+1 1 -> 1
+2 h + 2*x -> 2*x
+3 h**2 + 3*h*x + 3*x**2 -> 3*x**2
+4 h**3 + 4*h**2*x + 6*h*x**2 + 4*x**3 -> 4*x**3
+5 h**4 + 5*h**3*x + 10*h**2*x**2 + 10*h*x**3 + 5*x**4 -> 5*x**4
+```
+
+## The power rule
+
+`sp.diff` agrees with $nx^{n-1}$ for each $n$, $n = 0$ included. A numeric slope at $x = 1$,
+with a small `h`, gives the same numbers:
+
+```python title="power.py" step=power-rule colors="xn=blue rule=teal" hover="xn=f rule=fprime" check
+t = sp.symbols("t")
+for n in range(6):
+    xn = t**n
+    rule = n * t ** (n - 1)
+    numeric = ((1 + 1e-6) ** n - 1**n) / 1e-6
+    print(n, sp.diff(xn, t), sp.simplify(sp.diff(xn, t) - rule),
+          round(numeric, 4))
+```
+
+```output
+0 0 0 0.0
+1 1 0 1.0
+2 2*t 0 2.0
+3 3*t**2 0 3.0
+4 4*t**3 0 4.0
+5 5*t**4 0 5.0
+```
+
+## Term by term
+
+A polynomial is a list of coefficients, `c[k]` for $x^k$. The power rule moves each one down a
+place and multiplies it by `k`; linearity says that is the whole derivative. `np.polynomial`
+does the same:
+
+```python title="polynomial.py" step=linearity colors="f=blue g=purple combo=green" hover="f=f g=g combo=combo" check
+def derivative(c: list[float]) -> list[float]:
+    return [k * c[k] for k in range(1, len(c))]
+
+f = [0, 0, 1, 0]       # x^2
+g = [0, -2, 0, 0.5]    # 0.5x^3 - 2x
+a, b = 1, 1
+combo = [a * fk + b * gk for fk, gk in zip(f, g)]
+print(derivative(combo))
+print(np.polynomial.polynomial.polyder(combo))
+print(derivative([-2, 7, -5, 4]))  # 4x^3 - 5x^2 + 7x - 2
+```
+
+```output
+[-2, 2, 1.5]
+[-2.   2.   1.5]
+[7, -10, 12]
+```

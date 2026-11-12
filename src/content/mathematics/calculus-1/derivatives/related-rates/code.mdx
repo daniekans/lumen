@@ -1,0 +1,145 @@
+SymPy follows the method of the lesson to the letter. Each changing quantity is a function of
+`t`, `sp.diff(..., t)` differentiates the relation in $t$ with the chain rule on every one of
+them, and the values of the instant go in only after that. Hover a rate to light its arrow.
+
+## A sliding ladder
+
+The relation holds at every moment, so differentiate it in $t$, solve for the unknown rate, and
+only then substitute the instant $x = 3$, $y = 4$. The other tabs substitute too early, and check
+the rate numerically.
+
+<CodeTabs>
+
+```python title="ladder.py" tab=SymPy step=ladder colors="x=blue y=purple dx_dt=blue dy_dt=purple" hover="dx_dt=dx_dt dy_dt=dy_dt" check
+import numpy as np
+import sympy as sp
+
+t = sp.symbols("t")
+x = sp.Function("x")(t)  # foot, meters from the wall
+y = sp.Function("y")(t)  # top, meters up
+dx_dt, dy_dt = x.diff(t), y.diff(t)
+
+relation = x**2 + y**2 - 25
+rates = sp.diff(relation, t)
+print(rates)
+rule = sp.solve(rates, dy_dt)[0]
+print(rule)
+print(rule.subs({dx_dt: 0.5}).subs({x: 3, y: 4}))
+```
+
+```output
+2*x(t)*Derivative(x(t), t) + 2*y(t)*Derivative(y(t), t)
+-x(t)*Derivative(x(t), t)/y(t)
+-0.375000000000000
+```
+
+```python title="too_early.py" tab="Too early" step=ladder colors="y=purple dy_dt=purple" hover="dy_dt=dy_dt" check
+wrong = sp.diff(relation.subs(x, 3), t)
+print(wrong, sp.solve(wrong, dy_dt))
+```
+
+```output
+2*y(t)*Derivative(y(t), t) [0]
+```
+
+```python title="numeric.py" tab=Numeric step=ladder colors="dy_dt=purple" hover="dy_dt=dy_dt" check
+def top(time: float) -> float:
+    return np.sqrt(25 - (1 + 0.5 * time) ** 2)
+
+h = 1e-6
+print((top(4 + h) - top(4 - h)) / (2 * h))
+```
+
+```output
+-0.37499999994139444
+```
+
+</CodeTabs>
+
+Substituting $x = 3$ first makes the relation forget that the foot moves, and the rate comes out
+$0$. The stage moves the foot as $x = 1 + 0.5t$, which reaches $3$ at $t = 4$, and a difference
+quotient of the top's height there agrees with the rule.
+
+## Filling a cone
+
+Similar triangles give $r = \frac{h}{2}$, which removes $r$ before differentiating. The inflow
+$\frac{dV}{dt} = 2\pi$ is the known rate:
+
+```python title="cone.py" step=tank colors="h=blue dh_dt=teal" check
+h = sp.Function("h")(t)  # depth of the water
+dh_dt = h.diff(t)
+r = h / 2
+V = sp.pi * r**2 * h / 3
+
+inflow = sp.Eq(sp.diff(V, t), 2 * sp.pi)
+rule = sp.solve(inflow, dh_dt)[0]
+print(sp.simplify(V), rule, rule.subs(h, 4))
+```
+
+```output
+pi*h(t)**3/12 8/h(t)**2 1/2
+```
+
+## An angle of elevation
+
+The observer stands $4$ meters away, so $\tan\theta = \frac{h}{4}$ at every moment. At $h = 4$
+the angle is $\frac{\pi}{4}$:
+
+```python title="balloon.py" step=balloon colors="h=purple dh_dt=purple theta=teal" hover="dh_dt=dh_dt" check
+theta = sp.Function("theta")(t)
+h = sp.Function("h")(t)  # height of the balloon
+dh_dt = h.diff(t)
+
+relation = sp.tan(theta) - h / 4
+rule = sp.solve(sp.diff(relation, t), theta.diff(t))[0]
+print(rule)
+at_h4 = sp.atan(1)  # tan(theta) = 4 / 4
+print(at_h4, rule.subs(dh_dt, 1).subs(theta, at_h4))
+```
+
+```output
+cos(theta(t))**2*Derivative(h(t), t)/4
+pi/4 1/8
+```
+
+## A walking shadow
+
+Solve the similar triangles for $s$ first; the relation $s = 1.5x$ holds at every moment, so
+its rate is $1.5$ times the walking speed, wherever the person is:
+
+```python title="shadow.py" step=shadow colors="x=blue s=purple dx_dt=blue ds_dt=purple" hover="dx_dt=dx_dt ds_dt=ds_dt" check
+x = sp.Function("x")(t)  # the person, from the light
+s_sym = sp.symbols("s")
+similar = sp.Eq(s_sym / 5.4, (s_sym - x) / 1.8)
+s = sp.solve(similar, s_sym)[0]
+dx_dt = x.diff(t)
+ds_dt = sp.diff(s, t)
+print(s, ds_dt, ds_dt.subs(dx_dt, 1.2))
+```
+
+```output
+1.5*x(t) 1.5*Derivative(x(t), t) 1.80000000000000
+```
+
+## Two cars
+
+Both legs change, so both rates appear. At the instant drawn on the stage, $x = 12$, $y = 16$
+and $D = 20$ kilometers:
+
+```python title="cars.py" step=cars colors="x=blue y=purple D=teal dx_dt=blue dy_dt=purple" hover="dx_dt=dx_dt dy_dt=dy_dt" check
+x = sp.Function("x")(t)  # car A, east of the crossing
+y = sp.Function("y")(t)  # car B, north
+D = sp.Function("D")(t)
+dx_dt, dy_dt = x.diff(t), y.diff(t)
+
+rates = sp.diff(D**2 - x**2 - y**2, t)
+rule = sp.solve(rates, D.diff(t))[0]
+print(rule)
+now = {dx_dt: 80, dy_dt: 60}
+print(rule.subs(now).subs({x: 12, y: 16, D: 20}))  # km/h
+```
+
+```output
+(x(t)*Derivative(x(t), t) + y(t)*Derivative(y(t), t))/D(t)
+96
+```

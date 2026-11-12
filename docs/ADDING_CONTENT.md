@@ -189,9 +189,13 @@ rows=12-13"`, else the block's `{n}` applies). The block stays in place and the 
   shown above it in the panel. Keep it to one or two sentences that say what the code does at
   this step. Only inline code and `$math$` keep their formatting there; emphasis and links show
   as plain text. A heading between the paragraph and the block means no lead.
+- **Several blocks in one step** stack all their leads above all the blocks in the panel. Put
+  them in one `<CodeTabs>` with a single lead instead (`chain-rule`, `related-rates`).
 - `codeCorner` in `meta.ts` moves the panel when readouts sit at the bottom-left (the default).
 - Give names their stage colors (`colors=`) and hover keys (`hover=`, the shapes' `hoverKey`), so
-  hovering `A` in the panel lights the matrix and the other way around.
+  hovering `A` in the panel lights the matrix and the other way around. Shapes without a `hoverKey`
+  prop (curves, segments, points) get one by wrapping them in `HoverGroup` from `@/viz-kit`.
+  Color names in `colors=` are the hues only (blue, yellow, teal, red, green, purple, orange).
 
 Content rules for code:
 

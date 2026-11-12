@@ -1,0 +1,137 @@
+The game in NumPy: a tolerance `eps`, a window `delta`, and a check that samples the window.
+Sampling tests many points, not every point, so it can catch a bad `delta` but never prove a
+good one; the proof is the next item's job. The function is the stage's $\frac{x^2}{4} + 1$ with
+$f(2)$ moved to $3$.
+
+## The band
+
+The inputs whose outputs land in the band $2 \pm \varepsilon$ come from solving
+$\frac{x^2}{4} + 1 = 2 \pm \varepsilon$ for $x$. `x = 2` itself is outside: its value is $3$:
+
+```python title="band.py" step=band colors="eps=teal lo=yellow hi=yellow" check
+import numpy as np
+
+a, L = 2.0, 2.0
+
+def f(x: np.ndarray) -> np.ndarray:
+    return np.where(x == a, 3.0, x**2 / 4 + 1)
+
+eps = 0.5
+lo, hi = 2 * np.sqrt(1 - eps), 2 * np.sqrt(1 + eps)
+print(lo, hi)
+print(abs(f(np.array([lo + 1e-9, a, hi - 1e-9])) - L) < eps)
+```
+
+```output
+1.4142135623730951 2.449489742783178
+[ True False  True]
+```
+
+## A window around a
+
+`works` samples a thousand points on each side of `a`, never `a` itself, and asks whether all
+their outputs are inside the band. Too wide fails; narrow enough passes:
+
+```python title="window.py" step=window colors="eps=teal delta=yellow" check
+def works(f, a: float, L: float, eps: float, delta: float) -> bool:
+    t = np.linspace(1e-9, delta, 1000, endpoint=False)
+    x = np.concatenate([a - t, a + t])  # 0 < |x - a| < delta
+    return bool(np.all(np.abs(f(x) - L) < eps))
+
+for delta in (0.9, 0.6, 0.35):
+    print(delta, works(f, a, L, eps, delta))
+```
+
+```output
+0.9 False
+0.6 False
+0.35 True
+```
+
+## The game
+
+For each `eps` of the challenger, start with a window of `1` and halve it until the samples
+pass. Every round finds an answer, as the definition asks:
+
+```python title="game.py" step=game colors="eps=teal delta=yellow" check
+def find_delta(f, a: float, L: float, eps: float) -> float | None:
+    delta = 1.0
+    for _ in range(40):
+        if works(f, a, L, eps, delta):
+            return delta
+        delta /= 2
+    return None  # no answer down to about 1e-12
+
+for eps in (1.0, 0.5, 0.25, 0.1):
+    print(eps, find_delta(f, a, L, eps))
+```
+
+```output
+1.0 0.5
+0.5 0.25
+0.25 0.125
+0.1 0.0625
+```
+
+## The nearer side decides
+
+The exact ends come from the band step. The window is symmetric, so it takes the smaller
+distance. The best `delta` passes and one a little wider fails:
+
+```python title="sides.py" step=sides colors="eps=teal delta=yellow" check
+eps = 0.5
+delta_left = a - 2 * np.sqrt(1 - eps)
+delta_right = 2 * np.sqrt(1 + eps) - a
+delta = min(delta_left, delta_right)
+print(delta_left, delta_right, delta)
+print(works(f, a, L, eps, delta), works(f, a, L, eps, delta + 0.01))
+```
+
+```output
+0.5857864376269049 0.4494897427831779 0.4494897427831779
+True False
+```
+
+## When no delta works
+
+At the jump with $\varepsilon = 0.5$, `find_delta` runs out of halvings for each claimed `L`;
+the explanation shows that every `L` loses once $\varepsilon \le 0.75$. With $0.8$, $1.75$ wins:
+
+```python title="jump.py" step=jump colors="L=teal eps=teal" check
+def jump(x: np.ndarray) -> np.ndarray:
+    return np.where(x < a, x / 2, x / 2 + 1.5)
+
+for L in (1.0, 1.75, 2.5):
+    print(L, find_delta(jump, a, L, 0.5))
+print(find_delta(jump, a, 1.75, 0.8))
+```
+
+```output
+1.0 None
+1.75 None
+2.5 None
+0.0625
+```
+
+## At infinity
+
+The window becomes a threshold `N`. The bound $\frac{6}{\varepsilon}$ from the explanation
+always works; the samples find where the last escape is, a little before it:
+
+```python title="infinity.py" step=infinity colors="eps=teal N=yellow" check
+def wiggle(x: np.ndarray) -> np.ndarray:
+    return 2 + 6 * np.sin(x) / x
+
+eps = 0.5
+x = np.linspace(0.01, 200, 2_000_000)
+escapes = x[np.abs(wiggle(x) - 2) >= eps]
+print(escapes.max(), 6 / eps)
+
+beyond = np.linspace(6 / eps, 200, 100_000)
+print(np.all(np.abs(wiggle(beyond) - 2) < eps))
+```
+
+```output
+11.331039580519791 12.0
+True
+```

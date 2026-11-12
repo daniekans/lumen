@@ -1,0 +1,145 @@
+SymPy settles the limits at infinity exactly; floats show why the stage draws logarithms instead
+of values. A float holds numbers up to about $1.8 \cdot 10^{308}$, and the functions of this
+lesson pass that quickly.
+
+## A logarithmic scale
+
+`2.0 ** 1100` is past the largest float, so Python raises `OverflowError`. The logarithm of the
+same number is a small float: the height on the stage's scale, a line with slope
+$\log_{10} 2$:
+
+```python title="log_scale.py" step=log-scale colors="x=yellow" check
+import math
+
+x = 1100
+try:
+    print(2.0**x)
+except OverflowError as error:
+    print("OverflowError:", error)
+
+print(x * math.log10(2))  # log10 of 2^x
+print(math.log10(2) * 40, 2.0**40)
+```
+
+```output
+OverflowError: (34, 'Numerical result out of range')
+331.1329952303793
+12.041199826559248 1099511627776.0
+```
+
+## Powers against exponentials
+
+The ratio $\frac{x^{10}}{2^x}$ grows for a long time before it falls. `limit` gives the end of the
+story, and `nsolve` the last crossing, here on the logarithms ($x \ln 2 = p \ln x$):
+
+```python title="powers.py" step=powers colors="x=yellow p=teal" check
+from sympy import Symbol, exp, limit, log, nsolve, oo
+
+for x in (10, 50, 100, 200):
+    print(x, x**10 / 2**x)
+
+X = Symbol("X", positive=True)
+print(limit(X**10 / 2**X, X, oo))
+for p in (3, 5, 10):
+    print(p, nsolve(X * log(2) - p * log(X), X, 5 * p))
+```
+
+```output
+10 9765625.0
+50 86.73617379884035
+100 7.888609052210118e-11
+200 6.372367644529809e-38
+0
+3 9.93953514142691
+5 22.4400056800602
+10 58.7701059379214
+```
+
+## Logarithms against powers
+
+`limit` handles the stage's $\sqrt{x}$ and any smaller power, even $x^{\frac{1}{10}}$. That
+crossing is so far out that the search runs on $t = \ln x$, then converts back:
+
+```python title="logarithm.py" step=logarithm check
+from sympy import Rational, sqrt
+
+print(limit(log(X) / sqrt(X), X, oo))
+print(limit(log(X) / X ** Rational(1, 10), X, oo))
+t = Symbol("t", positive=True)
+t_cross = nsolve(t / 10 - log(t), t, 30)  # x^0.1 = ln x with x = e^t
+print(t_cross, exp(t_cross).evalf(3))
+```
+
+```output
+0
+0
+35.7715206395730 3.43e+15
+```
+
+## The factorial
+
+Python integers have no size limit, so `math.factorial` and `10**n` compare exactly. Floats stop
+at $170!$; `math.lgamma` gives $\ln n!$ for any size, the stage's curve between whole numbers:
+
+```python title="factorial.py" step=factorial check
+for n in (10, 24, 25, 30):
+    print(n, math.factorial(n) > 10**n)
+
+try:
+    print(float(math.factorial(171)))
+except OverflowError as error:
+    print("OverflowError:", error)
+print(math.lgamma(1000 + 1) / math.log(10))  # log10 of 1000!
+```
+
+```output
+10 False
+24 False
+25 True
+30 True
+OverflowError: int too large to convert to float
+2567.6046442221323
+```
+
+## Dominant terms
+
+The ratio climbs to about $16$ before the exponentials take over; `limit` divides through and
+gives $3$:
+
+```python title="dominant.py" step=dominant-terms colors="x=yellow" check
+def ratio(x: float) -> float:
+    return (3 * 2**x + x**4) / (2**x + x**2)
+
+for x in (0, 7, 15, 30, 60):
+    print(x, round(ratio(x), 4))
+print(limit((3 * 2**X + X**4) / (2**X + X**2), X, oo))
+```
+
+```output
+0 3.0
+7 15.7345
+15 4.514
+30 3.0008
+60 3.0
+3
+```
+
+## Big-O
+
+$f = O(x^2)$ because $\frac{f(x)}{x^2}$ has a finite limit. With $C = 4$, `solve` finds the $x_0$
+where the bound starts to hold, the larger root of $(C - 3)x^2 - 5x - 2$:
+
+```python title="big_o.py" step=big-o colors="C=teal x0=yellow" check
+from sympy import solve
+
+f = 3 * X**2 + 5 * X + 2
+print(limit(f / X**2, X, oo))
+C = 4
+x0 = max(solve(f - C * X**2, X))
+print(x0, x0.evalf(4))
+```
+
+```output
+3
+5/2 + sqrt(33)/2 5.372
+```

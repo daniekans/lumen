@@ -8,12 +8,14 @@ import {
   AxisInterval,
   FunctionPlot,
   Grid,
+  HoverGroup,
   MathLabel,
   Overlay,
   Point,
   Segment,
   Stage,
   useAnimatedValue,
+  useHighlight,
   useSequence,
   useStepEffect,
   useStepStart,
@@ -98,6 +100,7 @@ export default function DerivativeFunction() {
   const [kink, setKink] = useVizParam<Kink>('kink', 'cusp', kinkCodec)
   const [op, setOp] = useVizParam<Op>('fn', 'square', opCodec)
   const seq = useSequence()
+  const hl = useHighlight()
   const start = useStepStart({ x, h })
 
   const sweep = (from: number, to: number, duration: number) =>
@@ -145,6 +148,7 @@ export default function DerivativeFunction() {
     <>
       <Stage
         zoomable
+        highlight={hl}
         domain={{ x: [vx0, vx1], y: [vy0, vy1] }}
         ariaLabel="Graph of a function and its derivative"
         overlay={
@@ -157,12 +161,14 @@ export default function DerivativeFunction() {
                   value={fmt(f(x))}
                   color={vc.blue}
                   hint="$f(x) = 0.2x^3 - 1.2x^2 + 1.8x + 1$"
+                  {...hl.bind('f')}
                 />
                 <Readout
                   label="slope $f'(x)$"
                   value={fmt(m)}
                   color={vc.teal}
                   hint="$f'(x) = 0.6x^2 - 2.4x + 1.8 = 0.6(x - 1)(x - 3)$"
+                  {...hl.bind('fprime')}
                 />
               </ReadoutPanel>
             )}
@@ -179,12 +185,14 @@ export default function DerivativeFunction() {
                   value={fmt(rightSlope, 2)}
                   color={vc.yellow}
                   hint="$\frac{f(2 + h) - f(2)}{h}$"
+                  {...hl.bind('right')}
                 />
                 <Readout
                   label="from the left"
                   value={fmt(leftSlope, 2)}
                   color={vc.orange}
                   hint="$\frac{f(2) - f(2 - h)}{h}$"
+                  {...hl.bind('left')}
                 />
               </ReadoutPanel>
             )}
@@ -221,22 +229,26 @@ export default function DerivativeFunction() {
                 <MathLabel at={[A, df(A)]} tex="f'(2) = -0.6" color={vc.teal} anchor="s" />
               </>
             )}
-            <FunctionPlot
-              f={df}
-              domain={id === 'trace' ? [X_MIN, x] : [X_MIN, X_MAX]}
-              color={vc.teal}
-              width={2.5}
-            />
-            <FunctionPlot f={f} domain={[X_MIN, X_MAX]} color={vc.blue} />
-            <MathLabel at={[2.8, f(2.8)]} tex="f" color={vc.blue} anchor="n" offset={10} />
-            <MathLabel
-              at={[0.4, df(0.4)]}
-              tex="f'"
-              color={vc.teal}
-              anchor="w"
-              offset={10}
-              opacity={id === 'trace' && x < 0.4 ? 0 : 1}
-            />
+            <HoverGroup hoverKey="fprime">
+              <FunctionPlot
+                f={df}
+                domain={id === 'trace' ? [X_MIN, x] : [X_MIN, X_MAX]}
+                color={vc.teal}
+                width={2.5}
+              />
+              <MathLabel
+                at={[0.4, df(0.4)]}
+                tex="f'"
+                color={vc.teal}
+                anchor="w"
+                offset={10}
+                opacity={id === 'trace' && x < 0.4 ? 0 : 1}
+              />
+            </HoverGroup>
+            <HoverGroup hoverKey="f">
+              <FunctionPlot f={f} domain={[X_MIN, X_MAX]} color={vc.blue} />
+              <MathLabel at={[2.8, f(2.8)]} tex="f" color={vc.blue} anchor="n" offset={10} />
+            </HoverGroup>
             <Segment from={P} to={[x, m]} color={vc.muted} width={1} dash="2 4" />
             <Segment from={piece.from} to={piece.to} color={vc.teal} width={2.5} />
             <Point at={[x, m]} color={vc.teal} r={5} coords={false} />
@@ -257,11 +269,19 @@ export default function DerivativeFunction() {
               <FunctionPlot f={g.df} breaks={[A]} color={vc.teal} width={2} dash="6 6" />
             )}
             <MathLabel at={[4.6, g.df(4.6)]} tex="f'" color={vc.teal} anchor="s" offset={10} />
-            <Segment from={O} to={R} extend color={vc.yellow} width={4} opacity={0.6} />
-            <Segment from={O} to={L} extend color={vc.orange} width={4} opacity={0.6} />
+            <HoverGroup hoverKey="right">
+              <Segment from={O} to={R} extend color={vc.yellow} width={4} opacity={0.6} />
+            </HoverGroup>
+            <HoverGroup hoverKey="left">
+              <Segment from={O} to={L} extend color={vc.orange} width={4} opacity={0.6} />
+            </HoverGroup>
             <FunctionPlot f={g.f} color={vc.blue} />
-            <Point at={R} color={vc.yellow} r={5.5} onDrag={([px]) => moveH(px - A)} />
-            <Point at={L} color={vc.orange} r={5.5} onDrag={([px]) => moveH(A - px)} />
+            <HoverGroup hoverKey="right">
+              <Point at={R} color={vc.yellow} r={5.5} onDrag={([px]) => moveH(px - A)} />
+            </HoverGroup>
+            <HoverGroup hoverKey="left">
+              <Point at={L} color={vc.orange} r={5.5} onDrag={([px]) => moveH(A - px)} />
+            </HoverGroup>
             <Point at={O} color={vc.blue} r={6} />
           </>
         )}

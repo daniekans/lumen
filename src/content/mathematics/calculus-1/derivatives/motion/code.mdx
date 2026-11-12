@@ -1,0 +1,101 @@
+A sensor never gives a formula, only positions at sample times. The blocks treat the ball that
+way: NumPy turns samples of $s(t) = 19.6t - 4.9t^2$ into velocities and an acceleration, and
+SymPy gives the exact derivatives to compare with.
+
+## Position over time
+
+Samples every half second, from the throw to the landing:
+
+```python title="position.py" step=position colors="s=blue" check
+import numpy as np
+import sympy as sp
+
+def position(t: np.ndarray) -> np.ndarray:
+    return 19.6 * t - 4.9 * t**2  # meters
+
+t = np.linspace(0.0, 4.0, 9)  # seconds
+s = position(t)
+print(t)
+print(s.round(3))
+```
+
+```output
+[0.  0.5 1.  1.5 2.  2.5 3.  3.5 4. ]
+[ 0.     8.575 14.7   18.375 19.6   18.375 14.7    8.575  0.   ]
+```
+
+## Average velocity
+
+Meters over seconds: the slope of the secant from $t = 1$ to $t + \Delta t = 2$:
+
+```python title="average.py" step=average colors="ds=yellow" check
+t0, dt = 1.0, 1.0
+ds = position(t0 + dt) - position(t0)
+print(ds, ds / dt)  # meters, meters per second
+```
+
+```output
+4.9 4.9
+```
+
+## The speedometer reading
+
+Shrink $\Delta t$ and the averages approach $v(1) = 9.8$. For this parabola the error is exactly
+$4.9\,\Delta t$, so each tenfold cut gains one digit:
+
+```python title="instant.py" step=instant check
+for dt in [1.0, 0.1, 0.01, 0.001]:
+    ds = position(t0 + dt) - position(t0)
+    print(f"{dt:<6} {ds / dt:.6f}")
+```
+
+```output
+1.0    4.900000
+0.1    9.310000
+0.01   9.751000
+0.001  9.795100
+```
+
+## Velocity as a function
+
+`np.gradient` divides the differences of neighbors by the spacing at every sample, a velocity at
+each time. `edge_order=2` uses a second-order formula at the ends too, exact for a parabola.
+SymPy gives $v(t)$ itself:
+
+```python title="velocity.py" step=velocity colors="v=teal s=blue" check
+v = np.gradient(s, t, edge_order=2).round(9)
+print(v)
+
+ts = sp.symbols("t")
+s_exact = 98 * ts / 5 - 49 * ts**2 / 10  # exact 19.6, 4.9
+v_exact = sp.diff(s_exact, ts)
+print(v_exact, sp.solve(v_exact, ts))  # zero at the top
+```
+
+```output
+[ 19.6  14.7   9.8   4.9  -0.   -4.9  -9.8 -14.7 -19.6]
+98/5 - 49*t/5 [2]
+```
+
+## Acceleration
+
+Apply the same step to the velocity samples. Every value is $-9.8$ meters per second per second,
+and SymPy's second derivative agrees:
+
+```python title="acceleration.py" step=acceleration colors="a=orange v=teal" check
+a = np.gradient(v, t, edge_order=2)  # m/s^2
+print(a.round(3))
+print(sp.diff(s_exact, ts, 2))
+
+speeding_up = np.sign(v) == np.sign(a)
+print(t[speeding_up])  # moving down, after the top at t = 2
+```
+
+```output
+[-9.8 -9.8 -9.8 -9.8 -9.8 -9.8 -9.8 -9.8 -9.8]
+-49/5
+[2.5 3.  3.5 4. ]
+```
+
+Real sensors add noise, and dividing small differences of noisy samples by a small spacing
+magnifies it. That is why velocity from GPS positions is smoothed before it is shown.

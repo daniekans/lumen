@@ -1,0 +1,149 @@
+Each rule in this item comes from one standard limit. The blocks compute those limits with
+NumPy, compare the slopes the stage measures with the rules, and let SymPy's `diff` confirm the
+results.
+
+## $e^x$ is its own slope
+
+The factor $\frac{e^h - 1}{h}$ tends to $1$, so a small difference quotient of $e^x$ is close to
+the height $e^x$ at every $x$:
+
+```python title="exp.py" step=exp colors="height=blue slope=teal" check
+import numpy as np
+import sympy as sp
+
+for h in [0.1, 0.01, 0.0001]:
+    print(h, (np.exp(h) - 1) / h)
+
+h = 1e-6
+for x in [-1.0, 0.6, 2.0]:
+    height = np.exp(x)
+    slope = (np.exp(x + h) - np.exp(x - h)) / (2 * h)
+    print(x, height, slope)
+```
+
+```output
+0.1 1.0517091807564771
+0.01 1.005016708416795
+0.0001 1.000050001667141
+-1.0 0.36787944117144233 0.3678794411599018
+0.6 1.8221188003905089 1.82211880039862
+2.0 7.38905609893065 7.3890560989831044
+```
+
+## Other bases
+
+For $b^x$ the factor tends to the slope at $0$, and that slope is $\ln b$. SymPy writes the
+derivative with the factor in front:
+
+```python title="base.py" step=base colors="b=blue" check
+b = 2.0
+h = 1e-6
+print((b**h - 1) / h, np.log(b))  # slope at 0, ln b
+
+xs, bs = sp.symbols("x b", positive=True)
+print(sp.diff(bs**xs, xs))
+```
+
+```output
+0.6931474207938493 0.6931471805599453
+b**x*log(b)
+```
+
+A population growing in proportion to its size, $\frac{dP}{dt} = kP$, is the same rule.
+`dsolve` finds the exponential:
+
+```python title="growth.py" colors="k=yellow" check
+t, k, P0 = sp.symbols("t k P_0")
+P = sp.Function("P")
+print(sp.dsolve(sp.Eq(P(t).diff(t), k * P(t)), P(t), ics={P(0): P0}))
+print(0.3 * 5000)  # cells per hour, at k = 0.3 and 5000 cells
+```
+
+```output
+Eq(P(t), P_0*exp(k*t))
+1500.0
+```
+
+## Sine on the unit circle
+
+Turn the angle by `d_theta` and divide the change of each coordinate by it. As the turn
+shrinks, the ratios approach $\cos\theta$ and $-\sin\theta$:
+
+```python title="circle.py" step=circle colors="theta=blue d_theta=yellow" check
+theta = 0.9
+for d_theta in [0.6, 0.1, 0.001]:
+    turned = theta + d_theta
+    up = (np.sin(turned) - np.sin(theta)) / d_theta
+    left = (np.cos(turned) - np.cos(theta)) / d_theta
+    print(d_theta, np.round([up, left], 5))
+print("limit", np.round([np.cos(theta), -np.sin(theta)], 5))
+```
+
+```output
+0.6 [ 0.35695 -0.91812]
+0.1 [ 0.58144 -0.81308]
+0.001 [ 0.62122 -0.78364]
+limit [ 0.62161 -0.78333]
+```
+
+## The slopes of sine
+
+`diff` gives $\cos x$ for sine, and the quotient rule's result for tangent simplifies to
+$\frac{1}{\cos^2 x}$. In degrees every slope carries $\frac{\pi}{180}$:
+
+```python title="sine.py" step=sine-graph check
+x = sp.symbols("x")
+print(sp.diff(sp.sin(x), x), sp.diff(sp.cos(x), x))
+d_tan = sp.diff(sp.tan(x), x)
+print(sp.simplify(d_tan - 1 / sp.cos(x)**2))
+
+deg = sp.symbols("d")  # an angle in degrees
+print(sp.diff(sp.sin(sp.pi * deg / 180), deg))
+```
+
+```output
+cos(x) -sin(x)
+0
+pi*cos(pi*d/180)/180
+```
+
+## $\ln x$ by reflection
+
+The tangent of $e^y$ at $Q = (\ln x, x)$ has slope $x$; the reflection swaps rise and run, so
+the slope of $\ln$ at $P = (x, \ln x)$ is $\frac{1}{x}$:
+
+```python title="log.py" step=log colors="slope_Q=blue slope_P=green" check
+x = 2.0
+h = 1e-6
+y = np.log(x)
+slope_Q = (np.exp(y + h) - np.exp(y - h)) / (2 * h)
+slope_P = (np.log(x + h) - np.log(x - h)) / (2 * h)
+print(slope_Q, slope_P, 1 / slope_Q)
+print(sp.diff(sp.log(sp.Symbol("x")), "x"))
+```
+
+```output
+2.0000000000575113 0.5000000000143778 0.49999999998562217
+1/x
+```
+
+## Every real exponent
+
+With a positive $x$ the rule holds for any real $r$. At $r = \frac{1}{2}$ the slope
+$\frac{1}{2\sqrt{x}}$ grows without bound as $x$ nears $0$:
+
+```python title="powers.py" step=real-powers colors="r=blue" check
+x, r = sp.symbols("x r", positive=True)
+print(sp.simplify(sp.diff(x**r, x)))
+
+r = 0.5
+for x in [1.0, 0.01, 0.0001]:
+    print(x, r * x**(r - 1))
+```
+
+```output
+r*x**(r - 1)
+1.0 0.5
+0.01 5.0
+0.0001 50.0
+```

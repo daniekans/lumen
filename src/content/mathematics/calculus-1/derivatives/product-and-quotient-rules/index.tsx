@@ -7,6 +7,7 @@ import {
   Axes,
   FunctionPlot,
   Grid,
+  HoverGroup,
   MathLabel,
   Overlay,
   Path,
@@ -14,6 +15,7 @@ import {
   Segment,
   Stage,
   useAnimatedValue,
+  useHighlight,
   useSequence,
   useStepEffect,
   useStepStart,
@@ -85,27 +87,33 @@ function GrowingRectangle({
         width={1.5}
         fill={alpha(vc.blue, 0.2)}
       />
-      <Path
-        points={rect(w, 0, w + dw, h)}
-        closed
-        color={vc.teal}
-        width={1.5}
-        fill={alpha(vc.teal, 0.35)}
-      />
-      <Path
-        points={rect(0, h, w, h + dh)}
-        closed
-        color={vc.purple}
-        width={1.5}
-        fill={alpha(vc.purple, 0.35)}
-      />
-      <Path
-        points={rect(w, h, w + dw, h + dh)}
-        closed
-        color={vc.yellow}
-        width={1.5}
-        fill={alpha(vc.yellow, 0.45)}
-      />
+      <HoverGroup hoverKey="right">
+        <Path
+          points={rect(w, 0, w + dw, h)}
+          closed
+          color={vc.teal}
+          width={1.5}
+          fill={alpha(vc.teal, 0.35)}
+        />
+      </HoverGroup>
+      <HoverGroup hoverKey="top">
+        <Path
+          points={rect(0, h, w, h + dh)}
+          closed
+          color={vc.purple}
+          width={1.5}
+          fill={alpha(vc.purple, 0.35)}
+        />
+      </HoverGroup>
+      <HoverGroup hoverKey="corner">
+        <Path
+          points={rect(w, h, w + dw, h + dh)}
+          closed
+          color={vc.yellow}
+          width={1.5}
+          fill={alpha(vc.yellow, 0.45)}
+        />
+      </HoverGroup>
       <MathLabel at={[w / 2, h / 2]} tex={labels.area} color={vc.blue} />
       <MathLabel at={[w / 2, 0]} tex={labels.width} anchor="s" />
       <MathLabel at={[0, h / 2]} tex={labels.height} anchor="w" />
@@ -138,6 +146,7 @@ export default function ProductAndQuotientRules() {
   const [n, setN] = useVizParam<number>('n', 1)
   const [px, setPx] = useState(1)
   const seq = useSequence()
+  const hl = useHighlight()
   const start = useStepStart(dx)
 
   const tweenDx = (from: number, to: number) =>
@@ -180,6 +189,7 @@ export default function ProductAndQuotientRules() {
     <>
       <Stage
         zoomable
+        highlight={hl}
         domain={{ x: [vx0, vx1], y: [vy0, vy1] }}
         ariaLabel="A growing rectangle behind the product and quotient rules, and graphs of negative powers"
         overlay={
@@ -193,8 +203,18 @@ export default function ProductAndQuotientRules() {
                   value={fmt((f(x1) * g(x1) - f(x) * g(x)) / dx, 3)}
                   hint="The whole gain in area, strips and corner, divided by $\Delta x$."
                 />
-                <Readout label="$f'g$" value={fmt(df() * g(x), 3)} color={vc.teal} />
-                <Readout label="$fg'$" value={fmt(f(x) * dg(x), 3)} color={vc.purple} />
+                <Readout
+                  label="$f'g$"
+                  value={fmt(df() * g(x), 3)}
+                  color={vc.teal}
+                  {...hl.bind('right')}
+                />
+                <Readout
+                  label="$fg'$"
+                  value={fmt(f(x) * dg(x), 3)}
+                  color={vc.purple}
+                  {...hl.bind('top')}
+                />
                 <Readout
                   label="$f'g + fg'$"
                   value={fmt(df() * g(x) + f(x) * dg(x), 3)}
@@ -210,6 +230,7 @@ export default function ProductAndQuotientRules() {
                   label="$q = \frac{f}{g}$"
                   value={fmt(Q(x), 3)}
                   hint="$f(x) = \frac{1}{2}x^2 + 1$ and $g(x) = \frac{1}{2}x + 1$ here."
+                  {...hl.bind('q')}
                 />
                 <Readout label="$\frac{\Delta q}{\Delta x}$" value={fmt((Q(x1) - Q(x)) / dx, 3)} />
                 <Readout label="$\frac{f'g - fg'}{g^2}$" value={fmt(dQ(x), 3)} color={vc.teal} />
@@ -221,12 +242,14 @@ export default function ProductAndQuotientRules() {
                   label="$f(x)$"
                   value={<Tex>{`\\frac{1}{${n === 1 ? 'x' : `x^{${n}}`}} = x^{-${n}}`}</Tex>}
                   color={vc.blue}
+                  {...hl.bind('f')}
                 />
                 <Readout label="$x$" value={fmt(px)} />
                 <Readout
                   label="$-nx^{-n-1}$"
                   value={<Tex>{`${n === 1 ? '-' : -n}x^{${-n - 1}} = ${fmt(dPower(px), 3)}`}</Tex>}
                   color={vc.teal}
+                  {...hl.bind('fprime')}
                 />
               </ReadoutPanel>
             )}
@@ -273,8 +296,12 @@ export default function ProductAndQuotientRules() {
 
         {id === 'negative-powers' && (
           <>
-            <FunctionPlot f={dPower} color={vc.teal} width={2} dash="6 6" breaks={[0]} />
-            <FunctionPlot f={power} color={vc.blue} breaks={[0]} />
+            <HoverGroup hoverKey="fprime">
+              <FunctionPlot f={dPower} color={vc.teal} width={2} dash="6 6" breaks={[0]} />
+            </HoverGroup>
+            <HoverGroup hoverKey="f">
+              <FunctionPlot f={power} color={vc.blue} breaks={[0]} />
+            </HoverGroup>
             <Segment from={tangent.from} to={tangent.to} color={vc.teal} width={2.5} />
             <Segment from={P} to={[px, dPower(px)]} color={vc.muted} width={1} dash="2 4" />
             <Point at={[px, dPower(px)]} color={vc.teal} r={4.5} coords={false} />

@@ -8,6 +8,7 @@ export const meta = defineItem({
   tags: ['derivative', 'slope', 'differentiable', 'corner', 'cusp', 'vertical tangent', 'operator'],
   level: 'core',
   order: 3,
+  codeCorner: 'bottom-right',
   skills: ['derivative-graphs'],
   steps: [
     {

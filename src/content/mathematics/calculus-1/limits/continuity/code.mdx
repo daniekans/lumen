@@ -1,0 +1,127 @@
+SymPy checks the three conditions of continuity with exact limits, and plain Python runs the
+bisection method of the last step. The functions are the ones on the stage.
+
+## Three conditions
+
+`is_continuous_at` asks the three questions in order. A function is given by the formula used
+left of $a$, the one used right of $a$, and its value at $a$ (`None` when undefined), so each
+one-sided limit is an exact SymPy `limit` of one formula:
+
+```python title="continuity.py" step=definition colors="f=blue value=yellow lim=teal" check
+from sympy import Expr, Rational, Symbol, limit, oo, sin
+
+x = Symbol("x", real=True)
+
+def is_continuous_at(left: Expr, right: Expr, value, a) -> bool:
+    if value is None:
+        return False  # f(a) is not defined
+    lim = limit(left, x, a, "-")
+    if lim != limit(right, x, a, "+") or lim in (oo, -oo):
+        return False  # no (finite) two-sided limit
+    return bool(lim == value)
+
+f = 2 + (x - 1) - Rational(3, 10) * (x - 1) ** 2
+print(f.subs(x, 1), limit(f, x, 1), is_continuous_at(f, f, 2, 1))
+```
+
+```output
+2 2 True
+```
+
+## Kinds of discontinuity
+
+Each kind fails a different check. The removable one moves the value to $3.5$; the jump uses
+`g - 3/2` on the right. The oscillating kind has no limit at all: SymPy returns
+`AccumBounds(1, 3)`, the range the values keep sweeping, not a number:
+
+```python title="kinds.py" step=discontinuities colors="f=blue" check
+g = f
+jump_right = g - Rational(3, 2)
+infinite = 2 + 1 / (x - 1)
+
+print(is_continuous_at(g, g, Rational(7, 2), 1))  # removable
+print(limit(g, x, 1, "-"), limit(jump_right, x, 1, "+"))
+print(is_continuous_at(g, jump_right, Rational(1, 2), 1))
+print(limit(infinite, x, 1, "-"), limit(infinite, x, 1, "+"))
+print(is_continuous_at(infinite, infinite, None, 1))
+print(limit(2 + sin(1 / (x - 1)), x, 1))
+```
+
+```output
+False
+2 1/2
+False
+-oo oo
+False
+AccumBounds(1, 3)
+```
+
+## Choosing a constant
+
+Each piece is a polynomial, so only $x = 2$ needs a check. Set the left limit equal to $f(2)$
+and solve for `c`:
+
+```python title="parameter.py" step=parameter colors="c=blue" check
+from sympy import Eq, solve
+
+c = Symbol("c")
+left = limit(x**2 + c, x, 2)  # the left piece near 2
+value = (3 * x - 1).subs(x, 2)  # the right piece gives f(2)
+print(left, value, solve(Eq(left, value), c))
+```
+
+```output
+c + 4 5 [1]
+```
+
+## The intermediate value theorem
+
+$f(1)$ and $f(2)$ bracket every $N$ between them. The theorem promises a `c`; `nsolve` finds
+one for $N = 2$ by a numerical search that starts in the interval:
+
+```python title="ivt.py" step=ivt colors="f=blue N=teal c=yellow" check
+from sympy import nsolve
+
+f = x**3 - x - 1
+print(f.subs(x, 1), f.subs(x, 2))
+
+N = 2
+c = nsolve(f - N, x, 1.5)
+print(c, f.subs(x, c))
+```
+
+```output
+-1 5
+1.67169988165716 2.00000000000000
+```
+
+## Bisection
+
+Keep the half whose ends differ in sign. Each pass halves `b - a`, so ten passes take $[1, 2]$ to
+a width under $0.001$:
+
+```python title="bisection.py" step=bisection colors="a=yellow b=yellow m=teal" check
+def f(x: float) -> float:
+    return x**3 - x - 1
+
+def bisect(a: float, b: float, steps: int) -> tuple[float, float]:
+    for _ in range(steps):
+        m = (a + b) / 2
+        if f(a) * f(m) <= 0:
+            b = m  # the sign changes in the left half
+        else:
+            a = m
+    return a, b
+
+for k in (0, 1, 2, 10, 30):
+    a, b = bisect(1.0, 2.0, k)
+    print(k, a, b, b - a)
+```
+
+```output
+0 1.0 2.0 1.0
+1 1.0 1.5 0.5
+2 1.25 1.5 0.25
+10 1.32421875 1.3251953125 0.0009765625
+30 1.3247179565951228 1.3247179575264454 9.313225746154785e-10
+```

@@ -1,0 +1,125 @@
+Two ways to get $f'$ in code: from samples of $f$ with NumPy, the way data arrives, and exactly
+with SymPy, which applies the limit definition through rules. Hover a name to light its graph.
+
+## Slopes from samples
+
+`np.gradient` estimates the slope at each sample from its neighbors, a difference quotient with
+`h` equal to the spacing. Next to the exact `df` it is close (the largest error is at the ends,
+which have a neighbor on one side only), and ten times denser samples cut the error by ten:
+
+```python title="trace.py" step=trace colors="f=blue df=teal slopes=teal" hover="f=f df=fprime slopes=fprime" check
+import numpy as np
+import sympy as sp
+
+x = sp.symbols("x")
+f = sp.Rational(1, 5) * x**3 - sp.Rational(6, 5) * x**2 \
+    + sp.Rational(9, 5) * x + 1
+df = sp.lambdify(x, sp.diff(f, x), "numpy")
+
+for n in [27, 261]:
+    xs = np.linspace(0.0, 5.2, n)
+    ys = sp.lambdify(x, f, "numpy")(xs)
+    slopes = np.gradient(ys, xs)
+    print(n, np.abs(slopes - df(xs)).max().round(4))
+```
+
+```output
+27 0.376
+261 0.0383
+```
+
+## Reading the sign
+
+The zeros of $f'$ are the flat tangents; its sign on each side says rising or falling. Where
+$f'$ itself has a flat tangent, $f$ is steepest:
+
+```python title="read.py" step=read colors="dfdx=teal" hover="dfdx=fprime" check
+dfdx = sp.diff(f, x)
+print(sp.factor(dfdx))
+print(sp.solve(dfdx, x))
+
+for a in [0.5, 2.0, 4.0]:
+    print(a, "rising" if df(a) > 0 else "falling")
+
+steepest = sp.solve(sp.diff(dfdx, x), x)
+print(steepest, dfdx.subs(x, steepest[0]))
+```
+
+```output
+3*(x - 3)*(x - 1)/5
+[1, 3]
+0.5 rising
+2.0 falling
+4.0 rising
+[2] -3/5
+```
+
+## A corner
+
+The quotient of $|x - 2| + 1$ at $2$ from each side. SymPy finds both one-sided limits; they
+differ, so asking for the two-sided limit (`"+-"`) raises an error:
+
+```python title="corner.py" step=corner colors="right=yellow left=orange" hover="right=right left=left" check
+h = sp.symbols("h")
+g = sp.Abs(x - 2) + 1
+quotient = (g.subs(x, 2 + h) - g.subs(x, 2)) / h
+
+right = sp.limit(quotient, h, 0, "+")
+left = sp.limit(quotient, h, 0, "-")
+print(right, left)
+try:
+    sp.limit(quotient, h, 0, "+-")
+except ValueError as error:
+    print(error)
+```
+
+```output
+1 -1
+The limit does not exist since left hand limit = -1 and right hand limit = 1
+```
+
+## Cusps and vertical tangents
+
+`np.cbrt` is the real cube root, negative for negative input. The quotients grow without bound:
+opposite signs for the cusp, the same sign for the vertical tangent.
+
+```python title="cusp.py" step=cusp colors="right=yellow left=orange" hover="right=right left=left" check
+def cusp(t: np.ndarray) -> np.ndarray:
+    return np.cbrt((t - 2) ** 2) + 1
+
+def vertical(t: np.ndarray) -> np.ndarray:
+    return np.cbrt(t - 2) + 2
+
+hs = np.array([0.1, 0.001, 0.00001])
+for g in [cusp, vertical]:
+    right = (g(2 + hs) - g(2)) / hs
+    left = (g(2) - g(2 - hs)) / hs
+    print(g.__name__, right.round(1), left.round(1))
+```
+
+```output
+cusp [ 2.2 10.  46.4] [ -2.2 -10.  -46.4]
+vertical [   4.6  100.  2154.4] [   4.6  100.  2154.4]
+```
+
+## $\frac{d}{dx}$ as an operator
+
+`sp.diff` is the operator: a function goes in, a function comes out. The domain of the output can
+be smaller, as for $\sqrt{x}$ at $0$:
+
+```python title="operator.py" step=operator check
+for fx in [x**2, x**3 - 3 * x, 1 / x, sp.sqrt(x)]:
+    print(fx, "->", sp.diff(fx, x))
+
+print(sp.sqrt(x).subs(x, 0), sp.diff(sp.sqrt(x), x).subs(x, 0))
+```
+
+```output
+x**2 -> 2*x
+x**3 - 3*x -> 3*x**2 - 3
+1/x -> -1/x**2
+sqrt(x) -> 1/(2*sqrt(x))
+0 zoo
+```
+
+`zoo` is SymPy's complex infinity: $\frac{1}{0}$, no number.

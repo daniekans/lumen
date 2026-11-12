@@ -8,6 +8,7 @@ export const meta = defineItem({
   tags: ['product rule', 'quotient rule', 'power rule', 'derivative', 'rectangle'],
   level: 'core',
   order: 6,
+  codeCorner: 'bottom-right',
   skills: ['basic-rules'],
   steps: [
     {
