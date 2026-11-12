@@ -15,7 +15,7 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 6     | The code panel: code beside the visual, step by step (replaces tab) | done    |
 | 7     | Code that moves with the visual: per-step and animated line focus   | done    |
 | 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | done    |
-| 9     | Code for existing items: Calculus 1 (18)                            | review  |
+| 9     | Code for existing items: Calculus 1 (18)                            | done    |
 | 10    | Code for existing items: Data Engineering (16)                      | planned |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
@@ -512,7 +512,7 @@ so `h = 1e-12` is worse than `h = 1e-6`.
 Also `integrals/riemann-sums` (legacy): left, right and midpoint sums as `np.sum(f(x) * dx)`, the
 error shrinking with $n$, and `sympy.integrate` for the exact area.
 
-**Batch 9 (built 2026-11-12, for review).** All 18 items have a `code.mdx`; every block is
+**Batch 9 (built 2026-11-12, approved by the owner on 2026-11-12).** All 18 items have a `code.mdx`; every block is
 `check` and its output comes from a real run. Notes:
 
 - New kit piece `HoverGroup` (`src/viz-kit/stage/HoverGroup.tsx`): gives a hover key to shapes
