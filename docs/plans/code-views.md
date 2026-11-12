@@ -14,8 +14,8 @@ Drafted on 2026-11-01 and reviewed by the owner the same day (answers at the end
 | 5     | Snippet runner (Docker envs) and opt-in checks in a separate CI job | done    |
 | 6     | The code panel: code beside the visual, step by step (replaces tab) | done    |
 | 7     | Code that moves with the visual: per-step and animated line focus   | done    |
-| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | review  |
-| 9     | Code for existing items: Calculus 1 (18)                            | next    |
+| 8     | Code for existing items: Linear Algebra and Machine Learning (11)   | done    |
+| 9     | Code for existing items: Calculus 1 (18)                            | review  |
 | 10    | Code for existing items: Data Engineering (16)                      | planned |
 
 One batch per session. Update this table and the "Suggested next session" in `ROADMAP.md` when a
@@ -465,7 +465,7 @@ Also in this batch, `complex-numbers/arithmetic/complex-multiplication`: Python'
 (`z * w`, `abs`, `cmath.phase`) and multiplication as a rotation and scaling, the same as a
 $2 \times 2$ matrix acting on $(a, b)$.
 
-**Batch 8 (built 2026-11-09, for review).** All 11 items have a `code.mdx`; every block is
+**Batch 8 (built 2026-11-09, approved by the owner on 2026-11-12).** All 11 items have a `code.mdx`; every block is
 `check` and its output comes from a real run. Most items had no hover keys, so their arrows
 gained `hoverKey`s (and `useHighlight` where the stage had none) to link the code. Notes:
 
@@ -511,6 +511,32 @@ so `h = 1e-12` is worse than `h = 1e-6`.
 
 Also `integrals/riemann-sums` (legacy): left, right and midpoint sums as `np.sum(f(x) * dx)`, the
 error shrinking with $n$, and `sympy.integrate` for the exact area.
+
+**Batch 9 (built 2026-11-12, for review).** All 18 items have a `code.mdx`; every block is
+`check` and its output comes from a real run. Notes:
+
+- New kit piece `HoverGroup` (`src/viz-kit/stage/HoverGroup.tsx`): gives a hover key to shapes
+  without a `hoverKey` prop (curves, segments, points, rectangles). Used in
+  `derivative-as-limit`, `derivative-function`, `power-and-sum-rules`,
+  `product-and-quotient-rules` and `riemann-sums`; `related-rates` gained `hoverKey`s on its rate
+  arrows. The eight Limits items and the other four Derivatives items link names by color only.
+  Idea for the owner: wrap their shapes in `HoverGroup` too (or give `FunctionPlot`, `Segment`,
+  `Point` and `Path` a native `hoverKey`).
+- Floating point thread: `derivative-as-limit` (error 4.4e-07 at $h = 10^{-6}$, smallest near
+  $10^{-8}$, 3.5e-04 at $10^{-12}$), `squeeze-and-standard-limits` (`np.expm1`, `np.log1p`),
+  `approaching-a-value`, `growth-rates` (overflow against logarithms).
+- SymPy pitfalls met: `limit` gets one-sided limits wrong on a `Piecewise` at its breakpoint, so
+  the code takes each piece's limit; a two-sided limit with opposite infinities returns `zoo`,
+  so the code compares the sides. `epsilon-delta-proofs` says its sampling is a test, not a
+  proof.
+- A step with several blocks stacks all leads above all blocks in the panel; `chain-rule` and
+  `related-rates` use one `<CodeTabs>` with a shared lead instead (rule added to
+  `ADDING_CONTENT.md`).
+- `derivative-function` and `product-and-quotient-rules` moved the panel bottom-right. In
+  `product-and-quotient-rules` it still partly covers the yellow corner at the default $x$ and
+  $\Delta x$; shifting the view would fix it (a visual change, left for the owner).
+- No `useCodeFocus` in this batch: the animations shrink a distance or change $n$, nothing the
+  code does term by term. A Riemann step that adds strips one by one could drive it later.
 
 ### Batch 10: Data Engineering (16 items)
 
