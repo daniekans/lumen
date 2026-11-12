@@ -239,7 +239,11 @@ const runBlocks = (env, blocks) => {
     command = ['docker', ['run', '--rm', '-i', imageOf(env), 'sh', '-c', `${run.join(' ')} run.py`]]
   }
   const started = Date.now()
-  const result = spawnSync(command[0], command[1], { input: script, encoding: 'utf8' })
+  const result = spawnSync(command[0], command[1], {
+    input: script,
+    encoding: 'utf8',
+    maxBuffer: 256 * 1024 * 1024, // Spark's INFO logs pass the 1 MB default
+  })
   const seconds = ((Date.now() - started) / 1000).toFixed(1)
   const at = result.stdout?.lastIndexOf(MARKER) ?? -1
   if (at < 0) {
