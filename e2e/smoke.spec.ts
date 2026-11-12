@@ -36,7 +36,7 @@ test('home lists areas and courses', async ({ page }) => {
 
 test('every item renders and survives its steps', async ({ page }) => {
   // Visits every item, so the time grows with the content.
-  test.setTimeout(240_000)
+  test.setTimeout(480_000)
   const errors = collectErrors(page)
   await page.goto('/')
   const hrefs = await allItemLinks(page)
