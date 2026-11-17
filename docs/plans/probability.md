@@ -6,7 +6,8 @@ Outline, threads and unit plans for Probability and Statistics. Part of
 ## Status
 
 Outline drafted and reviewed on 2026-11-17; approved with the review decisions at the end of the
-outline. No unit is built. The course starts after Calculus 1 Integrals (owner's decision), with
+outline, then revised the same day at the owner's request: statistics grew from one unit to three
+(Estimation, Hypothesis testing, Linear models), so the named tests are covered. No unit is built. The course starts after Calculus 1 Integrals (owner's decision), with
 the unit plan and first batch of Probability foundations.
 
 ## Depth and threads
@@ -14,6 +15,9 @@ the unit plan and first batch of Probability foundations.
 Core depth, as in Calculus and Linear Algebra. The reference syllabi are MIT 18.05 (Introduction to
 Probability and Statistics) and Harvard Stat 110 (Blitzstein), carried to the level Machine
 Learning needs: likelihood, Bayesian updating, the multivariate normal, entropy and Markov chains.
+For statistics, StatQuest (Josh Starmer, a channel the owner likes) is the reference for scope and
+spirit: the common tests, linear models with t-tests and ANOVA as special cases, R², logistic
+regression, multiple testing and the false discovery rate.
 The picture comes first (probability as mass spread over outcomes, sampled thousands of times on
 the stage), then the computation, then proofs. Folder `src/content/mathematics/probability/`,
 course title "Probability and Statistics". Threads:
@@ -26,8 +30,8 @@ course title "Probability and Statistics". Threads:
   $P(B \mid A)$ into $P(A \mid B)$; Bayesian inference applies the same update to a parameter;
   naive Bayes and regularization as a prior carry it into Machine Learning.
 - **Sampling (S).** Simulation from the first unit (a long-run frequency on the stage), then the
-  law of large numbers and the central limit theorem, then estimators, intervals, tests and the
-  bootstrap. Monte Carlo is the bridge to ML and to sampling in Data Engineering.
+  law of large numbers and the central limit theorem, then estimators, intervals, the bootstrap,
+  hypothesis tests (each null distribution first simulated, then named) and linear models. Monte Carlo is the bridge to ML and to sampling in Data Engineering.
 - **Toward ML (ML).** Likelihood as the quantity a model maximizes; negative log-likelihood as the
   loss (cross-entropy for classifiers, squared error from Gaussian noise, a link to regression as
   a projection in Linear Algebra 7); a prior as regularization; softmax as a distribution;
@@ -55,8 +59,14 @@ correct form from the start:
   unit 4.
 - A 95% confidence interval is a procedure that covers the true value in 95% of repetitions, and a
   p-value is $P(\text{data at least this extreme} \mid H_0)$; neither is the probability that the
-  hypothesis or the parameter is in a range. Bayesian credible intervals arrive in unit 6 as a
+  hypothesis or the parameter is in a range. Bayesian credible intervals arrive in unit 7 as a
   different object, not a correction.
+- The $t$, $\chi^2$ and $F$ distributions are defined from normals when they first appear (a
+  standardized mean with an estimated $\sigma$, a sum of squared standard normals, a ratio of two
+  scaled $\chi^2$), so later units use the same definitions.
+- A test that "fails to reject" says the data are compatible with $H_0$, not that $H_0$ is true;
+  each test is stated with its assumptions, and Linear models shows t-tests and ANOVA as cases of
+  one model without changing what they meant.
 - The Poisson pmf sums to 1 because $\sum \frac{\lambda^k}{k!} = e^{\lambda}$; unit 2 says that
   Power and Taylor series (Calculus 2) proves it, and uses the limit $(1 - \frac{\lambda}{n})^n \to
   e^{-\lambda}$ from Limits now. The normal density's constant $\frac{1}{\sqrt{2\pi}}$ is checked
@@ -67,7 +77,9 @@ correct form from the start:
 The course starts after Calculus 1 Integrals (decided 2026-11-17), so every unit can use
 integrals where they help, and unit 3 (densities) needs them. Units 1 and 2 stay discrete (sums,
 not integrals) because that is the clearest first picture, not because integrals are missing.
-Unit 7 (multivariate) leans on Linear Algebra Eigenvalues and SVD. Machine Learning is outlined
+Unit 8 (Linear models) leans on Linear Algebra Orthogonality and least squares, unit 9
+(multivariate) on Eigenvalues and SVD; both are suggested prerequisites, and units 5 to 7 do not
+need them. Machine Learning is outlined
 once Probability foundations is built.
 
 Cross-area links: the birthday problem and hash collisions (DE Partitioning and hashing), entropy
@@ -78,8 +90,9 @@ units 2 and 4 here.
 ### Code and visualization needs
 
 Code views fit almost every item: NumPy's `default_rng` for simulation, `scipy.stats` for named
-distributions, plain Python for counting. The `default` image needs SciPy (check at the start of
-the first batch). New kit pieces, built when the first item needs them: a `Bars` (pmf, histogram)
+distributions and tests, `statsmodels` for regression and ANOVA tables (the output a data
+scientist reads), plain Python for counting. The `default` image needs SciPy and, from unit 8, statsmodels
+(check at the start of the first batch that uses them). New kit pieces, built when the first item needs them: a `Bars` (pmf, histogram)
 primitive with animated heights, a sample stream (dots falling into bins, a Galton board), and a
 point cloud for scatter plots. Joint densities as surfaces wait for `Surface3D` (phase 5, item 1);
 until then they are contour plots and heat maps in 2D.
@@ -89,12 +102,14 @@ until then they are contour plots and heat maps in 2D.
 Medical tests and base rates (Bayes), spam filtering (naive Bayes), A/B tests on a conversion
 rate, requests per second and time between arrivals (Poisson, exponential), retries until success
 (geometric), latency percentiles and heavy tails (p95, p99), hash collisions (birthday), sensor
-noise (normal), polling and sampling a large table, Galton's heights (regression to the mean).
+noise (normal), polling and sampling a large table, Galton's heights (regression to the mean), a
+fair die or a traffic split checked with $\chi^2$, a pipeline change compared before and after
+(paired test), many metrics tested at once (false discoveries), churn as logistic regression.
 Dice and coins stay where they make the mechanism clearest.
 
 ## Probability and Statistics outline
 
-Nine units, about 90 items. Kinds: E explore, L lesson, P practice, C checkpoint.
+Eleven units, about 115 items. Kinds: E explore, L lesson, P practice, C checkpoint.
 
 **1. Probability foundations** (11 items)
 
@@ -140,7 +155,7 @@ Nine units, about 90 items. Kinds: E explore, L lesson, P practice, C checkpoint
 | 4   | continuous-expectation    | L    | $E[X] = \int x f(x)\,dx$ extending unit 2, $E[g(X)]$, variance; a density with no mean (Cauchy)                                        | D       |
 | 5   | practice-densities        | P    | Normalizing constants, interval probabilities, CDFs, means and variances                                                               |         |
 | 6   | normal-distribution       | E    | $\mu$ and $\sigma$ sliders; standardizing to $Z$; 68, 95, 99.7; sensor noise; the constant $\frac{1}{\sqrt{2\pi}}$ checked numerically | D       |
-| 7   | quantiles-and-tails       | E    | Inverse CDF, median against mean, p95 and p99 latency; heavy tails (log-normal, Pareto) where the mean misleads                        | D       |
+| 7   | quantiles-and-tails       | E    | Inverse CDF, median against mean, p95 and p99 latency; heavy tails (log-normal, Pareto); a Q-Q plot to compare a sample with a normal  | D       |
 | 8   | practice-normal-quantiles | P    | Normal probabilities through $Z$, quantiles, percentiles in context                                                                    |         |
 | 9   | transformations           | L    | Density of $Y = g(X)$ by $f_Y(y)\,\lvert dy\rvert = f_X(x)\,\lvert dx\rvert$; inverse-transform sampling                               | Lz, S   |
 | 10  | practice-transformations  | P    | Densities of transformed variables, sampling recipes                                                                                   |         |
@@ -160,37 +175,80 @@ Nine units, about 90 items. Kinds: E explore, L lesson, P practice, C checkpoint
 | 8   | practice-sampling       | P    | Monte Carlo error, sample sizes, stratified estimates                                                                        |         |
 | 9   | checkpoint              | C    | All of the above plus a proof (Chebyshev's inequality from Markov's)                                                         |         |
 
-**5. Estimation and testing** (12 items; focused, see review decision 3): estimators, bias and
-variance, the sampling distribution and the standard error, with the $n - 1$ in the sample
-variance; maximum likelihood as the unit's centerpiece (the likelihood as a function of the
-parameter, the log-likelihood, MLE for a coin and a normal) and the link to loss functions
-(squared error from Gaussian noise, cross-entropy from Bernoulli labels); confidence intervals (a
-hundred intervals, about 95 cover), with the $t$ distribution inside that item for small samples
-rather than as its own topic; hypothesis tests, p-values, type I and II errors and power; an A/B
-test on conversion rates with sample size, the peeking problem and multiple comparisons as one
-lesson; the bootstrap. Not covered: the catalog of named tests (chi-squared, ANOVA, nonparametric
-tests); they can be added on request. S, ML.
+**5. Estimation** (11 items)
 
-**6. Bayesian inference** (8 items): prior to posterior for a coin's bias, one flip at a time (the
+| #   | Item                 | Kind | Content                                                                                                                            | Threads |
+| --- | -------------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | estimators           | E    | The sample mean as a random variable; its sampling distribution drawn by repeated samples; bias and variance of an estimator       | S       |
+| 2   | standard-error       | L    | $\frac{\sigma}{\sqrt{n}}$; standard deviation against standard error; why the sample variance divides by $n - 1$                   | S       |
+| 3   | practice-estimators  | P    | Bias, standard errors, sample sizes for a target precision                                                                         |         |
+| 4   | maximum-likelihood   | E    | The likelihood curve of a coin's bias as flips arrive; the log-likelihood; MLE for Bernoulli, Poisson and normal                   | ML      |
+| 5   | likelihood-and-loss  | L    | Gaussian noise gives squared error, Bernoulli labels give cross-entropy; MLE's large-sample behavior, stated                       | ML      |
+| 6   | practice-mle         | P    | MLEs by differentiating the log-likelihood, losses from noise models                                                               |         |
+| 7   | confidence-intervals | E    | A hundred intervals, about 95 cover the true mean; the $z$ interval; what 95% means and does not mean                              | S       |
+| 8   | t-distribution       | E    | Estimating $\sigma$ widens the interval; degrees of freedom; heavier tails that approach the normal as $n$ grows; the $t$ interval | S       |
+| 9   | bootstrap            | E    | Resampling the sample; percentile intervals for a median or a ratio, where no formula is handy; when it fails                      | S       |
+| 10  | practice-intervals   | P    | $z$ and $t$ intervals, interpreting intervals, choosing $n$                                                                        |         |
+| 11  | checkpoint           | C    | All of the above plus a proof (the $n - 1$ sample variance is unbiased)                                                            |         |
+
+**6. Hypothesis testing** (14 items)
+
+| #   | Item                       | Kind | Content                                                                                                                                          | Threads |
+| --- | -------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------- |
+| 1   | logic-of-tests             | E    | Null hypothesis, test statistic, the null distribution simulated, the p-value as a tail area, the level $\alpha$                                 | S       |
+| 2   | errors-and-power           | E    | Type I and II errors as areas under two curves; power against effect size and $n$                                                                | S       |
+| 3   | practice-p-values          | P    | p-values from simulated and named null distributions, errors and power in context                                                                |         |
+| 4   | t-tests                    | L    | One-sample, two-sample (Welch) and paired tests, one template: (estimate minus null) over standard error                                         | S       |
+| 5   | ab-testing                 | L    | Two proportions; sample size from power; peeking inflates false positives (simulated)                                                            | S       |
+| 6   | practice-t-and-proportions | P    | t-tests and proportion tests in context, paired or not                                                                                           |         |
+| 7   | chi-squared-tests          | E    | $\chi^2$ as a sum of squared standard normals; goodness of fit (a fair die, a traffic split); independence in a contingency table                | S       |
+| 8   | fishers-exact-test         | L    | The hypergeometric distribution from counting; exact p-values for small tables, where $\chi^2$'s approximation is poor                           |         |
+| 9   | permutation-tests          | E    | Shuffle the labels to build the null distribution with no distribution assumed                                                                   | S       |
+| 10  | rank-tests                 | L    | Mann-Whitney (Wilcoxon rank-sum) and Wilcoxon signed-rank as permutation tests on ranks; outliers and skewed data                                | S       |
+| 11  | multiple-testing           | E    | Twenty tests at 0.05; Bonferroni; the false discovery rate and Benjamini-Hochberg; p-hacking                                                     | S       |
+| 12  | choosing-a-test            | L    | A map from question and data type (paired or not, numeric or categorical, assumptions) to the test; effect sizes and odds ratios beside p-values |         |
+| 13  | practice-choosing-tests    | P    | Choose and run the test for a described study; interpret the result                                                                              |         |
+| 14  | checkpoint                 | C    | All of the above plus a proof (Bonferroni's bound from the union bound)                                                                          |         |
+
+**7. Bayesian inference** (8 items): prior to posterior for a coin's bias, one flip at a time (the
 Beta distribution); conjugate priors and the posterior mean as a weighted average of prior and
 data; MAP estimates and regularization (a Gaussian prior is L2, a Laplace prior is L1); credible
-intervals beside confidence intervals, as different objects; naive Bayes as a spam filter;
-the posterior predictive. B, ML.
+intervals beside confidence intervals, as different objects; Bayes factors beside p-values;
+naive Bayes as a spam filter; the posterior predictive. B, ML.
 
-**7. Multivariate distributions** (10 items; suggested prerequisites: Linear Algebra Eigenvalues
+**8. Linear models** (13 items; suggested prerequisite: Linear Algebra Orthogonality)
+
+| #   | Item                         | Kind | Content                                                                                                                    | Threads |
+| --- | ---------------------------- | ---- | -------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | simple-regression            | E    | The least squares line through a point cloud; residuals and their squares drawn; slope from covariance                     | ML      |
+| 2   | r-squared                    | L    | Total = explained + residual sum of squares (a right angle, from the projection); $R^2$ and correlation $r$                | ML      |
+| 3   | practice-regression          | P    | Fits, residuals, $R^2$, predictions in context                                                                             |         |
+| 4   | inference-for-coefficients   | L    | Standard error and $t$ test of a slope, its interval; the $F$ distribution and the $F$ test for the whole model            | S       |
+| 5   | multiple-regression          | E    | A plane through a 3D cloud; the design matrix and normal equations; a coefficient as the effect with the others held fixed | ML      |
+| 6   | tests-as-linear-models       | E    | A t-test is a regression on a 0 or 1 column; the design matrix makes the familiar tests one model                          | S       |
+| 7   | anova                        | L    | One-way ANOVA as a linear model; variance between and within groups; the $F$ test; comparisons after it                    | S       |
+| 8   | practice-linear-models       | P    | Coefficient tests, $F$ tests, ANOVA tables read from `statsmodels`                                                         |         |
+| 9   | regression-diagnostics       | E    | Residual plots, Q-Q plots, leverage and outliers, unequal variance; Anscombe's quartet                                     |         |
+| 10  | categorical-and-interactions | L    | Dummy columns, interaction terms, two-way ANOVA                                                                            |         |
+| 11  | logistic-regression          | E    | Odds and log-odds, the sigmoid, fitting by maximum likelihood; coefficients as odds ratios; deviance                       | ML      |
+| 12  | practice-logistic-and-anova  | P    | Logistic coefficients and probabilities, two-way designs, diagnostics in context                                           |         |
+| 13  | checkpoint                   | C    | All of the above plus a proof (the sum of squares splits because residuals are orthogonal to the fitted values)            |         |
+
+**9. Multivariate distributions** (10 items; suggested prerequisites: Linear Algebra Eigenvalues
 and SVD): covariance matrices as ellipses over a point cloud; correlation measures only linear
-dependence (Anscombe's quartet); $\mathrm{Cov}(A\mathbf{X}) = A\Sigma A^T$ and whitening; the
+dependence; $\mathrm{Cov}(A\mathbf{X}) = A\Sigma A^T$ and whitening; the
 multivariate normal, its contours and their axes as eigenvectors; Mahalanobis distance;
-conditioning a bivariate normal is a regression line (Galton's heights, regression to the mean);
+conditioning a bivariate normal is a regression line (Galton's heights, regression to the mean,
+linked to Linear models);
 PCA revisited from the covariance side (Linear Algebra 8). D, ML.
 
-**8. Information theory** (7 items): surprise $-\log p$ and entropy (revisiting the DE lesson
+**10. Information theory** (7 items): surprise $-\log p$ and entropy (revisiting the DE lesson
 `entropy-and-compression`, from the probability side); cross-entropy and KL divergence, with
 $D_{KL} \ge 0$ proved and its asymmetry shown; log-loss as cross-entropy as negative
 log-likelihood (one quantity, three names); softmax as a distribution over classes; mutual
 information. ML.
 
-**9. Random processes** (8 items): Markov chains as a matrix acting on distributions; stationary
+**11. Random processes** (8 items): Markov chains as a matrix acting on distributions; stationary
 distributions as an eigenvector (Linear Algebra Eigen, PageRank); random walks and gambler's ruin;
 the Poisson process (arrivals in time, linking Poisson and exponential); a first look at Markov
 chain Monte Carlo (Metropolis), for Bayesian ML later. B, S, ML.
@@ -201,20 +259,26 @@ chain Monte Carlo (Metropolis), for Bayesian ML later. B, S, ML.
   7, after units 2 and 4 here, as decided (cross-area topics in the area they fit best).
 - Probability densities in Calculus 2 (Applications of integration) and the Gaussian integral in
   Multivariable 4 link here as applications; they do not repeat this course.
+- Linear and logistic regression appear here as statistical models (fit, inference, diagnostics).
+  Machine Learning links to them and adds the predictive side (gradient descent, regularization,
+  train and test splits, the bias-variance trade-off) without repeating them.
 - Measure theory is out of scope. The axioms are stated so that it would extend them, not replace
   them.
 
 ### Review decisions (2026-11-17)
 
-1. **Scope** (left to Claude). Nine units, about 90 items, as drafted. Information theory and
+1. **Scope** (left to Claude). Nine units as drafted, eleven after decision 3's revision. Information theory and
    Random processes stay here: they are mathematics, and Machine Learning applies them without
    teaching them again, as it does with Linear Algebra.
 2. **Order** (owner). The course starts after Calculus 1 Integrals, not before. The suggested
    order puts Applications of derivatives and Integrals first.
-3. **Classical statistics** (left to Claude, with the owner's goals: what later topics need,
-   nothing more). Unit 5 keeps what Machine Learning, A/B testing and data work rely on (standard
-   error, MLE, intervals, tests and p-values, power, the bootstrap); the $t$ distribution and
-   multiple comparisons fold into other items, and the catalog of named tests is left out.
+3. **Statistics, revised by the owner.** A first answer kept one focused unit and left out the
+   named tests. The owner disagreed: StatQuest-style topics (t-tests, ANOVA, chi-squared, Fisher's
+   exact test, rank tests, the false discovery rate, linear and logistic regression) are part of
+   mastering statistics. Statistics is now three units: Estimation (5), Hypothesis testing (6) and
+   Linear models (8), with Bayesian inference between them (7) because it does not need Linear
+   Algebra Orthogonality. Each test is built the same way: simulate the null distribution, then
+   name it, then state its assumptions.
 4. **Simulation on the stage** (owner: yes). An exploration draws random samples while the
    learner watches: dots fall through a Galton board into bins, a histogram grows toward the
    pmf, a running average settles. A "resample" button draws new samples; a seed keeps a run

@@ -140,11 +140,14 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   rule supplies a factor such as $\frac{dy}{dx}$ for every quantity that depends on it. Items
   that differentiate an equation say which variable and why; $\frac{dx}{dy}$ and
   $\frac{d^2y}{dx^2}$ are part of the thread.
-- Probability and Statistics outline approved (2026-11-17): nine units, about 90 items, in
+- Probability and Statistics outline approved (2026-11-17): eleven units, about 115 items, in
   `plans/probability.md`. The course starts after Calculus 1 Integrals. Information theory and
-  Random processes stay in it (math taught once, applied by Machine Learning). Classical
-  statistics covers what later topics need (standard error, MLE, intervals, tests, power, A/B
-  tests, the bootstrap), not the catalog of named tests. Explorations simulate on the stage
+  Random processes stay in it (math taught once, applied by Machine Learning). Statistics is
+  covered in full, in the spirit of StatQuest, which the owner likes: Estimation, Hypothesis
+  testing (t, proportion, $\chi^2$, Fisher's exact, permutation and rank tests, multiple testing
+  and the false discovery rate, choosing a test) and Linear models (regression, $R^2$, ANOVA,
+  tests as linear models, diagnostics, logistic regression). The owner rejected a leaner version
+  that skipped the named tests: mastering statistics includes them. Explorations simulate on the stage
   (samples drawn while the learner watches, with resample and a seed); new kit pieces for that
   are expected.
 
