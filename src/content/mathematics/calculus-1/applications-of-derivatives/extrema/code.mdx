@@ -1,0 +1,143 @@
+SymPy finds the critical points exactly; a few lines of Python turn them into a sign chart and
+into the closed interval method.
+
+## Peaks and valleys
+
+The critical points are the solutions of $f'(x) = 0$. Here they are the local maximum and
+minimum:
+
+```python title="local.py" step=local colors="f=blue" check
+import numpy as np
+import sympy as sp
+
+x = sp.symbols("x")
+f = sp.Rational(1, 4) * x**3 - sp.Rational(3, 2) * x**2 \
+    + sp.Rational(9, 4) * x + 1
+df = sp.diff(f, x)
+print(sp.factor(df))
+
+critical = sp.solve(df, x)
+print([(c, f.subs(x, c)) for c in critical])
+```
+
+```output
+3*(x - 3)*(x - 1)/4
+[(1, 2), (3, 1)]
+```
+
+## Why the tangent is flat
+
+At the peak, secants to the right have slope $\le 0$ and secants to the left $\ge 0$. Both
+squeeze toward $f'(1) = 0$:
+
+```python title="fermat.py" step=fermat colors="right=yellow left=orange" hover="right=right left=left" check
+fn = sp.lambdify(x, f, "numpy")
+hs = np.array([0.5, 0.1, 0.01])
+right = (fn(1 + hs) - fn(1)) / hs
+left = (fn(1) - fn(1 - hs)) / hs
+print(right.round(4), left.round(4))
+```
+
+```output
+[-0.3125 -0.0725 -0.0075] [0.4375 0.0775 0.0075]
+```
+
+## Critical points
+
+Two more functions with a critical point at $2$: a flat tangent with no turn, and a corner
+where SymPy's derivative is undefined. Check the values on each side:
+
+```python title="critical.py" step=critical check
+flat = (x - 2) ** 3 / 2 + sp.Rational(3, 2)
+corner = sp.Rational(4, 5) * sp.Abs(x - 2) + sp.Rational(3, 5)
+
+print(sp.diff(flat, x).subs(x, 2))
+for g in [flat, corner]:
+    print([g.subs(x, t) for t in [sp.Rational(19, 10), 2, sp.Rational(21, 10)]])
+```
+
+```output
+0
+[2999/2000, 3/2, 3001/2000]
+[17/25, 3/5, 17/25]
+```
+
+The flat one rises through $2$; the corner is lowest there.
+
+## The first derivative test
+
+One test value between consecutive critical points gives the sign of $f'$ on that interval:
+
+```python title="first_test.py" step=first-test colors="df=teal" check
+dfn = sp.lambdify(x, df)
+edges = [-np.inf, 1, 3, np.inf]
+tests = [0, 2, 4]
+for lo, hi, t in zip(edges, edges[1:], tests):
+    sign = "+" if dfn(t) > 0 else "-"
+    print(f"({lo}, {hi}): {sign}")
+```
+
+```output
+(-inf, 1): +
+(1, 3): -
+(3, inf): +
+```
+
+## Absolute extrema on a closed interval
+
+The closed interval method as a function: candidates are the critical points inside and the two
+ends.
+
+```python title="closed.py" step=closed check
+def absolute_extrema(
+    g: sp.Expr, a: float, b: float
+) -> tuple[float, float]:
+    inside = [c for c in sp.solve(sp.diff(g, x), x) if a < c < b]
+    values = [round(float(g.subs(x, t)), 4) for t in [a, *inside, b]]
+    return max(values), min(values)
+
+print(absolute_extrema(f, 0.5, 3.8))
+print(absolute_extrema(f, 0.2, 4.4))
+```
+
+```output
+(2.0, 1.0)
+(3.156, 1.0)
+```
+
+## A drug's peak
+
+The same method, for $C(t) = 8t\,e^{-t/2}$ on $[0, 12]$:
+
+```python title="dose.py" step=dose check
+t = sp.symbols("t", nonnegative=True)
+C = 8 * t * sp.exp(-t / 2)
+dC = sp.factor(sp.diff(C, t))
+print(dC, sp.solve(dC, t))
+
+peak = C.subs(t, 2)
+print(peak, round(float(peak), 3), C.subs(t, 0))
+```
+
+```output
+-4*(t - 2)*exp(-t/2) [2]
+16*exp(-1) 5.886 0
+```
+
+## When there is no maximum
+
+`absolute_extrema` assumes a continuous function on a closed interval. On the open interval
+$(0.5, 4.4)$ the values approach $f(4.4)$ without reaching it:
+
+```python title="no_max.py" step=no-max check
+for t in [4.3, 4.39, 4.399]:
+    print(t, round(fn(t), 4))
+print("sup", round(fn(4.4), 4))
+```
+
+```output
+4.3 2.8167
+4.39 3.1205
+4.399 3.1524
+sup 3.156
+```

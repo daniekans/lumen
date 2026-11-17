@@ -1,0 +1,34 @@
+These problems use the first four items of the unit. Every answer comes from a derivative and a
+little algebra.
+
+## Linear approximation
+
+The <Term id="linearization">linearization</Term> at $a$ is $L(x) = f(a) + f'(a)(x - a)$. Choose
+$a$ where $f(a)$ and $f'(a)$ are easy, such as a perfect square for $\sqrt{x}$. For an error in a
+measurement, take <Term id="differential">differentials</Term> in the measured variable:
+$V = \frac{4}{3}\pi r^3$ gives $dV = 4\pi r^2\,dr$.
+
+The tangent estimate is too high where $f$ is <Term id="concavity">concave down</Term> (the graph
+lies below its tangent) and too low where it is concave up.
+
+## Critical points and extrema
+
+1. Find the <Term id="critical-point">critical points</Term>: $f'(x) = 0$ or $f'$ undefined.
+2. Classify each with the <Term id="first-derivative-test">first derivative test</Term> (the sign of
+   $f'$ on each side) or the <Term id="second-derivative-test">second derivative test</Term>
+   ($f''(c) > 0$ minimum, $f''(c) < 0$ maximum, $f''(c) = 0$ no conclusion).
+3. On a closed interval, compare $f$ at the critical points inside it and at both ends.
+
+$f$ decreases where $f' < 0$. A sign chart needs the zeros of $f'$ and one test point in each
+interval between them.
+
+## The mean value theorem
+
+The <Term id="mean-value-theorem">mean value theorem</Term> promises a $c$ in $(a, b)$ with
+$f'(c) = \frac{f(b) - f(a)}{b - a}$. To find it, compute the chord's slope, set $f'(c)$ equal to
+it, solve, and keep the solutions inside $(a, b)$.
+
+## Concavity
+
+$f'' > 0$: concave up. $f'' < 0$: concave down. An <Term id="inflection-point">inflection point</Term> is where the sign of $f''$ changes, which needs
+more than $f'' = 0$.

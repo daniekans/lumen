@@ -1,0 +1,118 @@
+The linearization in SymPy, then its error in NumPy: how fast it shrinks, why the tangent is the
+only line that keeps up, and the same idea for a measured radius.
+
+## The tangent as a fit
+
+`L` is the tangent line at $a = 4$, built from $f(a)$ and $f'(a)$ exactly. Near $4$ it agrees
+with $\sqrt{x}$ to several digits:
+
+```python title="fit.py" step=fit colors="f=blue L=teal" hover="L=L" check
+import numpy as np
+import sympy as sp
+
+x = sp.symbols("x")
+f = sp.sqrt(x)
+a = 4
+L = f.subs(x, a) + sp.diff(f, x).subs(x, a) * (x - a)
+print(sp.expand(L))
+
+for t in [3.9, 4.0, 4.1]:
+    print(t, float(f.subs(x, t)), float(L.subs(x, t)))
+```
+
+```output
+x/4 + 1
+3.9 1.9748417658131499 1.975
+4.0 2.0 2.0
+4.1 2.0248456731316584 2.025
+```
+
+## $dx$ and $dy$
+
+`dy` uses the slope at $a$; `delta_y` is the true change. Their difference is the error:
+
+```python title="differentials.py" step=differentials colors="dx=yellow dy=teal delta_y=orange" hover="dx=dx dy=dy delta_y=Dy" check
+def fn(t: float) -> float:
+    return float(np.sqrt(t))
+
+slope = 1 / (2 * np.sqrt(a))
+dx = 2.5
+dy = slope * dx
+delta_y = fn(a + dx) - fn(a)
+print(dy, round(delta_y, 5), round(delta_y - dy, 5))
+```
+
+```output
+0.625 0.54951 -0.07549
+```
+
+## $\sqrt{4.1}$ by hand
+
+```python title="estimate.py" step=estimate check
+estimate = fn(a) + slope * 0.1
+print(estimate, round(fn(4.1), 6), f"{estimate - fn(4.1):.2e}")
+```
+
+```output
+2.025 2.024846 1.54e-04
+```
+
+## The error shrinks like $dx^2$
+
+Divide the error by $dx$ and by $dx^2$. The first goes to $0$; the second settles at
+$\frac{f''(4)}{2} = -\frac{1}{64}$:
+
+```python title="error.py" step=error check
+for dx in [1.0, 0.1, 0.01, 0.001]:
+    err = fn(a + dx) - fn(a) - slope * dx
+    print(dx, f"{err / dx:.6f}", f"{err / dx**2:.6f}")
+
+print(-1 / 64)
+```
+
+```output
+1.0 -0.013932 -0.013932
+0.1 -0.001543 -0.015433
+0.01 -0.000156 -0.015605
+0.001 -0.000016 -0.015623
+-0.015625
+```
+
+## The best linear fit
+
+Any other slope `m` leaves an error over $dx$ that tends to $f'(4) - m$, here $0.25 - 0.55 =
+-0.3$:
+
+```python title="best.py" step=best colors="m=purple" hover="m=m" check
+m = 0.55
+for dx in [1.0, 0.1, 0.01, 0.001]:
+    change = fn(a + dx) - fn(a)
+    print(dx, f"{(change - slope * dx) / dx:.5f}",
+          f"{(change - m * dx) / dx:.5f}")
+```
+
+```output
+1.0 -0.01393 -0.31393
+0.1 -0.00154 -0.30154
+0.01 -0.00016 -0.30016
+0.001 -0.00002 -0.30002
+```
+
+## An error in a measurement
+
+$dA = 2\pi r\,dr$ against the exact ring. The gap is $\pi\,dr^2$, and the relative error of
+the area is twice that of the radius:
+
+```python title="ring.py" step=ring check
+r, dr = 10.0, 0.1
+area = np.pi * r**2
+ring = np.pi * (r + dr) ** 2 - area
+dA = 2 * np.pi * r * dr
+print(round(ring, 4), round(dA, 4), round(ring - dA, 4), round(np.pi * dr**2, 4))
+print(f"{dr / r:.1%} of r -> {dA / area:.1%} of A")
+```
+
+```output
+6.3146 6.2832 0.0314 0.0314
+1.0% of r -> 2.0% of A
+```

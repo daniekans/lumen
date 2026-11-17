@@ -1,0 +1,86 @@
+The first derivative says whether a graph goes up or down. The <Term id="second-derivative">second derivative</Term> says how it bends, and with both a graph can
+be sketched from its formula.
+
+## Concavity
+
+$f$ is concave up on an interval where $f'$ is increasing, and concave down where $f'$ is
+decreasing. In Leibniz notation, $\frac{d^2y}{dx^2} = \frac{d}{dx}\left(\frac{dy}{dx}\right)$ is
+the rate of change of the slope, so the <Term id="mean-value-theorem">mean value theorem</Term> applied to $f'$ gives a test:
+
+$$
+f'' > 0 \text{ on an interval} \implies f \text{ concave up there}, \qquad
+f'' < 0 \implies \text{concave down}.
+$$
+
+For <C c="blue">$f(x) = \frac{1}{4}x^3 - \frac{3}{2}x^2 + \frac{9}{4}x + 1$</C>, $f''(x) =
+\frac{3}{2}x - 3$: <C c="orange">concave down</C> on $(-\infty, 2)$ and <C c="purple">concave up</C> on $(2, \infty)$. <StepLink step="bend">Slide $P$</StepLink> and watch
+the tangent turn.
+
+A concave up graph lies above its tangents, and a concave down graph below them. This ties back
+to <Term id="linearization">linear approximation</Term>: where $f'' > 0$ the tangent estimate is
+too low, where $f'' < 0$ too high. For $\sqrt{x}$, concave down, $L(4.1) = 2.025$ was slightly
+above $\sqrt{4.1}$.
+
+## Inflection points
+
+An inflection point is a point of the graph where $f$ is continuous and its concavity changes.
+There, $f''$ is $0$ or does not exist. The <StepLink step="inflection">cubic</StepLink> has one
+at $(2, 1.5)$, where $f''$ changes from negative to positive.
+
+$f''(c) = 0$ alone is not enough. For $\frac{1}{4}(x - 2)^4 + 0.5$, $f''(x) = 3(x - 2)^2$ is $0$
+at $x = 2$ but positive on both sides, so the graph bends up throughout. Check the sign on each
+side, as for critical points.
+
+## The second derivative test
+
+At a <Term id="critical-point">critical point</Term> $c$ with $f'(c) = 0$:
+
+- $f''(c) > 0$: the graph bends up through a flat tangent, a local minimum;
+- $f''(c) < 0$: it bends down, a local maximum;
+- $f''(c) = 0$: no conclusion.
+
+Back to <StepLink step="second-test">the cubic</StepLink>: $f''(1) = -\frac{3}{2}$ and $f''(3) = \frac{3}{2}$, which agrees with the <Term id="first-derivative-test">first derivative test</Term>. The third
+case is a real gap: $x^3$, $x^4$ and $-x^4$ all have $f'(0) = f''(0) = 0$, and they have no
+extremum, a minimum and a maximum. Then go back to the first derivative test, which decides whenever
+$f'$ keeps one sign on each side of $c$.
+
+## Reading $f$, $f'$ and $f''$ together
+
+Each is the slope graph of the one before it.
+
+Here they are <StepLink step="together">on one set of axes</StepLink>:
+
+| Where   | $f$              | $f'$                 | $f''$                |
+| ------- | ---------------- | -------------------- | -------------------- |
+| $x = 1$ | local maximum    | $0$, from $+$ to $-$ | $< 0$                |
+| $x = 2$ | inflection point | its minimum          | $0$, from $-$ to $+$ |
+| $x = 3$ | local minimum    | $0$, from $-$ to $+$ | $> 0$                |
+
+## A sketch from the derivatives
+
+For <StepLink step="sketch">$f(x) = \frac{4x}{x^2 + 1}$</StepLink>, collect the facts, then draw:
+
+1. **Domain and symmetry.** Every real $x$; $f(-x) = -f(x)$, so the graph is symmetric through the
+   origin, which it passes through.
+2. **Far out.** $f(x) \to 0$ as $x \to \pm\infty$ (degree 1 over degree 2): the asymptote $y = 0$.
+3. **First derivative.** $f'(x) = \frac{4(1 - x^2)}{(x^2 + 1)^2}$, zero at $x = \pm 1$, positive
+   between them. Minimum $f(-1) = -2$, maximum $f(1) = 2$, and these are absolute.
+4. **Second derivative.** $f''(x) = \frac{8x(x^2 - 3)}{(x^2 + 1)^3}$, zero at $0$ and $\pm\sqrt{3}$
+   and changing sign at each: three inflection points, at $(0, 0)$ and $\left(\pm\sqrt{3},
+   \pm\sqrt{3}\right)$.
+5. **Draw** through those points with the right bending on each interval.
+
+## The peak of new cases
+
+In an outbreak, the total number of cases $N(t)$ often follows a logistic curve,
+
+$$
+N(t) = \frac{K}{1 + e^{-r(t - t_0)}}, \qquad \frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right).
+$$
+
+$\frac{dN}{dt}$ is the number of new cases per day. While $\frac{d^2N}{dt^2} > 0$, each day adds
+more cases than the day before; after the inflection point, each day adds fewer, though the total
+still rises. The inflection is where $\frac{dN}{dt}$ is largest. Since $rN\left(1 -
+\frac{N}{K}\right)$ is a parabola in $N$ with its top at $N = \frac{K}{2}$, the busiest day is the
+one when <StepLink step="outbreak">half of all cases</StepLink> have happened: day 30 for
+$K = 10\,000$, $r = 0.2$ per day, $t_0 = 30$. "Flattening the curve" means lowering that peak.

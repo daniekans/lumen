@@ -1,0 +1,120 @@
+$f''$ in SymPy, the tests as sign checks, and a sketch collected fact by fact. The outbreak
+curve comes from daily counts in NumPy, the way the data would arrive.
+
+## Slopes that increase
+
+$f''$ is the derivative of $f'$. Its sign on each side of its zero is the concavity:
+
+```python title="bend.py" step=bend colors="f=blue d2f=purple" hover="f=f d2f=d2f" check
+import numpy as np
+import sympy as sp
+
+x = sp.symbols("x")
+f = sp.Rational(1, 4) * x**3 - sp.Rational(3, 2) * x**2 \
+    + sp.Rational(9, 4) * x + 1
+d2f = sp.diff(f, x, 2)
+print(d2f, sp.solve(d2f, x))
+print(d2f.subs(x, 1), d2f.subs(x, 3))
+```
+
+```output
+3*(x/2 - 1) [2]
+-3/2 3/2
+```
+
+## Inflection points
+
+$f''(c) = 0$ is not enough: check the sign on both sides.
+
+```python title="inflection.py" step=inflection check
+def is_inflection(g: sp.Expr, c: sp.Expr, e: float = 0.01) -> bool:
+    g2 = sp.diff(g, x, 2)
+    return bool(g2.subs(x, c - e) * g2.subs(x, c + e) < 0)
+
+quartic = (x - 2) ** 4 / 4 + sp.Rational(1, 2)
+print(sp.diff(quartic, x, 2).subs(x, 2))
+print(is_inflection(f, 2), is_inflection(quartic, 2))
+```
+
+```output
+0
+True False
+```
+
+## The second derivative test
+
+At each critical point, the sign of $f''$ decides; zero decides nothing:
+
+```python title="second_test.py" step=second-test check
+def second_test(g: sp.Expr, c: sp.Expr) -> str:
+    v = sp.diff(g, x, 2).subs(x, c)
+    return "min" if v > 0 else "max" if v < 0 else "no conclusion"
+
+print([(c, second_test(f, c)) for c in sp.solve(sp.diff(f, x), x)])
+print([second_test(g, 0) for g in [x**3, x**4, -(x**4)]])
+```
+
+```output
+[(1, 'max'), (3, 'min')]
+['no conclusion', 'no conclusion', 'no conclusion']
+```
+
+## $f$, $f'$ and $f''$ together
+
+The zeros of each derivative, side by side:
+
+```python title="together.py" step=together colors="f=blue df=teal d2f=purple" hover="f=f df=df d2f=d2f" check
+df = sp.diff(f, x)
+print("f' = 0 at", sp.solve(df, x))
+print("f'' = 0 at", sp.solve(d2f, x))
+print("f' is lowest at", sp.solve(sp.diff(df, x), x))
+```
+
+```output
+f' = 0 at [1, 3]
+f'' = 0 at [2]
+f' is lowest at [2]
+```
+
+## A sketch from the derivatives
+
+Every fact the sketch needs, in order: symmetry, the limit far out, then the zeros of $g'$ and
+$g''$:
+
+```python title="sketch.py" step=sketch check
+g = 4 * x / (x**2 + 1)
+print(sp.simplify(g.subs(x, -x) + g))
+print(sp.limit(g, x, sp.oo), sp.limit(g, x, -sp.oo))
+
+g1 = sp.factor(sp.diff(g, x))
+g2 = sp.factor(sp.diff(g, x, 2))
+print(g1, sp.solve(g1, x))
+print(g2, sp.solve(g2, x))
+print([g.subs(x, c) for c in [-1, 1, sp.sqrt(3)]])
+```
+
+```output
+0
+0 0
+-4*(x - 1)*(x + 1)/(x**2 + 1)**2 [-1, 1]
+8*x*(x**2 - 3)/(x**2 + 1)**3 [0, -sqrt(3), sqrt(3)]
+[-2, 2, sqrt(3)]
+```
+
+## The peak of new cases
+
+Cumulative counts once a day. `np.gradient` estimates the new cases per day (a difference
+quotient centered on each day), and the busiest day is where the total is half the final count:
+
+```python title="outbreak.py" step=outbreak check
+days = np.arange(61)
+total = 10_000 / (1 + np.exp(-0.2 * (days - 30)))
+new = np.gradient(total, days)
+
+busiest = int(np.argmax(new))
+print(busiest, round(new[busiest]), round(total[busiest]))
+```
+
+```output
+30 498 5000
+```

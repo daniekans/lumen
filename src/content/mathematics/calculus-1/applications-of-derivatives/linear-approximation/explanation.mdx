@@ -1,0 +1,102 @@
+A differentiable function looks straight when you zoom in on it. That straight line, the <Term id="tangent-line">tangent</Term>, is easy to compute with. How good is it as a stand-in for
+the curve, and how fast does it get worse as you move away?
+
+## The linearization
+
+The tangent to $f$ at $a$ is the line
+
+$$
+L(x) = f(a) + f'(a)(x - a).
+$$
+
+Used to estimate $f$ near $a$, it is called the linearization of $f$ at $a$. For <C c="blue">$f(x) = \sqrt{x}$</C> at $a = 4$, $f(4) = 2$ and $f'(4) = \frac{1}{2\sqrt{4}} = \frac{1}{4}$, so <C c="teal">$L(x) = 2 + \frac{1}{4}(x - 4)$</C>. The <StepLink step="fit">zoom</StepLink> shows
+why it works: near $A$ the two graphs are almost the same line, which is what <Term id="locally-linear">locally linear</Term> means.
+
+## Differentials
+
+Leibniz's $dx$ and $dy$ get a meaning of their own here. Take $dx$ to be any change in $x$, a
+real number, positive or negative. Then define
+
+$$
+dy = f'(x)\,dx.
+$$
+
+$dy$ is the change in height along the tangent, while
+$\Delta y = f(x + dx) - f(x)$ is the change along the curve (<StepLink step="differentials">drag
+$dx$</StepLink>). When $dx \neq 0$, dividing gives $\frac{dy}{dx} = f'(x)$: the symbol
+from <Term id="leibniz-notation">Leibniz notation</Term> is also a true quotient, of two
+differentials. It still means the limit of $\frac{\Delta y}{\Delta x}$ too; the two readings
+agree.
+
+The differentials are taken in a variable. For the area of a disk, $A = \pi r^2$, they are taken
+in $r$: $dA = 2\pi r\,dr$.
+
+## An estimate by hand
+
+To estimate $\sqrt{4.1}$, step $dx = 0.1$ from $a = 4$:
+
+$$
+\sqrt{4.1} \approx L(4.1) = 2 + \frac{1}{4} \cdot 0.1 = 2.025.
+$$
+
+The true value is $2.024846\ldots$, so the error is about $0.00016$. Physics uses the same idea
+for a pendulum: the tangent to $\sin\theta$ at $0$ is $\theta$ itself, so $\sin\theta \approx
+\theta$ for small angles, and the equation of motion becomes one that can be solved exactly.
+
+## How fast the error shrinks
+
+The error is $\Delta y - dy$. That it is small is not the point; that it is small compared with
+$dx$ is. Write
+
+$$
+\Delta y = dy + \varepsilon\,dx, \qquad \varepsilon = \frac{\Delta y}{dx} - f'(x).
+$$
+
+As $dx \to 0$, $\frac{\Delta y}{dx} \to f'(x)$ by the definition of the derivative, so
+$\varepsilon \to 0$. Being <Term id="differentiable">differentiable</Term> means exactly this: the
+change $\Delta y$ is a linear part $f'(x)\,dx$ plus an error that vanishes faster than $dx$.
+
+When $f''$ also exists, the error shrinks like $dx^2$:
+
+$$
+\frac{\Delta y - dy}{dx^2} \to \frac{f''(a)}{2}.
+$$
+
+In <StepLink step="error">the zoom that follows $dx$</StepLink>, this ratio settles at
+$-\frac{1}{64} = -0.015625$, since $f''(4) = -\frac{1}{32}$ for $\sqrt{x}$. The sign says the
+tangent lies above the curve. Halve $dx$ and
+the error drops to a quarter. The proof of this limit uses the Taylor remainder, which comes in
+Calculus 2; the numbers on the stage are evidence, not a proof.
+
+## Why the tangent is the best line
+
+Any line through $A$ with slope $m$ predicts $f(a) + m\,dx$. Its error divided by $dx$ is
+
+$$
+\frac{\Delta y - m\,dx}{dx} = \frac{\Delta y}{dx} - m \to f'(a) - m.
+$$
+
+That limit is $0$ only for $m = f'(a)$. <StepLink step="best">Every other slope</StepLink> leaves
+an error of the same size as $dx$, so the tangent is the only line that fits better and better as
+you zoom in. This is the sense in which it is the best linear approximation.
+
+## Errors in measurements
+
+A radius measured as $r = 10$ cm with an error up to $dr = 0.1$ cm gives an area error up to
+
+$$
+dA = 2\pi r\,dr = 2\pi \cdot 10 \cdot 0.1 \approx 6.28\ \text{cm}^2.
+$$
+
+The units follow the notation: centimeters times centimeters. <StepLink step="ring">The
+ring</StepLink> shows the picture: the exact change $\Delta A$ is the ring, and $dA$ is its
+circumference times its width, short of the true ring by $\pi\,dr^2$. Dividing by $A = \pi r^2$
+gives the relative error, $\frac{dA}{A} = 2\frac{dr}{r}$: a 1% error in the radius is about a 2%
+error in the area.
+
+## Where this goes
+
+Linear approximation runs through the rest of this unit and beyond: L'Hôpital's rule compares two
+linearizations, Newton's method follows the tangent to a root, and in many variables the tangent
+plane and the gradient do the same job. Gradient descent, the method that trains neural networks,
+takes small steps because the linear prediction of the loss is only trustworthy for small steps.

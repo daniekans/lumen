@@ -1,0 +1,79 @@
+A derivative is a fact about one point. Statements like "$f' > 0$ on an interval, so $f$ is
+increasing there" are about the whole interval. The mean value theorem connects the two.
+
+## Rolle's theorem
+
+If $f$ is continuous on $[a, b]$, differentiable on $(a, b)$, and $f(a) = f(b)$, then there is a
+$c$ in $(a, b)$ with $f'(c) = 0$.
+
+The proof uses the last item. By the <Term id="extreme-value-theorem">extreme value theorem</Term>, $f$ has a maximum and a minimum on
+$[a, b]$. If both are at the ends, they are equal (since $f(a) = f(b)$), so $f$ is constant and $f'
+= 0$ everywhere inside. Otherwise one of them is at some $c$ inside, where it is a local extremum,
+and <Term id="fermats-theorem">Fermat's theorem</Term> gives $f'(c) = 0$.
+In <StepLink step="rolle">the first step</StepLink>, $A$ and $B$ are at the same height and the flat
+tangent is at the top of the arch.
+
+## The mean value theorem
+
+If $f$ is continuous on $[a, b]$ and differentiable on $(a, b)$, then there is a $c$ in $(a, b)$
+with
+
+$$
+f'(c) = \frac{f(b) - f(a)}{b - a}.
+$$
+
+The right side is the slope of the <C c="orange">chord</C> from $A$ to $B$, the average rate of
+change. The theorem says that some <C c="teal">tangent</C> is <StepLink step="mvt">parallel to the chord</StepLink>: at some instant, the rate equals the average
+rate. It says that such a $c$ exists, not where it is, and there may be more than one.
+
+**Proof.** <StepLink step="proof">Subtract the chord</StepLink> from the curve:
+
+$$
+h(x) = f(x) - f(a) - \frac{f(b) - f(a)}{b - a}(x - a).
+$$
+
+$h$ is continuous on $[a, b]$ and differentiable on $(a, b)$, and $h(a) = h(b) = 0$. Rolle gives
+a $c$ with $h'(c) = 0$, that is, $f'(c) - \frac{f(b) - f(a)}{b - a} = 0$. The mean value theorem
+is Rolle's theorem with the picture tilted.
+
+## The conditions matter
+
+A <StepLink step="fails">corner</StepLink> breaks the theorem. For $|x - 2| + 1$ on $[0.5, 4]$,
+the chord has slope $\frac{3 - 2.5}{3.5} = \frac{1}{7}$, and no tangent has that slope. The
+function is continuous, but not differentiable at $2$. A function with a jump fails in the same
+way.
+
+## An average speed check
+
+Some highways measure speed over a section: a camera records the time at each end, and the
+average speed is the distance over the time. A car that covers 160 km in 1.5 hours averages
+$\frac{160}{1.5} \approx 106.7$ km/h. With $s(t)$ the distance driven after $t$ hours, the mean
+value theorem gives an instant $c$ with
+
+$$
+s'(c) = \frac{s(1.5) - s(0)}{1.5 - 0} \approx 106.7\ \text{km/h}.
+$$
+
+So at some moment the <StepLink step="speed">speedometer</StepLink> read the average, and if that
+is over the limit, the car was over the limit then. Position is continuous and the speedometer
+reading is its derivative, so the conditions hold.
+
+## Consequences
+
+These are the facts the previous item used.
+
+**$f' = 0$ means constant.** If $f'(x) = 0$ for every $x$ in an interval, take any two points
+$x_1 < x_2$ in it. The mean value theorem gives $f(x_2) - f(x_1) = f'(c)(x_2 - x_1) = 0$. So all
+values are equal.
+
+**$f' > 0$ means increasing.** If $f' > 0$ on an interval, then for $x_1 < x_2$ in it,
+$f(x_2) - f(x_1) = f'(c)(x_2 - x_1) > 0$. So $f$ is <Term id="increasing-decreasing">increasing</Term>. With $f' < 0$, decreasing. This is why the <Term id="first-derivative-test">first derivative test</Term> works.
+
+**Same derivative, a constant apart.** If $f' = g'$ on an interval, then $(f - g)' = 0$, so
+$f - g = C$ for some constant. Their graphs are <StepLink step="same-slope">vertical shifts</StepLink>
+of each other. This will matter for integrals: the functions whose derivative is a given $f$
+differ only by a constant, written $+ C$.
+
+All three need an interval. $f(x) = \frac{1}{x}$ has $f'(x) = -\frac{1}{x^2} < 0$ wherever it is
+defined, yet $f(-1) = -1 < 1 = f(1)$: the domain is two intervals, and the theorem applies on each
+separately.
