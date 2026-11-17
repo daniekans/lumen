@@ -140,6 +140,13 @@ reopen them. Newest last within each section. Add to this file whenever somethin
   rule supplies a factor such as $\frac{dy}{dx}$ for every quantity that depends on it. Items
   that differentiate an equation say which variable and why; $\frac{dx}{dy}$ and
   $\frac{d^2y}{dx^2}$ are part of the thread.
+- Probability and Statistics outline approved (2026-11-17): nine units, about 90 items, in
+  `plans/probability.md`. The course starts after Calculus 1 Integrals. Information theory and
+  Random processes stay in it (math taught once, applied by Machine Learning). Classical
+  statistics covers what later topics need (standard error, MLE, intervals, tests, power, A/B
+  tests, the bootstrap), not the catalog of named tests. Explorations simulate on the stage
+  (samples drawn while the learner watches, with resample and a seed); new kit pieces for that
+  are expected.
 
 ## Engineering
 

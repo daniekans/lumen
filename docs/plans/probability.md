@@ -5,9 +5,9 @@ Outline, threads and unit plans for Probability and Statistics. Part of
 
 ## Status
 
-Outline drafted on 2026-11-17, **waiting for the owner's review** (open questions at the end of
-the outline). No unit is built. After the review, the first unit (Probability foundations) gets a
-unit plan and its first batch.
+Outline drafted and reviewed on 2026-11-17; approved with the review decisions at the end of the
+outline. No unit is built. The course starts after Calculus 1 Integrals (owner's decision), with
+the unit plan and first batch of Probability foundations.
 
 ## Depth and threads
 
@@ -64,10 +64,11 @@ correct form from the start:
 
 ### Prerequisites and order
 
-Units 1 and 2 need only algebra and limits, so they can start now. Unit 3 (densities) needs
-Calculus 1 Integrals, which is not built yet; it is a suggested prerequisite, and the suggested
-order places unit 3 after Integrals. Unit 7 (multivariate) leans on Linear Algebra Eigenvalues
-and SVD. Machine Learning can be outlined once units 1 and 2 are done, as the suggested order says.
+The course starts after Calculus 1 Integrals (decided 2026-11-17), so every unit can use
+integrals where they help, and unit 3 (densities) needs them. Units 1 and 2 stay discrete (sums,
+not integrals) because that is the clearest first picture, not because integrals are missing.
+Unit 7 (multivariate) leans on Linear Algebra Eigenvalues and SVD. Machine Learning is outlined
+once Probability foundations is built.
 
 Cross-area links: the birthday problem and hash collisions (DE Partitioning and hashing), entropy
 (DE `entropy-and-compression`, revisited, not repeated), sampling and percentiles (DE Distributed
@@ -159,13 +160,16 @@ Nine units, about 90 items. Kinds: E explore, L lesson, P practice, C checkpoint
 | 8   | practice-sampling       | P    | Monte Carlo error, sample sizes, stratified estimates                                                                        |         |
 | 9   | checkpoint              | C    | All of the above plus a proof (Chebyshev's inequality from Markov's)                                                         |         |
 
-**5. Estimation and testing** (12 items): estimators, bias and variance, the sampling distribution
-and the standard error; the $n - 1$ in the sample variance; maximum likelihood (the likelihood as
-a function of the parameter, the log-likelihood, MLE for a coin and a normal, and the link to loss
-functions: squared error from Gaussian noise, cross-entropy from Bernoulli labels); confidence
-intervals (a hundred intervals, about 95 cover); the $t$ distribution for small samples;
-hypothesis tests, p-values, type I and II errors and power; an A/B test on conversion rates with
-sample size and the peeking problem; the bootstrap; multiple testing. S, ML.
+**5. Estimation and testing** (12 items; focused, see review decision 3): estimators, bias and
+variance, the sampling distribution and the standard error, with the $n - 1$ in the sample
+variance; maximum likelihood as the unit's centerpiece (the likelihood as a function of the
+parameter, the log-likelihood, MLE for a coin and a normal) and the link to loss functions
+(squared error from Gaussian noise, cross-entropy from Bernoulli labels); confidence intervals (a
+hundred intervals, about 95 cover), with the $t$ distribution inside that item for small samples
+rather than as its own topic; hypothesis tests, p-values, type I and II errors and power; an A/B
+test on conversion rates with sample size, the peeking problem and multiple comparisons as one
+lesson; the bootstrap. Not covered: the catalog of named tests (chi-squared, ANOVA, nonparametric
+tests); they can be added on request. S, ML.
 
 **6. Bayesian inference** (8 items): prior to posterior for a coin's bias, one flip at a time (the
 Beta distribution); conjugate priors and the posterior mean as a weighted average of prior and
@@ -200,14 +204,19 @@ chain Monte Carlo (Metropolis), for Bayesian ML later. B, S, ML.
 - Measure theory is out of scope. The axioms are stated so that it would extend them, not replace
   them.
 
-### Open questions for the review
+### Review decisions (2026-11-17)
 
-1. **Scope.** Nine units, about 90 items. Units 8 (Information theory) and 9 (Random processes)
-   could move to Machine Learning instead; here they get the math once, and ML uses it.
-2. **Order around Calculus.** Units 1 and 2 now; unit 3 (densities) after Calculus 1 Integrals.
-   The alternative is to wait for Integrals before starting the course.
-3. **Classical statistics depth.** Unit 5 includes $t$ tests, A/B tests and multiple testing,
-   which matter for data work. A leaner unit would keep only MLE, intervals and the bootstrap.
-4. **Simulation everywhere.** Most explorations sample live on the stage (bars filling, a Galton
-   board, running averages), with a "resample" button and a seed in the URL. This needs the new
-   kit pieces above in batch 1.
+1. **Scope** (left to Claude). Nine units, about 90 items, as drafted. Information theory and
+   Random processes stay here: they are mathematics, and Machine Learning applies them without
+   teaching them again, as it does with Linear Algebra.
+2. **Order** (owner). The course starts after Calculus 1 Integrals, not before. The suggested
+   order puts Applications of derivatives and Integrals first.
+3. **Classical statistics** (left to Claude, with the owner's goals: what later topics need,
+   nothing more). Unit 5 keeps what Machine Learning, A/B testing and data work rely on (standard
+   error, MLE, intervals, tests and p-values, power, the bootstrap); the $t$ distribution and
+   multiple comparisons fold into other items, and the catalog of named tests is left out.
+4. **Simulation on the stage** (owner: yes). An exploration draws random samples while the
+   learner watches: dots fall through a Galton board into bins, a histogram grows toward the
+   pmf, a running average settles. A "resample" button draws new samples; a seed keeps a run
+   reproducible (and shareable in the URL). New kit pieces (`Bars`, a sample stream, a point
+   cloud) are expected and built in the first batch that needs them.

@@ -35,10 +35,9 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** the owner's review of the Probability and Statistics outline
-(`plans/probability.md`, open questions at the end of the outline). Apply the review, then write
-the unit plan for Probability foundations and build its first batch (step 14 of the suggested
-order).
+**Suggested next session:** Calculus 1: Applications of derivatives (step 15 of the suggested
+order). Write its unit plan from the outline in `plans/calculus.md` for the owner's review, then
+build batch 1.
 
 ### Phase 3: Explore page
 
