@@ -385,3 +385,93 @@ $\frac{dD}{dt}$; generators `shadow` and `two-cars`; the checkpoint swaps `ladde
 `two-cars`. Item 7's growth paragraph uses $e^{kt} = (e^k)^t$, since the chain rule comes later.
 `Axes` gained `formatX` for scaled time axes. The owner approved the revision on 2026-10-24;
 the unit is done.
+
+## Applications of derivatives unit plan
+
+Folder `src/content/mathematics/calculus-1/applications-of-derivatives/`. Core unit, 11 items in
+three batches, as in the Calculus outline. The thread: the derivative is local information (a
+slope at a point), and this unit turns it into global facts about a function (where it rises,
+where it peaks, how it bends) and into tools (linear approximation, optimization, L'Hôpital,
+Newton). The mean value theorem is the bridge from local to global: the increasing test that item 2
+uses is proved in item 3, and item 2 says so where it states it (with its conditions). Numerical
+derivatives and sampling verify every practice answer, as in Derivatives.
+
+**Threads.**
+
+- **Leibniz notation (Lz).** Item 1 makes $dx$ and $dy$ variables of their own: $dx$ is any change
+  in $x$ (a real number, not an "infinitely small" one), and $dy = f'(x)\,dx$ is the change along
+  the tangent. So $\frac{dy}{dx}$, so far one symbol for a limit, is also a true quotient of
+  differentials when $dx \neq 0$ (an added view, nothing taken back; the term `leibniz-notation`
+  said "for now one symbol"). $\Delta y = dy + \varepsilon\,dx$ with $\varepsilon \to 0$ is what
+  "differentiable" means. The choice of variable: $dA = 2\pi r\,dr$ takes differentials in $r$.
+  Item 4 reads $\frac{d^2y}{dx^2}$ as the rate of change of the slope. Item 6 differentiates the
+  quantity being optimized in the variable that the constraint leaves free, after eliminating the
+  others, and says why that variable.
+- **Linear approximation (Lin).** Item 1: the tangent is the best linear fit (the only line whose
+  error is small compared with $dx$), and the error shrinks like $dx^2$ when $f''$ exists (shown
+  numerically, proved with the Taylor remainder in Calculus 2, said so). Item 4: concave up means
+  the tangent lies below the curve, so the linear estimate is low. Item 8: L'Hôpital as the ratio of
+  two linear approximations. Item 9: Newton's method follows the tangent to its root. The
+  explanation of item 1 points ahead to gradient descent, which trusts the linear approximation for
+  a small step.
+- **Limits (Lim).** Item 8: L'Hôpital's rule with its conditions, the forms $0 \cdot \infty$,
+  $\infty - \infty$, $1^\infty$, $0^0$, $\infty^0$ through logarithms, back to
+  $(1 + \frac{1}{n})^n \to e$, and why $\frac{\sin x}{x}$ by L'Hôpital is circular (its derivative
+  needs that limit, Limits item 5).
+
+**Rules stated with their conditions.** Fermat's theorem needs differentiability at the point; the
+extreme value theorem needs a continuous function on a closed, bounded interval (stated, its proof
+uses the completeness of the real numbers and belongs to a later analysis course, said so); Rolle
+and the mean value theorem need continuity on $[a, b]$ and differentiability on $(a, b)$; the
+second derivative test is inconclusive when $f''(c) = 0$; an inflection point needs a change of
+concavity, not only $f'' = 0$ ($x^4$); L'Hôpital needs an indeterminate form, $g' \neq 0$ near $a$
+and a limit of $\frac{f'}{g'}$ (when that limit does not exist, the rule says nothing: $\frac{x +
+\sin x}{x}$); Newton's method converges fast from a good start, and can cycle or diverge.
+
+**Real scenarios.** Item 1: a measured radius with an error, $dA = 2\pi r\,dr$ as the ring around a
+disk (square centimeters from centimeters times centimeters), relative error $\frac{dA}{A} = 2
+\frac{dr}{r}$; $\sqrt{4.1}$ by hand; $\sin\theta \approx \theta$ for a pendulum (explanation).
+Item 2: a drug's concentration in the blood $C(t) = a\,t\,e^{-kt}$ (mg/L over hours), its peak
+at a critical point and its lowest value at an endpoint. Item 3: average speed checks on a
+highway (section control): 160 km in 1.5 hours means the speedometer read
+$106.7\ \text{km/h}$ at some instant. Item 4: cumulative cases in an outbreak (logistic), the
+inflection point where new cases per day peak. Item 6: an open box from a sheet, a can with the
+least metal (and why real cans differ), the lifeguard's fastest path (refraction), and the mean as
+the number that minimizes squared error (the first loss function, a link to Machine Learning).
+Item 8: continuous compounding $\left(1 + \frac{r}{n}\right)^{nt} \to e^{rt}$. Item 9: how a
+calculator finds $\sqrt{a}$ (Newton on $x^2 - a$ is the Babylonian method), and Newton on $f'$ as
+a first optimizer (Multivariable, then ML). Practice items reuse these as generators.
+
+Skills: `linear-approximation`, `extrema`, `mean-value-theorem`, `concavity` (batch 1);
+`optimization` (batch 2); `lhopital`, `newtons-method` (batch 3). Batches: items 1 to 5, 6 to 7,
+8 to 11 (with the self-review of the whole unit). Every explore and lesson gets a `code.mdx`
+(NumPy for samples, SymPy for exact values).
+
+| #   | Item                         | Kind       | Skills                   | Content                                                                                                                                                                                                                                       | Status |
+| --- | ---------------------------- | ---------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | linear-approximation         | explore    | linear-approximation     | $\sqrt{x}$ at $4$: the tangent as a fit, zoom; $dx$, $dy$ against $\Delta y$; the error over $dx^2$ tends to $\frac{\lvert f''(a) \rvert}{2}$; any other slope leaves an error of order $dx$; the ring $dA = 2\pi r\,dr$                      | review |
+| 2   | extrema                      | explore    | extrema                  | Local extrema; Fermat by one-sided secants; critical points ($x^3$, $\lvert x \rvert$); the first derivative test with a sign chart; the closed interval method with draggable ends; no maximum on an open interval or with a jump            | review |
+| 3   | mean-value-theorem           | explore    | mean-value-theorem       | Rolle (a chord with equal heights); the MVT as a tilted Rolle, proved by subtracting the secant; $\lvert x \rvert$ fails; the section speed check; $f' = 0$ means constant, $f' > 0$ means increasing, same derivative means a constant apart | review |
+| 4   | concavity-and-sketching      | explore    | concavity                | Slopes that increase; $f''$ and $\frac{d^2y}{dx^2}$; inflection points and $x^4$; the second derivative test; $f$, $f'$, $f''$ together; sketching $\frac{4x}{x^2 + 1}$; the logistic outbreak curve                                          | review |
+| 5   | practice-curve-analysis      | practice   | all four                 | Linear estimates, error from differentials, critical points, classify, intervals of increase, inflection, absolute extrema, MVT $c$, concavity at a point, a drug's peak time                                                                 | review |
+| 6   | optimization                 | lesson     | optimization             | Model (variables, constraint, one variable left, its interval), then optimize; the box, the can, the lifeguard, the mean as least squares; checks                                                                                             | idea   |
+| 7   | practice-optimization        | practice   | optimization             | Fences, boxes, cans, distance from a point to a curve, revenue, least squares of a constant, with interval endpoints checked                                                                                                                  | idea   |
+| 8   | lhopital                     | explore    | lhopital                 | Two linear approximations near $a$; $\frac{0}{0}$ and $\frac{\infty}{\infty}$; conditions and a failure; $0 \cdot \infty$, $1^\infty$ by logarithms; compounding to $e^{rt}$; the circular $\frac{\sin x}{x}$; Cauchy's MVT                   | idea   |
+| 9   | newtons-method               | explore    | newtons-method           | Tangents to a root; digits double (quadratic convergence); $\sqrt{a}$ the Babylonian way; failures (flat tangent, a cycle, $\sqrt[3]{x}$ diverging); Newton on $f'$ to find a minimum                                                         | idea   |
+| 10  | practice-lhopital-and-newton | practice   | lhopital, newtons-method | Every indeterminate form, when the rule does not apply, Newton steps and iterations                                                                                                                                                           | idea   |
+| 11  | checkpoint                   | checkpoint | all                      | Generators from items 5, 7 and 10, plus a self-graded proof: if $f' = g'$ on an interval, $f - g$ is constant (by the MVT)                                                                                                                    | idea   |
+
+Batch 1 (items 1 to 5) built on 2026-11-17, awaiting the owner's review. Choices made while
+building: item 1's error and best-fit steps zoom with $dx$ (the view scales by $\frac{1.6}{dx}$),
+so $dx$ keeps its length on screen and the gap visibly fades; the ring step is a diagram with
+units in the readouts. Items 2 and 4 share the cubic $\frac{1}{4}x^3 - \frac{3}{2}x^2 +
+\frac{9}{4}x + 1$ (critical points $1$ and $3$, inflection at $2$); item 3 reuses the cubic of
+`derivative-function`. The speed check uses a made-up but smooth trip whose speed stays positive.
+Practice has 12 generators, each verified in `problems.test.ts` by sampling or numerical
+derivatives (no formula from the generator is reused). Every explore has a `code.mdx`.
+
+Notes. Existing terms: `maximum-minimum` (absolute extremes, Functions) and
+`increasing-decreasing` (Functions) are linked, not redefined. New terms: `differential`,
+`linearization` (item 1); `local-extremum`, `critical-point`, `fermats-theorem`,
+`first-derivative-test`, `extreme-value-theorem` (item 2); `rolles-theorem`, `mean-value-theorem`
+(item 3); `concavity`, `inflection-point`, `second-derivative-test` (item 4).
