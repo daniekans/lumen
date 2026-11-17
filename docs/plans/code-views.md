@@ -567,7 +567,7 @@ an image is built once and all blocks of an item run in one container.
 Keep each block short; Spark setup (session, sample data) goes in the first block of an item and
 later blocks reuse it, as the pilot does.
 
-**Batch 10 (built 2026-11-12, for review).** All 16 items have a `code.mdx`; all 94 blocks are
+**Batch 10 (built 2026-11-12, approved by the owner on 2026-11-17).** All 16 items have a `code.mdx`; all 94 blocks are
 `check` and their outputs come from real runs (Spark items in `spark`, the pure hashing items
 `rehashing`, `consistent-hashing` and `sizing-partitions` mostly in `default`). Notes:
 
