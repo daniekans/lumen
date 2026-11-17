@@ -36,9 +36,15 @@ unit can be picked out of order.
 13. Code for existing items, three batches (`plans/code-views.md`, batches 8 to 10, decided
     2026-11-07): Linear Algebra and Machine Learning, then Calculus 1, then Data Engineering.
     One session each, reviewed after each. Batch 10 counts as an owner's request for Data
-    Engineering. Batch 8 approved 2026-11-12; batch 9 approved 2026-11-12; batch 10 built 2026-11-12, waiting for the owner's review.
-14. Outline Probability and Statistics (for review), then its first unit
-15. Calculus 1 and Linear Algebra, next units
+    Engineering. Batch 8 approved 2026-11-12; batch 9 approved 2026-11-12; batch 10 approved 2026-11-17 (done).
+14. Outline Probability and Statistics (`plans/probability.md`, drafted 2026-11-17, waiting for
+    the owner's review), then its first unit, Probability foundations: unit plan and batch 1
+    (with the new kit pieces: `Bars` and a sample stream)
+15. Calculus 1: Applications of derivatives (unit plan, then batches)
+16. Linear Algebra: Determinants (unit plan, then batches)
+17. Probability: Discrete random variables
+18. Calculus 1: Integrals (opens Probability unit 3, Continuous random variables)
+19. Outline Machine Learning (Linear Algebra and Probability then have two units each)
 
 After that, keep alternating Calculus, Linear Algebra and Probability, and outline Machine Learning
 as soon as Linear Algebra and Probability have their first units, then build it. Extend this
@@ -325,8 +331,10 @@ plan there (items, skills, status) when its first batch is built. Status values:
   rational functions, Exponential and logarithmic functions.
 - [plans/calculus.md](plans/calculus.md): depth and threads, the Calculus outline (Calculus 1, 2,
   Multivariable), and unit plans from Limits on.
-- [plans/linear-algebra.md](plans/linear-algebra.md): threads and the Linear Algebra outline
-  (awaiting review).
+- [plans/linear-algebra.md](plans/linear-algebra.md): threads, the Linear Algebra outline
+  (approved) and unit plans.
+- [plans/probability.md](plans/probability.md): threads and the Probability and Statistics
+  outline (awaiting review).
 - [plans/data-engineering.md](plans/data-engineering.md): Relational model and joins, Storage and
   file formats, Partitioning, bucketing and hashing.
 
