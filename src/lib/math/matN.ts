@@ -98,3 +98,49 @@ export const sameMatN = (a: MatN, b: MatN, eps = 1e-9) =>
   rowsOf(a) === rowsOf(b) &&
   colsOf(a) === colsOf(b) &&
   a.every((row, i) => row.every((v, j) => Math.abs(v - b[i]![j]!) < eps))
+
+const isSquare = (a: MatN) => a.every((row) => row.length === a.length)
+
+/**
+ * The determinant of a square matrix by elimination on exact fractions: shears (adding a multiple
+ * of one row to another) keep it, a swap flips its sign, and the triangular result has the
+ * product of its diagonal. Exact for integer and decimal entries, so a collapsing matrix gives 0,
+ * never a rounding residue. Named `detN` because `det` is the 2 x 2 form in `mat2.ts`.
+ */
+export const detN = (a: MatN): number => {
+  if (!isSquare(a)) throw new Error(`Not square: ${rowsOf(a)}x${colsOf(a)}`)
+  const m = a.map((row) => row.map(toFrac))
+  let d: Frac = [1, 1]
+  for (let c = 0; c < m.length; c++) {
+    const pivot = m.findIndex((row, i) => i >= c && row[c]![0] !== 0)
+    if (pivot < 0) return 0
+    if (pivot !== c) {
+      ;[m[c], m[pivot]] = [m[pivot]!, m[c]!]
+      d = [-d[0], d[1]]
+    }
+    d = mul(d, m[c]![c]!)
+    for (let i = c + 1; i < m.length; i++) {
+      const f = div(m[i]![c]!, m[c]![c]!)
+      m[i] = m[i]!.map((x, j) => sub(x, mul(f, m[c]![j]!)))
+    }
+  }
+  return d[0] / d[1]
+}
+
+/** The matrix without row i and column j (the minor's matrix). */
+export const minorMatrix = (a: MatN, i: number, j: number): number[][] =>
+  a.filter((_, r) => r !== i).map((row) => row.filter((_, c) => c !== j))
+
+/**
+ * The determinant by cofactor expansion along the first row, in floating point: about n!
+ * products, so only for small matrices. An independent route to `detN`, used by tests.
+ */
+export const detCofactor = (a: MatN): number => {
+  if (!isSquare(a)) throw new Error(`Not square: ${rowsOf(a)}x${colsOf(a)}`)
+  if (a.length === 0) return 1
+  if (a.length === 1) return a[0]![0]!
+  return a[0]!.reduce(
+    (s, v, j) => s + (j % 2 === 0 ? 1 : -1) * v * detCofactor(minorMatrix(a, 0, j)),
+    0,
+  )
+}

@@ -31,3 +31,13 @@ export const distance = (a: Vec2, b: Vec2) => length(sub(a, b))
 /** A point as "(x, y)" in the short form of `fmtShort`. */
 export const fmtPoint = (p: Vec2, digits = 2) =>
   `(${fmtShort(p[0], digits)}, ${fmtShort(p[1], digits)})`
+
+/** The signed angle of the shorter turn from a to b, in (-pi, pi]: positive when counterclockwise. */
+export const turnAngle = (a: Vec2, b: Vec2) => Math.atan2(cross(a, b), dot(a, b))
+
+/**
+ * The signed area of a polygon from its corners in order (the shoelace formula, a sum of signed
+ * triangle areas from the origin): positive when the corners go counterclockwise.
+ */
+export const polygonArea = (points: readonly Vec2[]) =>
+  points.reduce((s, p, k) => s + cross(p, points[(k + 1) % points.length]!), 0) / 2

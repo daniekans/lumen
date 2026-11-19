@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   column,
+  detCofactor,
+  detN,
   fromColumns,
   identityN,
   matMul,
@@ -91,5 +93,71 @@ describe('matN', () => {
         [1, 3],
       ]),
     ).toBe(1)
+  })
+
+  describe('determinants', () => {
+    it('gives the known values', () => {
+      expect(detN([[3]])).toBe(3)
+      expect(detN(identityN(4))).toBe(1)
+      expect(
+        detN([
+          [2, 1],
+          [1, 2],
+        ]),
+      ).toBe(3)
+      // A swap of rows flips the sign; a triangular matrix has the product of its diagonal.
+      expect(
+        detN([
+          [0, 1],
+          [1, 0],
+        ]),
+      ).toBe(-1)
+      expect(
+        detN([
+          [2, 7, -1],
+          [0, 3, 5],
+          [0, 0, -4],
+        ]),
+      ).toBe(-24)
+    })
+
+    it('is exactly 0 for dependent columns, even with decimals', () => {
+      const a = fromColumns([0.1, 0.2, 0.3], [0.7, 0.1, 0.4], [0.8, 0.3, 0.7])
+      expect(detN(a)).toBe(0)
+      expect(Math.abs(detCofactor(a))).toBeLessThan(1e-12)
+    })
+
+    it('agrees with cofactor expansion on random integer matrices', () => {
+      let seed = 7
+      const next = () => {
+        seed = (seed * 1103515245 + 12345) % 2147483648
+        return (seed % 11) - 5
+      }
+      for (let n = 1; n <= 5; n++)
+        for (let k = 0; k < 20; k++) {
+          const a = Array.from({ length: n }, () => Array.from({ length: n }, next))
+          expect(detN(a)).toBe(detCofactor(a))
+        }
+    })
+
+    it('multiplies across products and ignores transposing', () => {
+      const a = [
+        [1, 2, 0],
+        [3, -1, 4],
+        [0.5, 2, 1],
+      ]
+      const b = [
+        [2, 0, 1],
+        [1, 1, 0],
+        [0, 3, -2],
+      ]
+      expect(detN(matMul(a, b))).toBeCloseTo(detN(a) * detN(b), 9)
+      expect(detN(transpose(a))).toBe(detN(a))
+    })
+
+    it('rejects a matrix that is not square', () => {
+      expect(() => detN([[1, 2]])).toThrow()
+      expect(() => detCofactor([[1, 2]])).toThrow()
+    })
   })
 })
