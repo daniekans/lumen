@@ -35,9 +35,10 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Linear Algebra: Determinants, batch 1 (items 1 to 3), once the owner
-has reviewed the unit plan in `plans/linear-algebra.md` (drafted 2026-11-19, four open questions
-at its end). Record the review decisions in the plan first.
+**Suggested next session:** Linear Algebra: Determinants, the owner's review of batch 1
+(`area-scaling`, `volume-in-3d`, `determinant-rules`, built 2026-11-19; notes in
+`plans/linear-algebra.md`), then batch 2 (items 4 to 6: `computing-determinants`,
+`practice-determinants`, `product-rule`).
 
 ### Phase 3: Explore page
 

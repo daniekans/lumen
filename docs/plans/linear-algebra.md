@@ -11,8 +11,8 @@ of the outline. Units are built in order; the Vectors unit (plan below) is done,
 2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 was
 reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) approved on
 2026-11-07, and batch 3 (items 9 to 12) approved on 2026-11-09 without changes, which closes the
-unit. The Determinants unit plan (below, 9 items) was drafted on 2026-11-19 for the owner's
-review.
+unit. The Determinants unit plan (below, 9 items) was drafted on 2026-11-19 and approved by the
+owner the same day as drafted; batch 1 (items 1 to 3) was built the same day for review.
 
 ## Depth and threads
 
@@ -508,7 +508,8 @@ that step (sway off so $P$ stays readable).
 
 ## Determinants unit plan
 
-Drafted on 2026-11-19 for the owner's review; build nothing before approval. Folder
+Drafted on 2026-11-19 and approved by the owner the same day as drafted (review decisions at the
+end of this section). Folder
 `src/content/mathematics/linear-algebra/determinants/` (the legacy skill redirect already points to
 `determinants#determinant`). Core unit, 9 items in three batches: the outline's 8 plus one
 exploration, `determinant-rules` (see the open questions). The thread: a linear map scales every
@@ -604,9 +605,9 @@ such as $\det$ as a polynomial in $k$).
 
 | #   | Item                      | Kind       | Skills                                                 | Content                                                                                                                                                                                                                                                                                                                           | Status  |
 | --- | ------------------------- | ---------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 1   | area-scaling              | explore    | determinant                                            | The unit square becomes the parallelogram of the columns; every grid square scales by the same factor, and so does a disk (ellipse area $\pi ab$); drag a column through the other's line: the area shrinks to $0$ and comes back flipped (F mirrored, turn arc reversed), so a sign is natural; collapse onto a line and a point | planned |
-| 2   | volume-in-3d              | explore    | determinant                                            | The unit cube becomes the parallelepiped of the columns; signed volume; right- and left-handed triples (a mirror); collapse onto a plane and a line; the volume of a tetrahedron as one sixth                                                                                                                                     | planned |
-| 3   | determinant-rules         | explore    | determinant-rules                                      | The three rules seen as areas: a column scaled, two parallelograms on one base adding their heights, a shear keeping base and height, equal columns flat; then a swap flips the sign and dependent columns give $0$; reducing any matrix to triangular shows the rules fix the number                                             | planned |
+| 1   | area-scaling              | explore    | determinant                                            | The unit square becomes the parallelogram of the columns; every grid square scales by the same factor, and so does a disk (ellipse area $\pi ab$); drag a column through the other's line: the area shrinks to $0$ and comes back flipped (F mirrored, turn arc reversed), so a sign is natural; collapse onto a line and a point | done    |
+| 2   | volume-in-3d              | explore    | determinant                                            | The unit cube becomes the parallelepiped of the columns; signed volume; right- and left-handed triples (a mirror); collapse onto a plane and a line; the volume of a tetrahedron as one sixth                                                                                                                                     | done    |
+| 3   | determinant-rules         | explore    | determinant-rules                                      | The three rules seen as areas: a column scaled, two parallelograms on one base adding their heights, a shear keeping base and height, equal columns flat; then a swap flips the sign and dependent columns give $0$; reducing any matrix to triangular shows the rules fix the number                                             | done    |
 | 4   | computing-determinants    | lesson     | computing-determinants, determinant-rules              | $ad - bc$ from the rules and from the picture (rectangle minus corners); rows give the same parallelogram area ($\det A^T$); cofactor expansion along any row or column; Sarrus for $3 \times 3$ only; triangular; elimination and pivots; $n!$ against $n^3$; the area of a polygon from its corners                             | planned |
 | 5   | practice-determinants     | practice   | determinant, determinant-rules, computing-determinants | $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$ by elimination, after described row or column operations, $k$ that makes $\det = 0$, collinear points, orientation of a triangle, a polygon's area, image area of a region                                                                                                   | planned |
 | 6   | product-rule              | explore    | determinant-rules                                      | $\det(AB) = \det A \det B$ as scaling twice (two flips make none); powers; undoing a map needs $\det \ne 0$ and has $\frac{1}{\det A}$; $\det(cA) = c^n \det A$; same $\det$ in any basis; $\det(A - \lambda I)$ as a preview                                                                                                     | planned |
@@ -635,16 +636,46 @@ such as $\det$ as a polynomial in $k$).
 **Batches.** 1: items 1 to 3 (with `det` in `matN.ts`, the turn arc and the F in the kit).
 2: items 4 to 6. 3: items 7 to 9, then the self-review of the whole unit. Each batch is one session.
 
-**Open questions for the review.**
+**Review decisions (2026-11-19).** The owner chose the drafted option on all four questions.
 
-1. **Nine items instead of eight.** The new `determinant-rules` exploration gives the three rules
-   their own pictures before the computing lesson, so that $ad - bc$, cofactors and row operations
-   are derived, not given. The alternative keeps 8 items and puts the rules into the lesson.
-2. **Cross product through duality** (3Blue1Brown's route), with the $\hat{\imath}, \hat{\jmath},
-   \hat{k}$ determinant as a memory aid. The alternative defines it by components and proves the
-   properties afterwards; it is shorter but less connected.
-3. **$\det A^T = \det A$ for every $n$**: checked here for $2 \times 2$ and $3 \times 3$, proved
-   in general in Systems and inverses (said so in item 4). The alternative proves it
-   now with the permutation formula, which the unit otherwise only mentions.
-4. **Cramer's rule** (the weights of `linear-combinations` as ratios of determinants) goes to
-   Systems and inverses, where solving is the topic, unless you want it here.
+1. **Nine items.** `determinant-rules` stays its own exploration before the computing lesson, so
+   $ad - bc$, cofactors and row operations are derived from the rules.
+2. **Cross product through duality**, with the $\hat{\imath}, \hat{\jmath}, \hat{k}$ determinant
+   as a memory aid only.
+3. **$\det A^T = \det A$** is checked for $2 \times 2$ and $3 \times 3$ here and proved for every
+   $n$ in Systems and inverses, said so in item 4.
+4. **Cramer's rule** goes to Systems and inverses.
+
+**Batch 1 (built 2026-11-19, for review).** Every item has a `code.mdx` (NumPy; SymPy for the
+Jacobian), outputs from real runs. Library: `detN` (exact elimination on fractions; named so
+because `det` is the $2 \times 2$ form in `mat2.ts`), `detCofactor` and `minorMatrix` in
+`matN.ts`, `turnAngle` and `polygonArea` (shoelace) in `vec2.ts`, with tests. Kit:
+`Parallelogram`, `TurnArc` (a turn with an arrowhead, clockwise for a negative determinant),
+`ArrowPath` and `LetterF` (the F in a unit box, now also used by `matrix-transformations` and
+`gallery-of-maps`) in `math-plot/Parallelogram.tsx`; `TurnArc3D` in `stage3d/maps.tsx`. Terms:
+`determinant`, `orientation`, `parallelepiped`, `right-handed` (instead of `right-hand-rule`; item
+7 may add the rule for the cross product's direction).
+
+- `area-scaling` (6 steps): the unit square to the parallelogram of $A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}$
+  (det $3$, F and turn arc inside); four grid squares, each area $3$; the unit disk filled by
+  squares of side $\frac{1}{2}$ to $\frac{1}{16}$ and the ellipse $3\pi$; $A\hat{\jmath}$ moved
+  across the line of $A\hat{\imath}$ ($3$ to $-3$, F mirrored, arc clockwise); collapse onto a
+  line and a point; a curved map $f(x, y) = (x + 0.6\sin y,\ y + 0.6\sin x)$ whose stage zooms
+  with the square side $h$ at three points, area ratio against $\det J$ (the Jacobian named as a
+  preview). Real scenarios in the explanation: a photo scaled by $2$, italic type. The non-square
+  sentence uses the camera matrix of Maps in 3D.
+- `volume-in-3d` (4 steps): the unit cube to the box of the columns (volume $1.5$, base times
+  height); handedness with `TurnArc3D` and a slider for the height of $A\hat{k}$ through the
+  floor (the mirror $(x, y, z) \mapsto (x, y, -z)$); collapse onto a plane and a line (rank in
+  the readout); the tetrahedron, with the proof of $\frac{1}{6}$ by the six orderings of the
+  coordinates. The crystal cell is one paragraph.
+- `determinant-rules` (8 steps): rule 1; scaling a column ($c$ from $1$ to $2$ to $-1$); adding in
+  a column ($\mathbf{u}$, $\mathbf{v}$ draggable, $\mathbf{v}$ blue, the two parallelograms
+  stacked on the base $\mathbf{w}$); equal columns; shear (slider $k$, the line through
+  $\mathbf{u}$ parallel to $\mathbf{w}$); swap through $0$; dependent columns; two shears to
+  $\operatorname{diag}(2, 1.5)$. The explanation proves the swap and dependence from the rules,
+  the reduction to triangular form for every $n$, and both directions of "$\det A = 0$ exactly
+  when the columns are dependent".
+
+**For the review:** the any-region step counts squares inside the disk (the readout shows the
+count times $h^2$); the curved step zooms the stage with $h$ instead of offering pan and zoom.

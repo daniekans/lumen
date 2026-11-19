@@ -41,8 +41,8 @@ unit can be picked out of order.
     `plans/probability.md`; the course starts after Calculus 1 Integrals)
 15. Calculus 1: Applications of derivatives (done; batches 1 to 3 approved 2026-11-18 and
     2026-11-19, gap 3 of the self-review, a loan's interest rate by Newton, built 2026-11-19)
-16. Linear Algebra: Determinants (unit plan drafted 2026-11-19 in `plans/linear-algebra.md`,
-    awaiting the owner's review; then batches)
+16. Linear Algebra: Determinants (unit plan approved 2026-11-19 in `plans/linear-algebra.md`;
+    batch 1, items 1 to 3, built 2026-11-19 for review; then batches 2 and 3)
 17. Calculus 1: Integrals (unit plan, then batches; the legacy `riemann-sums` is item 1)
 18. Probability: Probability foundations (unit plan, then batches; batch 1 builds the new kit
     pieces for simulation on the stage)
