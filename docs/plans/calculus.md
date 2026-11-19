@@ -456,10 +456,10 @@ Skills: `linear-approximation`, `extrema`, `mean-value-theorem`, `concavity` (ba
 | 5   | practice-curve-analysis      | practice   | all four                 | Linear estimates, error from differentials, critical points, classify, intervals of increase, inflection, absolute extrema, MVT $c$, concavity at a point, a drug's peak time                                                                 | done   |
 | 6   | optimization                 | lesson     | optimization             | Model (variables, constraint, one variable left, its interval), then optimize; the box, the can, the lifeguard, the mean as least squares; checks                                                                                             | done   |
 | 7   | practice-optimization        | practice   | optimization             | Fences, boxes, cans, distance from a point to a curve, revenue, least squares of a constant, with interval endpoints checked                                                                                                                  | done   |
-| 8   | lhopital                     | explore    | lhopital                 | Two linear approximations near $a$; $\frac{0}{0}$ and $\frac{\infty}{\infty}$; conditions and a failure; $0 \cdot \infty$, $1^\infty$ by logarithms; compounding to $e^{rt}$; the circular $\frac{\sin x}{x}$; Cauchy's MVT                   | idea   |
-| 9   | newtons-method               | explore    | newtons-method           | Tangents to a root; digits double (quadratic convergence); $\sqrt{a}$ the Babylonian way; failures (flat tangent, a cycle, $\sqrt[3]{x}$ diverging); Newton on $f'$ to find a minimum                                                         | idea   |
-| 10  | practice-lhopital-and-newton | practice   | lhopital, newtons-method | Every indeterminate form, when the rule does not apply, Newton steps and iterations                                                                                                                                                           | idea   |
-| 11  | checkpoint                   | checkpoint | all                      | Generators from items 5, 7 and 10, plus a self-graded proof: if $f' = g'$ on an interval, $f - g$ is constant (by the MVT)                                                                                                                    | idea   |
+| 8   | lhopital                     | explore    | lhopital                 | Two linear approximations near $a$; $\frac{0}{0}$ and $\frac{\infty}{\infty}$; conditions and a failure; $0 \cdot \infty$, $1^\infty$ by logarithms; compounding to $e^{rt}$; the circular $\frac{\sin x}{x}$; Cauchy's MVT                   | done   |
+| 9   | newtons-method               | explore    | newtons-method           | Tangents to a root; digits double (quadratic convergence); $\sqrt{a}$ the Babylonian way; failures (flat tangent, a cycle, $\sqrt[3]{x}$ diverging); Newton on $f'$ to find a minimum                                                         | done   |
+| 10  | practice-lhopital-and-newton | practice   | lhopital, newtons-method | Every indeterminate form, when the rule does not apply, Newton steps and iterations                                                                                                                                                           | done   |
+| 11  | checkpoint                   | checkpoint | all                      | Generators from items 5, 7 and 10, plus a self-graded proof: if $f' = g'$ on an interval, $f - g$ is constant (by the MVT)                                                                                                                    | done   |
 
 Batch 1 (items 1 to 5) built on 2026-11-17 and approved by the owner on 2026-11-18, with the unit plan. Choices made while
 building: item 1's error and best-fit steps zoom with $dx$ (the view scales by $\frac{1.6}{dx}$),
@@ -481,6 +481,42 @@ and links to Backpropagation. Practice has 6 generators (fence, box, can, closes
 with an optional price cap, least squares), several with the answer at an end of the interval,
 each verified by sampling the objective in `problems.test.ts`. New terms: `objective-function`,
 `least-squares`.
+
+Batch 3 (items 8 to 11) built on 2026-11-19, awaiting the owner's review. Choices made while
+building: L'Hôpital uses $\frac{\ln x}{x^2 - 1}$ at $1$ for its first three steps; the third
+draws the curve of pairs $(g(x), f(x))$, where the chord from the origin has slope
+$\frac{f}{g}$ and Cauchy's theorem gives a parallel tangent (the proof of the $\frac{0}{0}$ case,
+and a Leibniz moment: $\frac{df}{dg}$ with differentials in $x$). The $\frac{\infty}{\infty}$
+case is stated, its proof left to analysis (said so). Limits item 5 already drew
+$(1 + t)^{1/t} \to e$, so the compounding step adds the logarithm $\frac{\ln(1 + rh)}{h} \to r$
+with a rate slider. Steps whose graphs need different scales draw in stage units with scaled tick
+labels. Newton's method has a pure helper `newtonIterates` (`src/lib/math/calculus.ts`, tested);
+its digits step is a bar chart of correct decimals (1.7, 3.8, 8.0, 16.5 from $2.6$ in exact
+arithmetic, as the code shows); the Babylonian step draws rectangles of area $a$ turning into a
+square. Practice has 12 generators (seven limit families with several forms each, compounding in
+dollars, four Newton problems and a choice on how Newton behaves), each verified numerically or by
+bisection in `problems.test.ts`. The checkpoint has 13 problems: 5 from item 5, 2 from item 7, 5
+from item 10, and the proof. New terms: `lhopitals-rule`, `cauchy-mean-value-theorem`,
+`newtons-method`, `quadratic-convergence`; the Limits term `indeterminate-form` now mentions the
+rule.
+
+### Self-review of the whole unit (2026-11-19, proposals for the owner)
+
+Checked against `ADDING_CONTENT.md` section 0 and this plan. Every rule is stated with its
+conditions (Fermat, the extreme value theorem, Rolle, the MVT, the second derivative test,
+inflection, L'Hôpital, Newton), the three threads advance as planned (Lz: $dx$ and $dy$, the
+choice of variable in optimization, $\frac{df}{dg}$ in item 8, the Newton step as a $dx$; Lin:
+item 1 to Newton and gradient descent; Lim: every form and the circular $\frac{\sin x}{x}$), and
+nothing taught is taken back. Gaps, none of them a correctness issue:
+
+1. **Quadratic convergence is shown but never practiced.** Add a generator to item 10: given
+   $e_n$ and $\frac{f''(r)}{2f'(r)}$, estimate $e_{n+1}$, or count the correct decimals after one
+   more step.
+2. **No proof in practice beyond the checkpoint's.** Add a self-graded proof to item 10:
+   Cauchy's mean value theorem from Rolle, or the $\frac{0}{0}$ case of L'Hôpital from Cauchy.
+3. **Newton's method has one real scenario in practice** (square roots). Add one where no formula
+   exists, for example the interest rate of a loan from its payment
+   ($P = \frac{Lr}{1 - (1 + r)^{-n}}$, solved for $r$).
 
 Notes. Existing terms: `maximum-minimum` (absolute extremes, Functions) and
 `increasing-decreasing` (Functions) are linked, not redefined. New terms: `differential`,

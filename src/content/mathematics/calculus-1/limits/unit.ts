@@ -81,7 +81,7 @@ export const unit = defineUnit({
       title: 'Indeterminate form',
       tex: '\\frac{0}{0}',
       summary:
-        'A substitution result such as $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$ that does not decide the limit: it can be any number, infinite, or not exist. Algebra (factor, rationalize, combine fractions) removes it.',
+        "A substitution result such as $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$ that does not decide the limit: it can be any number, infinite, or not exist. Algebra (factor, rationalize, combine fractions) removes it, and L'Hôpital's rule (Applications of derivatives) handles many of the rest.",
       introducedIn: 'limit-laws',
     },
     {

@@ -1,0 +1,131 @@
+Newton's method is a loop of a few lines. SymPy supplies the derivative, and Python's `Decimal`
+counts digits past the 16 a float holds.
+
+## Follow the tangent
+
+One step: the root of the tangent line at $x_0$.
+
+```python title="step.py" step=tangent-step colors="x0=yellow x1=yellow" check
+import sympy as sp
+from decimal import Decimal, getcontext
+
+x = sp.symbols("x")
+f = x**2 - 2
+df = sp.diff(f, x)
+
+x0 = sp.Rational(13, 5)
+x1 = x0 - f.subs(x, x0) / df.subs(x, x0)
+print(df, x1, float(x1))
+```
+
+```output
+2*x 219/130 1.6846153846153846
+```
+
+## Repeat
+
+The same step in a loop, with plain floats:
+
+```python title="iterate.py" step=iterate check
+def newton(f: sp.Expr, x0: float, n: int) -> list[float]:
+    step = sp.lambdify(x, x - f / sp.diff(f, x))
+    xs = [x0]
+    for _ in range(n):
+        xs.append(float(step(xs[-1])))
+    return xs
+
+print([round(v, 6) for v in newton(f, 2.6, 4)])
+```
+
+```output
+[2.6, 1.684615, 1.435915, 1.414378, 1.414214]
+```
+
+## Digits double
+
+With 60 significant digits, the correct decimals of each iterate against $\sqrt{2}$:
+
+```python title="digits.py" step=digits check
+getcontext().prec = 60
+root = Decimal(2).sqrt()
+xn = Decimal("2.6")
+for n in range(1, 7):
+    xn = (xn + 2 / xn) / 2
+    error = abs(xn - root)
+    print(n, round(-error.log10(), 1))
+```
+
+```output
+1 0.6
+2 1.7
+3 3.8
+4 8.0
+5 16.5
+6 33.4
+```
+
+## Square roots, the Babylonian way
+
+The step for $x^2 - a$ is the average of $x$ and $\frac{a}{x}$:
+
+```python title="babylonian.py" step=babylonian colors="a=yellow" check
+a = sp.symbols("a", positive=True)
+print(sp.simplify(x - (x**2 - a) / sp.diff(x**2 - a, x)))
+
+side = 2.0
+for _ in range(4):
+    side = (side + 2 / side) / 2
+    print(side, 2 / side)
+```
+
+```output
+(a + x**2)/(2*x)
+1.5 1.3333333333333333
+1.4166666666666665 1.411764705882353
+1.4142156862745097 1.41421143847487
+1.4142135623746899 1.4142135623715002
+```
+
+## A cycle
+
+From $0$ the iterates of $x^3 - 2x + 2$ alternate; from $-1$ they find the root:
+
+```python title="cycle.py" step=cycle check
+cubic = x**3 - 2 * x + 2
+print(newton(cubic, 0.0, 6))
+print(round(newton(cubic, -1.0, 8)[-1], 4))
+```
+
+```output
+[0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0]
+-1.7693
+```
+
+## Overshooting
+
+For $\sqrt[3]{x}$ the step simplifies to $-2x$:
+
+```python title="diverge.py" step=diverge check
+c = sp.symbols("c", positive=True)
+g = sp.cbrt(c)
+print(sp.simplify(c - g / sp.diff(g, c)))
+```
+
+```output
+-2*c
+```
+
+## Newton on the derivative
+
+Newton's loop applied to $g'$ walks to the minimum of $g$:
+
+```python title="minimum.py" step=minimum colors="g=blue" check
+g = x**4 / 4 - x + 2
+print([round(v, 4) for v in newton(sp.diff(g, x), 2.2, 4)])
+print(sp.solve(sp.diff(g, x), x)[0], sp.diff(g, x, 2).subs(x, 1))
+```
+
+```output
+[2.2, 1.5355, 1.1651, 1.0223, 1.0005]
+1 3
+```

@@ -1,0 +1,141 @@
+SymPy computes these limits directly (`sp.limit`), so each block checks the rule against it: the
+ratio of the derivatives, and the original limit.
+
+## Two functions that vanish
+
+The ratio at points closer and closer to $1$, from both sides, then the exact limit:
+
+```python title="zero_over_zero.py" step=zero-over-zero colors="f=blue g=orange ratio=purple" hover="ratio=ratio" check
+import numpy as np
+import sympy as sp
+
+x = sp.symbols("x")
+f = sp.log(x)
+g = x**2 - 1
+
+xs = 1 + np.array([0.1, 0.01, -0.01, -0.001])
+ratio = np.log(xs) / (xs**2 - 1)
+print(ratio.round(5))
+print(sp.limit(f / g, x, 1))
+```
+
+```output
+[0.45386 0.49504 0.50504 0.5005 ]
+1/2
+```
+
+## Two tangent lines
+
+The slopes at $1$, and their ratio:
+
+```python title="tangents.py" step=tangents colors="f=blue g=orange" check
+df, dg = sp.diff(f, x), sp.diff(g, x)
+print(df.subs(x, 1), dg.subs(x, 1))
+print(df.subs(x, 1) / dg.subs(x, 1))
+```
+
+```output
+1 2
+1/2
+```
+
+## The curve of pairs
+
+Cauchy's theorem on $[1, 2]$: the chord's slope $\frac{f(2)}{g(2)}$ equals $\frac{f'(c)}{g'(c)}$
+for some $c$ between, found with `nsolve`:
+
+```python title="cauchy.py" step=cauchy colors="chord=purple c=teal" hover="chord=chord c=tangent" check
+chord = f.subs(x, 2) / g.subs(x, 2)
+c = sp.nsolve(df / dg - chord, x, 1.5)
+print(round(float(chord), 5), round(float(c), 5))
+```
+
+```output
+0.23105 1.47107
+```
+
+## Infinity over infinity
+
+Each use of the rule differentiates the top and the bottom; the form stays
+$\frac{\infty}{\infty}$ until the power is gone:
+
+```python title="infinity.py" step=infinity check
+top, bottom = x**2, sp.exp(x)
+for _ in range(3):
+    print(top / bottom, sp.limit(top / bottom, x, sp.oo))
+    top, bottom = sp.diff(top, x), sp.diff(bottom, x)
+```
+
+```output
+x**2*exp(-x) 0
+2*x*exp(-x) 0
+2*exp(-x) 0
+```
+
+## When the rule says nothing
+
+The original limit exists; the ratio of the derivatives only has bounds, which SymPy returns as an
+interval (`AccumBounds`):
+
+```python title="fails.py" step=fails colors="slopes=teal" check
+top, bottom = x + sp.sin(x), x
+slopes = sp.diff(top, x) / sp.diff(bottom, x)
+print(sp.limit(top / bottom, x, sp.oo))
+print(slopes, sp.limit(slopes, x, sp.oo))
+```
+
+```output
+1
+cos(x) + 1 AccumBounds(0, 2)
+```
+
+## Zero to the zero by a logarithm
+
+The logarithm first, then the power:
+
+```python title="logs.py" step=logs check
+print(sp.limit(x * sp.log(x), x, 0, "+"))
+print(sp.limit(x**x, x, 0, "+"))
+```
+
+```output
+0
+1
+```
+
+## Compounding, one to the infinity
+
+1000 dollars at $5\%$ for 10 years, paid $n$ times a year, against $1000\,e^{rt}$:
+
+```python title="compounding.py" step=compounding check
+r, t = 0.05, 10
+for n in [1, 12, 365]:
+    print(n, round(1000 * (1 + r / n) ** (n * t), 2))
+print("continuous", round(1000 * np.exp(r * t), 2))
+
+h, rate = sp.symbols("h rate", positive=True)
+print(sp.limit(sp.log(1 + rate * h) / h, h, 0, "+"))
+```
+
+```output
+1 1628.89
+12 1647.01
+365 1648.66
+continuous 1648.72
+rate
+```
+
+## A circular argument
+
+The derivative of $\sin$ at $0$, written out from its definition, is the limit in question:
+
+```python title="circular.py" step=circular check
+quotient = (sp.sin(0 + h) - sp.sin(0)) / h
+print(quotient)
+print(sp.limit(quotient, h, 0))
+```
+
+```output
+sin(h)/h
+1
+```

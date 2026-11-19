@@ -1,0 +1,141 @@
+The Limits unit removed $\frac{0}{0}$ with algebra (factor, rationalize) and with squeezes. Some
+ratios resist both: $\frac{\ln x}{x^2 - 1}$ at $x = 1$ has nothing to factor. Derivatives give a
+general method, because near a point where both functions vanish, each one is close to its
+tangent line.
+
+## Two linear approximations
+
+Let $f(a) = g(a) = 0$, with $f$ and $g$ differentiable at $a$ and $g'(a) \neq 0$. From
+the <Term id="linearization">linear approximation</Term>, with $dx = x - a$,
+
+$$
+f(x) = f'(a)\,dx + \varepsilon_1\,dx, \qquad g(x) = g'(a)\,dx + \varepsilon_2\,dx,
+$$
+
+where $\varepsilon_1$ and $\varepsilon_2$ tend to $0$ as $x \to a$. For $x \neq a$ the factor
+$dx$ cancels:
+
+$$
+\frac{f(x)}{g(x)} = \frac{f'(a) + \varepsilon_1}{g'(a) + \varepsilon_2} \to \frac{f'(a)}{g'(a)}.
+$$
+
+For $f(x) = \ln x$ and $g(x) = x^2 - 1$ at $a = 1$: $f'(1) = 1$ and $g'(1) = 2$, so
+the <C c="purple">ratio</C> tends to $\frac{1}{2}$. <StepLink step="tangents">Zoomed in</StepLink>,
+the <C c="blue">curve of $f$</C> and the <C c="orange">curve of $g$</C> become their tangents, and the
+ratio of two lines through the same point is the ratio of their slopes.
+
+## L'Hôpital's rule
+
+The rule asks less than this argument: no values at $a$, and only a limit of $\frac{f'}{g'}$.
+
+$$
+\lim_{x \to a} \frac{f(x)}{g(x)} = \lim_{x \to a} \frac{f'(x)}{g'(x)}
+$$
+
+**Conditions.** $f$ and $g$ are differentiable on an open interval around $a$, except possibly
+at $a$, and $g'(x) \neq 0$ there. Both $f(x)$ and $g(x)$ tend to $0$, or both tend to $\pm\infty$
+(an <Term id="indeterminate-form">indeterminate form</Term> $\frac{0}{0}$ or
+$\frac{\infty}{\infty}$). And the limit on the right exists, as a number or as $\pm\infty$. Then
+the limit on the left exists and is the same. The rule also holds for one-sided limits and for
+$x \to \pm\infty$.
+
+## Why it works: Cauchy's mean value theorem
+
+If $f$ and $g$ are continuous on $[a, b]$, differentiable on $(a, b)$, and $g' \neq 0$ on
+$(a, b)$, then for some $c$ in $(a, b)$
+
+$$
+\frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(c)}{g'(c)}.
+$$
+
+The denominator is not $0$: $g(b) = g(a)$ would give a point with $g' = 0$,
+by <Term id="rolles-theorem">Rolle's theorem</Term>. **Proof.** Let
+$h(x) = \left(f(b) - f(a)\right)g(x) - \left(g(b) - g(a)\right)f(x)$. Expanding gives
+$h(a) = h(b) = f(b)g(a) - f(a)g(b)$, so Rolle gives a $c$ with $h'(c) = 0$, which is the
+equation above. With $g(x) = x$ it is the <Term id="mean-value-theorem">mean value theorem</Term>.
+
+The picture is <StepLink step="cauchy">the curve of pairs</StepLink> $P = (g(x), f(x))$. The left
+side is the slope of the <C c="purple">chord</C> from one point of the curve to another, and the
+right side is the slope of a <C c="teal">tangent</C>. Both coordinates depend on $x$, so
+take <Term id="differential">differentials</Term> in $x$: $df = f'(x)\,dx$ and $dg = g'(x)\,dx$. The
+tangent's slope is their quotient, $\frac{df}{dg} = \frac{f'(x)}{g'(x)}$, and the $dx$ cancels.
+
+Now the $\frac{0}{0}$ case. Set $f(a) = g(a) = 0$ (this makes both continuous at $a$, since they
+tend to $0$). For $x$ just above $a$, Cauchy's theorem on $[a, x]$ gives
+
+$$
+\frac{f(x)}{g(x)} = \frac{f(x) - f(a)}{g(x) - g(a)} = \frac{f'(c)}{g'(c)}, \quad a < c < x.
+$$
+
+As $x \to a^+$, $c$ is squeezed to $a$, so the right side tends to $\lim \frac{f'}{g'}$. The left
+side is the same. The $\frac{\infty}{\infty}$ case also rests on Cauchy's theorem, with more
+bookkeeping; it is stated here and proved in an analysis course.
+
+## Infinity over infinity, and using it twice
+
+$\frac{x^2}{e^x}$ is <StepLink step="infinity">$\frac{\infty}{\infty}$</StepLink> as $x \to \infty$.
+The rule gives $\frac{2x}{e^x}$, still $\frac{\infty}{\infty}$, and again $\frac{2}{e^x} \to 0$.
+Each use needs its own check of the form. The same steps show $\frac{x^n}{e^x} \to 0$ for every
+$n$, and $\frac{\ln x}{x^p} \to 0$ for every $p > 0$: the growth order from the Limits unit,
+now with a proof.
+
+## When it does not apply
+
+**Check the form first.** $\lim_{x \to 0} \frac{\cos x}{x + 1} = 1$ by substitution. Applying
+the rule anyway gives $\frac{-\sin 0}{1} = 0$, which is wrong: the rule is only for
+indeterminate forms.
+
+**The limit of $\frac{f'}{g'}$ must
+exist.** <StepLink step="fails">$\frac{x + \sin x}{x}$</StepLink> is $\frac{\infty}{\infty}$ as
+$x \to \infty$ and tends to $1$, since $\left|\frac{\sin x}{x}\right| \le \frac{1}{x}$. But
+$\frac{f'(x)}{g'(x)} = 1 + \cos x$ has no limit. The rule is a one-way statement: if the limit
+of $\frac{f'}{g'}$ exists, so does the original, with the same value. When it does not, the
+rule says nothing, and the original limit still has to be found another way.
+
+## Other forms, through algebra and logarithms
+
+The rule handles quotients, so the other indeterminate forms are first rewritten as one.
+
+- **$0 \cdot \infty$.** Move one factor to the denominator: $x \ln x = \frac{\ln x}{1/x}$, which
+  is $\frac{\infty}{\infty}$ as $x \to 0^+$, and the rule gives
+  $\frac{1/x}{-1/x^2} = -x \to 0$.
+- **$\infty - \infty$.** Combine into one fraction: $\frac{1}{\sin x} - \frac{1}{x} =
+  \frac{x - \sin x}{x \sin x}$, a $\frac{0}{0}$ form that tends to $0$ after two uses.
+- **$1^\infty$, $0^0$, $\infty^0$.** For $y = u(x)^{v(x)}$ with $u > 0$, take the logarithm:
+  $\ln y = v \ln u$, a product of the form $0 \cdot \infty$. If $\ln y \to L$, then
+  $y = e^{\ln y} \to e^L$, because $e^x$ is continuous.
+
+The function <StepLink step="logs">$x^x$</StepLink> as $x \to 0^+$ is $0^0$. Its logarithm is
+$x \ln x \to 0$, so $x^x \to e^0 = 1$.
+
+## Continuous compounding
+
+At a yearly rate $r$ paid $n$ times a year, 1 dollar grows in a year to
+$\left(1 + \frac{r}{n}\right)^n = (1 + rh)^{1/h}$ with $h = \frac{1}{n}$, a $1^\infty$ form as
+$h \to 0^+$. <StepLink step="compounding">Its logarithm</StepLink> is $\frac{\ln(1 + rh)}{h}$, a
+$\frac{0}{0}$ form, and
+
+$$
+\lim_{h \to 0^+} \frac{\ln(1 + rh)}{h} = \lim_{h \to 0^+} \frac{r / (1 + rh)}{1} = r.
+$$
+
+So the amount tends to $e^r$, and after $t$ years to $e^{rt}$:
+the <Term id="continuous-compounding">continuous compounding</Term> of the Exponential functions unit.
+1000 dollars at $5\%$ for 10 years grows to about 1647.01 dollars when paid monthly and to
+$1000\,e^{0.5} \approx 1648.72$ dollars when compounded continuously. The Limits unit reached
+$\left(1 + \frac{1}{n}\right)^n \to e$ with a squeeze; here the same fact comes from the
+derivative of $\ln$ at $1$, since $\frac{\ln(1 + h)}{h}$ is that derivative's difference quotient.
+
+## A circular argument
+
+The rule gives $\lim_{x \to 0} \frac{\sin x}{x} = \lim_{x \to 0} \frac{\cos x}{1} = 1$. The
+computation is valid, but it does not prove the limit: it uses $\sin'(0) = 1$, and the
+Derivatives unit found that slope from this same limit, since
+$\sin'(0) = \lim_{h \to 0} \frac{\sin h}{h}$. A proof that assumes its conclusion proves nothing.
+The <Term id="squeeze-theorem">squeeze theorem</Term> on the unit circle is the
+proof; <StepLink step="circular">the teal tangent</StepLink> is its result.
+
+The same caution applies to $\frac{e^h - 1}{h} \to 1$. Elsewhere the rule is safe whenever the
+derivatives it uses were found without the limit in question.
+
+Next: Newton's method, which follows a tangent line to find a root.

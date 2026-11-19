@@ -26,6 +26,14 @@ export const unit = defineUnit({
       id: 'optimization',
       title: 'Model a quantity as a function of one variable on an interval, and optimize it',
     },
+    {
+      id: 'lhopital',
+      title: "Evaluate indeterminate forms with L'Hôpital's rule, and check its conditions",
+    },
+    {
+      id: 'newtons-method',
+      title: "Approximate roots and minima with Newton's method, and recognize when it fails",
+    },
   ],
   terms: [
     {
@@ -127,6 +135,37 @@ export const unit = defineUnit({
       summary:
         'Choosing parameters to make the sum of squared misfits as small as possible. Fitting a single constant $c$ to data this way gives the mean.',
       introducedIn: 'optimization',
+    },
+    {
+      id: 'lhopitals-rule',
+      title: "L'Hôpital's rule",
+      tex: "\\lim_{x \\to a} \\frac{f(x)}{g(x)} = \\lim_{x \\to a} \\frac{f'(x)}{g'(x)}",
+      summary:
+        "If $\\frac{f(x)}{g(x)}$ has the form $\\frac{0}{0}$ or $\\frac{\\infty}{\\infty}$ at $a$, $f$ and $g$ are differentiable near $a$ with $g' \\neq 0$, and $\\lim \\frac{f'}{g'}$ exists (or is $\\pm\\infty$), then $\\lim \\frac{f}{g}$ is the same. When $\\lim \\frac{f'}{g'}$ does not exist, the rule says nothing.",
+      introducedIn: 'lhopital',
+    },
+    {
+      id: 'cauchy-mean-value-theorem',
+      title: "Cauchy's mean value theorem",
+      summary:
+        "If $f$ and $g$ are continuous on $[a, b]$, differentiable on $(a, b)$, and $g' \\neq 0$ there, then $\\frac{f(b) - f(a)}{g(b) - g(a)} = \\frac{f'(c)}{g'(c)}$ for some $c$ in $(a, b)$. With $g(x) = x$ it is the mean value theorem.",
+      introducedIn: 'lhopital',
+    },
+    {
+      id: 'newtons-method',
+      title: "Newton's method",
+      tex: "x_{n+1} = x_n - \\frac{f(x_n)}{f'(x_n)}",
+      summary:
+        'An iteration for a root of $f$: each guess is replaced by the root of the tangent line there. Near a simple root it converges quadratically; from a poor start it can cycle or diverge.',
+      introducedIn: 'newtons-method',
+    },
+    {
+      id: 'quadratic-convergence',
+      title: 'Quadratic convergence',
+      tex: 'e_{n+1} \\approx C e_n^2',
+      summary:
+        "Convergence in which each error is about a constant times the square of the previous one, so the number of correct digits roughly doubles per step. Newton's method has it at a simple root.",
+      introducedIn: 'newtons-method',
     },
   ],
 })
