@@ -74,5 +74,28 @@ export const unit = defineUnit({
         'A square matrix with only zeros below its diagonal (upper triangular) or only zeros above it (lower triangular). Its determinant is the product of the diagonal entries.',
       introducedIn: 'computing-determinants',
     },
+    {
+      id: 'cross-product',
+      title: 'Cross product',
+      tex: '\\mathbf{v} \\times \\mathbf{w}',
+      summary:
+        'For $\\mathbf{v}$, $\\mathbf{w}$ in $\\mathbb{R}^3$: the one vector with $(\\mathbf{v} \\times \\mathbf{w}) \\cdot \\mathbf{x} = \\det[\\mathbf{v}\\ \\mathbf{w}\\ \\mathbf{x}]$ for every $\\mathbf{x}$. It is perpendicular to both, its length is the area of their parallelogram, and $\\mathbf{v}, \\mathbf{w}, \\mathbf{v} \\times \\mathbf{w}$ are right-handed. Components $(v_2w_3 - v_3w_2,\\ v_3w_1 - v_1w_3,\\ v_1w_2 - v_2w_1)$.',
+      introducedIn: 'cross-product',
+    },
+    {
+      id: 'right-hand-rule',
+      title: 'Right-hand rule',
+      summary:
+        'With the fingers of the right hand curling from $\\mathbf{v}$ to $\\mathbf{w}$ (the shorter way), the thumb points along $\\mathbf{v} \\times \\mathbf{w}$. The same rule gives the direction of a torque from the way it turns.',
+      introducedIn: 'cross-product',
+    },
+    {
+      id: 'triple-product',
+      title: 'Triple product',
+      tex: '\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w})',
+      summary:
+        '$\\mathbf{u} \\cdot (\\mathbf{v} \\times \\mathbf{w}) = \\det[\\mathbf{u}\\ \\mathbf{v}\\ \\mathbf{w}]$: the signed volume of the box on the three vectors. It is $0$ exactly when they lie in one plane through the origin.',
+      introducedIn: 'cross-product',
+    },
   ],
 })

@@ -1,0 +1,151 @@
+NumPy computes the cross product with `np.cross`. The code checks each property against the
+definition: $(\mathbf{v} \times \mathbf{w}) \cdot \mathbf{x} = \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$.
+
+## Volume as a function
+
+The volume of the box is linear in its third column, so a combination of inputs gives the same
+combination of volumes:
+
+```python title="volume.py" step=volume colors="v=green w=red x=purple" check
+import numpy as np
+
+v = np.array([1.5, 0.0, 0.0])
+w = np.array([0.5, 1.0, 0.0])
+f = lambda x: round(float(np.linalg.det(np.column_stack([v, w, x]))), 9)
+
+x = np.array([0.5, 0.5, 1.0])
+y = np.array([-0.5, 1.2, 1.0])  # the same height as x
+print(f(x), f(y))
+print(f(2 * x + 3 * y), 2 * f(x) + 3 * f(y))
+```
+
+```output
+1.5 1.5
+7.5 7.5
+```
+
+## A dot product with one vector
+
+The volumes at $\hat{\imath}$, $\hat{\jmath}$, $\hat{k}$ are the components of one vector, and it is
+what `np.cross` returns:
+
+```python title="one_vector.py" step=one-vector colors="v=green w=red p=orange" check
+p = np.array([f(e) for e in np.eye(3)])
+print(p, np.cross(v, w))
+print(f(x), p @ x)
+```
+
+```output
+[0.  0.  1.5] [0.  0.  1.5]
+1.5 1.5
+```
+
+## Perpendicular, with the area as length
+
+Both dot products are $0$, the length is $|\mathbf{v}||\mathbf{w}|\sin\theta$, and parallel
+vectors give the zero vector:
+
+```python title="geometry.py" step=geometry colors="v=green w=red p=orange" check
+p = np.cross(v, w)
+theta = np.arccos(v @ w / (np.linalg.norm(v) * np.linalg.norm(w)))
+print(p @ v, p @ w)
+print(np.linalg.norm(p), np.linalg.norm(v) * np.linalg.norm(w) * np.sin(theta))
+print(np.cross(v, 2 * v))
+```
+
+```output
+0.0 0.0
+1.5 1.5
+[0. 0. 0.]
+```
+
+## The order matters
+
+Swapping the factors flips the sign, and moving the brackets changes the result:
+
+```python title="order.py" step=order check
+i, j, k = np.eye(3)
+print(np.cross(w, v), -np.cross(v, w))
+print(np.cross(np.cross(i, i), j), np.cross(i, np.cross(i, j)))
+```
+
+```output
+[ 0.   0.  -1.5] [-0.  -0.  -1.5]
+[0. 0. 0.] [ 0. -1.  0.]
+```
+
+NumPy prints $-0$ for a zero that came from negating $0$; it equals $0$.
+
+## The components
+
+SymPy writes the components with symbols, the $2 \times 2$ determinants of the other two
+coordinates:
+
+```python title="components.py" step=components check
+import sympy as sp
+
+v1, v2, v3, w1, w2, w3 = sp.symbols("v1 v2 v3 w1 w2 w3")
+V = sp.Matrix([v1, v2, v3])
+W = sp.Matrix([w1, w2, w3])
+print(V.cross(W).T)
+print(np.cross([1.5, 0, 0.5], [0, 1, 0.5]))
+```
+
+```output
+Matrix([[v2*w3 - v3*w2, -v1*w3 + v3*w1, v1*w2 - v2*w1]])
+[-0.5  -0.75  1.5 ]
+```
+
+## The triple product
+
+The triple product equals the determinant, and three vectors in one plane give $0$:
+
+```python title="triple.py" step=triple colors="x=purple" check
+v = np.array([1.5, 0.0, 0.5])
+w = np.array([0.0, 1.0, 0.5])
+x = np.array([0.5, 0.5, 1.0])
+print(x @ np.cross(v, w), round(float(np.linalg.det(np.column_stack([v, w, x]))), 9))
+print(round(float((2 * v - w) @ np.cross(v, w)), 9))  # in the plane of v and w
+```
+
+```output
+0.875 0.875
+0.0
+```
+
+## The plane through three points
+
+The normal from two edges, and the equation's right side:
+
+```python title="plane.py" step=plane colors="n=orange" check
+p, q, r = np.array([2, 0, 2]), np.array([2, 1, 1]), np.array([0, 1, 2])
+n = np.cross(q - p, r - p)
+print(n, n @ p)  # the plane n . x = n . p
+print([int(n @ point) for point in (p, q, r)])
+print(np.linalg.norm(n) / 2)  # area of the triangle
+```
+
+```output
+[1 2 2] 6
+[6, 6, 6]
+1.5
+```
+
+## Torque
+
+The handle along $x$, a force of $50$ newtons at an angle $\theta$ in the floor. The torque in
+newton meters is vertical, along the bolt:
+
+```python title="torque.py" step=torque check
+r = np.array([0.3, 0.0, 0.0])  # meters
+for deg in [90, 45, 0]:
+    t = np.radians(deg)
+    F = 50 * np.array([np.cos(t), np.sin(t), 0.0])  # newtons
+    print(deg, np.cross(r, F).round(3))
+```
+
+```output
+90 [ 0.  0. 15.]
+45 [ 0.     0.    10.607]
+0 [0. 0. 0.]
+```

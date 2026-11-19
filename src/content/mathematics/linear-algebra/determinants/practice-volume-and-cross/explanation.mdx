@@ -1,0 +1,43 @@
+Problems on the <Term id="cross-product">cross product</Term>, areas and volumes in space, planes,
+torque and the product rule of the <Term id="determinant">determinant</Term>.
+
+## Answers
+
+- Vectors are typed as $(a, b, c)$; a plane $ax + by + cz = d$ as $(a, b, c, d)$, with the
+  coefficient the problem fixes.
+- Areas and volumes are positive. An area such as $\frac{1}{2}\sqrt{29}$ can be typed as it is.
+- Proofs are graded by you against the solution.
+
+## Formulas
+
+$$
+\mathbf{v} \times \mathbf{w} =
+\begin{bmatrix} v_2w_3 - v_3w_2 \\ v_3w_1 - v_1w_3 \\ v_1w_2 - v_2w_1 \end{bmatrix},
+\qquad
+|\mathbf{v} \times \mathbf{w}| = |\mathbf{v}||\mathbf{w}|\sin\theta.
+$$
+
+$$
+\mathbf{u} \cdot (\mathbf{v} \times \mathbf{w}) = \det[\mathbf{u}\ \mathbf{v}\ \mathbf{w}].
+$$
+
+- The parallelogram on $\mathbf{v}$, $\mathbf{w}$ has area $|\mathbf{v} \times \mathbf{w}|$, the
+  triangle half of it.
+- The box on $\mathbf{u}$, $\mathbf{v}$, $\mathbf{w}$ has volume
+  $|\mathbf{u} \cdot (\mathbf{v} \times \mathbf{w})|$, the tetrahedron one sixth of it. Four points
+  lie in one plane exactly when the <Term id="triple-product">triple product</Term> of the three
+  edges from one of them is $0$.
+- The plane through $\mathbf{p}$, $\mathbf{q}$, $\mathbf{r}$ has the normal
+  $\mathbf{n} = (\mathbf{q} - \mathbf{p}) \times (\mathbf{r} - \mathbf{p})$ and the equation
+  $\mathbf{n} \cdot \mathbf{x} = \mathbf{n} \cdot \mathbf{p}$.
+- Torque: $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}$ in newton meters, for $\mathbf{r}$ in
+  meters and $\mathbf{F}$ in newtons.
+
+| Matrix     | $\det$                        |
+| ---------- | ----------------------------- |
+| $AB$       | $\det A \det B$               |
+| $A^k$      | $(\det A)^k$                  |
+| $cA$       | $c^n \det A$ for $n \times n$ |
+| $A^T$      | $\det A$                      |
+| $A^{-1}$   | $\frac{1}{\det A}$            |
+| $P^{-1}AP$ | $\det A$                      |

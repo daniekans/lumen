@@ -1,0 +1,171 @@
+Given two vectors $\mathbf{v}$ and $\mathbf{w}$ in space, is there a vector perpendicular to both,
+as long as the area they span? There is exactly one with the right orientation, and the
+determinant produces it: it is the vector that turns "the volume of the box on $\mathbf{v}$,
+$\mathbf{w}$ and $\mathbf{x}$" into a dot product with $\mathbf{x}$. That vector is the
+cross product $\mathbf{v} \times \mathbf{w}$, defined only for vectors in $\mathbb{R}^3$.
+
+## Volume as a function of one column
+
+Fix <C c="green">$\mathbf{v}$</C> and <C c="red">$\mathbf{w}$</C> and let the third column vary:
+
+$$
+f(\mathbf{x}) = \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}].
+$$
+
+This is the <StepLink step="volume">signed volume of the box</StepLink> on $\mathbf{v}$,
+$\mathbf{w}$ and <C c="purple">$\mathbf{x}$</C>: the area of the base (the parallelogram of
+$\mathbf{v}$ and $\mathbf{w}$) times the height of $\mathbf{x}$ above it, negative below. Every
+$\mathbf{x}$ on a sheet parallel to the base gives the same volume. And by rule 2, $f$ is linear:
+$f(a\mathbf{x} + b\mathbf{y}) = af(\mathbf{x}) + bf(\mathbf{y})$.
+
+## A dot product with one vector
+
+A linear function from $\mathbb{R}^3$ to the numbers is a $1 \times 3$ matrix, and a
+$1 \times 3$ matrix is a <Term id="dot-product">dot product</Term> with a fixed vector (the
+duality seen in Vectors and in Linear maps). Its entries are the values on the standard basis:
+
+$$
+f(\mathbf{x}) = \mathbf{p} \cdot \mathbf{x}, \qquad
+\mathbf{p} = \big(f(\hat{\imath}),\ f(\hat{\jmath}),\ f(\hat{k})\big).
+$$
+
+The step <StepLink step="one-vector">sends $\mathbf{x}$ to each basis vector</StepLink> and reads
+off the three volumes. Two linear functions that agree on a basis agree everywhere, so
+exactly one vector $\mathbf{p}$ does this. It is the <Term id="cross-product">cross product</Term>:
+
+$$
+\det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}] = (\mathbf{v} \times \mathbf{w}) \cdot \mathbf{x}
+\quad \text{for every } \mathbf{x}.
+$$
+
+Every property below follows from this one line and the rules of the determinant.
+
+## Perpendicular, as long as the area, right-handed
+
+- **Perpendicular to both.** $(\mathbf{v} \times \mathbf{w}) \cdot \mathbf{v} =
+  \det[\mathbf{v}\ \mathbf{w}\ \mathbf{v}] = 0$, since two columns are equal; the same for
+  $\mathbf{w}$. So $\mathbf{v} \times \mathbf{w}$ is a <Term id="normal-vector">normal</Term> to
+  the plane of $\mathbf{v}$ and $\mathbf{w}$.
+- **Its length is the area.** Let $\mathbf{n}$ be the unit vector along $\mathbf{v} \times
+  \mathbf{w}$ (when it is not $\mathbf{0}$). Then $(\mathbf{v} \times \mathbf{w}) \cdot \mathbf{n}
+  = |\mathbf{v} \times \mathbf{w}|$, and it is also the volume of the box on $\mathbf{v}$,
+  $\mathbf{w}$, $\mathbf{n}$: base times height $1$. So the
+  length is <StepLink step="geometry">the area</StepLink> of the parallelogram, $|\mathbf{v}||\mathbf{w}
+  |\sin\theta$ for the angle $\theta$ between them.
+- **Zero exactly when parallel.** The area is $0$ exactly when $\mathbf{v}$ and $\mathbf{w}$ lie on
+  one line.
+- **Right-handed.** $\det[\mathbf{v}\ \mathbf{w}\ \mathbf{v} \times \mathbf{w}] =
+  |\mathbf{v} \times \mathbf{w}|^2 > 0$ when it is not $\mathbf{0}$, so $\mathbf{v}$, $\mathbf{w}$,
+  $\mathbf{v} \times \mathbf{w}$ are <Term id="right-handed">right-handed</Term>. This is the
+  <Term id="right-hand-rule">right-hand rule</Term>: curl the fingers of the right hand from
+  $\mathbf{v}$ to $\mathbf{w}$, and the thumb points along $\mathbf{v} \times \mathbf{w}$.
+
+Three facts (perpendicular, the length, the side) pin a vector down, so these could serve as a
+definition too. The determinant gives them at once, with the formula.
+
+## The order matters, and so do the brackets
+
+The <StepLink step="order">order of the factors</StepLink> matters, since swapping two columns
+flips the sign of the determinant: $\mathbf{w} \times \mathbf{v} = -\mathbf{v}
+\times \mathbf{w}$. In particular $\mathbf{v} \times \mathbf{v} = \mathbf{0}$. For the basis
+vectors,
+
+$$
+\hat{\imath} \times \hat{\jmath} = \hat{k}, \qquad
+\hat{\jmath} \times \hat{k} = \hat{\imath}, \qquad
+\hat{k} \times \hat{\imath} = \hat{\jmath},
+$$
+
+and the reversed products carry a minus sign. The cross product is linear in each factor, as the
+determinant is in each column, but it is not associative:
+$(\hat{\imath} \times \hat{\imath}) \times \hat{\jmath} = \mathbf{0} \times \hat{\jmath} =
+\mathbf{0}$, while $\hat{\imath} \times (\hat{\imath} \times \hat{\jmath}) = \hat{\imath} \times
+\hat{k} = -\hat{\jmath}$. Brackets are always written.
+
+## The components
+
+Expand $\det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ along its third column. The coefficient of
+$x_i$ is the cofactor of entry $(i, 3)$, a $2 \times 2$ determinant of the other two coordinates
+of $\mathbf{v}$ and $\mathbf{w}$:
+
+$$
+\mathbf{v} \times \mathbf{w} =
+\begin{bmatrix} v_2w_3 - v_3w_2 \\ v_3w_1 - v_1w_3 \\ v_1w_2 - v_2w_1 \end{bmatrix}.
+$$
+
+In <StepLink step="components">the example</StepLink>, $(1.5, 0, 0.5) \times (0, 1, 0.5) =
+(0 - 0.5,\ 0 - 0.75,\ 1.5 - 0) = (-0.5, -0.75, 1.5)$. Each component skips its own coordinate,
+and the indices of its first product run in cyclic order: $2, 3$, then $3, 1$, then $1, 2$.
+
+A common memory aid writes the same expansion as a determinant with $\hat{\imath}$, $\hat{\jmath}$,
+$\hat{k}$ in a row:
+
+$$
+\mathbf{v} \times \mathbf{w} = \det\begin{bmatrix}
+\hat{\imath} & \hat{\jmath} & \hat{k} \\ v_1 & v_2 & v_3 \\ w_1 & w_2 & w_3
+\end{bmatrix}.
+$$
+
+Expanding along the first row gives the three components above. It is a pattern for remembering
+the formula, not a determinant of numbers: its first row holds vectors.
+
+In the plane the analogue is a number, not a vector: $\det[\mathbf{v}\ \mathbf{w}] = v_1w_2 -
+v_2w_1$, the signed area, which is the third component of the cross product of $(v_1, v_2, 0)$
+and $(w_1, w_2, 0)$.
+
+## The triple product
+
+The defining line, read the other way, is the <Term id="triple-product">triple product</Term>:
+
+$$
+\mathbf{x} \cdot (\mathbf{v} \times \mathbf{w}) = \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]
+= \det[\mathbf{x}\ \mathbf{v}\ \mathbf{w}].
+$$
+
+Moving $\mathbf{x}$ to the front takes two swaps, so the sign stays. In
+the <StepLink step="triple">picture</StepLink> it is the area $|\mathbf{v} \times \mathbf{w}|$
+times the height of $\mathbf{x}$ along $\mathbf{v} \times \mathbf{w}$, the volume of the box with
+its sign. It is $0$ exactly when $\mathbf{x}$, $\mathbf{v}$ and $\mathbf{w}$ lie in one plane
+through the origin. So four points are in one plane exactly when the triple product of the three
+edges from one of them is $0$, and the tetrahedron on those edges has volume
+$\tfrac{1}{6}|\mathbf{x} \cdot (\mathbf{v} \times \mathbf{w})|$.
+
+## The plane through three points
+
+For points $\mathbf{p}$, $\mathbf{q}$, $\mathbf{r}$ not on one line, the edges
+$\mathbf{q} - \mathbf{p}$ and $\mathbf{r} - \mathbf{p}$ lie in their plane, so
+
+$$
+\mathbf{n} = (\mathbf{q} - \mathbf{p}) \times (\mathbf{r} - \mathbf{p})
+$$
+
+is a normal, and the plane is $\mathbf{n} \cdot \mathbf{x} = \mathbf{n} \cdot \mathbf{p}$.
+
+The <StepLink step="plane">example</StepLink> has $\mathbf{p} = (2, 0, 2)$, $\mathbf{q} = (2, 1, 1)$,
+$\mathbf{r} = (0, 1, 2)$, which give $\mathbf{n} = (0, 1, -1) \times (-2, 1, 0) = (1, 2, 2)$ and the plane
+$x + 2y + 2z = 6$ of Lines and planes, without solving any equations. The triangle $\mathbf{pqr}$
+has area $\tfrac{1}
+{2}|\mathbf{n}|$, here $\tfrac{3}
+{2}$. If the points are on one line, $\mathbf{n} = \mathbf{0}$ and no single plane is fixed.
+
+3D graphics does this for every triangle of a mesh. Lighting uses $\mathbf{n} \cdot
+\boldsymbol{\ell}$ with the direction $\boldsymbol{\ell}$ toward the light (brightest when the
+surface faces it), and the corners are listed in a fixed order (counterclockwise seen from
+outside), so the sign of $\mathbf{n}$ toward the camera tells whether the triangle faces the
+viewer. Triangles facing away are skipped (back-face culling).
+
+## Torque
+
+A force $\mathbf{F}$ applied at the end of a wrench handle $\mathbf{r}$ (from the bolt to the
+hand) turns the bolt with
+
+$$
+\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}, \qquad
+|\boldsymbol{\tau}| = |\mathbf{r}||\mathbf{F}|\sin\theta,
+$$
+
+in newton meters. <StepLink step="torque">The torque</StepLink> points along the bolt, and the
+right-hand rule gives the turn: thumb along $\boldsymbol{\tau}$, fingers curling the way the bolt
+turns. A longer handle gives proportionally more torque, a push at a right angle gives the most,
+and a push along the handle ($\theta = 0$) turns nothing. Only the part of $\mathbf{F}$
+perpendicular to $\mathbf{r}$ counts.
