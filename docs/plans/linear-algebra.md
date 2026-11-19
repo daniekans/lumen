@@ -13,7 +13,7 @@ reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) app
 2026-11-07, and batch 3 (items 9 to 12) approved on 2026-11-09 without changes, which closes the
 unit. The Determinants unit plan (below, 9 items) was drafted on 2026-11-19 and approved by the
 owner the same day as drafted; batch 1 (items 1 to 3) was built and approved the same day
-without changes; batch 2 (items 4 to 6) was built the same day for review.
+without changes; batch 2 (items 4 to 6) was built and approved the same day without changes.
 
 ## Depth and threads
 
@@ -717,3 +717,6 @@ and `MatrixCells` cover it. Terms: `minor`, `cofactor`, `triangular-matrix`.
 **For the review:** in `computing-determinants` the cofactor, Sarrus, triangular and elimination
 steps draw matrices on the stage rather than a picture of space; `product-rule` shows the
 transformed grid in every map step (dense when $A - \lambda I$ nearly collapses).
+
+**Batch 2 review (2026-11-19).** Approved as built, without changes. Both points above stay as
+they are (matrices on the stage in the computing steps, the transformed grid in every map step).
