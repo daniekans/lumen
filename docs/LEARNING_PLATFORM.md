@@ -40,7 +40,7 @@ unit can be picked out of order.
 14. Outline Probability and Statistics (done, approved 2026-11-17 with review decisions in
     `plans/probability.md`; the course starts after Calculus 1 Integrals)
 15. Calculus 1: Applications of derivatives (unit plan written 2026-11-17 in `plans/calculus.md`;
-    batch 1, items 1 to 5, built 2026-11-17 and awaiting review; then batches 2 and 3)
+    plan and batch 1, items 1 to 5, approved 2026-11-18; then batches 2 and 3)
 16. Linear Algebra: Determinants (unit plan, then batches)
 17. Calculus 1: Integrals (unit plan, then batches; the legacy `riemann-sums` is item 1)
 18. Probability: Probability foundations (unit plan, then batches; batch 1 builds the new kit
