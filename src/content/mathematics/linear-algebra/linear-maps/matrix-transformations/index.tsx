@@ -17,6 +17,7 @@ import { Button, Divider } from '@/ui/atoms'
 import { MatrixView, Readout, ReadoutPanel, SegmentedControl, ToggleField } from '@/ui/molecules'
 import {
   Grid,
+  LetterF,
   MathLabel,
   Overlay,
   Path,
@@ -59,19 +60,6 @@ const DRAW = mat2(2, 1, 0, 1)
 const ITALIC = mat2(1, 0.25, 0, 1)
 
 const X: Vec2 = [2, 1]
-
-/** The letter F, upright on the baseline y = 0, as strokes. */
-const LETTER: Vec2[][] = [
-  [
-    [-3, 0],
-    [-3, 2],
-    [-1.8, 2],
-  ],
-  [
-    [-3, 1.1],
-    [-2.1, 1.1],
-  ],
-]
 
 const isIdentity = (m: Mat2) => sameMat(m, identity, 1e-6)
 
@@ -221,28 +209,9 @@ export default function MatrixTransformations() {
 
         <TransformedGrid m={m} />
 
-        {letterOpacity > 0.01 &&
-          moved &&
-          LETTER.map((stroke, k) => (
-            <Path
-              key={`ghost-${k}`}
-              points={stroke}
-              color={vc.fg}
-              width={2}
-              dash="4 5"
-              opacity={0.3 * letterOpacity}
-            />
-          ))}
-        {letterOpacity > 0.01 &&
-          LETTER.map((stroke, k) => (
-            <Path
-              key={k}
-              points={stroke.map((p) => apply(m, p))}
-              color={vc.fg}
-              width={4}
-              opacity={letterOpacity}
-            />
-          ))}
+        {letterOpacity > 0.01 && (
+          <LetterF m={m} origin={[-3, 0]} size={2} ghost={moved} opacity={letterOpacity} />
+        )}
 
         {xOpacity > 0.01 && (
           <g style={{ opacity: xOpacity }}>

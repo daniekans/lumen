@@ -1,6 +1,7 @@
-import { add3, apply3, colsOf, dot3, scale3, type MatN, type Vec3 } from '@/lib/math'
+import { add3, apply3, colsOf, dot3, length3, scale3, sub3, type MatN, type Vec3 } from '@/lib/math'
 import { alpha, vc } from '@/styles/viz-colors'
 import { useProjection } from './camera'
+import { ArrowPath } from '../math-plot'
 import { Path3D, Segment3D } from './primitives'
 
 /** All lists of `n` whole numbers from -k to k. */
@@ -122,5 +123,53 @@ export function Cell3D({
         />
       ))}
     </g>
+  )
+}
+
+/**
+ * The turn from `from` to `to` (the shorter way, in the plane they span) as an arc with an
+ * arrowhead at the origin. With the thumb of the right hand along the cross product, the fingers
+ * curl this way; a third vector on the thumb's side makes a right-handed triple.
+ */
+export function TurnArc3D({
+  from,
+  to,
+  r = 0.45,
+  color = vc.fg,
+  width = 2,
+  opacity = 1,
+}: {
+  from: Vec3
+  to: Vec3
+  r?: number
+  color?: string
+  width?: number
+  opacity?: number
+}) {
+  const { project, cue } = useProjection()
+  const lu = length3(from)
+  const lv = length3(to)
+  const radius = Math.min(r, 0.5 * lu, 0.5 * lv)
+  if (radius < 0.05) return null
+  const e1 = scale3(from, 1 / lu)
+  const perp = sub3(to, scale3(e1, dot3(to, e1)))
+  const lp = length3(perp)
+  // Parallel vectors span no plane: no turn to draw.
+  if (lp < 0.05 * lv) return null
+  const e2 = scale3(perp, 1 / lp)
+  const turn = Math.atan2(lp, dot3(to, e1))
+  const n = Math.max(8, Math.ceil(turn * 16))
+  const points = Array.from({ length: n + 1 }, (_, k) => {
+    const t = (turn * k) / n
+    return add3(scale3(e1, radius * Math.cos(t)), scale3(e2, radius * Math.sin(t)))
+  })
+  const mid = points[n >> 1]!
+  return (
+    <ArrowPath
+      points={points.map((p) => project(p))}
+      color={color}
+      width={width}
+      opacity={opacity * cue(mid)}
+    />
   )
 }

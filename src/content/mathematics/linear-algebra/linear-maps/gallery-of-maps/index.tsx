@@ -22,6 +22,7 @@ import { LabeledSlider, MatrixView, Readout, ReadoutPanel, SegmentedControl } fr
 import {
   Arc,
   Grid,
+  LetterF,
   MathLabel,
   Overlay,
   Path,
@@ -100,19 +101,6 @@ const kindOptions = [
   { value: 'scaling', label: 'Scale' },
   { value: 'projection', label: 'Project' },
 ] as const
-
-/** The letter F in the first quadrant, upright on y = 0.4, as strokes. */
-const LETTER: Vec2[][] = [
-  [
-    [1, 0.4],
-    [1, 2.4],
-    [2.2, 2.4],
-  ],
-  [
-    [1, 1.5],
-    [1.9, 1.5],
-  ],
-]
 
 const EPS = 1e-6
 
@@ -356,19 +344,7 @@ export default function GalleryOfMaps() {
           <Segment from={[0, 0]} to={lineDir} extend color={vc.muted} width={1.5} />
         )}
 
-        {LETTER.map((stroke, n) => (
-          <Path
-            key={`ghost-${n}`}
-            points={stroke}
-            color={vc.fg}
-            width={2}
-            dash="4 5"
-            opacity={0.3}
-          />
-        ))}
-        {LETTER.map((stroke, n) => (
-          <Path key={n} points={stroke.map((p) => apply(m, p))} color={vc.fg} width={4} />
-        ))}
+        <LetterF m={m} origin={[1, 0.4]} size={2} ghost />
 
         {kind === 'projection' && (
           <>
