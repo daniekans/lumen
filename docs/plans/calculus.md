@@ -482,7 +482,7 @@ with an optional price cap, least squares), several with the answer at an end of
 each verified by sampling the objective in `problems.test.ts`. New terms: `objective-function`,
 `least-squares`.
 
-Batch 3 (items 8 to 11) built on 2026-11-19, awaiting the owner's review. Choices made while
+Batch 3 (items 8 to 11) built on 2026-11-19 and approved by the owner the same day. Choices made while
 building: L'Hôpital uses $\frac{\ln x}{x^2 - 1}$ at $1$ for its first three steps; the third
 draws the curve of pairs $(g(x), f(x))$, where the chord from the origin has slope
 $\frac{f}{g}$ and Cauchy's theorem gives a parallel tangent (the proof of the $\frac{0}{0}$ case,
@@ -500,14 +500,15 @@ from item 10, and the proof. New terms: `lhopitals-rule`, `cauchy-mean-value-the
 `newtons-method`, `quadratic-convergence`; the Limits term `indeterminate-form` now mentions the
 rule.
 
-### Self-review of the whole unit (2026-11-19, proposals for the owner)
+### Self-review of the whole unit (2026-11-19, reviewed by the owner the same day)
 
 Checked against `ADDING_CONTENT.md` section 0 and this plan. Every rule is stated with its
 conditions (Fermat, the extreme value theorem, Rolle, the MVT, the second derivative test,
 inflection, L'Hôpital, Newton), the three threads advance as planned (Lz: $dx$ and $dy$, the
 choice of variable in optimization, $\frac{df}{dg}$ in item 8, the Newton step as a $dx$; Lin:
 item 1 to Newton and gradient descent; Lim: every form and the circular $\frac{\sin x}{x}$), and
-nothing taught is taken back. Gaps, none of them a correctness issue:
+nothing taught is taken back. Gaps, none of them a correctness issue. The owner kept gaps 1 and 2 as they are (no change) and
+accepted gap 3, to build in its own session; after it the unit is done:
 
 1. **Quadratic convergence is shown but never practiced.** Add a generator to item 10: given
    $e_n$ and $\frac{f''(r)}{2f'(r)}$, estimate $e_{n+1}$, or count the correct decimals after one

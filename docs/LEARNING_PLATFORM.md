@@ -40,9 +40,9 @@ unit can be picked out of order.
 14. Outline Probability and Statistics (done, approved 2026-11-17 with review decisions in
     `plans/probability.md`; the course starts after Calculus 1 Integrals)
 15. Calculus 1: Applications of derivatives (unit plan written 2026-11-17 in `plans/calculus.md`;
-    plan and batch 1, items 1 to 5, approved 2026-11-18; batch 2, items 6 and 7, approved
-    2026-11-19; batch 3, items 8 to 11, built 2026-11-19 with the unit's self-review, awaiting
-    review)
+    batches 1 to 3 approved 2026-11-18 and 2026-11-19; next: gap 3 of the self-review, a Newton
+    problem in context (a loan's interest rate) in `practice-lhopital-and-newton`, then the unit
+    is done)
 16. Linear Algebra: Determinants (unit plan, then batches)
 17. Calculus 1: Integrals (unit plan, then batches; the legacy `riemann-sums` is item 1)
 18. Probability: Probability foundations (unit plan, then batches; batch 1 builds the new kit
