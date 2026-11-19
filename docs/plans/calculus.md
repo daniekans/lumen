@@ -470,7 +470,7 @@ units in the readouts. Items 2 and 4 share the cubic $\frac{1}{4}x^3 - \frac{3}{
 Practice has 12 generators, each verified in `problems.test.ts` by sampling or numerical
 derivatives (no formula from the generator is reused). Every explore has a `code.mdx`.
 
-Batch 2 (items 6 and 7) built on 2026-11-18, awaiting the owner's review. Choices made while
+Batch 2 (items 6 and 7) built on 2026-11-18 and approved by the owner on 2026-11-19. Choices made while
 building: the lesson's diagrams and the graph of the objective share one stage through a new kit
 piece, `plotBox` (`src/lib/math`) with `PlotBoxAxes` (`src/viz-kit`), which fits a graph into a box
 with its own scales. The can holds $330\ \text{cm}^3$ and is compared with a real can ($r \approx 3.3$,

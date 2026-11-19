@@ -35,8 +35,8 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Calculus 1: Applications of derivatives. Batch 2 (items 6 and 7,
-optimization) is built (2026-11-18) and awaits the owner's review. After approval, build batch 3
+**Suggested next session:** Calculus 1: Applications of derivatives. Batches 1 and 2 (items 1 to 7)
+are approved (2026-11-19). Build batch 3
 (items 8 to 11: L'Hôpital, Newton's method, their practice, the checkpoint, and the self-review of
 the unit) from `plans/calculus.md`.
 
