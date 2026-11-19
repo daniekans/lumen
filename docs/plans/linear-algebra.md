@@ -12,7 +12,8 @@ of the outline. Units are built in order; the Vectors unit (plan below) is done,
 reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) approved on
 2026-11-07, and batch 3 (items 9 to 12) approved on 2026-11-09 without changes, which closes the
 unit. The Determinants unit plan (below, 9 items) was drafted on 2026-11-19 and approved by the
-owner the same day as drafted; batch 1 (items 1 to 3) was built the same day for review.
+owner the same day as drafted; batch 1 (items 1 to 3) was built and approved the same day
+without changes; batch 2 (items 4 to 6) was built the same day for review.
 
 ## Depth and threads
 
@@ -608,9 +609,9 @@ such as $\det$ as a polynomial in $k$).
 | 1   | area-scaling              | explore    | determinant                                            | The unit square becomes the parallelogram of the columns; every grid square scales by the same factor, and so does a disk (ellipse area $\pi ab$); drag a column through the other's line: the area shrinks to $0$ and comes back flipped (F mirrored, turn arc reversed), so a sign is natural; collapse onto a line and a point | done    |
 | 2   | volume-in-3d              | explore    | determinant                                            | The unit cube becomes the parallelepiped of the columns; signed volume; right- and left-handed triples (a mirror); collapse onto a plane and a line; the volume of a tetrahedron as one sixth                                                                                                                                     | done    |
 | 3   | determinant-rules         | explore    | determinant-rules                                      | The three rules seen as areas: a column scaled, two parallelograms on one base adding their heights, a shear keeping base and height, equal columns flat; then a swap flips the sign and dependent columns give $0$; reducing any matrix to triangular shows the rules fix the number                                             | done    |
-| 4   | computing-determinants    | lesson     | computing-determinants, determinant-rules              | $ad - bc$ from the rules and from the picture (rectangle minus corners); rows give the same parallelogram area ($\det A^T$); cofactor expansion along any row or column; Sarrus for $3 \times 3$ only; triangular; elimination and pivots; $n!$ against $n^3$; the area of a polygon from its corners                             | planned |
-| 5   | practice-determinants     | practice   | determinant, determinant-rules, computing-determinants | $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$ by elimination, after described row or column operations, $k$ that makes $\det = 0$, collinear points, orientation of a triangle, a polygon's area, image area of a region                                                                                                   | planned |
-| 6   | product-rule              | explore    | determinant-rules                                      | $\det(AB) = \det A \det B$ as scaling twice (two flips make none); powers; undoing a map needs $\det \ne 0$ and has $\frac{1}{\det A}$; $\det(cA) = c^n \det A$; same $\det$ in any basis; $\det(A - \lambda I)$ as a preview                                                                                                     | planned |
+| 4   | computing-determinants    | lesson     | computing-determinants, determinant-rules              | $ad - bc$ from the rules and from the picture (rectangle minus corners); rows give the same parallelogram area ($\det A^T$); cofactor expansion along any row or column; Sarrus for $3 \times 3$ only; triangular; elimination and pivots; $n!$ against $n^3$; the area of a polygon from its corners                             | done    |
+| 5   | practice-determinants     | practice   | determinant, determinant-rules, computing-determinants | $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$ by elimination, after described row or column operations, $k$ that makes $\det = 0$, collinear points, orientation of a triangle, a polygon's area, image area of a region                                                                                                   | done    |
+| 6   | product-rule              | explore    | determinant-rules                                      | $\det(AB) = \det A \det B$ as scaling twice (two flips make none); powers; undoing a map needs $\det \ne 0$ and has $\frac{1}{\det A}$; $\det(cA) = c^n \det A$; same $\det$ in any basis; $\det(A - \lambda I)$ as a preview                                                                                                     | done    |
 | 7   | cross-product             | lesson     | cross-product                                          | $\mathbf{x} \mapsto \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ is a dot product with one vector, $\mathbf{v} \times \mathbf{w}$; drag $\mathbf{x}$ to see volume as area times height; its length, direction, components; triple product; normals to planes and the plane through three points; torque                             | planned |
 | 8   | practice-volume-and-cross | practice   | cross-product, determinant, determinant-rules          | Areas of triangles in space, volumes of parallelepipeds and tetrahedra, coplanar points, cross products, normals and plane equations, torque, $\det(AB)$, $\det(A^k)$, $\det(cA)$, $\det A^T$, the determinant of an undoing map, short proofs (a swap flips the sign, $\det(cA) = c^n \det A$)                                   | planned |
 | 9   | checkpoint                | checkpoint | all                                                    | Problems from items 5 and 8 plus a self-graded proof: if the columns of $A$ are dependent, then $\det A = 0$ (from the three rules; the outline's "two equal columns" is a rule now, so the proof generalizes it)                                                                                                                 | planned |
@@ -679,3 +680,40 @@ because `det` is the $2 \times 2$ form in `mat2.ts`), `detCofactor` and `minorMa
 
 **For the review:** the any-region step counts squares inside the disk (the readout shows the
 count times $h^2$); the curved step zooms the stage with $h$ instead of offering pan and zoom.
+
+**Batch 1 review (2026-11-19).** Approved as built, without changes. Both points above stay as
+they are (the square count in the any-region step, the stage zooming with $h$ in the curved step).
+
+**Batch 2 (built 2026-11-19, for review).** Every item but the practice has a `code.mdx`, outputs
+from real runs. No new library or kit code: `detN`, `detCofactor`, `minorMatrix`, `polygonArea`
+and `MatrixCells` cover it. Terms: `minor`, `cofactor`, `triangular-matrix`.
+
+- `computing-determinants` (10 steps, a check on 8 of them): $ad - bc$ from the rules (the two
+  rectangles $ad$ and $-bc$ with their turn arcs) and from the picture (the six corner pieces of
+  the bounding rectangle); the rows' parallelogram beside the columns' (draggable columns, equal
+  areas); cofactor expansion of a $3 \times 3$ term by term on `MatrixCells`; any row or column
+  (a picker, with the checkerboard of signs, zero terms faded); Sarrus (the first two columns
+  copied, diagonals labeled $+$ and $-$, "3 × 3 only"); a triangular $4 \times 4$; elimination as
+  four matrices with their operations and $\pm\det A$ under each; $n!$ against $n^3$ on a log
+  axis with a slider; the shoelace formula on a five-corner plot (triangles from the origin,
+  negative ones dashed and labeled with their sign, draggable corners). The explanation sketches
+  the cofactor proof and the existence of the determinant for every $n$, states $\det A^T =
+  \det A$ as checked for $n \le 3$ (proof in Systems and inverses), and covers cost, the
+  floating-point and small-determinant warnings, `ST_Area` and the orientation test.
+- `practice-determinants` (10 generators): $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$
+  built as $LU$ (elimination without swaps), two described row operations on a matrix with known
+  determinant, the $k$ that makes $\det = 0$ (integer answers), the third fence stake on a line,
+  orientation (choice, sometimes collinear), a plot's area in square meters, the area of the image
+  of a rectangle or triangle. Tests verify by cofactors, by building the operated matrix, and
+  areas and collinearity by Heron's formula and distances (no determinant).
+- `product-rule` (7 steps): $A$ then $B$ animated with the ghost of the first image; two
+  reflections (F mirrored, then a rotation); powers $A^k$ (slider $k$); undoing $A$ and back, with
+  a slider that moves the second column onto the line of the first ($\det A^{-1}$ "none"); $cA$
+  with the $c \times c$ copies drawn; any basis (drag $\mathbf{b}_1, \mathbf{b}_2$; $P^{-1}AP$
+  and the area ratio in the readouts); $\det(A - \lambda I)$ collapsing at $\lambda = 1$ and
+  $3$. The explanation proves the product rule for every $n$ from the three rules, and has the
+  photo resized twice, log-determinants in normalizing flows and $\det(X^TX)$ with its proof.
+
+**For the review:** in `computing-determinants` the cofactor, Sarrus, triangular and elimination
+steps draw matrices on the stage rather than a picture of space; `product-rule` shows the
+transformed grid in every map step (dense when $A - \lambda I$ nearly collapses).
