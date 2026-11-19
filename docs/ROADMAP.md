@@ -35,9 +35,9 @@ Phase 2's task trackers are in [HISTORY.md](HISTORY.md). 2D closed on
 Storage and file formats). Content units continue after it as ongoing work, in the suggested order
 of `LEARNING_PLATFORM.md`, alongside the numbered phases.
 
-**Suggested next session:** Linear Algebra: Determinants. Write its unit plan in
-`plans/linear-algebra.md` (check it against `ADDING_CONTENT.md` section 0) for the owner's review;
-build nothing before approval. Calculus 1: Applications of derivatives is done (2026-11-19).
+**Suggested next session:** Linear Algebra: Determinants, batch 1 (items 1 to 3), once the owner
+has reviewed the unit plan in `plans/linear-algebra.md` (drafted 2026-11-19, four open questions
+at its end). Record the review decisions in the plan first.
 
 ### Phase 3: Explore page
 

@@ -11,7 +11,8 @@ of the outline. Units are built in order; the Vectors unit (plan below) is done,
 2026-10-25. Linear maps and matrices (plan below) was approved on 2026-10-25; batch 1 was
 reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) approved on
 2026-11-07, and batch 3 (items 9 to 12) approved on 2026-11-09 without changes, which closes the
-unit.
+unit. The Determinants unit plan (below, 9 items) was drafted on 2026-11-19 for the owner's
+review.
 
 ## Depth and threads
 
@@ -85,7 +86,7 @@ Eight units, about 90 items. Kinds: E explore, L lesson, P practice, C checkpoin
 | 11  | practice-maps                   | P    | Classify maps, image dimension, matrices of 3D rotations and projections                                                                                         |         |
 | 12  | checkpoint                      | C    | All of the above plus a proof (composition of linear maps is linear, so $AB$ is its matrix)                                                                      |         |
 
-**3. Determinants** (8 items)
+**3. Determinants** (8 items; the unit plan proposes 9)
 
 | #   | Item                      | Kind | Content                                                                                                           | Threads |
 | --- | ------------------------- | ---- | ----------------------------------------------------------------------------------------------------------------- | ------- |
@@ -504,3 +505,146 @@ that step (sway off so $P$ stays readable).
    gallery says in words what a map does to areas and orientation, and its last sentence points
    ahead ("Determinants measures this with one number"). The owner's rule for later units: a
    reframing is fine when the earlier item says explicitly that a later unit extends the idea.
+
+## Determinants unit plan
+
+Drafted on 2026-11-19 for the owner's review; build nothing before approval. Folder
+`src/content/mathematics/linear-algebra/determinants/` (the legacy skill redirect already points to
+`determinants#determinant`). Core unit, 9 items in three batches: the outline's 8 plus one
+exploration, `determinant-rules` (see the open questions). The thread: a linear map scales every
+area by the same factor, and that factor with a sign for orientation is $\det A$; three rules seen
+in the picture (scaling a column, a shear, equal columns) pin the number down, and every way of
+computing it follows from them; doing two maps multiplies the factors; in space the same idea gives
+signed volume and, read as a linear function of one column, the cross product. Colors as in Linear
+maps: $\hat{\imath}$ and its image green, $\hat{\jmath}$ red, $\hat{k}$ purple, the input blue,
+the output teal; the area or volume (the determinant itself) yellow; a normal vector orange (as
+in `lines-and-planes`). The sign is never shown by color alone: the letter F from
+`matrix-transformations` appears mirrored, and a turn arc from the first column to the second
+reverses.
+
+**Stated with conditions, never taken back.**
+
+- Definition (item 1): for a $2 \times 2$ matrix, $\det A$ is the signed factor by which the map
+  scales areas: $|\det A|$ is the area of the image of the unit square, the sign is positive when
+  the turn from $A\hat{\imath}$ to $A\hat{\jmath}$ stays counterclockwise. The same factor holds for
+  every region with an area (a grid square is a shifted copy of the unit square; any region is
+  filled by ever smaller squares, a limit Integrals makes exact, said so). In 3D (item 2): signed
+  volume, positive for a right-handed triple. Determinants exist only for square matrices; a
+  non-square map goes between spaces of different dimension, so "the same area" has no meaning (one
+  sentence, with the $2 \times 3$ camera map from Linear maps).
+- The three rules (item 3): $\det I = 1$; linear in each column separately (not in the whole
+  matrix: $\det(A + B) \ne \det A + \det B$ and $\det(cA) = c^n \det A$ in general); two equal
+  columns give $0$. From them: a swap flips the sign, adding a multiple of one column to another
+  (a shear) keeps $\det$, dependent columns give $0$. The explanation shows that these rules
+  determine the number for every square matrix (reduce to triangular by the allowed operations) and
+  that the area factor obeys them, so the two definitions agree. Existence for every $n$ (that some
+  function obeys the rules) is the cofactor formula of item 4.
+- Rows and columns (item 4): the picture uses columns. $\det A^T = \det A$ is checked from the
+  $2 \times 2$ and $3 \times 3$ formulas, so row operations act on $\det$ exactly as column
+  operations do, and cofactor expansion works along any row or column. For every $n$ it is stated
+  in item 4 and proved in Systems and inverses (elementary matrices and the product rule), said so
+  where it is stated.
+- Computing (item 4): $ad - bc$; cofactor expansion for every $n$ (the general proof is an
+  induction, sketched); the rule of Sarrus stated only for $3 \times 3$, with the warning that it
+  does not extend to $4 \times 4$; triangular means the product of the diagonal; elimination gives
+  $\pm$ the product of the pivots. Cost: cofactor expansion takes about $n!$ products, elimination
+  about $n^3$, which is why `np.linalg.det` eliminates (LU, built in Systems and inverses).
+- $\det A = 0$ means the map collapses space onto a lower dimension, which happens exactly when the
+  columns are dependent (both directions proved in item 3). Undoing (item 6): if a map $B$ undoes
+  $A$ ($BA = I$), then $\det B \det A = 1$, so $\det A \ne 0$ is necessary and $\det B =
+  \frac{1}{\det A}$. That $\det A \ne 0$ is also sufficient, and how to find $B = A^{-1}$, is
+  Systems and inverses, said so.
+- A small determinant does not mean "almost collapsed": $0.1 I$ in ten dimensions has $\det =
+  10^{-10}$ and is undone exactly by $10 I$. How close a map is to collapsing is measured by the
+  condition number (SVD unit), said so (item 4, the software section). Floating point gives
+  $\approx 10^{-16}$ instead of $0$ for a collapsing matrix, so code compares ranks, not
+  $\det = 0$.
+- Cross product (item 7): defined only for vectors in $\mathbb{R}^3$. For fixed $\mathbf{v},
+  \mathbf{w}$, the function $\mathbf{x} \mapsto \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ is
+  linear (rule 2), so it is a $1 \times 3$ matrix, that is $\mathbf{p} \cdot \mathbf{x}$ for exactly
+  one vector $\mathbf{p}$ (the duality seed of Vectors 5 and Linear maps item 3); $\mathbf{v} \times
+  \mathbf{w}$ is that $\mathbf{p}$. Its properties follow: orthogonal to both, length the
+  parallelogram's area, direction by the right-hand rule, $\mathbf{w} \times \mathbf{v} =
+  -\mathbf{v} \times \mathbf{w}$, $\mathbf{0}$ exactly when parallel, not associative
+  ($(\hat{\imath} \times \hat{\imath}) \times \hat{\jmath} \ne \hat{\imath} \times (\hat{\imath}
+  \times \hat{\jmath})$). The $\hat{\imath}, \hat{\jmath}, \hat{k}$ determinant is explained as a
+  memory aid for this expansion, not as a determinant of numbers. In the plane the analogue is the
+  number $\det[\mathbf{v}\ \mathbf{w}]$.
+
+**Threads.** Map (M): every exploration; $\det$ is a property of the map, so it does not depend on
+the basis ($\det(P^{-1}AP) = \det A$, one sentence in item 6, a preview of Vector spaces). Two
+pictures (P): the parallelogram of the rows has the same area as that of the columns ($\det A^T =
+\det A$, item 4), a surprise worth a step. Basis (B): a basis of space is right- or left-handed
+(the sign of its determinant, item 2). Duality: item 7 defines the cross product through it,
+extending the seed; Orthogonality adds the rest. Eigen preview: item 6 ends with $\det(A - \lambda
+I) = 0$ as the question "which $\lambda$ makes $A - \lambda I$ collapse", answered in Eigenvalues.
+Calculus links (linear approximation and Leibniz): item 1's explanation zooms into a curved map
+(`WarpedGrid`) until it looks linear, so it scales small areas by a local determinant; in
+Multivariable this is the Jacobian, and $dx\,dy = |\det J|\,du\,dv$ in a change of variables
+(previewed, not taught). ML: item 6, the log of the determinant adds across layers (normalizing
+flows, and the Gaussian density in Probability carries $\det \Sigma$); the Gram matrix $X^TX$ of a
+feature table has $\det = 0$ exactly when the features are dependent (short proof: $X^TX\mathbf{v}
+= \mathbf{0}$ gives $\lVert X\mathbf{v} \rVert^2 = 0$), the multicollinearity of Linear maps item
+10 seen as a number.
+
+Skills: `determinant` (kept id: the signed area or volume factor, read from a picture or columns),
+`determinant-rules` (the three rules, column and row operations, the product rule, transpose),
+`computing-determinants` ($2 \times 2$, cofactors, triangular, elimination, areas of polygons),
+`cross-product`. Terms: `determinant`, `orientation`, `parallelepiped`, `minor`, `cofactor`,
+`triangular-matrix`, `cross-product`, `right-hand-rule`, `triple-product`.
+
+Library and kit. `src/lib/math/matN.ts` gets `det` by exact elimination (fractions) and
+`detCofactor`; tests check one against the other, and practice verifies every answer by a different
+route (volumes by $\mathbf{u} \cdot (\mathbf{v} \times \mathbf{w})$ with `vec3`, areas by
+splitting into triangles, row-operation answers by building the matrices). Kit: a filled
+parallelogram with its turn arc (2D), `Cell3D` for the parallelepiped, the letter F moved from
+`matrix-transformations` into the kit, a right-hand triad marker in 3D. Every exploration and
+lesson gets a `code.mdx` (NumPy `det`, `slogdet`, `cross`; SymPy for exact values and symbols,
+such as $\det$ as a polynomial in $k$).
+
+| #   | Item                      | Kind       | Skills                                                 | Content                                                                                                                                                                                                                                                                                                                           | Status  |
+| --- | ------------------------- | ---------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| 1   | area-scaling              | explore    | determinant                                            | The unit square becomes the parallelogram of the columns; every grid square scales by the same factor, and so does a disk (ellipse area $\pi ab$); drag a column through the other's line: the area shrinks to $0$ and comes back flipped (F mirrored, turn arc reversed), so a sign is natural; collapse onto a line and a point | planned |
+| 2   | volume-in-3d              | explore    | determinant                                            | The unit cube becomes the parallelepiped of the columns; signed volume; right- and left-handed triples (a mirror); collapse onto a plane and a line; the volume of a tetrahedron as one sixth                                                                                                                                     | planned |
+| 3   | determinant-rules         | explore    | determinant-rules                                      | The three rules seen as areas: a column scaled, two parallelograms on one base adding their heights, a shear keeping base and height, equal columns flat; then a swap flips the sign and dependent columns give $0$; reducing any matrix to triangular shows the rules fix the number                                             | planned |
+| 4   | computing-determinants    | lesson     | computing-determinants, determinant-rules              | $ad - bc$ from the rules and from the picture (rectangle minus corners); rows give the same parallelogram area ($\det A^T$); cofactor expansion along any row or column; Sarrus for $3 \times 3$ only; triangular; elimination and pivots; $n!$ against $n^3$; the area of a polygon from its corners                             | planned |
+| 5   | practice-determinants     | practice   | determinant, determinant-rules, computing-determinants | $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$ by elimination, after described row or column operations, $k$ that makes $\det = 0$, collinear points, orientation of a triangle, a polygon's area, image area of a region                                                                                                   | planned |
+| 6   | product-rule              | explore    | determinant-rules                                      | $\det(AB) = \det A \det B$ as scaling twice (two flips make none); powers; undoing a map needs $\det \ne 0$ and has $\frac{1}{\det A}$; $\det(cA) = c^n \det A$; same $\det$ in any basis; $\det(A - \lambda I)$ as a preview                                                                                                     | planned |
+| 7   | cross-product             | lesson     | cross-product                                          | $\mathbf{x} \mapsto \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ is a dot product with one vector, $\mathbf{v} \times \mathbf{w}$; drag $\mathbf{x}$ to see volume as area times height; its length, direction, components; triple product; normals to planes and the plane through three points; torque                             | planned |
+| 8   | practice-volume-and-cross | practice   | cross-product, determinant, determinant-rules          | Areas of triangles in space, volumes of parallelepipeds and tetrahedra, coplanar points, cross products, normals and plane equations, torque, $\det(AB)$, $\det(A^k)$, $\det(cA)$, $\det A^T$, the determinant of an undoing map, short proofs (a swap flips the sign, $\det(cA) = c^n \det A$)                                   | planned |
+| 9   | checkpoint                | checkpoint | all                                                    | Problems from items 5 and 8 plus a self-graded proof: if the columns of $A$ are dependent, then $\det A = 0$ (from the three rules; the outline's "two equal columns" is a rule now, so the proof generalizes it)                                                                                                                 | planned |
+
+**Real scenarios** (only where they add meaning):
+
+- Item 1: an image scaled by $2$ in both directions has $4$ times the pixels (memory and file size
+  grow with $\det$); a shear (italic type) keeps the ink area.
+- Item 2: none needed; a crystal's unit cell volume from three edge vectors (density as mass over
+  volume) is a candidate if it reads naturally.
+- Item 4: a land plot's area from its surveyed corners (the shoelace formula, a sum of signed
+  triangle areas); the same computation is what GIS engines do for a polygon's area (`ST_Area` on
+  planar coordinates). The orientation test (is a point left of a directed line, the sign of a
+  $2 \times 2$ determinant) is the core step of convex hulls and point-in-polygon checks.
+- Item 6: resizing a photo twice multiplies the pixel factors; log-determinants of layers add
+  (normalizing flows).
+- Item 7: torque $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}$ in newton meters (a wrench:
+  longer handle, more torque; pushing along the handle does nothing); surface normals in 3D
+  graphics (lighting by $\mathbf{n} \cdot \boldsymbol{\ell}$, and the sign of a triangle's
+  orientation decides whether it faces the camera).
+- Practice: plot areas, points on one line, torque, mesh triangle normals; the rest plain math.
+
+**Batches.** 1: items 1 to 3 (with `det` in `matN.ts`, the turn arc and the F in the kit).
+2: items 4 to 6. 3: items 7 to 9, then the self-review of the whole unit. Each batch is one session.
+
+**Open questions for the review.**
+
+1. **Nine items instead of eight.** The new `determinant-rules` exploration gives the three rules
+   their own pictures before the computing lesson, so that $ad - bc$, cofactors and row operations
+   are derived, not given. The alternative keeps 8 items and puts the rules into the lesson.
+2. **Cross product through duality** (3Blue1Brown's route), with the $\hat{\imath}, \hat{\jmath},
+   \hat{k}$ determinant as a memory aid. The alternative defines it by components and proves the
+   properties afterwards; it is shorter but less connected.
+3. **$\det A^T = \det A$ for every $n$**: checked here for $2 \times 2$ and $3 \times 3$, proved
+   in general in Systems and inverses (said so in item 4). The alternative proves it
+   now with the permutation formula, which the unit otherwise only mentions.
+4. **Cramer's rule** (the weights of `linear-combinations` as ratios of determinants) goes to
+   Systems and inverses, where solving is the topic, unless you want it here.
