@@ -51,5 +51,28 @@ export const unit = defineUnit({
         'Three vectors $\\mathbf{u}$, $\\mathbf{v}$, $\\mathbf{w}$ of space are right-handed when, with the fingers of the right hand curling from $\\mathbf{u}$ to $\\mathbf{v}$ (the shorter way), $\\mathbf{w}$ lies on the side the thumb points to. $\\hat{\\imath}, \\hat{\\jmath}, \\hat{k}$ are right-handed; $\\det[\\mathbf{u}\\ \\mathbf{v}\\ \\mathbf{w}] > 0$ exactly when the triple is.',
       introducedIn: 'volume-in-3d',
     },
+    {
+      id: 'minor',
+      title: 'Minor',
+      tex: '\\det M_{ij}',
+      summary:
+        'For entry $(i, j)$ of a square matrix: the determinant of the matrix $M_{ij}$ left when row $i$ and column $j$ are removed.',
+      introducedIn: 'computing-determinants',
+    },
+    {
+      id: 'cofactor',
+      title: 'Cofactor',
+      tex: 'C_{ij}',
+      summary:
+        'The minor with the sign of a checkerboard: $C_{ij} = (-1)^{i + j}\\det M_{ij}$. Cofactor expansion along row $i$ gives $\\det A = \\sum_j a_{ij}C_{ij}$, and the same along any column.',
+      introducedIn: 'computing-determinants',
+    },
+    {
+      id: 'triangular-matrix',
+      title: 'Triangular matrix',
+      summary:
+        'A square matrix with only zeros below its diagonal (upper triangular) or only zeros above it (lower triangular). Its determinant is the product of the diagonal entries.',
+      introducedIn: 'computing-determinants',
+    },
   ],
 })

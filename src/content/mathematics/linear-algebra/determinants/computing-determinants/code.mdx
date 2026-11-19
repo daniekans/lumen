@@ -1,0 +1,144 @@
+SymPy gives the formulas with letters; NumPy computes with numbers. Each method of the lesson is a
+few lines, checked against `np.linalg.det`.
+
+## Two by two
+
+The rules, applied by SymPy to columns of letters, give $ad - bc$; the transpose gives the same:
+
+```python title="two_by_two.py" step="rules picture rows" focus="rules=1-5 picture=1-5 rows=6" check
+import sympy as sp
+
+a, b, c, d = sp.symbols("a b c d")
+A = sp.Matrix([[a, b], [c, d]])
+print(A.det())
+print(A.T.det())
+```
+
+```output
+a*d - b*c
+a*d - b*c
+```
+
+## Cofactor expansion
+
+`cofactor_det` expands along row `i`, removing a row and a column for each entry and calling
+itself on the minor:
+
+```python title="cofactor.py" step="cofactor any-line" focus="cofactor=4-12 any-line=14-15" colors="A=blue" check
+import numpy as np
+
+A = np.array([[2, 1, 3], [0, -1, 4], [1, 0, 2]])
+
+def cofactor_det(A: np.ndarray, i: int = 0) -> float:
+    n = len(A)
+    if n == 1:
+        return float(A[0, 0])
+    total = 0.0
+    for j in range(n):
+        minor = np.delete(np.delete(A, i, axis=0), j, axis=1)
+        total += (-1) ** (i + j) * A[i, j] * cofactor_det(minor)
+    return total
+
+print([float(cofactor_det(A, i)) for i in range(3)])  # rows
+print(cofactor_det(A.T), round(np.linalg.det(A), 9))  # columns
+```
+
+```output
+[3.0, 3.0, 3.0]
+3.0 3.0
+```
+
+## Sarrus and triangular matrices
+
+The six diagonals of a $3 \times 3$, and the product of the diagonal of a triangular matrix:
+
+```python title="shortcuts.py" step="sarrus triangular" focus="sarrus=1-5 triangular=7-9" check
+def sarrus(M: np.ndarray) -> float:
+    down = sum(M[0, j] * M[1, (j + 1) % 3] * M[2, (j + 2) % 3] for j in range(3))
+    up = sum(M[2, j] * M[1, (j + 1) % 3] * M[0, (j + 2) % 3] for j in range(3))
+    return float(down - up)
+print(sarrus(A))
+
+T = np.array([[2, 5, -1, 3], [0, 3, 7, 1], [0, 0, -1, 4], [0, 0, 0, 2]])
+print(np.prod(np.diag(T)), round(np.linalg.det(T), 9))
+```
+
+```output
+3.0
+-12 -12.0
+```
+
+## Elimination
+
+Row operations to triangular form, keeping count of the swaps. This is what `np.linalg.det` does
+(through an LU factorization):
+
+```python title="elimination.py" step=elimination check
+def elim_det(A: np.ndarray) -> float:
+    U = A.astype(float).copy()
+    n, sign = len(U), 1.0
+    for k in range(n):
+        p = k + int(np.argmax(np.abs(U[k:, k])))  # largest entry
+        if U[p, k] == 0:
+            return 0.0  # no pivot in this column
+        if p != k:
+            U[[k, p]] = U[[p, k]]  # swap: flip the sign
+            sign = -sign
+        U[k + 1 :] -= np.outer(U[k + 1 :, k] / U[k, k], U[k])
+    return sign * float(np.prod(np.diag(U)))  # the pivots
+
+E = np.array([[0, 2, 1], [1, 1, 2], [2, 4, 1]])
+print(elim_det(E), round(np.linalg.det(E), 9))
+```
+
+```output
+8.0 8.0
+```
+
+Software picks the largest entry as the pivot, not just a nonzero one: dividing by a tiny pivot
+magnifies rounding errors.
+
+## Cost, and two warnings
+
+Cofactor expansion makes $n!$ products; elimination about $\frac{2}{3}n^3$ operations:
+
+```python title="cost.py" step=cost check
+from math import factorial
+
+for n in [3, 5, 10, 20]:
+    print(n, factorial(n), round(2 * n**3 / 3))
+
+S = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6], [0.7, 0.8, 0.9]])
+print(np.linalg.det(S), np.linalg.matrix_rank(S))
+print(np.linalg.det(0.1 * np.eye(10)))
+```
+
+```output
+3 6 18
+5 120 83
+10 3628800 667
+20 2432902008176640000 5333
+6.661338147750926e-18 2
+9.999999999999996e-11
+```
+
+In `S` the third column is twice the second minus the first. Its determinant comes out near $10^{-18}$, not $0$; its rank, $2$, says it collapses. And
+$0.1I$ in ten dimensions has a tiny determinant without collapsing anything.
+
+## The area of a polygon
+
+The shoelace formula, with `np.roll` pairing each corner with the next:
+
+```python title="shoelace.py" step=polygon check
+P = np.array([[1, 1], [6, 0.5], [7, 4], [3.5, 5.5], [0.5, 3.5]])
+x, y = P[:, 0], P[:, 1]
+x_next, y_next = np.roll(x, -1), np.roll(y, -1)
+terms = (x * y_next - x_next * y) / 2  # the triangles
+print(terms)
+print(terms.sum(), abs(terms.sum()) * 100, "m^2")
+```
+
+```output
+[-2.75 10.25 12.25  4.75 -1.5 ]
+23.0 2300.0 m^2
+```

@@ -1,0 +1,113 @@
+The determinant is the factor by which a map scales areas or volumes. Doing one map after
+another scales twice, so the factors multiply. This item proves that for every size of matrix and
+follows it to powers, undoing a map, scaling a matrix, a change of basis and a first look at
+eigenvalues.
+
+## The product rule
+
+$$
+\det(AB) = \det A \det B \qquad \text{for square } A, B \text{ of the same size.}
+$$
+
+In the plane it is the <StepLink step="twice">picture</StepLink>: $BA$ first applies $A$, which
+multiplies every area by $\det A$, then $B$, which multiplies every area, the new ones included, by
+$\det B$. A photo enlarged to $2$ times its width and height has $4$ times the pixels; enlarged again
+by $1.5$ in each direction, it has $4 \times 2.25 = 9$ times the original, the factor of enlarging
+by $3$ at once.
+
+**Proof for every $n$, from the rules.** Fix $B$.
+
+- If $\det B \ne 0$, look at $D(A) = \frac{\det(BA)}{\det B}$ as a function of the columns of $A$.
+  The columns of $BA$ are $B\mathbf{a}_1, \ldots, B\mathbf{a}_n$, and $B$ is linear, so $D$ is linear
+  in each column. Two equal columns of $A$ give two equal columns of $BA$, so $D = 0$. And
+  $D(I) = \frac{\det B}{\det B} = 1$. $D$ obeys the three rules, which fix the determinant, so
+  $D(A) = \det A$.
+- If $\det B = 0$, the columns of $B$ are dependent (previous items), so $B$ collapses space onto a
+  lower dimension. Every column of $BA$ is $B$ times something, so it lies in that smaller image,
+  and $n$ vectors in fewer than $n$ dimensions are dependent. So $\det(BA) = 0 = \det A \det B$.
+
+The order of the factors does not matter for the number, $\det(AB) = \det(BA)$, even though
+$AB \ne BA$ in general.
+
+**Signs.** A <StepLink step="flips">reflection</StepLink> has $\det = -1$. Two reflections give
+$(-1)(-1) = 1$: the orientation is flipped twice, so it is kept, and the result is a rotation. In
+general, $BA$ keeps orientation when $A$ and $B$ both keep it or both flip it.
+
+## Powers
+
+$A^k$ is $A$ applied $k$ times, so <StepLink step="powers">$\det(A^k) = (\det A)^k$</StepLink>. With
+$\det A = 1.5$, ten applications scale areas by $1.5^{10} \approx 57.7$. A map with
+$|\det A| < 1$ shrinks areas toward $0$ as it is repeated.
+
+## Undoing a map
+
+Suppose a map $B$ undoes $A$: $BA = I$. The product rule gives
+
+$$
+\det B \det A = \det I = 1, \qquad\text{so}\qquad \det A \ne 0 \quad\text{and}\quad \det B = \frac{1}{\det A}.
+$$
+
+In <StepLink step="inverse">the picture</StepLink>, $A$ multiplies areas by $\det A$, and the map
+back must divide them by the same factor. When $\det A = 0$ the plane is squeezed onto a line (or a
+point): many points land on the same image, and no map can send them back to where they came from.
+So $\det A \ne 0$ is necessary for $A$ to have an inverse $A^{-1}$. That it is also enough, and how
+to find $A^{-1}$, is the subject of Systems and inverses.
+
+## Scaling the whole matrix
+
+$cA$ multiplies every column by $c$. Rule 2 takes the factor $c$ out of each of the $n$ columns:
+
+$$
+\det(cA) = c^n \det A.
+$$
+
+In <StepLink step="scalar">the plane</StepLink>, $c = 3$ fits $9$ copies of the parallelogram inside
+the new one; in space $c = 2$ multiplies volumes by $8$. A negative $c$ flips orientation in odd
+dimensions only: $\det(-A) = (-1)^n\det A$, so $-I$ in the plane is a rotation by $180^\circ$, while
+in space it is a point reflection.
+
+## The same in every basis
+
+The determinant belongs to the map, not to the grid used to write it. In a basis
+$\mathbf{b}_1, \ldots, \mathbf{b}_n$, collected as the columns of $P$, the same map has the matrix
+$P^{-1}AP$ (Vector spaces builds this). The product rule gives
+
+$$
+\det(P^{-1}AP) = \det P^{-1} \det A \det P = \frac{1}{\det P}\det A \det P = \det A.
+$$
+
+In <StepLink step="basis">the picture</StepLink>, the cell of any basis is sent to a cell with $\det
+A$ times its area, so the ratio is the same whichever basis is chosen.
+
+## A preview: when does $A - \lambda I$ collapse?
+
+$A - \lambda I$ subtracts $\lambda$ from the diagonal. For
+the <StepLink step="eigen">matrix of the last step</StepLink>, $A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end
+{bmatrix}$,
+
+$$
+\det(A - \lambda I) = (2 - \lambda)^2 - 1 = (\lambda - 1)(\lambda - 3),
+$$
+
+which is $0$ exactly at $\lambda = 1$ and $\lambda = 3$. For those values $A - \lambda I$ collapses
+the plane onto a line, so some nonzero $\mathbf{v}$ has $(A - \lambda I)\mathbf{v} = \mathbf{0}$,
+that is $A\mathbf{v} = \lambda\mathbf{v}$: a direction that $A$ only stretches. These $\lambda$ are
+the eigenvalues, and finding them through $\det(A - \lambda I) = 0$ is the opening of the
+Eigenvalues unit.
+
+## In machine learning
+
+- **Log-determinants add.** A deep model that applies invertible maps $A_1, \ldots, A_L$ in a row
+  changes volumes by $\det(A_L \cdots A_1) = \det A_L \cdots \det A_1$. The product of many factors
+  overflows or underflows, so code adds logarithms instead:
+  $\log|\det(A_L \cdots A_1)| = \sum_k \log|\det A_k|$. Normalizing flows, which turn a simple
+  distribution into a complex one by such maps, keep track of probability densities this way, and
+  the density of a multivariate Gaussian (in the Probability course) carries $\det\Sigma$ in the
+  same role.
+- **Dependent features.** For a feature table $X$ (one row per example, one column per feature),
+  the Gram matrix $X^TX$ has $\det(X^TX) = 0$ exactly when the features are dependent. If
+  $X\mathbf{v} = \mathbf{0}$ for some $\mathbf{v} \ne \mathbf{0}$, then $X^TX\mathbf{v} = \mathbf{0}$
+  and $X^TX$ collapses. Conversely, if $X^TX\mathbf{v} = \mathbf{0}$, then
+  $\lVert X\mathbf{v} \rVert^2 = \mathbf{v}^TX^TX\mathbf{v} = 0$, so $X\mathbf{v} = \mathbf{0}$.
+  This is the multicollinearity of the linear maps unit, measured by one number; in floating point,
+  check the rank or the condition number rather than $\det$ (see computing determinants).

@@ -1,0 +1,36 @@
+Problems on the <Term id="determinant">determinant</Term>: computing it, the rules it obeys, and
+areas and orientation in the plane.
+
+## Answers
+
+- Every answer is a number or a choice. Exact fractions such as $\frac{5}{2}$ can be typed as they
+  are.
+- Areas are positive; the sign of a determinant only says whether a map flips orientation.
+
+## Formulas
+
+$$
+\det \begin{bmatrix} a & b \\ c & d \end{bmatrix} = ad - bc,
+$$
+
+$$
+\det A = \sum_{j} a_{ij}C_{ij}, \qquad C_{ij} = (-1)^{i + j}\det M_{ij}.
+$$
+
+A <Term id="cofactor">cofactor</Term> expansion works along any row or column.
+A <Term id="triangular-matrix">triangular matrix</Term> has the product of its diagonal as its
+determinant, and elimination gives $\det A = (-1)^{\text{swaps}}$ times the product of the pivots.
+
+| Operation                              | Effect on $\det$ |
+| -------------------------------------- | ---------------- |
+| Swap two rows (or columns)             | times $-1$       |
+| Multiply one row by $c$                | times $c$        |
+| Add a multiple of one row to another   | none             |
+| Multiply an $n \times n$ matrix by $c$ | times $c^n$      |
+| Transpose                              | none             |
+
+In the plane, $\det[\mathbf{q} - \mathbf{p}\ \ \mathbf{r} - \mathbf{p}]$ is positive when
+$\mathbf{p}, \mathbf{q}, \mathbf{r}$ turn counterclockwise, negative when they turn clockwise and $0$
+when they are on one line. A polygon with corners $(x_k, y_k)$ in order has area
+$\frac{1}{2}\left|\sum_k (x_ky_{k+1} - x_{k+1}y_k)\right|$ (the shoelace formula), and a linear map
+multiplies every area by $|\det A|$.

@@ -1,0 +1,166 @@
+The previous item showed that three rules fix the determinant. This lesson turns them into ways
+of computing it: a formula for $2 \times 2$, cofactor expansion for every size, the product of the
+diagonal for triangular matrices, and elimination, which is what software does. It ends with the
+area of a polygon from its corners.
+
+## Two by two: $ad - bc$
+
+Write $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, with columns $(a, c)$ and $(b, d)$.
+
+**From the rules.** Split each column along the axes and use rule 2 in each column:
+
+$$
+\det[a\hat{\imath} + c\hat{\jmath}\ \ b\hat{\imath} + d\hat{\jmath}]
+= ab\det[\hat{\imath}\ \hat{\imath}] + ad\det[\hat{\imath}\ \hat{\jmath}] + cb\det[\hat{\jmath}\ \hat{\imath}] + cd\det[\hat{\jmath}\ \hat{\jmath}].
+$$
+
+The first and last terms have equal columns, so they are $0$; $\det[\hat{\imath}\ \hat{\jmath}] = 1$,
+and the swap gives $\det[\hat{\jmath}\ \hat{\imath}] = -1$.
+So <StepLink step="rules">$\det A = ad - bc$</StepLink>. In the picture, $ad$ is a rectangle turning
+counterclockwise and $bc$ a rectangle turning clockwise.
+
+**From the picture.** When $a, b, c, d$ are positive and the turn from $(a, c)$ to $(b, d)$ is
+counterclockwise, the parallelogram fits in a rectangle $(a + b)$ by $(c + d)$,
+and <StepLink step="picture">the six corner pieces</StepLink> outside it have areas $\frac{ac}
+{2}$ twice, $\frac{bd}
+{2}$ twice and $bc$ twice:
+
+$$
+(a + b)(c + d) - ac - bd - 2bc = ad - bc.
+$$
+
+The picture covers one case; the rules cover all of them, signs included.
+
+## Rows give the same number
+
+The rows of $A$ are $(a, b)$ and $(c, d)$, and the <Term id="transpose">transpose</Term> $A^T$ has
+them as its columns. Its determinant is $ad - cb$, the same number:
+
+$$
+\det A^T = \det A.
+$$
+
+The <StepLink step="rows">parallelogram of the rows</StepLink> is a different shape with the same
+signed area, whatever the columns are. For $3 \times 3$ the six-term formula below shows the same
+thing: transposing swaps $b$ with $d$, $c$ with $g$ and $f$ with $h$, and the six terms are the same
+six terms in another order. For every $n$ it is true as well; the proof needs the product rule and
+the factorization of a matrix into simple steps, and comes in the Systems and inverses unit.
+
+So every rule about columns is also a rule about rows: the determinant is linear in each row, a
+row swap flips the sign, adding a multiple of one row to another keeps it, and two equal rows
+give $0$.
+
+## Cofactor expansion
+
+Remove row $i$ and column $j$ from an $n \times n$ matrix: what is left is an $(n - 1) \times (n - 1)$
+matrix $M_{ij}$. Its determinant is the <Term id="minor">minor</Term> of entry $(i, j)$, and with
+the sign of a checkerboard it is the <Term id="cofactor">cofactor</Term>
+$C_{ij} = (-1)^{i + j}\det M_{ij}$.
+
+For $3 \times 3$, <StepLink step="cofactor">along the first row</StepLink>:
+
+$$
+\det\begin{bmatrix} a & b & c \\ d & e & f \\ g & h & i \end{bmatrix}
+= a\det\begin{bmatrix} e & f \\ h & i \end{bmatrix}
+- b\det\begin{bmatrix} d & f \\ g & i \end{bmatrix}
++ c\det\begin{bmatrix} d & e \\ g & h \end{bmatrix}
+= aei + bfg + cdh - ceg - bdi - afh.
+$$
+
+Why it holds, sketched for every $n$. Write the first column as
+$a_{11}\mathbf{e}_1 + \cdots + a_{n1}\mathbf{e}_n$ and split the determinant with rule 2 into $n$
+terms $a_{i1}\det[\mathbf{e}_i\ \mathbf{a}_2\ \cdots\ \mathbf{a}_n]$. In term $i$, shears (multiples
+of the column $\mathbf{e}_i$ subtracted from the others) clear row $i$ in every other column without
+changing the determinant. What remains depends only on $M_{i1}$, and as a function of $M_{i1}$ it
+obeys the three rules up to a fixed sign, so it is $\pm\det M_{i1}$. Moving row $i$ to the top
+takes $i - 1$ swaps of neighboring rows, which gives the sign $(-1)^{i + 1}$:
+
+$$
+\det A = \sum_{i=1}^{n} a_{i1}C_{i1}.
+$$
+
+This also answers the question left open in the previous item: does a function with the three
+rules exist for every $n$? Define $D$ by this expansion, starting from $D[a] = a$ for $1 \times 1$.
+Induction on $n$ shows that $D$ is linear in each column and that $D(I) = 1$; that two equal
+columns give $0$ takes a little more bookkeeping, since a swap of two neighboring columns flips
+every minor's sign. So the determinant exists, and the rules fix
+it. <StepLink step="any-line">Any row or column works</StepLink>, with the same checkerboard signs:
+along column $j$ it is $\sum_i a_{ij}C_{ij}$ (the same argument with that column), and along row $i$
+it is $\sum_j a_{ij}C_{ij}$, since $\det A^T = \det A$ (for $n \le 3$ checked here, for every $n$ in
+Systems and inverses). Choose the line with the most zeros: each zero entry removes a whole minor.
+
+## The rule of Sarrus, for 3 by 3 only
+
+The six terms of the $3 \times 3$ formula are <StepLink step="sarrus">the six diagonals</StepLink>
+of the matrix with its first two columns copied to the right: three going down with a plus sign,
+three going up with a minus. It is a memory aid for $3 \times 3$ and nothing else. A $4 \times 4$
+determinant has $4 \times 3 \times 2 \times 1 = 24$ terms (one for each order of the columns), and
+the same picture would give $8$ of them.
+
+## Triangular matrices
+
+A <Term id="triangular-matrix">triangular matrix</Term> has only zeros below its diagonal (upper
+triangular) or only zeros above it (lower triangular). Expand an upper triangular matrix along its
+first column: only the diagonal entry is nonzero, and its minor is again upper triangular. Repeat:
+
+$$
+\det T = t_{11}t_{22}\cdots t_{nn}.
+$$
+
+The <StepLink step="triangular">example</StepLink> has $\det T = 2 \cdot 3 \cdot (-1) \cdot 2 = -12$.
+The previous item reached the same formula from the rules alone.
+
+## Elimination
+
+Row operations bring any square matrix to upper triangular form, as in solving equations: swap
+rows to get a nonzero entry on top, then subtract multiples of that row to clear the column below
+it. Swaps flip the sign and the subtractions keep the determinant, so
+
+$$
+\det A = (-1)^{\text{swaps}}\, p_1 p_2 \cdots p_n,
+$$
+
+where $p_1, \ldots, p_n$ are the diagonal entries at the end, the pivots.
+In <StepLink step="elimination">the example</StepLink> one swap and two subtractions give pivots $1, 2,
+-4$, so $\det A = -(1 \cdot 2 \cdot (-4)) = 8$. If no nonzero entry can be found for some column,
+that column has no pivot, and $\det A = 0$.
+
+## Which method, and what software does
+
+Cofactor expansion of an $n \times n$ matrix ends in $n!$ products. Elimination needs about
+$\frac{2}{3}n^3$ multiplications and additions. <StepLink step="cost">For $n = 20$</StepLink>,
+$20! \approx 2.4 \times 10^{18}$: at a billion products a second, about $77$ years. Elimination
+takes a few thousand operations. This is why `np.linalg.det` factors $A$ by elimination (the LU
+factorization, built in Systems and inverses) and multiplies the pivots. By hand, use $ad - bc$,
+cofactors along a line with zeros for small matrices, and elimination from $4 \times 4$ on.
+
+Two warnings for code:
+
+- Floating point rarely gives an exact $0$. A matrix whose columns are dependent can give a
+  tiny number such as $10^{-17}$ instead. To test for collapse, compare the
+  <Term id="rank">rank</Term> (`np.linalg.matrix_rank`), not $\det A$ with $0$.
+- A small determinant does not mean the map almost collapses. In $10$ dimensions, $0.1I$ shrinks
+  every direction to a tenth, so $\det(0.1I) = 10^{-10}$, yet $10I$ undoes it exactly. How close
+  a map is to collapsing is measured by the condition number, in the SVD unit.
+
+## The area of a polygon
+
+Take a polygon with corners $\mathbf{p}_1, \ldots, \mathbf{p}_m$ in order around it, and join each
+edge $\mathbf{p}_k\mathbf{p}_{k+1}$ (with $\mathbf{p}_{m+1} = \mathbf{p}_1$) to the origin. The
+triangle has signed area $\frac{1}{2}\det[\mathbf{p}_k\ \mathbf{p}_{k+1}]$: half the
+parallelogram. <StepLink step="polygon">Triangles that cover ground outside the polygon</StepLink> come with
+opposite signs and cancel, so
+
+$$
+\text{area} = \frac{1}{2}\left|\sum_{k=1}^{m}(x_ky_{k+1} - x_{k+1}y_k)\right|,
+$$
+
+positive before the absolute value when the corners go counterclockwise. This is the shoelace
+formula, and it is how a surveyor gets a plot's area from its corners. A GIS engine does the same
+for a polygon in planar coordinates (`ST_Area` in PostGIS, for example).
+
+The sign alone is useful too. For three points $\mathbf{p}$, $\mathbf{q}$, $\mathbf{r}$,
+$\det[\mathbf{q} - \mathbf{p}\ \ \mathbf{r} - \mathbf{p}]$ is positive when $\mathbf{r}$ lies to
+the left of the direction from $\mathbf{p}$ to $\mathbf{q}$, negative to the right and $0$ when
+the three are on one line. This orientation test is the core step of convex hull algorithms and of
+checking whether a point lies inside a polygon.
