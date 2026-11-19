@@ -22,6 +22,10 @@ export const unit = defineUnit({
       id: 'concavity',
       title: "Find concavity and inflection points, and read f, f' and f'' together",
     },
+    {
+      id: 'optimization',
+      title: 'Model a quantity as a function of one variable on an interval, and optimize it',
+    },
   ],
   terms: [
     {
@@ -108,6 +112,21 @@ export const unit = defineUnit({
       summary:
         "If $f'(c) = 0$ and $f''(c) > 0$, $f(c)$ is a local minimum; if $f''(c) < 0$, a local maximum. If $f''(c) = 0$ the test says nothing.",
       introducedIn: 'concavity-and-sketching',
+    },
+    {
+      id: 'objective-function',
+      title: 'Objective function',
+      summary:
+        'The quantity an optimization problem makes as large or as small as possible, written as a function of the variables it depends on. A constraint can reduce those variables to one.',
+      introducedIn: 'optimization',
+    },
+    {
+      id: 'least-squares',
+      title: 'Least squares',
+      tex: '\\min_c \\sum (y_i - c)^2',
+      summary:
+        'Choosing parameters to make the sum of squared misfits as small as possible. Fitting a single constant $c$ to data this way gives the mean.',
+      introducedIn: 'optimization',
     },
   ],
 })

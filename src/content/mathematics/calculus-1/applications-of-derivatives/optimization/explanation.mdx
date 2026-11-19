@@ -1,0 +1,141 @@
+The item [Extrema](/mathematics/calculus-1/applications-of-derivatives/extrema) found the largest and smallest values of a function
+that was given. In a real problem nobody gives the function: there is a quantity to make as large
+or as small as possible, and some rule that ties its parts together. Most of the work is building
+the function. The calculus at the end is the closed interval method from that item.
+
+## The method
+
+1. **Variables.** Draw the situation and name every quantity that changes. Write the
+   <Term id="objective-function">objective</Term>, the quantity to optimize, in terms of them.
+2. **Constraint.** Write the rule that ties them together (a fixed volume, a fixed sheet), and use
+   it to remove all but one variable.
+3. **Interval.** Find the values the remaining variable can take. The ends of this interval are
+   part of the answer.
+4. **Optimize.** Find the <Term id="critical-point">critical points</Term> inside the interval and
+   compare the objective there and at the ends (or, on an open interval, at the edges in the limit).
+5. **Check.** Units, a second look at the ends, and whether the answer makes sense.
+
+## An open box
+
+Cut a square of side $x$ from each corner of a $12$ by $12$ sheet of cardboard and fold up the
+sides, as in the step <StepLink step="box-model">model: an open box</StepLink>. The box has a
+square base of side $12 - 2x$ and height $x$, so
+
+$$
+V(x) = x(12 - 2x)^2, \qquad 0 \le x \le 6.
+$$
+
+The constraint (the sheet is $12$ wide) is already used: it is why the base is $12 - 2x$. The
+interval comes from the picture: a cut cannot be negative, and the base cannot be. Both ends give
+$V = 0$, a box with no sides or no base, so the maximum is inside.
+
+By the product and chain rules,
+
+$$
+V'(x) = (12 - 2x)^2 - 4x(12 - 2x) = (12 - 2x)(12 - 6x),
+$$
+
+which is $0$ at $x = 2$ and at $x = 6$. The candidates are $V(0) = 0$, $V(2) = 128$ and
+$V(6) = 0$, so the largest box, $128$ cubic centimeters, has $x = 2$
+(step <StepLink step="box-optimize">optimize</StepLink>). The units check: $x$ in centimeters, $V$ in
+cubic centimeters, $V'$ in square centimeters (volume per centimeter of cut).
+
+## A can with the least metal
+
+A can must hold $330$ cubic centimeters, and its metal (two disks and the side) should be as
+little as possible. Two variables, $r$ and $h$:
+
+$$
+A = 2\pi r^2 + 2\pi r h, \qquad \pi r^2 h = 330.
+$$
+
+The constraint can remove either one. Solving for $h$ is easier, $h = \frac{330}{\pi r^2}$, so
+keep $r$ and differentiate in $r$:
+
+$$
+A(r) = 2\pi r^2 + \frac{660}{r}, \qquad A'(r) = 4\pi r - \frac{660}{r^2}.
+$$
+
+The choice of variable changes the formulas, not the answer: keeping $h$ gives the same can. What
+matters is that the objective depends on one variable when you differentiate. Differentiating
+$A = 2\pi r^2 + 2\pi r h$ in $r$ while treating $h$ as a constant would be wrong, because the
+constraint makes $h$ change whenever $r$ does.
+
+$A'(r) = 0$ gives $r^3 = \frac{165}{\pi}$, so $r \approx 3.74$ cm and $h \approx 7.49$ cm. Here
+$r$ can be any positive number: the interval $(0, \infty)$ is open and has no ends to compare.
+Instead, $A(r) \to \infty$ at both edges (a thin can has a huge side, a flat one huge disks), and
+$A' < 0$ before the critical point and $A' > 0$ after it. By
+the <Term id="first-derivative-test">first derivative test</Term>, the one critical point is the
+absolute minimum.
+
+At that point $h = 2r$: the best can is as tall as it is wide
+(step <StepLink step="can">a can with the least metal</StepLink>). Real cans are taller, about $3.3$ cm in
+radius. The model leaves things out: the lids are thicker than the side, a narrow can fits a hand,
+and a tall can shows more label. The graph also shows why the cost is small: near a minimum $A'(r)
+\approx 0$, so moving away from it changes $A$ slowly. The real can uses about $268$ square
+centimeters instead of $264$, $1.5$ percent more.
+
+## The lifeguard's path
+
+A lifeguard at $G$, $30$ m from the shore, sees a swimmer at $S$, $20$ m out and $60$ m along the
+shore. Running on sand is $6$ m/s, swimming is $2$ m/s. Entering the water $x$ meters along
+the shore takes
+
+$$
+T(x) = \frac{\sqrt{x^2 + 30^2}}{6} + \frac{\sqrt{(60 - x)^2 + 20^2}}{2}, \qquad 0 \le x \le 60.
+$$
+
+The straight line $GS$ is the shortest path, but it is not the fastest: it swims too much. In
+the step <StepLink step="lifeguard">the lifeguard's path</StepLink> the best entry point is
+$x \approx 53.9$ m, with $T \approx 20.7$ seconds against $23.4$ for the straight line.
+
+$T'(x) = 0$ has no tidy solution, so the number comes from a computer. The equation itself says
+something:
+
+$$
+T'(x) = \frac{x}{6\sqrt{x^2 + 30^2}} - \frac{60 - x}{2\sqrt{(60 - x)^2 + 20^2}} = 0
+\quad\Longleftrightarrow\quad \frac{\sin\theta_1}{6} = \frac{\sin\theta_2}{2},
+$$
+
+where $\theta_1$ and $\theta_2$ are the angles of the two legs with the line perpendicular to the
+shore. This is Snell's law for light passing from air into water: light takes the fastest path, so
+it bends at the surface for the same reason.
+
+## The mean as least squares
+
+Given data $y_1, \dots, y_n$, which single number $c$ represents them best? One answer: the $c$
+that makes the total squared misfit smallest,
+
+$$
+S(c) = \sum_{i=1}^{n} (y_i - c)^2.
+$$
+
+In the step <StepLink step="mean">the mean as least squares</StepLink> each misfit is
+a <C c="red">square</C>, and $S(c)$ is their total area. Differentiate in $c$ (the data are fixed):
+
+$$
+S'(c) = -2\sum_{i=1}^{n} (y_i - c) = 0 \quad\Longleftrightarrow\quad c = \frac{1}{n}\sum_{i=1}^{n} y_i = \bar{y}.
+$$
+
+$S''(c) = 2n > 0$, so this is a minimum: the mean is
+the <Term id="least-squares">least squares</Term> fit by a constant. For $2, 3, 7, 8, 10$ it is $6$,
+with $S = 46$.
+
+Squares punish large misfits heavily. Replacing $10$ by $20$ moves the mean from $6$ to $8$; the
+median, which minimizes $\sum \lvert y_i - c \rvert$ instead, stays at $7$.
+
+$S$ is the first loss function of this course. Machine learning fits a model by choosing its
+parameters to minimize a loss like $S$, a sum of squared misfits over the data. With many
+parameters the condition $S' = 0$ becomes "every partial derivative is $0$", and when it cannot be
+solved by hand the minimum is found step by step (gradient descent, in Multivariable Calculus and
+the item [Backpropagation](/machine-learning/neural-networks/training/backpropagation)).
+
+## Checks
+
+- **Units.** The answer's units match the question: centimeters for a cut, seconds for a time.
+- **Ends.** On a closed interval, compare the ends. On an open interval, see what the objective
+  does at its edges; a single critical point with the right sign change is then the answer.
+- **Second look.** A critical point can be a maximum when a minimum was asked for. The first or
+  second derivative test settles it.
+- **Sense.** $h = 2r$, a box cut of a sixth of the sheet, a path that runs more where running is
+  fast. A strange answer usually means a wrong model, not a wrong derivative.

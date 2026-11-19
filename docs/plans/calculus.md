@@ -454,8 +454,8 @@ Skills: `linear-approximation`, `extrema`, `mean-value-theorem`, `concavity` (ba
 | 3   | mean-value-theorem           | explore    | mean-value-theorem       | Rolle (a chord with equal heights); the MVT as a tilted Rolle, proved by subtracting the secant; $\lvert x \rvert$ fails; the section speed check; $f' = 0$ means constant, $f' > 0$ means increasing, same derivative means a constant apart | done   |
 | 4   | concavity-and-sketching      | explore    | concavity                | Slopes that increase; $f''$ and $\frac{d^2y}{dx^2}$; inflection points and $x^4$; the second derivative test; $f$, $f'$, $f''$ together; sketching $\frac{4x}{x^2 + 1}$; the logistic outbreak curve                                          | done   |
 | 5   | practice-curve-analysis      | practice   | all four                 | Linear estimates, error from differentials, critical points, classify, intervals of increase, inflection, absolute extrema, MVT $c$, concavity at a point, a drug's peak time                                                                 | done   |
-| 6   | optimization                 | lesson     | optimization             | Model (variables, constraint, one variable left, its interval), then optimize; the box, the can, the lifeguard, the mean as least squares; checks                                                                                             | idea   |
-| 7   | practice-optimization        | practice   | optimization             | Fences, boxes, cans, distance from a point to a curve, revenue, least squares of a constant, with interval endpoints checked                                                                                                                  | idea   |
+| 6   | optimization                 | lesson     | optimization             | Model (variables, constraint, one variable left, its interval), then optimize; the box, the can, the lifeguard, the mean as least squares; checks                                                                                             | done   |
+| 7   | practice-optimization        | practice   | optimization             | Fences, boxes, cans, distance from a point to a curve, revenue, least squares of a constant, with interval endpoints checked                                                                                                                  | done   |
 | 8   | lhopital                     | explore    | lhopital                 | Two linear approximations near $a$; $\frac{0}{0}$ and $\frac{\infty}{\infty}$; conditions and a failure; $0 \cdot \infty$, $1^\infty$ by logarithms; compounding to $e^{rt}$; the circular $\frac{\sin x}{x}$; Cauchy's MVT                   | idea   |
 | 9   | newtons-method               | explore    | newtons-method           | Tangents to a root; digits double (quadratic convergence); $\sqrt{a}$ the Babylonian way; failures (flat tangent, a cycle, $\sqrt[3]{x}$ diverging); Newton on $f'$ to find a minimum                                                         | idea   |
 | 10  | practice-lhopital-and-newton | practice   | lhopital, newtons-method | Every indeterminate form, when the rule does not apply, Newton steps and iterations                                                                                                                                                           | idea   |
@@ -469,6 +469,18 @@ units in the readouts. Items 2 and 4 share the cubic $\frac{1}{4}x^3 - \frac{3}{
 `derivative-function`. The speed check uses a made-up but smooth trip whose speed stays positive.
 Practice has 12 generators, each verified in `problems.test.ts` by sampling or numerical
 derivatives (no formula from the generator is reused). Every explore has a `code.mdx`.
+
+Batch 2 (items 6 and 7) built on 2026-11-18, awaiting the owner's review. Choices made while
+building: the lesson's diagrams and the graph of the objective share one stage through a new kit
+piece, `plotBox` (`src/lib/math`) with `PlotBoxAxes` (`src/viz-kit`), which fits a graph into a box
+with its own scales. The can holds $330\ \text{cm}^3$ and is compared with a real can ($r \approx 3.3$,
+$1.5$ percent more metal, the flat minimum). The lifeguard's best entry point comes from sampling
+($T'(x) = 0$ has no tidy solution), and its readouts show both sides of Snell's law. The mean step
+draws each misfit as a square, so $S(c)$ is their total area; the explanation compares the median
+and links to Backpropagation. Practice has 6 generators (fence, box, can, closest point, profit
+with an optional price cap, least squares), several with the answer at an end of the interval,
+each verified by sampling the objective in `problems.test.ts`. New terms: `objective-function`,
+`least-squares`.
 
 Notes. Existing terms: `maximum-minimum` (absolute extremes, Functions) and
 `increasing-decreasing` (Functions) are linked, not redefined. New terms: `differential`,

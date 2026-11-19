@@ -1,0 +1,132 @@
+SymPy follows the method: write the objective in one variable, solve $f' = 0$ exactly, and
+compare the candidates. Where the equation has no tidy solution, NumPy samples the objective
+and checks the condition the derivative gives.
+
+## Model: an open box
+
+The constraint is already in the formula: the base is $12 - 2x$. The interval $[0, 6]$ keeps
+both lengths at least $0$:
+
+```python title="box.py" step=box-model colors="x=yellow V=blue" check
+import numpy as np
+import sympy as sp
+
+x = sp.symbols("x", real=True)
+V = x * (12 - 2 * x) ** 2
+interval = sp.solve([x >= 0, 12 - 2 * x >= 0], x)
+print(interval)
+print([V.subs(x, t) for t in [0, 1, 3, 5, 6]])
+```
+
+```output
+(0 <= x) & (x <= 6)
+[0, 100, 108, 20, 0]
+```
+
+## Optimize: the critical point
+
+The candidates are the critical points in $[0, 6]$ and the two ends. The largest wins:
+
+```python title="box_max.py" step=box-optimize colors="x=yellow V=blue" check
+dV = sp.diff(V, x)
+print(sp.factor(dV))
+critical = sp.solve(dV, x)
+candidates = sorted({0, 6, *critical})
+print({c: V.subs(x, c) for c in candidates})
+print(max(candidates, key=lambda c: V.subs(x, c)))
+```
+
+```output
+12*(x - 6)*(x - 2)
+{0: 0, 2: 128, 6: 0}
+2
+```
+
+## A can with the least metal
+
+The constraint gives $h$ in terms of $r$, so $A$ becomes a function of $r$ alone. The other tab
+keeps $h$ by mistake and differentiates as if it were fixed:
+
+<CodeTabs>
+
+```python title="can.py" tab=SymPy step=can colors="r=yellow A=blue" check
+r, h = sp.symbols("r h", positive=True)
+A = 2 * sp.pi * r**2 + 2 * sp.pi * r * h
+h_of_r = sp.solve(sp.Eq(sp.pi * r**2 * h, 330), h)[0]
+A_r = A.subs(h, h_of_r)
+best = sp.solve(sp.diff(A_r, r), r)[0]
+print(best, sp.N(best, 4))
+print(sp.N(h_of_r.subs(r, best) / best), sp.N(A_r.subs(r, best), 4))
+```
+
+```output
+165**(1/3)/pi**(1/3) 3.745
+2.00000000000000 264.4
+```
+
+```python title="h_fixed.py" tab="h fixed" step=can colors="r=yellow A=blue" check
+print(sp.solve(sp.diff(A, r), r))
+```
+
+```output
+[]
+```
+
+</CodeTabs>
+
+With $h$ held fixed, $A' = 4\pi r + 2\pi h$ is never $0$ for positive $r$: the model forgot
+that a wider can must be shorter.
+
+## The lifeguard's path
+
+$T'(x) = 0$ has no tidy solution, so sample $T$ on a fine grid and take the smallest. At that
+point the two sides of Snell's law agree:
+
+```python title="lifeguard.py" step=lifeguard colors="x=yellow T=blue" check
+def T(x: np.ndarray) -> np.ndarray:
+    return np.hypot(x, 30) / 6 + np.hypot(60 - x, 20) / 2
+
+xs = np.linspace(0, 60, 600_001)
+best = xs[np.argmin(T(xs))]
+print(round(best, 2), T(np.array([36.0, best])).round(2))
+
+sin1 = best / np.hypot(best, 30)
+sin2 = (60 - best) / np.hypot(60 - best, 20)
+print(round(sin1 / 6, 5), round(sin2 / 2, 5))
+```
+
+```output
+53.91 [23.43 20.74]
+0.14564 0.14564
+```
+
+## The mean as least squares
+
+$S'(c) = 0$ gives the mean, exactly. A grid search over $c$ agrees, and the median does not
+minimize $S$:
+
+<CodeTabs>
+
+```python title="mean.py" tab=SymPy step=mean colors="c=yellow S=blue" check
+c = sp.symbols("c")
+ys = [2, 3, 7, 8, 10]
+S = sum((y - c) ** 2 for y in ys)
+print(sp.solve(sp.diff(S, c), c), S.subs(c, 6), S.subs(c, 7))
+```
+
+```output
+[6] 46 51
+```
+
+```python title="mean_grid.py" tab=NumPy step=mean colors="c=yellow S=blue" check
+y = np.array([2, 3, 7, 8, 10])
+cs = np.linspace(0, 12, 1201)
+S_values = ((y[:, None] - cs) ** 2).sum(axis=0)
+print(cs[np.argmin(S_values)], y.mean())
+```
+
+```output
+6.0 6.0
+```
+
+</CodeTabs>
