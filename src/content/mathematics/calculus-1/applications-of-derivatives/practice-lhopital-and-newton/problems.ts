@@ -442,6 +442,41 @@ export const problems = defineProblems([
     },
   },
   {
+    id: 'newton-loan-rate',
+    title: 'The interest rate of a loan',
+    skills: ['newtons-method'],
+    difficulty: 3,
+    generate: (rng) => {
+      const loan = rng.pick([8000, 12000, 15000, 20000, 25000, 30000])
+      const n = rng.pick([24, 36, 48, 60])
+      const annual = rng.pick([3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5])
+      const rTrue = annual / 1200
+      // The payment as a bank quotes it, rounded to cents.
+      const pay = Math.round(((loan * rTrue) / (1 - (1 + rTrue) ** -n)) * 100) / 100
+      // h(r) = L r - P (1 - (1 + r)^(-n)) is convex with roots 0 and the rate; from the right of
+      // the rate, Newton decreases monotonically to it.
+      const h = (r: number) => loan * r - pay * (1 - (1 + r) ** -n)
+      const dh = (r: number) => loan - n * pay * (1 + r) ** (-n - 1)
+      const r0 = 0.01
+      const rs = iterate(h, dh, r0, 8)
+      const rate = rs[8]! * 1200
+      return {
+        prompt: `A loan of ${loan} is repaid in ${n} equal monthly payments of ${pay.toFixed(2)}. With a monthly rate $r$, the payment is $P = \\frac{Lr}{1 - (1 + r)^{-n}}$, and no formula solves this for $r$. Use Newton's method from $r_0 = 0.01$ to find $r$, then give the annual rate $12r$ as a percent, to two decimal places.`,
+        answer: { kind: 'number', value: rate, tolerance: 6e-3 },
+        hints: [
+          `Clear the fraction: $h(r) = ${loan}r - ${pay.toFixed(2)}\\left(1 - (1 + r)^{-${n}}\\right) = 0$, so $h'(r) = ${loan} - ${n} \\cdot ${pay.toFixed(2)}\\,(1 + r)^{-${n + 1}}$.`,
+          '$r = 0$ also solves $h(r) = 0$. Starting at $r_0 = 0.01$, to the right of the true rate, the iterates decrease toward it and stay away from $0$.',
+        ],
+        solution: [
+          `$r_1 \\approx ${dec(rs[1]!, 7)}$, $r_2 \\approx ${dec(rs[2]!, 7)}$, $r_3 \\approx ${dec(rs[3]!, 7)}$, $r_4 \\approx ${dec(rs[4]!, 7)}$.`,
+          `The monthly rate is $r \\approx ${dec(rs[8]!, 7)}$, so the annual rate is $12r \\approx ${rate.toFixed(2)}\\%$.`,
+          '$h$ is convex ($h^{\\prime\\prime} > 0$), and $h(r_0) > 0$, so every tangent lands between the rate and the previous iterate: the approach is from one side, with no overshoot.',
+        ],
+        data: rec({ loan, n, pay, annual }),
+      }
+    },
+  },
+  {
     id: 'newton-root',
     title: 'A root to four decimals',
     skills: ['newtons-method'],

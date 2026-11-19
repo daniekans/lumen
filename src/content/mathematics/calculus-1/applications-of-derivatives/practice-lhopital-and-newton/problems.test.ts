@@ -116,6 +116,14 @@ describe("Practice: L'Hôpital and Newton problems", () => {
           expect(Math.abs(value - Math.sqrt(a))).toBeLessThan(1e-3)
           break
         }
+        case 'newton-loan-rate': {
+          const h: Fn = (r) => d.loan! * r - d.pay! * (1 - (1 + r) ** -d.n!)
+          const r = bisect(h, 1e-6, 0.05)
+          expect(Math.abs(value - 1200 * r)).toBeLessThan(1e-6)
+          // The rate from the rounded payment stays close to the quoted one.
+          expect(Math.abs(value - d.annual!)).toBeLessThan(0.05)
+          break
+        }
         case 'newton-root': {
           const f: Fn = [
             (x: number) => x ** 3 + d.p! * x - d.q!,

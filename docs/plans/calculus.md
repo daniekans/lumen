@@ -518,6 +518,9 @@ accepted gap 3, to build in its own session; after it the unit is done:
 3. **Newton's method has one real scenario in practice** (square roots). Add one where no formula
    exists, for example the interest rate of a loan from its payment
    ($P = \frac{Lr}{1 - (1 + r)^{-n}}$, solved for $r$).
+   Done 2026-11-19: `newton-loan-rate` in item 10 (a payment rounded to cents, Newton on the
+   cleared form $h(r) = Lr - P(1 - (1 + r)^{-n})$ from $r_0 = 0.01$, verified by bisection; the
+   hint names the second root $r = 0$ and why the start on its right avoids it). The unit is done.
 
 Notes. Existing terms: `maximum-minimum` (absolute extremes, Functions) and
 `increasing-decreasing` (Functions) are linked, not redefined. New terms: `differential`,

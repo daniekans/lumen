@@ -18,6 +18,8 @@ These problems use the items
 - One step: $x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}$. Keep fractions exact.
 - For $\sqrt{a}$: $x_{n+1} = \frac{1}{2}\left(x_n + \frac{a}{x_n}\right)$.
 - To four decimals: iterate until two iterates agree to five or six decimals.
+- When no formula solves an equation (a loan's rate from its payment), clear the fractions first
+  so $f'$ stays simple, and start on the side where the iterates move toward the root you want.
 - To minimize $g$: apply the step to $g'$, so $x_{n+1} = x_n - \frac{g'(x_n)}{g''(x_n)}$.
 - A flat tangent stops the method; a start can also cycle, or move away from the root when $f'$
   does not exist there.
