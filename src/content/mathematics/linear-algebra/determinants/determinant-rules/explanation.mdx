@@ -1,0 +1,131 @@
+The determinant so far is a picture: the signed area of the parallelogram of the columns, or the
+signed volume of the box. This item finds three properties of that number which pin it down
+completely. Every way of computing a determinant, and every fact about it in this unit, follows
+from them, and they make sense for square matrices of any size, where no picture is available.
+
+## The three rules
+
+Write $\det[\mathbf{a}_1\ \cdots\ \mathbf{a}_n]$ for the determinant of the matrix with columns
+$\mathbf{a}_1, \ldots, \mathbf{a}_n$.
+
+1. **The identity** has $\det I = 1$.
+2. **Linear in each column.** With the other columns fixed, scaling one column scales the
+   determinant, and a sum in one column splits into a sum of determinants.
+3. **Two equal columns** give $\det = 0$.
+
+For two columns, rule 2 in the first column reads
+
+$$
+\det[c\mathbf{u}\ \ \mathbf{w}] = c\det[\mathbf{u}\ \mathbf{w}], \qquad
+\det[\mathbf{u} + \mathbf{v}\ \ \mathbf{w}] = \det[\mathbf{u}\ \mathbf{w}] + \det[\mathbf{v}\ \mathbf{w}],
+$$
+
+and the same holds in the second column, or in any column of a larger matrix.
+
+Rule 2 is about one column at a time, not the whole matrix. Scaling the whole matrix scales every
+column, so $\det(cA) = c^n\det A$ for an $n \times n$ matrix: doubling a $2 \times 2$ matrix
+multiplies areas by $4$, not $2$. And $\det(A + B)$ is in general not $\det A + \det B$: with
+$A = B = I$ in the plane, $\det(2I) = 4$ while $\det I + \det I = 2$.
+
+## Why the signed area obeys them
+
+For <StepLink step="identity">rule 1</StepLink>, the identity sends the unit square to itself, area
+$1$, turning counterclockwise from $\hat{\imath}$ to $\hat{\jmath}$.
+
+For rule 2, take the second column $\mathbf{w}$ as the base. The area of the parallelogram is
+the length of $\mathbf{w}$ times the height of $\mathbf{u}$ above the line of $\mathbf{w}$. Let
+$\mathbf{n}$ be the <Term id="unit-vector">unit vector</Term> a quarter turn clockwise from
+$\mathbf{w}$, <Term id="orthogonal">perpendicular</Term> to it, and count the height as
+$\mathbf{n} \cdot \mathbf{u}$: positive when $\mathbf{u}$ is on the side of $\mathbf{n}$, which
+is exactly when the turn from $\mathbf{u}$ to $\mathbf{w}$ is counterclockwise. So the signed area
+is $\lVert\mathbf{w}\rVert\,(\mathbf{n} \cdot \mathbf{u})$, and a dot product with a fixed vector
+is linear in $\mathbf{u}$. So <StepLink step="scale">scaling $\mathbf{u}$ by $c$</StepLink>
+scales the height and the determinant by $c$ (a negative $c$ moves $\mathbf{u}$ to the other side
+and flips the sign), and <StepLink step="add">the heights of $\mathbf{u}$ and
+$\mathbf{v}$ add</StepLink> to the height of $\mathbf{u} + \mathbf{v}$. In the picture the
+parallelogram of $\mathbf{u}$ and the one of $\mathbf{v}$, stacked on the same base, have the
+same total area as the one of $\mathbf{u} + \mathbf{v}$. With the first column as the base, the
+same argument works for the second column. In space the base is the parallelogram of two columns
+and the height is that of the third, as in the previous item.
+
+Rule 3: <StepLink step="equal">two equal columns</StepLink> span a flat parallelogram, area $0$.
+
+## What follows from the rules
+
+From here on only the rules are used, never the picture, so everything holds for every $n$.
+
+**A shear keeps the determinant.** <StepLink step="shear">Adding a multiple</StepLink> of one
+column to another:
+
+$$
+\det[\mathbf{u} + k\mathbf{w}\ \ \mathbf{w}] = \det[\mathbf{u}\ \mathbf{w}] + k\det[\mathbf{w}\ \mathbf{w}] = \det[\mathbf{u}\ \mathbf{w}].
+$$
+
+In the picture, $\mathbf{u}$ slides parallel to the base, so the height stays.
+
+**A swap flips the sign.** Put $\mathbf{u} + \mathbf{w}$ in both columns. Rule 3 gives $0$, and
+rule 2, used in each column, splits it into four terms, two of them with equal columns:
+
+$$
+0 = \det[\mathbf{u} + \mathbf{w}\ \ \mathbf{u} + \mathbf{w}]
+= \det[\mathbf{u}\ \mathbf{u}] + \det[\mathbf{u}\ \mathbf{w}] + \det[\mathbf{w}\ \mathbf{u}] + \det[\mathbf{w}\ \mathbf{w}]
+= \det[\mathbf{u}\ \mathbf{w}] + \det[\mathbf{w}\ \mathbf{u}].
+$$
+
+So $\det[\mathbf{w}\ \mathbf{u}] = -\det[\mathbf{u}\ \mathbf{w}]$.
+The <StepLink step="swap">swap</StepLink> reverses the turn from the first column to the second.
+
+**Dependent columns give $0$.** If one column is
+a <Term id="linear-combination">combination</Term> of the others, say $\mathbf{a}_1 = c_2\mathbf{a}_2 + \cdots + c_n\mathbf{a}_n$,
+rule 2 splits the determinant into terms $c_j\det[\mathbf{a}_j\ \mathbf{a}_2\ \cdots\ \mathbf{a}_n]$,
+and each has the column $\mathbf{a}_j$ twice, so each is $0$. In the
+plane: <StepLink step="dependent">$\det[\mathbf{u}\ \ k\mathbf{u}] = k\det[\mathbf{u}\ \mathbf{u}] = 0$</StepLink>.
+
+## The rules fix the number
+
+Shears and swaps can turn any square matrix into a triangular one. In
+the <StepLink step="triangular">last step</StepLink>,
+
+$$
+\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}
+\xrightarrow{\ \mathbf{a}_2 - \frac{1}{2}\mathbf{a}_1\ }
+\begin{bmatrix} 2 & 0 \\ 1 & 1.5 \end{bmatrix}
+\xrightarrow{\ \mathbf{a}_1 - \frac{2}{3}\mathbf{a}_2\ }
+\begin{bmatrix} 2 & 0 \\ 0 & 1.5 \end{bmatrix}.
+$$
+
+Both shears keep the determinant, and the last matrix has columns $2\hat{\imath}$ and
+$1.5\hat{\jmath}$, so rule 2 (twice) and rule 1 give $\det = 2 \times 1.5 \times \det I = 3$.
+
+The same works for every $n$. Go through the rows from the top. In row $i$, pick a column among
+the $i$-th and later ones with a nonzero entry in that row and swap it into place $i$ (each swap
+flips the sign); then subtract multiples of it from the later columns to clear their entries in
+row $i$ (shears). The result is triangular, with zeros above the diagonal. If at some row no such
+column exists, the diagonal entry there is $0$. Otherwise the diagonal entries $p_1, \ldots, p_n$
+are nonzero, more shears (multiples of each column subtracted from the earlier ones, starting
+from the last column) clear the entries below the diagonal without changing it, and rules 2 and
+1 give
+
+$$
+\det A = \pm\, p_1 p_2 \cdots p_n,
+$$
+
+with the sign set by the number of swaps. A triangular matrix with a $0$ on the diagonal has
+dependent columns: if the $0$ is in column $j$, the columns $j$ to $n$ have zeros in rows $1$ to
+$j$, so they are $n - j + 1$ vectors in a space of $n - j$ dimensions. Then its determinant is $0$.
+
+Every step used only the rules, so any function with the three properties gives the same
+number: the rules fix the determinant. The signed area and the signed volume have the properties,
+so they are this function. In higher dimensions the rules are the definition, and the lesson on
+computing determinants shows that such a function exists for every $n$ (the cofactor formula).
+
+The reduction also gives the converse of the last section. Shears and swaps can be undone, so
+they keep columns independent or dependent. If the columns of $A$
+are <Term id="linear-independence">independent</Term>, the triangular result has independent columns,
+so no $0$ on its diagonal, and $\det A \ne 0$. Together:
+
+$$
+\det A = 0 \quad\text{exactly when the columns of } A \text{ are dependent},
+$$
+
+that is, exactly when the map collapses space onto a lower dimension.

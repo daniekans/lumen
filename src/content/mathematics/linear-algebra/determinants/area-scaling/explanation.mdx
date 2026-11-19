@@ -1,0 +1,99 @@
+A <Term id="linear-transformation">linear map</Term> of the plane stretches, turns and shears
+shapes. This item asks what it does to areas. The answer is one number for the whole map: every
+region, wherever it is and whatever its shape, has its area multiplied by the same factor. That
+factor, with a sign for orientation, is the determinant.
+
+## The unit square
+
+The unit square is spanned by $\hat{\imath}$ and $\hat{\jmath}$: its points are
+$s\hat{\imath} + t\hat{\jmath}$ with $0 \le s, t \le 1$. A <Term id="matrix">matrix</Term> $A$
+sends such a point to $sA\hat{\imath} + tA\hat{\jmath}$, so
+the <StepLink step="square">square lands on the parallelogram</StepLink> spanned by the
+columns <C c="green">$A\hat{\imath}$</C> and <C c="red">$A\hat{\jmath}$</C>. For
+
+$$
+A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}
+$$
+
+that parallelogram has area $3$. The lesson Computing determinants derives the formula for it;
+here the readout computes it.
+
+## Every square, every region
+
+A <StepLink step="grid-squares">grid square</StepLink> with its lower-left corner at
+$\mathbf{q}$ is the unit square shifted by $\mathbf{q}$: its points are
+$\mathbf{q} + s\hat{\imath} + t\hat{\jmath}$. Linearity sends them to
+$A\mathbf{q} + sA\hat{\imath} + tA\hat{\jmath}$, the same parallelogram shifted by
+$A\mathbf{q}$. A shift does not change an area, so every grid square lands on area $3$.
+
+The same holds for a square of side $h$: it is the unit square scaled by $h$, and since
+$A(h\mathbf{x}) = hA\mathbf{x}$, its image is the parallelogram scaled by $h$, with area $3h^2$.
+Now take <StepLink step="any-region">any region</StepLink>, such as the unit disk. The squares of
+side $h$ inside it have a total area close to the disk's, and their images have exactly $3$ times
+that total. As $h$ shrinks, the squares fill the disk and their images fill its image. So the disk,
+area $\pi$, lands on an ellipse of area $3\pi$. Making "fill" precise is a limit of sums, the idea
+behind the <Term id="definite-integral">definite integral</Term>; Integrals and Multivariable
+calculus make it exact.
+
+Two everyday cases. Scaling a photo by $2$ in both directions has the matrix $2I$, area factor
+$4$: four times the pixels, and about four times the memory. Italic type is a shear, factor $1$:
+the letters lean, and the ink covers the same area.
+
+## The sign
+
+Now <StepLink step="sign">move $A\hat{\jmath}$</StepLink> across the line of $A\hat{\imath}$. The
+parallelogram gets thinner, flat at the line, then opens on the other side with its area growing
+again. Something has changed: the letter F now reads as in a mirror, and the turn from the first
+column to the second, the arc at the origin, goes clockwise. The map has flipped the
+orientation of the plane, as the reflection in A gallery of maps does.
+
+A sign records the flip. The **determinant** of a $2 \times 2$ matrix is
+
+$$
+\det A = \pm\,(\text{area of the parallelogram of the columns}),
+$$
+
+with $+$ when the turn from $A\hat{\imath}$ to $A\hat{\jmath}$ is counterclockwise and $-$ when it
+is clockwise. So $|\det A|$ is the factor by which the map scales every area, and the sign says
+whether it keeps the orientation. In the step, $\det A$ goes from $3$ through $0$ to $-3$ without
+a jump, while the plain area would bounce off $0$. The signed number is the natural one: the
+next items show that it obeys simple rules and has a short formula.
+
+## Collapse
+
+When the columns lie on one line, the parallelogram is flat, so <StepLink step="collapse">every
+area becomes $0$</StepLink> and $\det A = 0$. The whole plane lands on that line,
+the <Term id="image">image</Term> of the map, and with both columns $\mathbf{0}$ on a single point.
+Columns on one line are <Term id="linear-dependence">dependent</Term>, so a dependence gives
+$\det A = 0$, and $\det A = 0$ means the columns are dependent; the item on the three rules proves
+both directions. A map with $\det A = 0$ cannot be undone: many points land on each point of the
+line.
+
+Determinants exist only for square matrices. A $2 \times 3$ matrix, such as the camera matrix $P$
+in Maps in 3D, takes space to the plane: volumes go in and areas come out, so no factor compares
+them.
+
+## Zooming into a curved map
+
+The <StepLink step="curved">last step</StepLink> uses a map that is not linear,
+
+$$
+f(x, y) = (x + 0.6\sin y,\ y + 0.6\sin x).
+$$
+
+Its grid bends, and different places scale areas differently. But zoom in on a point
+$\mathbf{p}$: as the square shrinks, the curved grid around it straightens and looks like the grid
+of a linear map, the way a curve looks like its tangent line up close
+(<Term id="locally-linear">locally linear</Term>). That linear map has the matrix
+
+$$
+J = \begin{bmatrix} 1 & 0.6\cos y \\ 0.6\cos x & 1 \end{bmatrix},
+$$
+
+whose columns are the rates at which $f$ changes as $x$ and as $y$ change, at $\mathbf{p}$. The
+image of a square of side $h$ at $\mathbf{p}$ has an area close to $|\det J|\,h^2$, and the ratio
+in the readout approaches $\det J$ as $h \to 0$. At $(0, 0)$ the map shrinks small areas to
+$0.64$ of their size, at $(3, 0)$ it grows them by about $1.36$.
+
+Multivariable calculus calls $J$ the Jacobian matrix. Changing variables in a double integral
+uses exactly this local factor: $dx\,dy = |\det J|\,du\,dv$.

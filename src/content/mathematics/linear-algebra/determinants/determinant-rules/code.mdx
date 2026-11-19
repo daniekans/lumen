@@ -1,0 +1,95 @@
+Each rule is a statement about columns, so each can be checked with `np.linalg.det` on matrices
+built from columns. The last block computes determinants with the rules alone.
+
+## The rules
+
+`D(u, w)` is the determinant of the matrix with columns `u` and `w`:
+
+```python title="rules.py" step="identity scale add equal" focus="identity=7 scale=8 add=9-10 equal=11" colors="u=green w=red v=blue" check
+import numpy as np
+
+def D(*cols: np.ndarray) -> float:
+    return round(np.linalg.det(np.column_stack(cols)), 9)
+
+u, w, v = np.array([2.0, 1]), np.array([1.0, 2]), np.array([0.5, -0.5])
+print(D(np.array([1.0, 0]), np.array([0.0, 1])))  # rule 1
+print(D(-1 * u, w), -1 * D(u, w))  # rule 2, scaling
+print(D(u + v, w), D(u, w) + D(v, w))  # rule 2, adding
+print(D(u, w + v), D(u, w) + D(u, v))  # ... in column 2
+print(D(u, u))  # rule 3
+```
+
+```output
+1.0
+-3.0 -3.0
+4.5 4.5
+1.5 1.5
+0.0
+```
+
+Rule 2 holds one column at a time. For the whole matrix, $\det(cA) = c^n\det A$:
+
+```python title="whole.py" step=scale check
+A = np.column_stack([u, w])
+print(D(*(2 * A).T), 2**2 * D(u, w))  # det(2A) = 4 det A
+print(D(*(A + A).T), D(u, w) + D(u, w))  # not equal
+```
+
+```output
+12.0 12.0
+12.0 6.0
+```
+
+## Shear, swap, dependence
+
+```python title="consequences.py" step="shear swap dependent" focus="shear=1-2 swap=3 dependent=4-5" colors="u=green w=red" check
+for k in [-1.0, 0.5, 1.5]:
+    print(k, D(u + k * w, w))  # a shear keeps it
+print(D(w, u), D(u, w))  # a swap flips the sign
+for k in [-0.75, 1.5]:
+    print(k, D(u, k * u))  # dependent columns
+```
+
+```output
+-1.0 3.0
+0.5 3.0
+1.5 3.0
+-3.0 3.0
+-0.75 0.0
+1.5 0.0
+```
+
+## The rules fix the number
+
+`det_by_rules` uses only shears, swaps and rules 2 and 1, as in the explanation: row by row, a
+column with a nonzero entry is swapped into place, and multiples of it clear that row in the
+later columns. It agrees with `np.linalg.det` on a random $5 \times 5$ matrix:
+
+```python title="by_rules.py" step=triangular check
+def det_by_rules(A: np.ndarray) -> float:
+    A = A.astype(float).copy()
+    n, sign = len(A), 1.0
+    for i in range(n):
+        nonzero = [j for j in range(i, n) if A[i, j] != 0]
+        if not nonzero:
+            return 0.0  # a 0 on the diagonal: dependent
+        j = nonzero[0]
+        if j != i:
+            A[:, [i, j]] = A[:, [j, i]]  # swap: flip the sign
+            sign = -sign
+        for j in range(i + 1, n):  # shears clear row i
+            A[:, j] -= A[i, j] / A[i, i] * A[:, i]
+    return sign * np.prod(np.diag(A))  # rules 2 and 1
+
+print(det_by_rules(np.array([[2, 1], [1, 2]])))
+M = np.random.default_rng(1).integers(-5, 6, size=(5, 5))
+print(round(det_by_rules(M), 6), round(np.linalg.det(M), 6))
+```
+
+```output
+3.0
+2974.0 2974.0
+```
+
+After the loop the matrix is triangular, so its determinant is the product of its diagonal (the
+shears that would clear the rest do not change the diagonal).
