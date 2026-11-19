@@ -61,3 +61,21 @@ export const linePiece = (p: Vec2, d: Vec2, half = 0.8) => {
 
 /** A piece of the line through `p` with slope `m`, `half` units long on each side. */
 export const tangentPiece = (p: Vec2, m: number, half = 0.8) => linePiece(p, [1, m], half)
+
+/**
+ * Newton's method: x_{n+1} = x_n - f(x_n) / f'(x_n), starting at x0, for at most n steps.
+ * Returns x0 and every iterate. Stops early when the tangent is flat (f'(x_n) = 0, no next
+ * point) or an iterate is not finite.
+ */
+export const newtonIterates = (f: Fn, df: Fn, x0: number, n: number): number[] => {
+  const xs = [x0]
+  for (let k = 0; k < n; k++) {
+    const x = xs[xs.length - 1]!
+    const slope = df(x)
+    if (slope === 0) break
+    const next = x - f(x) / slope
+    if (!Number.isFinite(next)) break
+    xs.push(next)
+  }
+  return xs
+}

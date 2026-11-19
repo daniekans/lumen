@@ -15,6 +15,7 @@ import {
   integrate,
   linePiece,
   mat2,
+  newtonIterates,
   niceStep,
   stepDigits,
   zoomedStep,
@@ -49,6 +50,31 @@ describe('calculus', () => {
     expect(Math.hypot(t.to[0] - 1, t.to[1] - 2)).toBeCloseTo(1)
     expect((t.to[1] - t.from[1]) / (t.to[0] - t.from[0])).toBeCloseTo(3)
     expect(linePiece([0, 0], [0, 2], 0.5)).toEqual({ from: [0, -0.5], to: [0, 0.5] })
+  })
+  it("Newton's method converges to a root, cycles, and stops at a flat tangent", () => {
+    const xs = newtonIterates(
+      (x) => x * x - 2,
+      (x) => 2 * x,
+      1,
+      5,
+    )
+    expect(xs.slice(0, 3)).toEqual([1, 1.5, 17 / 12])
+    expect(xs[5]).toBeCloseTo(Math.SQRT2, 14)
+    const cycle = newtonIterates(
+      (x) => x ** 3 - 2 * x + 2,
+      (x) => 3 * x * x - 2,
+      0,
+      4,
+    )
+    expect(cycle).toEqual([0, 1, 0, 1, 0])
+    expect(
+      newtonIterates(
+        (x) => x * x - 2,
+        (x) => 2 * x,
+        0,
+        5,
+      ),
+    ).toEqual([0])
   })
 })
 
