@@ -13,7 +13,7 @@ reviewed on 2026-10-25, batch 2 (items 5 to 8, each with a code walkthrough) app
 2026-11-07, and batch 3 (items 9 to 12) approved on 2026-11-09 without changes, which closes the
 unit. The Determinants unit plan (below, 9 items) was drafted on 2026-11-19 and approved by the
 owner the same day as drafted; batch 1 (items 1 to 3) was built and approved the same day
-without changes; batch 2 (items 4 to 6) was built and approved the same day without changes.
+without changes; batch 2 (items 4 to 6) was built and approved the same day without changes; batch 3 (items 7 to 9) and the self-review of the unit were built the same day for review.
 
 ## Depth and threads
 
@@ -604,17 +604,17 @@ parallelogram with its turn arc (2D), `Cell3D` for the parallelepiped, the lette
 lesson gets a `code.mdx` (NumPy `det`, `slogdet`, `cross`; SymPy for exact values and symbols,
 such as $\det$ as a polynomial in $k$).
 
-| #   | Item                      | Kind       | Skills                                                 | Content                                                                                                                                                                                                                                                                                                                           | Status  |
-| --- | ------------------------- | ---------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| 1   | area-scaling              | explore    | determinant                                            | The unit square becomes the parallelogram of the columns; every grid square scales by the same factor, and so does a disk (ellipse area $\pi ab$); drag a column through the other's line: the area shrinks to $0$ and comes back flipped (F mirrored, turn arc reversed), so a sign is natural; collapse onto a line and a point | done    |
-| 2   | volume-in-3d              | explore    | determinant                                            | The unit cube becomes the parallelepiped of the columns; signed volume; right- and left-handed triples (a mirror); collapse onto a plane and a line; the volume of a tetrahedron as one sixth                                                                                                                                     | done    |
-| 3   | determinant-rules         | explore    | determinant-rules                                      | The three rules seen as areas: a column scaled, two parallelograms on one base adding their heights, a shear keeping base and height, equal columns flat; then a swap flips the sign and dependent columns give $0$; reducing any matrix to triangular shows the rules fix the number                                             | done    |
-| 4   | computing-determinants    | lesson     | computing-determinants, determinant-rules              | $ad - bc$ from the rules and from the picture (rectangle minus corners); rows give the same parallelogram area ($\det A^T$); cofactor expansion along any row or column; Sarrus for $3 \times 3$ only; triangular; elimination and pivots; $n!$ against $n^3$; the area of a polygon from its corners                             | done    |
-| 5   | practice-determinants     | practice   | determinant, determinant-rules, computing-determinants | $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$ by elimination, after described row or column operations, $k$ that makes $\det = 0$, collinear points, orientation of a triangle, a polygon's area, image area of a region                                                                                                   | done    |
-| 6   | product-rule              | explore    | determinant-rules                                      | $\det(AB) = \det A \det B$ as scaling twice (two flips make none); powers; undoing a map needs $\det \ne 0$ and has $\frac{1}{\det A}$; $\det(cA) = c^n \det A$; same $\det$ in any basis; $\det(A - \lambda I)$ as a preview                                                                                                     | done    |
-| 7   | cross-product             | lesson     | cross-product                                          | $\mathbf{x} \mapsto \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ is a dot product with one vector, $\mathbf{v} \times \mathbf{w}$; drag $\mathbf{x}$ to see volume as area times height; its length, direction, components; triple product; normals to planes and the plane through three points; torque                             | planned |
-| 8   | practice-volume-and-cross | practice   | cross-product, determinant, determinant-rules          | Areas of triangles in space, volumes of parallelepipeds and tetrahedra, coplanar points, cross products, normals and plane equations, torque, $\det(AB)$, $\det(A^k)$, $\det(cA)$, $\det A^T$, the determinant of an undoing map, short proofs (a swap flips the sign, $\det(cA) = c^n \det A$)                                   | planned |
-| 9   | checkpoint                | checkpoint | all                                                    | Problems from items 5 and 8 plus a self-graded proof: if the columns of $A$ are dependent, then $\det A = 0$ (from the three rules; the outline's "two equal columns" is a rule now, so the proof generalizes it)                                                                                                                 | planned |
+| #   | Item                      | Kind       | Skills                                                 | Content                                                                                                                                                                                                                                                                                                                           | Status |
+| --- | ------------------------- | ---------- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1   | area-scaling              | explore    | determinant                                            | The unit square becomes the parallelogram of the columns; every grid square scales by the same factor, and so does a disk (ellipse area $\pi ab$); drag a column through the other's line: the area shrinks to $0$ and comes back flipped (F mirrored, turn arc reversed), so a sign is natural; collapse onto a line and a point | done   |
+| 2   | volume-in-3d              | explore    | determinant                                            | The unit cube becomes the parallelepiped of the columns; signed volume; right- and left-handed triples (a mirror); collapse onto a plane and a line; the volume of a tetrahedron as one sixth                                                                                                                                     | done   |
+| 3   | determinant-rules         | explore    | determinant-rules                                      | The three rules seen as areas: a column scaled, two parallelograms on one base adding their heights, a shear keeping base and height, equal columns flat; then a swap flips the sign and dependent columns give $0$; reducing any matrix to triangular shows the rules fix the number                                             | done   |
+| 4   | computing-determinants    | lesson     | computing-determinants, determinant-rules              | $ad - bc$ from the rules and from the picture (rectangle minus corners); rows give the same parallelogram area ($\det A^T$); cofactor expansion along any row or column; Sarrus for $3 \times 3$ only; triangular; elimination and pivots; $n!$ against $n^3$; the area of a polygon from its corners                             | done   |
+| 5   | practice-determinants     | practice   | determinant, determinant-rules, computing-determinants | $2 \times 2$, $3 \times 3$, triangular, $4 \times 4$ by elimination, after described row or column operations, $k$ that makes $\det = 0$, collinear points, orientation of a triangle, a polygon's area, image area of a region                                                                                                   | done   |
+| 6   | product-rule              | explore    | determinant-rules                                      | $\det(AB) = \det A \det B$ as scaling twice (two flips make none); powers; undoing a map needs $\det \ne 0$ and has $\frac{1}{\det A}$; $\det(cA) = c^n \det A$; same $\det$ in any basis; $\det(A - \lambda I)$ as a preview                                                                                                     | done   |
+| 7   | cross-product             | lesson     | cross-product                                          | $\mathbf{x} \mapsto \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ is a dot product with one vector, $\mathbf{v} \times \mathbf{w}$; drag $\mathbf{x}$ to see volume as area times height; its length, direction, components; triple product; normals to planes and the plane through three points; torque                             | done   |
+| 8   | practice-volume-and-cross | practice   | cross-product, determinant, determinant-rules          | Areas of triangles in space, volumes of parallelepipeds and tetrahedra, coplanar points, cross products, normals and plane equations, torque, $\det(AB)$, $\det(A^k)$, $\det(cA)$, $\det A^T$, the determinant of an undoing map, short proofs (a swap flips the sign, $\det(cA) = c^n \det A$)                                   | done   |
+| 9   | checkpoint                | checkpoint | all                                                    | Problems from items 5 and 8 plus a self-graded proof: if the columns of $A$ are dependent, then $\det A = 0$ (from the three rules; the outline's "two equal columns" is a rule now, so the proof generalizes it)                                                                                                                 | done   |
 
 **Real scenarios** (only where they add meaning):
 
@@ -720,3 +720,51 @@ transformed grid in every map step (dense when $A - \lambda I$ nearly collapses)
 
 **Batch 2 review (2026-11-19).** Approved as built, without changes. Both points above stay as
 they are (matrices on the stage in the computing steps, the transformed grid in every map step).
+
+**Batch 3 (built 2026-11-19, for review).** No new library or kit code (`cross3`, `Cell3D`,
+`Plane3D`, `TurnArc3D` cover it). Terms: `cross-product`, `right-hand-rule`, `triple-product`.
+
+- `cross-product` (8 steps, a check on each, with a `code.mdx`): the volume
+  $f(\mathbf{x}) = \det[\mathbf{v}\ \mathbf{w}\ \mathbf{x}]$ with $\mathbf{x}$ moving up, along a
+  sheet parallel to the base and into it; $\mathbf{x}$ visiting $\hat{\imath}, \hat{\jmath},
+  \hat{k}$, so $\mathbf{p} = (f(\hat{\imath}), f(\hat{\jmath}), f(\hat{k}))$ is named
+  $\mathbf{v} \times \mathbf{w}$; perpendicular, length the area, right-handed ($\mathbf{w}$
+  turned onto the line of $\mathbf{v}$ and back); the order ($\mathbf{w} \times \mathbf{v}$, a
+  toggle); the components (both vectors out of the floor, drop lines); the triple product (the
+  height along $\mathbf{v} \times \mathbf{w}$, $\mathbf{x}$ dropped into the base plane); the
+  plane through three points (the plane $x + 2y + 2z = 6$ of Lines and planes, draggable points,
+  the normal drawn at half length); torque on a wrench (sliders for handle length and angle,
+  $50$ newtons). The explanation proves every property from the defining line, gives the
+  $\hat{\imath}, \hat{\jmath}, \hat{k}$ determinant as a memory aid only, the plane analogue
+  $\det[\mathbf{v}\ \mathbf{w}]$, non-associativity, mesh normals, lighting and back-face culling.
+- `practice-volume-and-cross` (11 generators): a cross product; basis products with brackets;
+  right- or left-handed; a mesh triangle's area; a crystal's unit cell; a tetrahedron; the $k$
+  that puts four points in one plane; the plane through three points as $(a, b, c, d)$ with one
+  coefficient fixed; torque (magnitude from $\sin\theta$, or the vector); the product rule with
+  powers, scalars, transposes, inverses and $A^{-1}BA$; a short proof (a swap flips the sign,
+  $\det(cA) = c^n\det A$, or $\det B = \frac{1}{\det A}$ when $BA = I$). Tests verify the cross
+  product by perpendicularity, Lagrange's identity and the sign, areas by Heron's formula,
+  components as volumes $\det[\mathbf{v}\ \mathbf{w}\ \mathbf{e}_i]$ by cofactors, and the
+  product rule on built matrices with a Gauss-Jordan inverse.
+- `checkpoint` (15 problems): seven from `practice-determinants`, seven from
+  `practice-volume-and-cross`, and the proof that dependent columns give $\det A = 0$.
+
+**Self-review of the unit (2026-11-19)**, against the plan and section 0 of `ADDING_CONTENT.md`.
+
+- Rules with conditions: the determinant only for square matrices (item 1), $\det A^T = \det A$
+  checked for $n \le 3$ and promised for every $n$ (item 4), $\det A \ne 0$ necessary for undoing
+  and sufficiency deferred (item 6), the cross product only in $\mathbb{R}^3$, not associative
+  (item 7). Nothing is taken back later.
+- Threads: map (every exploration), two pictures (rows and columns, item 4), basis handedness
+  (item 2), duality (item 7 defines the cross product through it), eigen preview (item 6),
+  Jacobian preview (item 1), ML ($\log\det$ in flows, $\det(X^TX)$, item 6). All as planned.
+- Real scenarios: photo scaling and italic type (1), crystal cell (2, practice), land plots,
+  `ST_Area` and the orientation test (4, practice), photo resized twice and flows (6), torque and
+  mesh normals (7, practice). Each carries units or a data link.
+- Practice and checkpoint: varied types, contexts, three short proofs plus the checkpoint proof.
+- Gaps found and fixed in this batch: nothing practiced the order and brackets of the cross
+  product or handedness in space; `basis-products` and `handedness` were added to
+  `practice-volume-and-cross`. No gaps left open.
+
+**For the review:** the plane step draws the normal at half its length (the readout gives the true
+vector); the torque step fixes the force at $50$ newtons and keeps the handle along $x$.
